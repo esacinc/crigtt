@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+    debug="false"
+    scan="true"
+    scanPeriod="30 seconds"
+    xmlns="ch.qos.logback">
+    
+    <!--====================================================================================================
+    = CONTEXT NAME
+    =====================================================================================================-->
+    <contextName>crigtt</contextName>
+    
+    <!--====================================================================================================
+    = STATUS LISTENERS
+    =====================================================================================================-->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    
+    <!--====================================================================================================
+    = CONTEXT LISTENERS
+    =====================================================================================================-->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+    
+    <!--====================================================================================================
+    = APPENDERS: CONSOLE
+    =====================================================================================================-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%p - %m%n%ex</pattern>
+        </encoder>
+        <target>System.out</target>
+        <withJansi>true</withJansi>
+    </appender>
+    
+    <appender name="consoleAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="console"/>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>true</includeCallerData>
+        <queueSize>256</queueSize>
+    </appender>
+    
+    <!--====================================================================================================
+    = LOGGERS: PROJECT
+    =====================================================================================================-->
+    <logger name="gov.hhs.onc.crigtt" level="all" additivity="false">
+        <appender-ref ref="consoleAsync"/>
+    </logger>
+    
+    <!--====================================================================================================
+    = LOGGERS: HELGER
+    =====================================================================================================-->
+    <logger name="com.helger" level="info" additivity="false">
+        <appender-ref ref="consoleAsync"/>
+    </logger>
+    
+    <!--====================================================================================================
+    = LOGGERS: APACHE
+    =====================================================================================================-->
+    <logger name="org.apache" level="info" additivity="false">
+        <appender-ref ref="consoleAsync"/>
+    </logger>
+    
+    <!--====================================================================================================
+    = LOGGERS: SPRING FRAMEWORK
+    =====================================================================================================-->
+    <logger name="org.springframework" level="info" additivity="false">
+        <appender-ref ref="consoleAsync"/>
+    </logger>
+    
+    <logger name="org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker" level="warn" additivity="false">
+        <appender-ref ref="consoleAsync"/>
+    </logger>
+    
+    <!--====================================================================================================
+    = ROOT LOGGER
+    =====================================================================================================-->
+    <root level="warn">
+        <appender-ref ref="consoleAsync"/>
+    </root>
+</configuration>

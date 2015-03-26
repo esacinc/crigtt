@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!--====================================================================================================
+    = TRANSFORMER FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="transformerFactory" class="javax.xml.transform.TransformerFactory" abstract="true"/>
+    
+    <beans:bean id="transformerFactorySaxon" class="net.sf.saxon.jaxp.SaxonTransformerFactory" parent="transformerFactory" abstract="true"/>
+    
+    <beans:bean id="transformerFactorySaxonImpl" class="net.sf.saxon.TransformerFactoryImpl" parent="transformerFactorySaxon" abstract="true"/>
+    
+    <beans:bean id="transformerFactoryCancerRegistryCda" parent="transformerFactorySaxonImpl"
+        c:config-ref="configCancerRegistryCda"/>
+    
+    <!--====================================================================================================
+    = TEMPLATES
+    =====================================================================================================-->
+    <beans:bean id="templates" class="javax.xml.transform.Templates" abstract="true"/>
+    
+    <beans:bean id="templatesSchematron" class="gov.hhs.onc.crigtt.transform.impl.SchematronTemplatesFactoryBean" parent="templates" abstract="true"
+        p:transformerFactory-ref="transformerFactoryCancerRegistryCda">
+        <beans:property name="pipelineRulesSources">
+            <beans:array>
+                <beans:bean parent="srcResource"
+                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
+                <beans:bean parent="srcResource"
+                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
+                <beans:bean parent="srcResource"
+                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="templatesSchematronCcdaR2" parent="templatesSchematron" lazy-init="true" scope="prototype">
+        <beans:property name="rulesSource">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/c-cda-r2/C-CDA-R2.sch"/>
+        </beans:property>
+    </beans:bean>
+</beans:beans>

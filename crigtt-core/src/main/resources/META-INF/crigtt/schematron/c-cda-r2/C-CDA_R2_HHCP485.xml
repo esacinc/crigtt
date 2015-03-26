@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="CDA.xsl"?>
 <!--
  Title:        Home Health Care Plan 
  Filename:     C-CDA_R2_HHCP485.xml
  Created by:   Lantana Consulting Group, LLC
  
- $LastChangedDate: 2014-10-30 00:10:45 -0400 (Thu, 30 Oct 2014) $
+ $LastChangedDate: 2014-11-12 23:25:09 -0500 (Wed, 12 Nov 2014) $
   
  ********************************************************
  Disclaimer: This sample file contains representative data elements to represent a Continuity of Care Document (CCD). 

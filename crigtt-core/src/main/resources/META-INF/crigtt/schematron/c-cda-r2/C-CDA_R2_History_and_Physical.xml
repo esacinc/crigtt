@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="CDA.xsl"?>
 <!--
  Title:        History and Physical
  Filename:     C-CDA_R2_History_and_Physical.xml
  
- $LastChangedDate: 2014-10-30 02:43:23 -0400 (Thu, 30 Oct 2014) $
+ $LastChangedDate: 2014-11-12 23:25:09 -0500 (Wed, 12 Nov 2014) $
   
  ********************************************************
  Disclaimer: This sample file contains representative data elements to represent a History and Physical. 

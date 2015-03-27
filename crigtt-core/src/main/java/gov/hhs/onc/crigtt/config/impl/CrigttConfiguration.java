@@ -1,21 +1,20 @@
 package gov.hhs.onc.crigtt.config.impl;
 
-import java.util.Map;
-import javax.annotation.Nonnegative;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.lib.FeatureKeys;
+import net.sf.saxon.trans.LicenseException;
 
 public class CrigttConfiguration extends Configuration {
-    public void setOptimizationLevel(@Nonnegative int optimizationLevel) {
-        this.optimizationLevel = optimizationLevel;
+    @Override
+    public void checkLicensedFeature(int featureId, String featureName) throws LicenseException {
     }
 
-    public void setProperties(Map<String, ?> props) {
-        props.forEach(this::setConfigurationProperty);
+    public boolean isSchemaAware() {
+        return this.getDefaultXsltCompilerInfo().isSchemaAware();
     }
 
-    public void setXsdVersion(int xsdVersion) {
-        this.xsdVersion = xsdVersion;
+    public void setSchemaAware(boolean schemaAware) {
+        this.getDefaultXsltCompilerInfo().setSchemaAware(schemaAware);
     }
 
     public void setXsltVersion(String xsltVersion) {

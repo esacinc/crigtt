@@ -29,11 +29,21 @@
     =====================================================================================================-->
     <beans:bean id="config" class="net.sf.saxon.Configuration" abstract="true"/>
     
-    <beans:bean id="configCancerRegistryCda" class="gov.hhs.onc.crigtt.config.impl.CrigttConfiguration" parent="config"
+    <beans:bean id="configCrigtt" class="gov.hhs.onc.crigtt.config.impl.CrigttConfiguration" parent="config"
         p:lineNumbering="true"
+        p:schemaAware="true"
+        p:schemaValidationMode="#{ T(net.sf.saxon.lib.Validation).STRICT }"
         p:stripsAllWhiteSpace="false"
         p:stripsWhiteSpace="#{ T(net.sf.saxon.value.Whitespace).PRESERVE }"
-        p:XMLVersion="#{ T(net.sf.saxon.Configuration).XML11 }"
-        p:xsdVersion="#{ T(net.sf.saxon.Configuration).XSD11 }"
-        p:xsltVersion="#{ T(net.sf.saxon.value.DecimalValue).TWO.stringValue }"/>
+        p:xsltVersion="#{ T(net.sf.saxon.value.DecimalValue).TWO.stringValue }">
+        <beans:property name="defaultSerializationProperties">
+            <beans:props>
+                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).ENCODING }">#{ charsetUtf8.name() }</beans:prop>
+                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).INDENT }">yes</beans:prop>
+                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }">no</beans:prop>
+                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).STANDALONE }">yes</beans:prop>
+                <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }">4</beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

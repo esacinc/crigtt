@@ -26,8 +26,8 @@
     
     <beans:bean id="transformerFactorySaxonImpl" class="net.sf.saxon.TransformerFactoryImpl" parent="transformerFactorySaxon" abstract="true"/>
     
-    <beans:bean id="transformerFactoryCancerRegistryCda" parent="transformerFactorySaxonImpl"
-        c:config-ref="configCancerRegistryCda"/>
+    <beans:bean id="transformerFactoryCrigtt" parent="transformerFactorySaxonImpl"
+        c:config-ref="configCrigtt"/>
     
     <!--====================================================================================================
     = TEMPLATES
@@ -35,7 +35,7 @@
     <beans:bean id="templates" class="javax.xml.transform.Templates" abstract="true"/>
     
     <beans:bean id="templatesSchematron" class="gov.hhs.onc.crigtt.transform.impl.SchematronTemplatesFactoryBean" parent="templates" abstract="true"
-        p:transformerFactory-ref="transformerFactoryCancerRegistryCda">
+        p:transformerFactory-ref="transformerFactoryCrigtt">
         <beans:property name="pipelineRulesSources">
             <beans:array>
                 <beans:bean parent="srcResource"
@@ -52,6 +52,13 @@
         <beans:property name="rulesSource">
             <beans:bean parent="srcResource"
                 c:resource="classpath:META-INF/crigtt/schematron/c-cda-r2/C-CDA-R2.sch"/>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="templatesSchematronCcdaR2CancerReg" parent="templatesSchematron" lazy-init="true" scope="prototype">
+        <beans:property name="rulesSource">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/c-cda-r2-cancer-reg/CancerIG_R1D1.sch"/>
         </beans:property>
     </beans:bean>
 </beans:beans>

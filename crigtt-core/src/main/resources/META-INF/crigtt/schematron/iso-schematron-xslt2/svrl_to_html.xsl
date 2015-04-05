@@ -23,9 +23,18 @@
             <body>
                 <h1>Summary</h1>
                 <ul>
-                    <li><strong>Total Rule(s)</strong>: <xsl:value-of select="count(svrl:active-pattern)"/></li>
-                    <li><strong># of Warning(s)</strong>: <xsl:value-of select="count(ends-with(preceding-sibling::svrl:failed-assert[@id], '-warnings'))"/></li>
-                    <li><strong># of Error(s)</strong>: <xsl:value-of select="count(ends-with(preceding-sibling::svrl:failed-assert[@id], '-errors'))"/></li>
+                    <li>
+                        <strong>Total Rule(s)</strong>:
+                        <xsl:value-of select="count(svrl:active-pattern)"/>
+                    </li>
+                    <li>
+                        <strong># of Warning(s)</strong>:
+                        <xsl:value-of select="count(svrl:failed-assert[preceding-sibling::svrl:fired-rule[1][ends-with(@id, '-warnings')]])"/>
+                    </li>
+                    <li>
+                        <strong># of Error(s)</strong>:
+                        <xsl:value-of select="count(svrl:failed-assert[preceding-sibling::svrl:fired-rule[1][ends-with(@id, '-errors')]])"/>
+                    </li>
                 </ul>
                 <h1>Result(s)</h1>
                 <ul>
@@ -37,10 +46,10 @@
     
     <xsl:template match="svrl:failed-assert">
         <xsl:choose>
-            <xsl:when test="ends-with((preceding-sibling::node()[@id])[0], '-warnings')">
+            <xsl:when test="preceding-sibling::svrl:fired-rule[1][ends-with(@id, '-warnings')]">
                 <li class="warning"><strong>WARNING</strong> (at <xsl:value-of select="@location"/>): <xsl:value-of select="svrl:text"/></li>
             </xsl:when>
-            <xsl:when test="ends-with((preceding-sibling::node()[@id])[0], '-errors')">
+            <xsl:when test="preceding-sibling::svrl:fired-rule[1][ends-with(@id, '-errors')]">
                 <li class="error"><strong>ERROR</strong> (at <xsl:value-of select="@location"/>): <xsl:value-of select="svrl:text"/></li>
             </xsl:when>
             <xsl:otherwise>

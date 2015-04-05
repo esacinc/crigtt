@@ -1,4 +1,4 @@
-package gov.hhs.onc.crigtt.transform.impl;
+package gov.hhs.onc.crigtt.io.impl;
 
 import java.io.IOException;
 import javax.xml.transform.stream.StreamSource;
@@ -8,7 +8,7 @@ public class ResourceSource extends StreamSource {
     private Resource resource;
 
     public ResourceSource(Resource resource) throws IOException {
-        super(resource.getInputStream(), resource.getURL().toString());
+        super(resource.getInputStream(), resource.getURL().toExternalForm());
 
         this.resource = resource;
     }

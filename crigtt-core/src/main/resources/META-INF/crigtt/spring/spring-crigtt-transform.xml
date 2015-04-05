@@ -22,43 +22,61 @@
     =====================================================================================================-->
     <beans:bean id="transformerFactory" class="javax.xml.transform.TransformerFactory" abstract="true"/>
     
-    <beans:bean id="transformerFactorySaxon" class="net.sf.saxon.jaxp.SaxonTransformerFactory" parent="transformerFactory" abstract="true"/>
-    
-    <beans:bean id="transformerFactorySaxonImpl" class="net.sf.saxon.TransformerFactoryImpl" parent="transformerFactorySaxon" abstract="true"/>
-    
-    <beans:bean id="transformerFactoryCrigtt" parent="transformerFactorySaxonImpl"
+    <beans:bean id="transformerFactoryCrigtt" class="gov.hhs.onc.crigtt.transform.impl.CrigttTransformerFactory"
         c:config-ref="configCrigtt"/>
     
     <!--====================================================================================================
-    = TEMPLATES
+    = TRANSFORMERS
     =====================================================================================================-->
-    <beans:bean id="templates" class="javax.xml.transform.Templates" abstract="true"/>
+    <beans:bean id="transformer" class="javax.xml.transform.Transformer" abstract="true"/>
     
-    <beans:bean id="templatesSchematron" class="gov.hhs.onc.crigtt.transform.impl.SchematronTemplatesFactoryBean" parent="templates" abstract="true"
-        p:transformerFactory-ref="transformerFactoryCrigtt">
-        <beans:property name="pipelineRulesSources">
-            <beans:array>
-                <beans:bean parent="srcResource"
-                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
-                <beans:bean parent="srcResource"
-                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
-                <beans:bean parent="srcResource"
-                    c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
-            </beans:array>
-        </beans:property>
+    <beans:bean id="transformerSchematronValidationReport" parent="transformer" factory-bean="transformerFactoryCrigtt" factory-method="newXmlTransformer"/>
+    
+    <beans:bean id="transformerSchematronValidationReportHtml" parent="transformer" factory-bean="transformerFactoryCrigtt" factory-method="newHtmlTransformer">
+        <beans:constructor-arg name="src">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/svrl_to_html.xsl"/>
+        </beans:constructor-arg>
     </beans:bean>
     
-    <beans:bean id="templatesSchematronCcdaR2" parent="templatesSchematron" lazy-init="true" scope="prototype">
-        <beans:property name="rulesSource">
+    <!--====================================================================================================
+    = PROCESSORS
+    =====================================================================================================-->
+    <beans:bean id="processor" class="net.sf.saxon.s9api.Processor" abstract="true"/>
+    
+    <beans:bean id="processorCrigtt" parent="processor"
+        c:config-ref="configCrigtt"/>
+    
+    <!--====================================================================================================
+    = XSLT COMPILERS
+    =====================================================================================================-->
+    <beans:bean id="xsltCompiler" class="net.sf.saxon.s9api.XsltCompiler" abstract="true"/>
+    
+    <beans:bean id="xsltCompilerCrigtt" parent="xsltCompiler" factory-bean="processorCrigtt" factory-method="newXsltCompiler"/>
+    
+    <!--====================================================================================================
+    = STYLESHEETS
+    =====================================================================================================-->
+    <beans:bean id="stylesheet" class="net.sf.saxon.s9api.XsltExecutable" abstract="true"/>
+    
+    <beans:bean id="stylesheetSchematronInclude" parent="stylesheet" factory-bean="xsltCompilerCrigtt" factory-method="compile">
+        <beans:constructor-arg name="source">
             <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/c-cda-r2/C-CDA-R2.sch"/>
-        </beans:property>
+                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
+        </beans:constructor-arg>
     </beans:bean>
     
-    <beans:bean id="templatesSchematronCcdaR2CancerReg" parent="templatesSchematron" lazy-init="true" scope="prototype">
-        <beans:property name="rulesSource">
+    <beans:bean id="stylesheetSchematronExpand" parent="stylesheet" factory-bean="xsltCompilerCrigtt" factory-method="compile">
+        <beans:constructor-arg name="source">
             <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/c-cda-r2-cancer-reg/CancerIG_R1D1.sch"/>
-        </beans:property>
+                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
+        </beans:constructor-arg>
+    </beans:bean>
+    
+    <beans:bean id="stylesheetSchematronValidationReport" parent="stylesheet" factory-bean="xsltCompilerCrigtt" factory-method="compile">
+        <beans:constructor-arg name="source">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
+        </beans:constructor-arg>
     </beans:bean>
 </beans:beans>

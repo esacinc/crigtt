@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!--====================================================================================================
+    = VALIDATORS
+    =====================================================================================================-->
+    <beans:bean id="validator" class="gov.hhs.onc.crigtt.validate.CrigttValidator" abstract="true"/>
+    
+    <beans:bean id="validatorImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttValidatorImpl" parent="validator" abstract="true"
+        p:xsltCompiler-ref="xsltCompilerCrigtt">
+        <beans:property name="stylesheets">
+            <beans:array>
+                <beans:ref bean="stylesheetSchematronInclude"/>
+                <beans:ref bean="stylesheetSchematronExpand"/>
+                <beans:ref bean="stylesheetSchematronValidationReport"/>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="validatorCcdaR2" parent="validatorImpl">
+        <beans:property name="schemaSource">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"/>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="validatorCcdaR2CancerReg" parent="validatorImpl">
+        <beans:property name="schemaSource">
+            <beans:bean parent="srcResource"
+                c:resource="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch"/>
+        </beans:property>
+    </beans:bean>
+</beans:beans>

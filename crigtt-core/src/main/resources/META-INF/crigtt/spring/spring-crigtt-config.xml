@@ -30,23 +30,13 @@
         p:stripsAllWhiteSpace="false"
         p:stripsWhiteSpace="#{ T(net.sf.saxon.value.Whitespace).PRESERVE }"
         p:xsltVersion="#{ T(net.sf.saxon.value.DecimalValue).TWO.stringValue }">
-        <beans:property name="htmlOutputProperties">
+        <beans:property name="defaultSerializationProperties">
             <beans:props>
                 <beans:prop key="#{ T(javax.xml.transform.OutputKeys).ENCODING }">#{ charsetUtf8.name() }</beans:prop>
                 <beans:prop key="#{ T(javax.xml.transform.OutputKeys).INDENT }">yes</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).METHOD }">html</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }">yes</beans:prop>
                 <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }">4</beans:prop>
-            </beans:props>
-        </beans:property>
-        <beans:property name="xmlOutputProperties">
-            <beans:props>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).ENCODING }">#{ charsetUtf8.name() }</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).INDENT }">yes</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).METHOD }">xml</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }">no</beans:prop>
+                <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }">160</beans:prop>
                 <beans:prop key="#{ T(javax.xml.transform.OutputKeys).STANDALONE }">yes</beans:prop>
-                <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }">4</beans:prop>
             </beans:props>
         </beans:property>
     </beans:bean>

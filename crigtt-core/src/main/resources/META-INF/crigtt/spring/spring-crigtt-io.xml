@@ -22,5 +22,27 @@
     =====================================================================================================-->
     <beans:bean id="src" class="javax.xml.transform.Source" abstract="true"/>
     
+    <beans:bean id="srcByteArr" class="gov.hhs.onc.crigtt.io.impl.ByteArraySource" parent="src" abstract="true"/>
+    
     <beans:bean id="srcResource" class="gov.hhs.onc.crigtt.io.impl.ResourceSource" parent="src" abstract="true"/>
+    
+    <!--====================================================================================================
+    = RESULTS
+    =====================================================================================================-->
+    <beans:bean id="result" class="javax.xml.transform.Result" abstract="true"/>
+    
+    <beans:bean id="resultByteArr" class="gov.hhs.onc.crigtt.io.impl.ByteArrayResult" parent="result" abstract="true"/>
+    
+    <beans:bean id="resultResource" class="gov.hhs.onc.crigtt.io.impl.ResourceResult" parent="result" abstract="true"/>
+    
+    <!--====================================================================================================
+    = URI RESOLVERS
+    =====================================================================================================-->
+    <beans:bean id="uriResolver" class="javax.xml.transform.URIResolver" abstract="true"/>
+    
+    <beans:bean id="uriResolverResource" class="gov.hhs.onc.crigtt.io.ResourceUriResolver" parent="uriResolver" abstract="true"/>
+    
+    <!--suppress SpringBeanConstructorArgInspection -->
+    <beans:bean id="uriResolverResourceImpl" class="gov.hhs.onc.crigtt.io.impl.ResourceUriResolverImpl" parent="uriResolverResource" lazy-init="true"
+        scope="prototype"/>
 </beans:beans>

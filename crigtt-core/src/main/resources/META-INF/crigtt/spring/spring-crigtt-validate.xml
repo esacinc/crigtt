@@ -18,32 +18,76 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = VALIDATORS
+    = THREAD GROUPS
     =====================================================================================================-->
-    <beans:bean id="validator" class="gov.hhs.onc.crigtt.validate.CrigttValidator" abstract="true"/>
+    <beans:bean id="threadGroupValidate" parent="threadGroup">
+        <beans:constructor-arg index="0" type="java.lang.ThreadGroup" ref="threadGroupRoot"/>
+        <beans:constructor-arg index="1" type="java.lang.String" value="#{ threadGroupRoot.name }-validate"/>
+    </beans:bean>
     
-    <beans:bean id="validatorImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttValidatorImpl" parent="validator" abstract="true"
-        p:xsltCompiler-ref="xsltCompilerCrigtt">
-        <beans:property name="stylesheets">
+    <!--====================================================================================================
+    = TASK EXECUTORS
+    =====================================================================================================-->
+    <beans:bean id="taskExecutorValidate" parent="taskExecutor" abstract="true"
+        p:threadGroup-ref="threadGroupValidate"/>
+    
+    <beans:bean id="taskExecutorValidateSchematron" parent="taskExecutorValidate"
+        p:corePoolSize="8"
+        p:maxPoolSize="128"
+        p:queueCapacity="256"
+        p:threadNamePrefix="#{ threadGroupValidate.name }-schematron"/>
+    
+    <!--====================================================================================================
+    = SCHEMATRONS
+    =====================================================================================================-->
+    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true"/>
+    
+    <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true">
+        <beans:property name="uriResolverBeanName">
+            <beans:idref bean="uriResolverResourceImpl"/>
+        </beans:property>
+        <beans:property name="xsltExecutables">
             <beans:array>
-                <beans:ref bean="stylesheetSchematronInclude"/>
-                <beans:ref bean="stylesheetSchematronExpand"/>
-                <beans:ref bean="stylesheetSchematronValidationReport"/>
+                <beans:ref bean="xsltExecSchematronInclude"/>
+                <beans:ref bean="xsltExecSchematronExpand"/>
+                <beans:ref bean="xsltExecSchematronValidationReport"/>
             </beans:array>
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="validatorCcdaR2" parent="validatorImpl">
-        <beans:property name="schemaSource">
+    <beans:bean id="schematronCcdaR2" parent="schematronImpl"
+        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
+        p:displayName="C-CDA R2"
+        p:name="ccda-r2">
+        <beans:property name="source">
             <beans:bean parent="srcResource"
                 c:resource="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"/>
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="validatorCcdaR2CancerReg" parent="validatorImpl">
-        <beans:property name="schemaSource">
+    <beans:bean id="schematronCcdaR2CancerReg" parent="schematronImpl"
+        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry"
+        p:displayName="C-CDA R2 Cancer Registry"
+        p:name="ccda-r2-cancer-reg">
+        <beans:property name="source">
             <beans:bean parent="srcResource"
                 c:resource="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch"/>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = VALIDATORS
+    =====================================================================================================-->
+    <beans:bean id="validator" class="gov.hhs.onc.crigtt.validate.CrigttValidator" abstract="true"/>
+    
+    <beans:bean id="validatorImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttValidatorImpl" parent="validator" abstract="true"/>
+    
+    <beans:bean id="validatorCrigtt" parent="validatorImpl">
+        <beans:property name="schematrons">
+            <beans:array>
+                <beans:ref bean="schematronCcdaR2"/>
+                <beans:ref bean="schematronCcdaR2CancerReg"/>
+            </beans:array>
         </beans:property>
     </beans:bean>
 </beans:beans>

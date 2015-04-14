@@ -1,123 +1,131 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.io.impl.ResourceSource;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
+import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
+import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
+import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
+import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import gov.hhs.onc.crigtt.validate.CrigttValidator;
-import java.io.IOException;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import gov.hhs.onc.crigtt.validate.SchematronValidatorResult;
+import gov.hhs.onc.crigtt.validate.ValidatorResult;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
+import javax.annotation.Resource;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.URIResolver;
-import net.sf.saxon.dom.NodeOverNodeInfo;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XdmDestination;
-import net.sf.saxon.s9api.XsltCompiler;
-import net.sf.saxon.s9api.XsltExecutable;
-import net.sf.saxon.s9api.XsltTransformer;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.w3c.dom.Document;
+import net.sf.saxon.s9api.DocumentBuilder;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XdmNode;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.util.concurrent.ListenableFutureTask;
 
 public class CrigttValidatorImpl implements CrigttValidator {
-    private class CrigttValidatorUriResolver implements URIResolver {
-        private String baseResourceUri;
+    private class SchematronValidatorCallback implements ListenableFutureCallback<SchematronValidatorResult> {
+        private Consumer<SchematronValidatorResult> schematronResultCommitter;
+        private CountDownLatch schematronResultLatch;
 
-        private CrigttValidatorUriResolver() {
-            String[] baseResourceUriParts = StringUtils.split(CrigttValidatorImpl.this.schemaSrc.getSystemId(), SystemUtils.FILE_SEPARATOR);
-            baseResourceUriParts[(baseResourceUriParts.length - 1)] = StringUtils.EMPTY;
-
-            this.baseResourceUri = StringUtils.join(baseResourceUriParts, SystemUtils.FILE_SEPARATOR);
+        public SchematronValidatorCallback(Consumer<SchematronValidatorResult> schematronResultCommitter, CountDownLatch schematronResultLatch) {
+            this.schematronResultCommitter = schematronResultCommitter;
+            this.schematronResultLatch = schematronResultLatch;
         }
 
-        @Nullable
         @Override
-        public Source resolve(String sysId, @Nullable String baseUri) throws TransformerException {
-            String resourceUri = this.baseResourceUri.concat(sysId);
-            Resource resource = CrigttValidatorImpl.this.resourceLoader.getResource(resourceUri);
+        public void onFailure(Throwable exception) {
+            this.schematronResultLatch.countDown();
+        }
 
-            try {
-                return (resource.exists() ? new ResourceSource(resource) : null);
-            } catch (IOException e) {
-                throw new TransformerException(String.format("Unable to read resource (sysId=%s, baseUri=%s, resourceUri=%s).", sysId, baseUri, resourceUri), e);
-            }
+        @Override
+        public void onSuccess(SchematronValidatorResult schematronResult) {
+            this.schematronResultCommitter.accept(schematronResult);
+
+            this.schematronResultLatch.countDown();
         }
     }
 
-    private ResourceLoader resourceLoader;
-    private Source schemaSrc;
-    private XsltExecutable[] stylesheets;
-    private XsltCompiler xsltCompiler;
-    private URIResolver validationUriResolver;
-    private XsltExecutable validationStylesheet;
+    private class SchematronValidatorCallable implements Callable<SchematronValidatorResult> {
+        private XdmNode docNode;
+        private Source docSrc;
+        private CrigttSchematron schematron;
+
+        public SchematronValidatorCallable(XdmNode docNode, Source docSrc, CrigttSchematron schematron) {
+            this.docNode = docNode;
+            this.docSrc = docSrc;
+            this.schematron = schematron;
+        }
+
+        @Override
+        public SchematronValidatorResult call() throws Exception {
+            SchematronValidatorResult schematronResult = new SchematronValidatorResultImpl();
+
+            XdmNode schematronResultNode = this.schematron.transform(this.docSrc);
+            schematronResult.setNode(schematronResultNode);
+
+            SchematronOutput docResultOutput =
+                ((SchematronOutput) CrigttValidatorImpl.this.schematronSvrlMarshaller.unmarshal(schematronResultNode.asSource()));
+            schematronResult.setOutput(docResultOutput);
+
+            Map<String, ResolvedPattern> patterns = this.schematron.getResolvedPatterns();
+
+            // TODO: Build Schematron result tree.
+
+            return schematronResult;
+        }
+    }
+
+    @Resource(name = "docBuilderCrigtt")
+    private DocumentBuilder docBuilder;
+
+    @Resource(name = "xpathCompilerCrigtt")
+    private XPathCompiler xpathCompiler;
+
+    @Resource(name = "serializerXml")
+    private CrigttSerializer xmlSerializer;
+
+    @Resource(name = "marshallerSchematronSvrl")
+    private Jaxb2Marshaller schematronSvrlMarshaller;
+
+    @Resource(name = "taskExecutorValidateSchematron")
+    private ThreadPoolTaskExecutor schematronTaskExecutor;
+
+    private CrigttSchematron[] schematrons;
 
     @Override
-    public Document validate(Source src) throws SaxonApiException {
-        XsltTransformer validationTransformer = this.validationStylesheet.load();
-        validationTransformer.setURIResolver(this.validationUriResolver);
-        validationTransformer.setSource(src);
+    public ValidatorResult validate(Source docSrc) throws Exception {
+        ValidatorResult docResult = new ValidatorResultImpl();
 
-        XdmDestination validationResult = new XdmDestination();
-        validationTransformer.setDestination(validationResult);
+        XdmNode docNode = this.docBuilder.build(docSrc);
 
-        validationTransformer.transform();
+        docSrc = new ByteArraySource(this.xmlSerializer.serializeNodeToBytes(docNode));
 
-        return ((Document) NodeOverNodeInfo.wrap(validationResult.getXdmNode().getUnderlyingNode()));
+        Map<CrigttSchematron, SchematronValidatorResult> schematronResults = new ConcurrentHashMap<>(this.schematrons.length);
+        docResult.setSchematronResults(schematronResults);
+
+        CountDownLatch schematronResultLatch = new CountDownLatch(this.schematrons.length);
+        ListenableFutureTask<SchematronValidatorResult> schematronValidatorTask;
+
+        for (CrigttSchematron schematron : this.schematrons) {
+            (schematronValidatorTask = new ListenableFutureTask<>(new SchematronValidatorCallable(docNode, docSrc, schematron)))
+                .addCallback(new SchematronValidatorCallback(schematronResult -> schematronResults.put(schematron, schematronResult), schematronResultLatch));
+
+            this.schematronTaskExecutor.submit(schematronValidatorTask);
+        }
+
+        schematronResultLatch.await();
+
+        return docResult;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        this.validationUriResolver = new CrigttValidatorUriResolver();
-
-        XsltTransformer[] transformers = Stream.of(this.stylesheets).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
-
-        IntStream.range(0, (transformers.length - 1)).forEach(
-            transformerIndex -> transformers[transformerIndex].setDestination(transformers[(transformerIndex + 1)]));
-
-        transformers[0].setSource(this.schemaSrc);
-
-        XdmDestination validationDest = new XdmDestination();
-        transformers[(transformers.length - 1)].setDestination(validationDest);
-
-        transformers[0].transform();
-
-        this.validationStylesheet = this.xsltCompiler.compile(validationDest.getXdmNode().asSource());
+    public CrigttSchematron[] getSchematrons() {
+        return this.schematrons;
     }
 
     @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
-
-    @Override
-    public Source getSchemaSource() {
-        return this.schemaSrc;
-    }
-
-    @Override
-    public void setSchemaSource(Source schemaSrc) {
-        this.schemaSrc = schemaSrc;
-    }
-
-    @Override
-    public XsltExecutable[] getStylesheets() {
-        return this.stylesheets;
-    }
-
-    @Override
-    public void setStylesheets(XsltExecutable[] stylesheets) {
-        this.stylesheets = stylesheets;
-    }
-
-    @Override
-    public XsltCompiler getXsltCompiler() {
-        return this.xsltCompiler;
-    }
-
-    @Override
-    public void setXsltCompiler(XsltCompiler xsltCompiler) {
-        this.xsltCompiler = xsltCompiler;
+    public void setSchematrons(CrigttSchematron ... schematrons) {
+        this.schematrons = schematrons;
     }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+    jaxb:extensionBindingPrefixes="annox basics inherit simplify xjc"
+    jaxb:version="2.1"
+    schemaLocation="../../schema/iso-schematron/schematron.xsd"
+    xmlns:annox="http://annox.dev.java.net"
+    xmlns:basic="http://jaxb2-commons.dev.java.net/basic"
+    xmlns:inherit="http://jaxb2-commons.dev.java.net/basic/inheritance"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <!--====================================================================================================
+    = SCHEMA
+    =====================================================================================================-->
+    <jaxb:schemaBindings>
+        <jaxb:package name="gov.hhs.onc.crigtt.api.schematron"/>
+    </jaxb:schemaBindings>
+    
+    <!--====================================================================================================
+    = ELEMENTS
+    =====================================================================================================-->
+    <jaxb:bindings node="xsd:element[@name='active']/xsd:complexType">
+        <simplify:as-element-property/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='assert']/xsd:complexType">
+        <simplify:as-element-property/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='diagnostic']/xsd:complexType">
+        <simplify:as-element-property/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='p']/xsd:complexType">
+        <simplify:as-element-property/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='report']/xsd:complexType">
+        <simplify:as-element-property/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='schema']/xsd:complexType">
+        <simplify:property name="anyOrIncludeOrTitle">
+            <simplify:as-element-property/>
+        </simplify:property>
+    </jaxb:bindings>
+ </jaxb:bindings>

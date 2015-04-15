@@ -19,14 +19,17 @@ import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
+import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltCompiler;
@@ -34,6 +37,7 @@ import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -53,6 +57,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     private String desc;
     private String displayName;
     private String name;
+    private Map<String, ?> params;
     private ResourceSource src;
     private String uriResolverBeanName;
     private XsltExecutable[] xsltExecs;
@@ -89,6 +94,10 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
         XdmDestination schemaDest = new XdmDestination();
         transformers[(transformers.length - 1)].setDestination(schemaDest);
+
+        Optional.ofNullable(this.params).ifPresent(
+            params -> params.forEach((paramName, paramValue) -> transformers[2].setParameter(new QName(paramName), (ClassUtils.isAssignable(
+                paramValue.getClass(), Boolean.class) ? new XdmAtomicValue(((Boolean) paramValue)) : new XdmAtomicValue(paramValue.toString())))));
 
         transformers[0].transform();
 
@@ -210,6 +219,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
+    public Map<String, ?> getParameters() {
+        return this.params;
+    }
+
+    @Override
+    public void setParameters(Map<String, ?> params) {
+        this.params = params;
+    }
+
+    @Override
     public Map<String, ResolvedPattern> getResolvedPatterns() {
         return this.resolvedPatterns;
     }
@@ -243,164 +262,4 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     public void setXsltExecutables(XsltExecutable ... xsltExecs) {
         this.xsltExecs = xsltExecs;
     }
-
-    // @formatter:off
-    /*
-    @Resource(name = "docBuilderCrigtt")
-    private DocumentBuilder docBuilder;
-
-    @Resource(name = "xpathCompilerCrigtt")
-    private XPathCompiler xpathCompiler;
-
-    @Resource(name = "xsltCompilerCrigtt")
-    private XsltCompiler xsltCompiler;
-
-    @Resource(name = "marshallerSchematron")
-    private Jaxb2Marshaller marshaller;
-
-    @Resource(name = "marshallerSchematronSvrl")
-    private Jaxb2Marshaller svrlMarshaller;
-
-    @Resource(name = "taskExecutorSchematronResults")
-    private ThreadPoolTaskExecutor resultsTaskExecutor;
-
-    private BeanFactory beanFactory;
-    private String desc;
-    private String displayName;
-    private String name;
-    private ResourceSource src;
-    private String uriResolverBeanName;
-    private XsltExecutable[] xsltExecs;
-    private XdmNode schemaNode;
-    private NodeInfo schemaNodeInfo;
-    private Schema schema;
-    private XsltExecutable schemaXsltExec;
-    private ResourceUriResolver uriResolver;
-
-    @Override
-    public CrigttSchematronResult validate(XdmNode docNode) throws SaxonApiException {
-        XsltTransformer docXsltTransformer = this.schemaXsltExec.load();
-        docXsltTransformer.setURIResolver(this.uriResolver);
-        docXsltTransformer.setSource(docNode.getUnderlyingNode());
-
-        XdmDestination docXsltDest = new XdmDestination();
-        docXsltTransformer.setDestination(docXsltDest);
-
-        docXsltTransformer.transform();
-
-        CrigttSchematronResult docSchemaResult = new CrigttSchematronResultImpl();
-
-        XdmNode docSchemaResultNode = docXsltDest.getXdmNode();
-        docSchemaResult.setNode(docSchemaResultNode);
-
-        SchematronOutput docSchemaResultOutput = ((SchematronOutput) this.svrlMarshaller.unmarshal(docSchemaResultNode.getUnderlyingNode()));
-        docSchemaResult.setOutput(docSchemaResultOutput);
-
-        return docSchemaResult;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        byte[] schemaContent = IOUtils.toByteArray(this.src.getInputStream());
-
-        this.schema = ((Schema) this.marshaller.unmarshal(new ByteArraySource(schemaContent)));
-
-        XsltTransformer[] xsltTransformers = Stream.of(this.xsltExecs).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
-        xsltTransformers[0].setSource(new ByteArraySource(schemaContent));
-
-        IntStream.range(0, (xsltTransformers.length - 1)).forEach(
-            xsltTransformerIndex -> xsltTransformers[xsltTransformerIndex].setDestination(xsltTransformers[(xsltTransformerIndex + 1)]));
-
-        XdmDestination schemaXsltDest = new XdmDestination();
-        xsltTransformers[(xsltTransformers.length - 1)].setDestination(schemaXsltDest);
-
-        xsltTransformers[0].transform();
-
-        this.schemaXsltExec = this.xsltCompiler.compile(schemaXsltDest.getXdmNode().asSource());
-
-        this.uriResolver =
-            ((ResourceUriResolver) this.beanFactory.getBean(this.uriResolverBeanName, ((Object) ArrayUtils.toArray(this.src.getResource()))));
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.desc;
-    }
-
-    @Override
-    public void setDescription(String desc) {
-        this.desc = desc;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    @Override
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public Schema getObject() {
-        return this.schema;
-    }
-
-    @Override
-    public XdmNode getSchemaNode() {
-        return this.schemaNode;
-    }
-
-    @Override
-    public NodeInfo getSchemaNodeInfo() {
-        return this.schemaNodeInfo;
-    }
-
-    @Override
-    public ResourceSource getSource() {
-        return this.src;
-    }
-
-    @Override
-    public void setSource(ResourceSource src) {
-        this.src = src;
-    }
-
-    @Override
-    public String getUriResolverBeanName() {
-        return this.uriResolverBeanName;
-    }
-
-    @Override
-    public void setUriResolverBeanName(String uriResolverBeanName) {
-        this.uriResolverBeanName = uriResolverBeanName;
-    }
-
-    @Override
-    public XsltExecutable[] getXsltExecutables() {
-        return this.xsltExecs;
-    }
-
-    @Override
-    public void setXsltExecutables(XsltExecutable ... xsltExecs) {
-        this.xsltExecs = xsltExecs;
-    }
-    */
-    // @formatter:on
 }

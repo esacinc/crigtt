@@ -25,6 +25,10 @@ public interface CrigttSchematron extends BeanFactoryAware, InitializingBean {
 
     public void setName(String name);
 
+    public Map<String, ?> getParameters();
+
+    public void setParameters(Map<String, ?> params);
+
     public Map<String, ResolvedPattern> getResolvedPatterns();
 
     public ResourceSource getSource();

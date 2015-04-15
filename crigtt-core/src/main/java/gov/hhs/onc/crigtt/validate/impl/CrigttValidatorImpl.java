@@ -18,6 +18,8 @@ import javax.xml.transform.Source;
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.XPathCompiler;
 import net.sf.saxon.s9api.XdmNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFutureCallback;
@@ -35,6 +37,9 @@ public class CrigttValidatorImpl implements CrigttValidator {
 
         @Override
         public void onFailure(Throwable exception) {
+            // TODO: Handle internal errors/failures.
+            LOGGER.error("Unable to validate Schematron.", exception);
+
             this.schematronResultLatch.countDown();
         }
 
@@ -65,7 +70,8 @@ public class CrigttValidatorImpl implements CrigttValidator {
             schematronResult.setNode(schematronResultNode);
 
             SchematronOutput docResultOutput =
-                ((SchematronOutput) CrigttValidatorImpl.this.schematronSvrlMarshaller.unmarshal(schematronResultNode.asSource()));
+                ((SchematronOutput) CrigttValidatorImpl.this.schematronSvrlMarshaller.unmarshal(new ByteArraySource(CrigttValidatorImpl.this.xmlSerializer
+                    .serializeNodeToBytes(schematronResultNode))));
             schematronResult.setOutput(docResultOutput);
 
             Map<String, ResolvedPattern> patterns = this.schematron.getResolvedPatterns();
@@ -75,6 +81,8 @@ public class CrigttValidatorImpl implements CrigttValidator {
             return schematronResult;
         }
     }
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(CrigttValidatorImpl.class);
 
     @Resource(name = "docBuilderCrigtt")
     private DocumentBuilder docBuilder;
@@ -99,7 +107,7 @@ public class CrigttValidatorImpl implements CrigttValidator {
 
         XdmNode docNode = this.docBuilder.build(docSrc);
 
-        docSrc = new ByteArraySource(this.xmlSerializer.serializeNodeToBytes(docNode));
+        docSrc = new ByteArraySource(this.xmlSerializer.serializeNodeToBytes(docNode), docSrc.getSystemId());
 
         Map<CrigttSchematron, SchematronValidatorResult> schematronResults = new ConcurrentHashMap<>(this.schematrons.length);
         docResult.setSchematronResults(schematronResults);

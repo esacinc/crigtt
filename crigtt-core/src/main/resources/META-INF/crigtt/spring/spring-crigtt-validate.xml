@@ -40,7 +40,15 @@
     <!--====================================================================================================
     = SCHEMATRONS
     =====================================================================================================-->
-    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true"/>
+    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true">
+        <beans:property name="parameters">
+            <beans:map>
+                <beans:entry key="diagnose" value="yes"/>
+                <beans:entry key="generate-path" value="true" value-type="java.lang.Boolean"/>
+                <beans:entry key="langCode" value="#{ T(java.util.Locale).ENGLISH.language }"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
     
     <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true">
         <beans:property name="uriResolverBeanName">

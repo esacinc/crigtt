@@ -5,13 +5,12 @@ import gov.hhs.onc.crigtt.api.schematron.ResolvedSchematronBean;
 public abstract class AbstractResolvedSchematronBean implements ResolvedSchematronBean {
     protected String id;
 
-    @Override
-    public String getId() {
-        return this.id;
+    protected AbstractResolvedSchematronBean(String id) {
+        this.id = id;
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
+    public String getId() {
+        return this.id;
     }
 }

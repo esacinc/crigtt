@@ -405,6 +405,9 @@
                             <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}.xml</suiteXmlFile>
                         </suiteXmlFiles>
                         <systemPropertyVariables combine.children="append">
+                            <crigtt.logging.console.tty>true</crigtt.logging.console.tty>
+                            <crigtt.logging.file.dir>${project.build.directory}/surefire-logs</crigtt.logging.file.dir>
+                            <crigtt.logging.file.name>${project.artifactId}-test</crigtt.logging.file.name>
                             <logback.configurationFile>META-INF/crigtt/logback/logback-crigtt.xml</logback.configurationFile>
                         </systemPropertyVariables>
                         <trimStackTrace>false</trimStackTrace>

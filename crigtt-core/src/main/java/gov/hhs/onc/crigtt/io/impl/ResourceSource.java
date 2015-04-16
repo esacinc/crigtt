@@ -1,10 +1,12 @@
 package gov.hhs.onc.crigtt.io.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import javax.annotation.Nullable;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
-public class ResourceSource extends AbstractCrigttSource {
+public class ResourceSource extends ByteArraySource {
     private Resource resource;
 
     public ResourceSource(Resource resource) throws IOException {
@@ -12,9 +14,11 @@ public class ResourceSource extends AbstractCrigttSource {
     }
 
     public ResourceSource(Resource resource, @Nullable String sysId) throws IOException {
-        super(resource.getInputStream(), ((sysId != null) ? sysId : resource.getURL().toExternalForm()));
+        super(((sysId != null) ? sysId : resource.getURL().toExternalForm()));
 
-        this.resource = resource;
+        try (InputStream resourceInStream = (this.resource = resource).getInputStream()) {
+            this.bytes = IOUtils.toByteArray(resourceInStream);
+        }
     }
 
     public Resource getResource() {

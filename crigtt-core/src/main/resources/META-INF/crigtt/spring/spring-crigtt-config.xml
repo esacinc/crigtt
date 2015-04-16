@@ -25,19 +25,19 @@
     <beans:bean id="configCrigtt" class="gov.hhs.onc.crigtt.config.impl.CrigttConfiguration" parent="config"
         p:lineNumbering="true"
         p:recoveryPolicy="#{ T(net.sf.saxon.Configuration).DO_NOT_RECOVER }"
-        p:schemaAware="true"
-        p:schemaValidationMode="#{ T(net.sf.saxon.lib.Validation).STRICT }"
         p:stripsAllWhiteSpace="false"
-        p:stripsWhiteSpace="#{ T(net.sf.saxon.value.Whitespace).PRESERVE }"
+        p:stripsWhiteSpace="#{ T(net.sf.saxon.value.Whitespace).NONE }"
         p:xsltVersion="#{ T(net.sf.saxon.value.DecimalValue).TWO.stringValue }">
+        <beans:property name="configurationProperties">
+            <beans:map>
+                <beans:entry key="#{ T(net.sf.saxon.lib.FeatureKeys).PRE_EVALUATE_DOC_FUNCTION }" value="true" value-type="java.lang.Boolean"/>
+            </beans:map>
+        </beans:property>
         <beans:property name="defaultSerializationProperties">
-            <beans:props>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).ENCODING }">#{ charsetUtf8.name() }</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).INDENT }">yes</beans:prop>
-                <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }">4</beans:prop>
-                <beans:prop key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }">160</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).STANDALONE }">yes</beans:prop>
-            </beans:props>
+            <beans:map>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).ENCODING }" value="#{ charsetUtf8.name() }"/>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).STANDALONE }" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
+            </beans:map>
         </beans:property>
     </beans:bean>
 </beans:beans>

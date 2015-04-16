@@ -8,6 +8,10 @@ import java.util.Map;
 public class SchematronRuleResultImpl extends AbstractSchematronResultBean<ResolvedRule> implements SchematronRuleResult {
     private Map<String, SchematronAssertResult> assertResults;
 
+    public SchematronRuleResultImpl(ResolvedRule bean) {
+        super(bean);
+    }
+
     @Override
     public Map<String, SchematronAssertResult> getAssertResults() {
         return this.assertResults;

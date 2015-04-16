@@ -7,10 +7,9 @@ import javax.xml.transform.Source;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltExecutable;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 
-public interface CrigttSchematron extends BeanFactoryAware, InitializingBean {
+public interface CrigttSchematron extends InitializingBean {
     public XdmNode transform(Source docSrc) throws SaxonApiException;
 
     public String getDescription();
@@ -29,15 +28,15 @@ public interface CrigttSchematron extends BeanFactoryAware, InitializingBean {
 
     public void setParameters(Map<String, ?> params);
 
+    public Map<String, Source> getReferencedDocuments();
+
+    public void setReferencedDocuments(Map<String, Source> referencedDocs);
+
     public Map<String, ResolvedPattern> getResolvedPatterns();
 
-    public ResourceSource getSource();
+    public Source getSource();
 
-    public void setSource(ResourceSource src);
-
-    public String getUriResolverBeanName();
-
-    public void setUriResolverBeanName(String uriResolverBeanName);
+    public void setSource(Source src);
 
     public XsltExecutable[] getXsltExecutables();
 

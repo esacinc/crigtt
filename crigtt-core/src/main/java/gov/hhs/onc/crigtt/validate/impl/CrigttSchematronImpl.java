@@ -12,11 +12,10 @@ import gov.hhs.onc.crigtt.api.schematron.SchematronLevel;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedAssertImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPatternImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedRuleImpl;
-import gov.hhs.onc.crigtt.io.ResourceUriResolver;
-import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
-import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
+import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,50 +25,50 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
+import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.DocumentPool;
+import net.sf.saxon.om.DocumentURI;
+import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XPathCompiler;
 import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 public class CrigttSchematronImpl implements CrigttSchematron {
-    @Resource(name = "xpathCompilerCrigtt")
-    private XPathCompiler xpathCompiler;
+    @Resource(name = "docBuilderCrigtt")
+    private DocumentBuilder docBuilder;
 
     @Resource(name = "xsltCompilerCrigtt")
     private XsltCompiler xsltCompiler;
 
-    @Resource(name = "marshallerSchematron")
-    private Jaxb2Marshaller marshaller;
+    @Resource(name = "jaxbMarshallerSchematron")
+    private CrigttJaxbMarshaller schematronJaxbMarshaller;
 
-    private BeanFactory beanFactory;
     private String desc;
     private String displayName;
     private String name;
     private Map<String, ?> params;
-    private ResourceSource src;
-    private String uriResolverBeanName;
-    private XsltExecutable[] xsltExecs;
-    private ResourceUriResolver uriResolver;
-    private XsltExecutable xsltExec;
+    private Map<String, Source> referencedDocs = new HashMap<>();
+    private Source src;
+    private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
     private Map<String, ResolvedPattern> resolvedPatterns;
+    private XsltExecutable[] xsltExecs;
+    private XsltExecutable xsltExec;
 
     @Override
     public XdmNode transform(Source docSrc) throws SaxonApiException {
         XsltTransformer docTransformer = this.xsltExec.load();
-        docTransformer.setURIResolver(this.uriResolver);
         docTransformer.setSource(docSrc);
+
+        DocumentPool docPool = docTransformer.getUnderlyingController().getDocumentPool();
+
+        this.pooledReferencedDocs.forEach((pooledReferencedDocUri, pooledReferencedDocInfo) -> docPool.add(pooledReferencedDocInfo, pooledReferencedDocUri));
 
         XdmDestination docDest = new XdmDestination();
         docTransformer.setDestination(docDest);
@@ -81,13 +80,15 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.uriResolver = ((ResourceUriResolver) this.beanFactory.getBean(this.uriResolverBeanName, ((Object) ArrayUtils.toArray(this.src.getResource()))));
+        this.pooledReferencedDocs = new HashMap<>(this.referencedDocs.size());
 
-        ByteArraySource contentSrc = new ByteArraySource(IOUtils.toByteArray(this.src.getInputStream()), this.src.getSystemId());
-        contentSrc.setPublicId(this.src.getPublicId());
+        for (String referencedDocUri : this.referencedDocs.keySet()) {
+            this.pooledReferencedDocs.put(new DocumentURI(referencedDocUri), ((DocumentInfo) this.docBuilder.build(this.referencedDocs.get(referencedDocUri))
+                .getUnderlyingNode()));
+        }
 
         XsltTransformer[] transformers = Stream.of(this.xsltExecs).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
-        transformers[0].setSource(contentSrc);
+        transformers[0].setSource(this.src);
 
         IntStream.range(0, (transformers.length - 1)).forEach(
             transformerIndex -> transformers[transformerIndex].setDestination(transformers[(transformerIndex + 1)]));
@@ -101,10 +102,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
         transformers[0].transform();
 
-        this.xsltExec = this.xsltCompiler.compile(schemaDest.getXdmNode().asSource());
+        DocumentInfo schemaDocInfo = ((DocumentInfo) schemaDest.getXdmNode().getUnderlyingNode());
 
-        Schema schema = ((Schema) this.marshaller.unmarshal(contentSrc));
+        this.xsltExec = this.xsltCompiler.compile(schemaDocInfo);
 
+        Schema schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class);
+
+        this.resolvedPatterns = this.resolvePatterns(schema);
+    }
+
+    private Map<String, ResolvedPattern> resolvePatterns(Schema schema) throws SaxonApiException {
         final Map<String, SchematronLevel> phaseLevels =
             EnumSet.allOf(SchematronLevel.class).stream().collect(Collectors.toMap(SchematronLevel::getPhaseId, Function.<SchematronLevel> identity())), activePatterns =
             new LinkedHashMap<>();
@@ -115,7 +122,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         schema.getPhase().forEach(phase -> {
             final SchematronLevel phaseLevel = phaseLevels.get(phase.getId());
 
-            phase.getActive().forEach(active -> activePatterns.put(active.getPattern().toString(), phaseLevel));
+            phase.getActive().forEach(active -> activePatterns.put(((Pattern) active.getPattern()).getId(), phaseLevel));
         });
 
         schema.getPattern().forEach(pattern -> {
@@ -128,64 +135,56 @@ public class CrigttSchematronImpl implements CrigttSchematron {
             });
         });
 
-        this.resolvedPatterns = new LinkedHashMap<>(patterns.size());
-
-        String patternId, ruleId, ruleContext;
+        Map<String, ResolvedPattern> resolvedPatterns = new LinkedHashMap<>(patterns.size());
         ResolvedPattern resolvedPattern;
+        Pattern pattern;
         Map<String, ResolvedRule> resolvedRules;
         ResolvedRule resolvedRule;
+        String ruleId;
 
-        for (Pattern pattern : patterns.values()) {
-            if ((pattern.isSetAbstract() && pattern.isAbstract()) || !activePatterns.containsKey((patternId = pattern.getId()))) {
+        for (String patternId : patterns.keySet()) {
+            if (StringUtils.isEmpty(patternId) || ((pattern = patterns.get(patternId)).isSetAbstract() && pattern.isAbstract())
+                || !activePatterns.containsKey(patternId)) {
                 continue;
             }
 
-            resolvedPattern = new ResolvedPatternImpl();
-            resolvedPattern.setId(patternId);
+            resolvedPatterns.put(patternId, (resolvedPattern = new ResolvedPatternImpl(patternId)));
             resolvedPattern.setLevel(activePatterns.get(patternId));
             resolvedPattern.setRules((resolvedRules = new LinkedHashMap<>()));
 
             for (Rule rule : pattern.getRule()) {
-                if (rule.isSetAbstract() && rule.isAbstract()) {
+                if (StringUtils.isEmpty((ruleId = rule.getId())) || (rule.isSetAbstract() && rule.isAbstract())) {
                     continue;
                 }
 
-                resolvedRule = new ResolvedRuleImpl();
-                resolvedRule.setId((ruleId = rule.getId()));
-
-                if (!StringUtils.isBlank((ruleContext = rule.getContext()))) {
-                    resolvedRule.setContext(this.xpathCompiler.compilePattern(ruleContext));
-                }
-
-                resolvedRule.setAsserts(this.resolveAsserts(rules, new LinkedHashMap<>(), rule));
-
-                resolvedRules.put(ruleId, resolvedRule);
+                resolvedRules.put(ruleId, (resolvedRule = new ResolvedRuleImpl(ruleId)));
+                resolvedRule.setContext(rule.getContext());
+                resolvedRule.setAsserts(this.resolveAsserts(new LinkedHashMap<>(), rule));
             }
         }
+
+        return resolvedPatterns;
     }
 
-    private Map<String, ResolvedAssert> resolveAsserts(Map<String, Rule> rules, Map<String, ResolvedAssert> resolvedAsserts, Rule rule)
-        throws SaxonApiException {
+    private Map<String, ResolvedAssert> resolveAsserts(Map<String, ResolvedAssert> resolvedAsserts, Rule rule) throws SaxonApiException {
         for (Extends extendz : rule.getExtends()) {
-            this.resolveAsserts(rules, resolvedAsserts, rules.get(extendz.getRule().toString()));
+            this.resolveAsserts(resolvedAsserts, ((Rule) extendz.getRule()));
         }
 
         ResolvedAssert resolvedAssert;
         String assertId;
 
         for (Assert azzert : rule.getAssert()) {
-            (resolvedAssert = new ResolvedAssertImpl()).setId((assertId = azzert.getId()));
-            resolvedAssert.setTest(this.xpathCompiler.compilePattern(azzert.getTest()));
-            resolvedAssert.setText(String.join(StringUtils.EMPTY, azzert.getMixedContent()));
-            resolvedAsserts.put(assertId, resolvedAssert);
+            if (StringUtils.isEmpty((assertId = azzert.getId()))) {
+                continue;
+            }
+
+            resolvedAsserts.put(assertId, (resolvedAssert = new ResolvedAssertImpl(assertId)));
+            resolvedAssert.setTest(azzert.getTest());
+            resolvedAssert.setText(azzert.getMixedContent().stream().toArray(String[]::new));
         }
 
         return resolvedAsserts;
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -229,28 +228,29 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
+    public Map<String, Source> getReferencedDocuments() {
+        return this.referencedDocs;
+    }
+
+    @Override
+    public void setReferencedDocuments(Map<String, Source> referencedDocs) {
+        this.referencedDocs.clear();
+        this.referencedDocs.putAll(referencedDocs);
+    }
+
+    @Override
     public Map<String, ResolvedPattern> getResolvedPatterns() {
         return this.resolvedPatterns;
     }
 
     @Override
-    public ResourceSource getSource() {
+    public Source getSource() {
         return this.src;
     }
 
     @Override
-    public void setSource(ResourceSource src) {
+    public void setSource(Source src) {
         this.src = src;
-    }
-
-    @Override
-    public String getUriResolverBeanName() {
-        return this.uriResolverBeanName;
-    }
-
-    @Override
-    public void setUriResolverBeanName(String uriResolverBeanName) {
-        this.uriResolverBeanName = uriResolverBeanName;
     }
 
     @Override

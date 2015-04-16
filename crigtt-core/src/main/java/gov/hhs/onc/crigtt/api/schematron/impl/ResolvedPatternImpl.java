@@ -9,6 +9,10 @@ public class ResolvedPatternImpl extends AbstractResolvedSchematronBean implemen
     private SchematronLevel level;
     private Map<String, ResolvedRule> rules;
 
+    public ResolvedPatternImpl(String id) {
+        super(id);
+    }
+
     @Override
     public SchematronLevel getLevel() {
         return this.level;

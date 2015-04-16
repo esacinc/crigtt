@@ -1,13 +1,13 @@
 package gov.hhs.onc.crigtt.validate;
 
 import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
+import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.Map;
-import net.sf.saxon.s9api.XdmNode;
 
 public interface SchematronValidatorResult {
-    public XdmNode getNode();
+    public XdmDocument getDocument();
 
-    public void setNode(XdmNode node);
+    public void setDocument(XdmDocument doc);
 
     public Map<String, SchematronPatternResult> getPatternResults();
 

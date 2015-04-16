@@ -6,13 +6,12 @@ import gov.hhs.onc.crigtt.validate.SchematronResultBean;
 public abstract class AbstractSchematronResultBean<T extends ResolvedSchematronBean> implements SchematronResultBean<T> {
     protected T bean;
 
-    @Override
-    public T getBean() {
-        return this.bean;
+    protected AbstractSchematronResultBean(T bean) {
+        this.bean = bean;
     }
 
     @Override
-    public void setBean(T bean) {
-        this.bean = bean;
+    public T getBean() {
+        return this.bean;
     }
 }

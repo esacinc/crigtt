@@ -21,13 +21,13 @@ import org.testng.annotations.Test;
 @Test(groups = { "crigtt.test.validate.all", "crigtt.test.validate.validator" })
 public class CrigttValidatorTests extends AbstractCrigttTests {
     @Value("classpath:${crigtt.test.input.file.1.path}")
-    private org.springframework.core.io.Resource testInputFilePath1;
+    private ResourceSource testInputSrc1;
 
     @Value("${crigtt.test.output.dir.path}")
     private FileSystemResource testOutputDirPath;
 
-    @Resource(name = "serializerXml")
-    private CrigttSerializer xmlSerializer;
+    @Resource(name = "serializerXmlDisplay")
+    private CrigttSerializer displayXmlSerializer;
 
     @Resource(name = "validatorCrigtt")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
@@ -38,15 +38,16 @@ public class CrigttValidatorTests extends AbstractCrigttTests {
         File testOutputDir = this.testOutputDirPath.getFile();
         testOutputDir.mkdir();
 
-        String testOutputFileNamePrefix = this.testInputFilePath1.getFilename() + "_";
-        ValidatorResult testResult = this.validator.validate(new ResourceSource(this.testInputFilePath1));
+        String testOutputFileNamePrefix = this.testInputSrc1.getResource().getFilename() + "_";
+        ValidatorResult testResult = this.validator.validate(testInputSrc1);
         Map<CrigttSchematron, SchematronValidatorResult> testSchematronResults = testResult.getSchematronResults();
 
         for (CrigttSchematron testSchematron : testSchematronResults.keySet()) {
             try (
                 OutputStream testSchematronResultOutStream =
                     new FileOutputStream(new File(testOutputDir, (testOutputFileNamePrefix + testSchematron.getName() + CrigttFileExtensions.SVRL)))) {
-                IOUtils.write(this.xmlSerializer.serializeNodeToBytes(testSchematronResults.get(testSchematron).getNode()), testSchematronResultOutStream);
+                IOUtils.write(this.displayXmlSerializer.serializeNodeToBytes(testSchematronResults.get(testSchematron).getDocument().getNode()),
+                    testSchematronResultOutStream);
 
                 testSchematronResultOutStream.flush();
             }

@@ -62,6 +62,11 @@ public class CrigttProcessor extends Processor {
     }
 
     @Override
+    public CrigttXpathCompiler newXPathCompiler() {
+        return new CrigttXpathCompiler(this);
+    }
+
+    @Override
     public CrigttConfiguration getUnderlyingConfiguration() {
         return ((CrigttConfiguration) super.getUnderlyingConfiguration());
     }

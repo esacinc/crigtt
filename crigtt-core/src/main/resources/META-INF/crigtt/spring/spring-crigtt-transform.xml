@@ -33,6 +33,14 @@
     <beans:bean id="docBuilderCrigtt" parent="docBuilder" factory-bean="processorCrigtt" factory-method="newDocumentBuilder"/>
     
     <!--====================================================================================================
+    = SERIALIZER FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="serializerFactory" class="net.sf.saxon.lib.SerializerFactory" abstract="true"/>
+    
+    <beans:bean id="serializerFactoryCrigtt" class="gov.hhs.onc.crigtt.transform.impl.CrigttSerializerFactory" parent="serializerFactory"
+        c:config-ref="configCrigtt"/>
+    
+    <!--====================================================================================================
     = SERIALIZERS
     =====================================================================================================-->
     <beans:bean id="serializer" class="net.sf.saxon.s9api.Serializer" abstract="true"/>
@@ -41,19 +49,42 @@
     
     <beans:bean id="serializerHtml" parent="serializerCrigtt" factory-bean="processorCrigtt" factory-method="newSerializer" lazy-init="true" scope="prototype">
         <beans:constructor-arg name="outProps">
-            <beans:props>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).METHOD }">html</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }">yes</beans:prop>
-            </beans:props>
+            <beans:map>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).HTML_VERSION }" value="${crigtt.transform.serialize.html.version}"/>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).INDENT }" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }" value="${crigtt.transform.serialize.indent.spaces}"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }" value="${crigtt.transform.serialize.line.len}"/>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).METHOD }" value="#{ T(gov.hhs.onc.crigtt.transform.CrigttOutputMethods).HTML }"/>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }"
+                    value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
+            </beans:map>
         </beans:constructor-arg>
     </beans:bean>
     
     <beans:bean id="serializerXml" parent="serializerCrigtt" factory-bean="processorCrigtt" factory-method="newSerializer" lazy-init="true" scope="prototype">
         <beans:constructor-arg name="outProps">
-            <beans:props>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).METHOD }">xml</beans:prop>
-                <beans:prop key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }">no</beans:prop>
-            </beans:props>
+            <beans:map>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).METHOD }" value="#{ T(gov.hhs.onc.crigtt.transform.CrigttOutputMethods).XML }"/>
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }"
+                    value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).NO }"/>
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+    
+    <!--suppress SpringBeanConstructorArgInspection -->
+    <beans:bean id="serializerXmlDisplay" parent="serializerXml" factory-bean="processorCrigtt" factory-method="newSerializer" lazy-init="true"
+        scope="prototype">
+        <beans:constructor-arg name="outProps">
+            <beans:map merge="true">
+                <beans:entry key="#{ T(javax.xml.transform.OutputKeys).INDENT }" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }" value="${crigtt.transform.serialize.indent.spaces}"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }" value="${crigtt.transform.serialize.line.len}"/>
+            </beans:map>
         </beans:constructor-arg>
     </beans:bean>
     
@@ -62,7 +93,10 @@
     =====================================================================================================-->
     <beans:bean id="xpathCompiler" class="net.sf.saxon.s9api.XPathCompiler" abstract="true"/>
     
-    <beans:bean id="xpathCompilerCrigtt" parent="xpathCompiler" factory-bean="processorCrigtt" factory-method="newXPathCompiler"/>
+    <beans:bean id="xpathCompilerCrigtt" class="gov.hhs.onc.crigtt.transform.impl.CrigttXpathCompiler" parent="xpathCompiler" abstract="true"/>
+    
+    <beans:bean id="xpathCompilerBase" parent="xpathCompilerCrigtt" factory-bean="processorCrigtt" factory-method="newXPathCompiler" lazy-init="true"
+        scope="prototype"/>
     
     <!--====================================================================================================
     = XPATH EXECUTABLES
@@ -81,24 +115,12 @@
     =====================================================================================================-->
     <beans:bean id="xsltExec" class="net.sf.saxon.s9api.XsltExecutable" abstract="true"/>
     
-    <beans:bean id="xsltExecSchematronInclude" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile">
-        <beans:constructor-arg name="source">
-            <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
-        </beans:constructor-arg>
-    </beans:bean>
+    <beans:bean id="xsltExecSchematronInclude" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
     
-    <beans:bean id="xsltExecSchematronExpand" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile">
-        <beans:constructor-arg name="source">
-            <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
-        </beans:constructor-arg>
-    </beans:bean>
+    <beans:bean id="xsltExecSchematronExpand" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
     
-    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile">
-        <beans:constructor-arg name="source">
-            <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
-        </beans:constructor-arg>
-    </beans:bean>
+    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
 </beans:beans>

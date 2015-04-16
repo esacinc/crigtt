@@ -2,30 +2,33 @@ package gov.hhs.onc.crigtt.api.schematron.impl;
 
 import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
 import javax.annotation.Nullable;
-import net.sf.saxon.s9api.XPathExecutable;
 
 public class ResolvedAssertImpl extends AbstractResolvedSchematronBean implements ResolvedAssert {
-    private XPathExecutable test;
-    private String text;
+    private String test;
+    private String[] text;
+
+    public ResolvedAssertImpl(String id) {
+        super(id);
+    }
 
     @Override
-    public XPathExecutable getTest() {
+    public String getTest() {
         return this.test;
     }
 
     @Override
-    public void setTest(XPathExecutable test) {
+    public void setTest(String test) {
         this.test = test;
     }
 
     @Nullable
     @Override
-    public String getText() {
+    public String[] getText() {
         return this.text;
     }
 
     @Override
-    public void setText(String text) {
+    public void setText(@Nullable String ... text) {
         this.text = text;
     }
 }

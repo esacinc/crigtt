@@ -5,16 +5,20 @@ import java.io.InputStream;
 import javax.annotation.Nullable;
 
 public class ByteArraySource extends AbstractCrigttSource {
-    private byte[] bytes;
+    protected byte[] bytes;
 
     public ByteArraySource(byte[] bytes) {
         this(bytes, null);
     }
 
     public ByteArraySource(byte[] bytes, @Nullable String sysId) {
-        super(sysId);
+        this(sysId);
 
         this.bytes = bytes;
+    }
+
+    protected ByteArraySource(@Nullable String sysId) {
+        super(sysId);
     }
 
     public byte[] getBytes() {

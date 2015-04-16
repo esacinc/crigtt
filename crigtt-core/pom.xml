@@ -20,7 +20,8 @@
         <!-- Project properties -->
         <project.basedir.all>${project.basedir}/..</project.basedir.all>
         <!-- Project build JAXB source properties -->
-        <project.build.jaxbGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb</project.build.jaxbGeneratedSourceDirectory>
+        <project.build.jaxbSchematronGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron</project.build.jaxbSchematronGeneratedSourceDirectory>
+        <project.build.jaxbSchematronSvrlGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron-svrl</project.build.jaxbSchematronSvrlGeneratedSourceDirectory>
         <project.build.jaxbSourceDirectory>${project.basedir}/src/main/jaxb</project.build.jaxbSourceDirectory>
         <!-- Project build XML schema properties -->
         <project.build.schemaDirectory>${project.build.outputDirectory}/META-INF/crigtt/schema</project.build.schemaDirectory>
@@ -346,8 +347,6 @@
                     </bindingIncludes>
                     <cleanPackageDirectories>false</cleanPackageDirectories>
                     <episode>false</episode>
-                    <forceRegenerate>true</forceRegenerate>
-                    <generateDirectory>${project.build.jaxbGeneratedSourceDirectory}</generateDirectory>
                     <markGenerated>true</markGenerated>
                     <schemaDirectory>${project.build.schemaSourceDirectory}</schemaDirectory>
                 </configuration>
@@ -361,6 +360,7 @@
                             <bindingIncludes>
                                 <include>iso-schematron/schematron.xjb</include>
                             </bindingIncludes>
+                            <generateDirectory>${project.build.jaxbSchematronGeneratedSourceDirectory}</generateDirectory>
                             <schemaIncludes>
                                 <include>iso-schematron/schematron.xsd</include>
                             </schemaIncludes>
@@ -375,6 +375,7 @@
                             <bindingIncludes>
                                 <include>iso-schematron/svrl.xjb</include>
                             </bindingIncludes>
+                            <generateDirectory>${project.build.jaxbSchematronSvrlGeneratedSourceDirectory}</generateDirectory>
                             <schemaIncludes>
                                 <include>iso-schematron/svrl.xsd</include>
                             </schemaIncludes>

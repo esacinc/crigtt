@@ -3,22 +3,22 @@ package gov.hhs.onc.crigtt.validate.impl;
 import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
 import gov.hhs.onc.crigtt.validate.SchematronPatternResult;
 import gov.hhs.onc.crigtt.validate.SchematronValidatorResult;
+import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.Map;
-import net.sf.saxon.s9api.XdmNode;
 
 public class SchematronValidatorResultImpl implements SchematronValidatorResult {
-    private XdmNode node;
+    private XdmDocument doc;
     private Map<String, SchematronPatternResult> patternResults;
     private SchematronOutput output;
 
     @Override
-    public XdmNode getNode() {
-        return this.node;
+    public XdmDocument getDocument() {
+        return this.doc;
     }
 
     @Override
-    public void setNode(XdmNode node) {
-        this.node = node;
+    public void setDocument(XdmDocument doc) {
+        this.doc = doc;
     }
 
     @Override

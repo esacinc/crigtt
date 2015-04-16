@@ -11,6 +11,31 @@
     <contextName>crigtt</contextName>
     
     <!--====================================================================================================
+    = PROPERTIES: CONSOLE
+    =====================================================================================================-->
+    <if condition='!isDefined("crigtt.logging.console.tty") &amp;&amp; (java.lang.System.console() != null)'>
+        <then>
+            <property name="crigtt.logging.console.tty" value="true" scope="context"/>
+        </then>
+    </if>
+    
+    <!--====================================================================================================
+    = PROPERTIES: FILE
+    =====================================================================================================-->
+    <property name="crigtt.logging.file.dir" value="${crigtt.logging.file.dir:-${user.dir}}" scope="context"/>
+    
+    <property name="crigtt.logging.file.name" value="${crigtt.logging.file.name:-${CONTEXT_NAME}}" scope="context"/>
+    
+    <property name="crigtt.logging.file.name.ext" value="${crigtt.logging.file.name.ext:-.log}" scope="context"/>
+    
+    <!--====================================================================================================
+    = CONVERSION RULES
+    =====================================================================================================-->
+    <conversionRule conversionWord="exRoot" converterClass="gov.hhs.onc.crigtt.logging.impl.RootCauseThrowableProxyConverter"/>
+    
+    <conversionRule conversionWord="pColor" converterClass="gov.hhs.onc.crigtt.logging.impl.PriorityColorCompositeConverter"/>
+    
+    <!--====================================================================================================
     = STATUS LISTENERS
     =====================================================================================================-->
     <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
@@ -27,55 +52,69 @@
     =====================================================================================================-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%p - %m%n%ex</pattern>
+            <pattern>%pColor(%p){${crigtt.logging.console.tty:-false}} - %m%n%exRoot</pattern>
         </encoder>
         <target>System.out</target>
         <withJansi>true</withJansi>
     </appender>
     
-    <appender name="consoleAsync" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="console"/>
-        <discardingThreshold>0</discardingThreshold>
-        <includeCallerData>true</includeCallerData>
-        <queueSize>256</queueSize>
+    <!--====================================================================================================
+    = APPENDERS: FILE
+    =====================================================================================================-->
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>${crigtt.logging.file.dir}/${crigtt.logging.file.name}${crigtt.logging.file.name.ext}</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss z} [%C:%L %t] %p - %m%n%exRoot</pattern>
+        </encoder>
     </appender>
     
     <!--====================================================================================================
     = LOGGERS: PROJECT
     =====================================================================================================-->
     <logger name="gov.hhs.onc.crigtt" level="all" additivity="false">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </logger>
+    
+    <logger name="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" level="warn" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </logger>
     
     <!--====================================================================================================
     = LOGGERS: HELGER
     =====================================================================================================-->
     <logger name="com.helger" level="info" additivity="false">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </logger>
     
     <!--====================================================================================================
     = LOGGERS: APACHE
     =====================================================================================================-->
     <logger name="org.apache" level="info" additivity="false">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </logger>
     
     <!--====================================================================================================
     = LOGGERS: SPRING FRAMEWORK
     =====================================================================================================-->
     <logger name="org.springframework" level="info" additivity="false">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </logger>
     
     <logger name="org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker" level="warn" additivity="false">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </logger>
     
     <!--====================================================================================================
     = ROOT LOGGER
     =====================================================================================================-->
     <root level="warn">
-        <appender-ref ref="consoleAsync"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </root>
 </configuration>

@@ -1,15 +1,14 @@
 package gov.hhs.onc.crigtt.api.schematron;
 
 import javax.annotation.Nullable;
-import net.sf.saxon.s9api.XPathExecutable;
 
 public interface ResolvedAssert extends ResolvedSchematronBean {
-    public XPathExecutable getTest();
+    public String getTest();
 
-    public void setTest(XPathExecutable test);
+    public void setTest(String test);
 
     @Nullable
-    public String getText();
+    public String[] getText();
 
-    public void setText(@Nullable String text);
+    public void setText(@Nullable String ... text);
 }

@@ -31,10 +31,11 @@
     <beans:bean id="taskExecutorValidate" parent="taskExecutor" abstract="true"
         p:threadGroup-ref="threadGroupValidate"/>
     
+    <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="taskExecutorValidateSchematron" parent="taskExecutorValidate"
-        p:corePoolSize="8"
-        p:maxPoolSize="128"
-        p:queueCapacity="256"
+        p:corePoolSize="${crigtt.validate.schematron.task.executor.pool.size.initial}"
+        p:maxPoolSize="${crigtt.validate.schematron.task.executor.pool.size.max}"
+        p:queueCapacity="${crigtt.validate.schematron.task.executor.queue.size}"
         p:threadNamePrefix="#{ threadGroupValidate.name }-schematron"/>
     
     <!--====================================================================================================
@@ -43,7 +44,8 @@
     <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true">
         <beans:property name="parameters">
             <beans:map>
-                <beans:entry key="diagnose" value="yes"/>
+                <beans:entry key="diagnose" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
+                <beans:entry key="full-path-notation" value="2"/>
                 <beans:entry key="generate-path" value="true" value-type="java.lang.Boolean"/>
                 <beans:entry key="langCode" value="#{ T(java.util.Locale).ENGLISH.language }"/>
             </beans:map>
@@ -51,9 +53,6 @@
     </beans:bean>
     
     <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true">
-        <beans:property name="uriResolverBeanName">
-            <beans:idref bean="uriResolverResourceImpl"/>
-        </beans:property>
         <beans:property name="xsltExecutables">
             <beans:array>
                 <beans:ref bean="xsltExecSchematronInclude"/>
@@ -66,20 +65,24 @@
     <beans:bean id="schematronCcdaR2" parent="schematronImpl"
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:displayName="C-CDA R2"
-        p:name="ccda-r2">
-        <beans:property name="source">
-            <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"/>
+        p:name="ccda-r2"
+        p:source="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
+        <beans:property name="referencedDocuments">
+            <beans:map>
+                <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
+            </beans:map>
         </beans:property>
     </beans:bean>
     
     <beans:bean id="schematronCcdaR2CancerReg" parent="schematronImpl"
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry"
         p:displayName="C-CDA R2 Cancer Registry"
-        p:name="ccda-r2-cancer-reg">
-        <beans:property name="source">
-            <beans:bean parent="srcResource"
-                c:resource="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch"/>
+        p:name="ccda-r2-cancer-reg"
+        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch">
+        <beans:property name="referencedDocuments">
+            <beans:map>
+                <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>
+            </beans:map>
         </beans:property>
     </beans:bean>
     

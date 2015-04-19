@@ -14,6 +14,11 @@ public class CrigttProcessor extends Processor {
     }
 
     @Override
+    public CrigttDocumentBuilder newDocumentBuilder() {
+        return new CrigttDocumentBuilder(this.getUnderlyingConfiguration());
+    }
+
+    @Override
     public CrigttSerializer newSerializer(File outFile) {
         return this.newSerializer(outFile, null);
     }

@@ -1,7 +1,6 @@
 package gov.hhs.onc.crigtt.api.schematron.impl;
 
 import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
-import javax.annotation.Nullable;
 
 public class ResolvedAssertImpl extends AbstractResolvedSchematronBean implements ResolvedAssert {
     private String test;
@@ -21,14 +20,13 @@ public class ResolvedAssertImpl extends AbstractResolvedSchematronBean implement
         this.test = test;
     }
 
-    @Nullable
     @Override
     public String[] getText() {
         return this.text;
     }
 
     @Override
-    public void setText(@Nullable String ... text) {
+    public void setText(String ... text) {
         this.text = text;
     }
 }

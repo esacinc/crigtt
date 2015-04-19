@@ -30,7 +30,9 @@
     =====================================================================================================-->
     <beans:bean id="docBuilder" class="net.sf.saxon.s9api.DocumentBuilder" abstract="true"/>
     
-    <beans:bean id="docBuilderCrigtt" parent="docBuilder" factory-bean="processorCrigtt" factory-method="newDocumentBuilder"/>
+    <beans:bean id="docBuilderCrigtt" class="gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder" parent="docBuilder" abstract="true"/>
+    
+    <beans:bean id="docBuilderBase" parent="docBuilderCrigtt" factory-bean="processorCrigtt" factory-method="newDocumentBuilder"/>
     
     <!--====================================================================================================
     = SERIALIZER FACTORIES

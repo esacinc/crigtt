@@ -1,28 +1,27 @@
 package gov.hhs.onc.crigtt.validate;
 
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
-import gov.hhs.onc.crigtt.io.impl.ResourceSource;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
+import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.Map;
 import javax.xml.transform.Source;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltExecutable;
 import org.springframework.beans.factory.InitializingBean;
 
 public interface CrigttSchematron extends InitializingBean {
-    public XdmNode transform(Source docSrc) throws SaxonApiException;
+    public XdmDocument transform(Source docSrc) throws SaxonApiException;
 
     public String getDescription();
 
     public void setDescription(String desc);
 
-    public String getDisplayName();
+    public String getDisplayId();
 
-    public void setDisplayName(String displayName);
+    public void setDisplayId(String displayId);
 
-    public String getName();
+    public String getId();
 
-    public void setName(String name);
+    public void setId(String id);
 
     public Map<String, ?> getParameters();
 
@@ -32,7 +31,7 @@ public interface CrigttSchematron extends InitializingBean {
 
     public void setReferencedDocuments(Map<String, Source> referencedDocs);
 
-    public Map<String, ResolvedPattern> getResolvedPatterns();
+    public Map<String, ResolvedPhase> getResolvedPhases();
 
     public Source getSource();
 

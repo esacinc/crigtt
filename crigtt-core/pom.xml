@@ -278,14 +278,14 @@
                 <version>0.12.3</version>
                 <dependencies>
                     <dependency>
-                        <groupId>com.btmatthews.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-commons-lang3</artifactId>
-                        <version>1.0.0</version>
+                        <groupId>net.codesup.util</groupId>
+                        <artifactId>jaxb2-rich-contract-plugin</artifactId>
+                        <version>1.6.7</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.commons</groupId>
                         <artifactId>commons-lang3</artifactId>
-                        <version>3.3.2</version>
+                        <version>3.4</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
@@ -317,29 +317,17 @@
                         <artifactId>jaxb2-basics-annotate</artifactId>
                         <version>1.0.1</version>
                     </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-fluent-api</artifactId>
-                        <version>3.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-value-constructor</artifactId>
-                        <version>3.0</version>
-                    </dependency>
                 </dependencies>
                 <configuration>
                     <args>
                         <arg>-Xannotate</arg>
-                        <arg>-Xcommons-lang3</arg>
-                        <arg>-Xcommons-lang3:ToStringStyle=DEFAULT_STYLE</arg>
+                        <arg>-Xclone</arg>
                         <arg>-Xdv</arg>
-                        <arg>-Xfluent-api</arg>
                         <arg>-Xinheritance</arg>
                         <arg>-Xsetters</arg>
                         <arg>-Xsetters-mode=direct</arg>
                         <arg>-Xsimplify</arg>
-                        <arg>-Xvalue-constructor</arg>
+                        <arg>-Xwildcard</arg>
                     </args>
                     <bindingDirectory>${project.build.jaxbSourceDirectory}</bindingDirectory>
                     <bindingIncludes combine.children="append">

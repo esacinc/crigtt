@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaxb:bindings
-    jaxb:extensionBindingPrefixes="annox inherit xjc"
+    jaxb:extensionBindingPrefixes="annox inherit simplify wildcard xjc"
     jaxb:version="2.1"
     xmlns:annox="http://annox.dev.java.net"
     xmlns:inherit="http://jaxb2-commons.dev.java.net/basic/inheritance"
     xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
+    xmlns:wildcard="http://jaxb2-commons.dev.java.net/basic/wildcard"
     xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     

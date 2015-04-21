@@ -1,6 +1,6 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
+import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import gov.hhs.onc.crigtt.validate.SchematronValidationEvent;
 import gov.hhs.onc.crigtt.validate.SchematronValidationResponse;
@@ -12,7 +12,7 @@ public class SchematronValidationResponseImpl extends AbstractCrigttValidationRe
     private CrigttSchematron schematron;
     private XdmDocument doc;
     private List<SchematronValidationEvent> events;
-    private SchematronOutput out;
+    private Output out;
 
     public SchematronValidationResponseImpl(CrigttSchematron schematron) {
         this.schematron = schematron;
@@ -57,12 +57,12 @@ public class SchematronValidationResponseImpl extends AbstractCrigttValidationRe
 
     @Nullable
     @Override
-    public SchematronOutput getOutput() {
+    public Output getOutput() {
         return this.out;
     }
 
     @Override
-    public void setOutput(@Nullable SchematronOutput out) {
+    public void setOutput(@Nullable Output out) {
         this.out = out;
     }
 

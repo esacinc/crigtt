@@ -1,14 +1,14 @@
 package gov.hhs.onc.crigtt.validate;
 
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
 import net.sf.saxon.expr.parser.ExpressionLocation;
 
 public interface SchematronValidationEvent {
-    public ResolvedAssert getAssert();
+    public ResolvedAssertion getAssert();
 
-    public void setAssert(ResolvedAssert azzert);
+    public void setAssert(ResolvedAssertion azzert);
 
     public ValidationEventLevel getLevel();
 

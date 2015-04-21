@@ -1,15 +1,19 @@
 package gov.hhs.onc.crigtt.validate;
 
+import com.github.sebhoss.warnings.CompilerWarnings;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.Map;
+import java.util.function.Function;
 import javax.xml.transform.Source;
+import net.sf.saxon.event.Receiver;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XsltExecutable;
 import org.springframework.beans.factory.InitializingBean;
 
 public interface CrigttSchematron extends InitializingBean {
-    public XdmDocument transform(Source docSrc) throws SaxonApiException;
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    public XdmDocument transform(Source docSrc, Function<Receiver, Receiver> ... docResultFilterBuilders) throws SaxonApiException;
 
     public String getDescription();
 
@@ -27,11 +31,19 @@ public interface CrigttSchematron extends InitializingBean {
 
     public void setParameters(Map<String, ?> params);
 
+    public String getQueryBinding();
+
+    public void setQueryBinding(String queryBinding);
+
     public Map<String, Source> getReferencedDocuments();
 
     public void setReferencedDocuments(Map<String, Source> referencedDocs);
 
     public Map<String, ResolvedPhase> getResolvedPhases();
+
+    public String getSchemaVersion();
+
+    public void setSchemaVersion(String schemaVersion);
 
     public Source getSource();
 
@@ -40,4 +52,8 @@ public interface CrigttSchematron extends InitializingBean {
     public XsltExecutable[] getXsltExecutables();
 
     public void setXsltExecutables(XsltExecutable ... xsltExecs);
+
+    public String getTitle();
+
+    public void setTitle(String title);
 }

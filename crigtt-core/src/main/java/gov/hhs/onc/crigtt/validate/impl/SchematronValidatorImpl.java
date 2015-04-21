@@ -1,11 +1,12 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
+import com.github.sebhoss.warnings.CompilerWarnings;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
-import gov.hhs.onc.crigtt.api.schematron.svrl.FailedAssert;
-import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
+import gov.hhs.onc.crigtt.api.schematron.svrl.FailedAssertion;
+import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.api.schematron.svrl.SuccessfulReport;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXpathCompiler;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
@@ -23,12 +24,33 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+import net.sf.saxon.event.CommentStripper;
+import net.sf.saxon.event.ProxyReceiver;
+import net.sf.saxon.event.Receiver;
 import net.sf.saxon.expr.parser.ExpressionLocation;
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.NodeName;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.sxpath.IndependentContext;
+import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.type.SimpleType;
 
 public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronValidationRequest, SchematronValidationResponse> implements SchematronValidator {
+    private static class DocumentAttributeStripper extends ProxyReceiver {
+        private final static String DOC_ATTR_LOCAL_NAME = "document";
+
+        public DocumentAttributeStripper(Receiver next) {
+            super(next);
+        }
+
+        @Override
+        public void attribute(NodeName name, SimpleType type, CharSequence value, int locId, int props) throws XPathException {
+            if (!name.getLocalPart().equals(DOC_ATTR_LOCAL_NAME)) {
+                super.attribute(name, type, value, locId, props);
+            }
+        }
+    }
+
     @Resource(name = "xpathCompilerBase")
     private CrigttXpathCompiler xpathCompiler;
 
@@ -39,6 +61,7 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
     private CrigttSchematron schematron;
 
     @Override
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     public SchematronValidationResponse validate(SchematronValidationRequest req) {
         SchematronValidationResponse resp = new SchematronValidationResponseImpl(this.schematron);
         boolean respSuccess = true;
@@ -46,10 +69,11 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
         Map<String, String> reqNamespaces = req.getNamespaces();
 
         try {
-            XdmDocument respDoc = this.schematron.transform(reqDoc.getUnderlyingNode());
+            XdmDocument respDoc = this.schematron.transform(reqDoc.getUnderlyingNode(), DocumentAttributeStripper::new, CommentStripper::new);
+
             resp.setDocument(respDoc);
 
-            SchematronOutput respOut = this.schematronSvrlJaxbMarshaller.unmarshal(respDoc.getSource(), SchematronOutput.class);
+            Output respOut = this.schematronSvrlJaxbMarshaller.unmarshal(respDoc.getSource(), Output.class);
             resp.setOutput(respOut);
 
             IndependentContext xpathContext = new IndependentContext(this.xpathCompiler.getUnderlyingStaticContext());
@@ -57,15 +81,15 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
             reqNamespaces.forEach(xpathContext::declareNamespace);
 
             respOut.getNsPrefixInAttributeValues().stream()
-                .forEach(attrValueNsPrefix -> xpathContext.declareNamespace(attrValueNsPrefix.getPrefix(), attrValueNsPrefix.getUri()));
+                .forEach(attrValueNs -> xpathContext.declareNamespace(attrValueNs.getPrefix(), attrValueNs.getUri()));
 
-            Map<String, FailedAssert> respFailedAsserts =
+            Map<String, FailedAssertion> respFailedAssertions =
                 respOut
                     .getFailedAssert()
                     .stream()
                     .collect(
-                        Collectors.toMap(FailedAssert::getId, Function.<FailedAssert> identity(), (respFailedAssert1, respFailedAssert2) -> respFailedAssert2,
-                            LinkedHashMap::new));
+                        Collectors.toMap(FailedAssertion::getId, Function.<FailedAssertion> identity(),
+                            (respFailedAssertion1, respFailedAssertion2) -> respFailedAssertion2, LinkedHashMap::new));
             Map<String, SuccessfulReport> respSuccessfulReports =
                 respOut
                     .getSuccessfulReport()
@@ -77,37 +101,37 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
             List<SchematronValidationEvent> respEvents = new ArrayList<>();
             Map<String, ResolvedPhase> phases = this.schematron.getResolvedPhases();
             ValidationEventLevel phaseLevel;
-            String assertId;
+            String assertionId;
             SchematronValidationEvent respEvent;
-            String respAssertLocExpr;
-            XdmNode respAssertLocNode;
-            NodeInfo respAssertLocNodeInfo;
+            String respAssertionLocExpr;
+            XdmNode respAssertionLocNode;
+            NodeInfo respAssertionLocNodeInfo;
 
             for (String phaseId : phases.keySet()) {
                 phaseLevel = this.phaseLevels.get(phaseId);
 
                 for (ResolvedPattern pattern : phases.get(phaseId).getPatterns().values()) {
                     for (ResolvedRule rule : pattern.getRules().values()) {
-                        for (ResolvedAssert azzert : rule.getAsserts().values()) {
+                        for (ResolvedAssertion assertion : rule.getAssertions().values()) {
                             (respEvent = new SchematronValidationEventImpl()).setPattern(pattern);
                             respEvent.setRule(rule);
-                            respEvent.setAssert(azzert);
+                            respEvent.setAssert(assertion);
 
-                            if (respFailedAsserts.containsKey((assertId = azzert.getId()))) {
+                            if (respFailedAssertions.containsKey((assertionId = assertion.getId()))) {
                                 respSuccess = false;
 
                                 respEvent.setLevel(phaseLevel);
 
-                                respAssertLocExpr = respFailedAsserts.get(assertId).getLocation();
+                                respAssertionLocExpr = respFailedAssertions.get(assertionId).getLocation();
                             } else {
                                 respEvent.setLevel(ValidationEventLevel.INFO);
 
-                                respAssertLocExpr = respSuccessfulReports.get(assertId).getLocation();
+                                respAssertionLocExpr = respSuccessfulReports.get(assertionId).getLocation();
                             }
 
-                            if (((respAssertLocNode = this.xpathCompiler.evaluateNode(respAssertLocExpr, xpathContext, reqDoc)) != null)) {
-                                respEvent.setLocation(new ExpressionLocation((respAssertLocNodeInfo = respAssertLocNode.getUnderlyingNode()).getSystemId(),
-                                    respAssertLocNodeInfo.getLineNumber(), respAssertLocNodeInfo.getColumnNumber()));
+                            if (((respAssertionLocNode = this.xpathCompiler.evaluateNode(respAssertionLocExpr, xpathContext, reqDoc)) != null)) {
+                                respEvent.setLocation(new ExpressionLocation((respAssertionLocNodeInfo = respAssertionLocNode.getUnderlyingNode())
+                                    .getSystemId(), respAssertionLocNodeInfo.getLineNumber(), respAssertionLocNodeInfo.getColumnNumber()));
                             }
 
                             respEvents.add(respEvent);

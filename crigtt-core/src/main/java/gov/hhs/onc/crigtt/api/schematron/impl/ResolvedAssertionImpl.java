@@ -1,12 +1,12 @@
 package gov.hhs.onc.crigtt.api.schematron.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
 
-public class ResolvedAssertImpl extends AbstractResolvedSchematronBean implements ResolvedAssert {
+public class ResolvedAssertionImpl extends AbstractResolvedSchematronBean implements ResolvedAssertion {
     private String test;
     private String[] text;
 
-    public ResolvedAssertImpl(String id) {
+    public ResolvedAssertionImpl(String id) {
         super(id);
     }
 

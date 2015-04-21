@@ -1,39 +1,45 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.Assert;
-import gov.hhs.onc.crigtt.api.schematron.Extends;
+import com.github.sebhoss.warnings.CompilerWarnings;
+import gov.hhs.onc.crigtt.api.schematron.Assertion;
+import gov.hhs.onc.crigtt.api.schematron.Extension;
 import gov.hhs.onc.crigtt.api.schematron.Pattern;
 import gov.hhs.onc.crigtt.api.schematron.Phase;
 import gov.hhs.onc.crigtt.api.schematron.Report;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssert;
+import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
 import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
 import gov.hhs.onc.crigtt.api.schematron.Rule;
 import gov.hhs.onc.crigtt.api.schematron.Schema;
+import gov.hhs.onc.crigtt.api.schematron.Title;
 import gov.hhs.onc.crigtt.api.schematron.impl.ReportImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedAssertImpl;
+import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedAssertionImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPatternImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPhaseImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedRuleImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.RuleImpl;
+import gov.hhs.onc.crigtt.api.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import gov.hhs.onc.crigtt.xml.impl.XdmDocumentDestination;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
+import net.sf.saxon.event.Receiver;
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.DocumentPool;
 import net.sf.saxon.om.DocumentURI;
@@ -65,15 +71,19 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     private String displayId;
     private String id;
     private Map<String, ?> params;
+    private String queryBinding;
     private Map<String, Source> referencedDocs = new HashMap<>();
+    private String schemaVersion;
     private Source src;
+    private String title;
     private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
     private Map<String, ResolvedPhase> resolvedPhases;
     private XsltExecutable[] xsltExecs;
     private XsltExecutable xsltExec;
 
     @Override
-    public XdmDocument transform(Source docSrc) throws SaxonApiException {
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    public XdmDocument transform(Source docSrc, Function<Receiver, Receiver> ... docResultFilterBuilders) throws SaxonApiException {
         XsltTransformer docTransformer = this.xsltExec.load();
         docTransformer.setSource(docSrc);
 
@@ -81,12 +91,12 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
         this.pooledReferencedDocs.forEach((pooledReferencedDocUri, pooledReferencedDocInfo) -> docPool.add(pooledReferencedDocInfo, pooledReferencedDocUri));
 
-        XdmDestination docDest = new XdmDestination();
+        XdmDocumentDestination docDest = new XdmDocumentDestination(docResultFilterBuilders);
         docTransformer.setDestination(docDest);
 
         docTransformer.transform();
 
-        return new XdmDocument(((DocumentInfo) docDest.getXdmNode().getUnderlyingNode()));
+        return docDest.getXdmNode();
     }
 
     @Override
@@ -106,6 +116,14 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         }
 
         Schema schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class);
+        schema.setQueryBinding(this.queryBinding);
+        schema.setSchemaVersion(this.schemaVersion);
+
+        if (this.title != null) {
+            Title title = new TitleImpl();
+            title.getContent().add(this.title);
+            schema.getTitle().add(title);
+        }
 
         this.resolvedPhases = this.resolvePhases(schema);
 
@@ -140,7 +158,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         final Map<String, Phase> phases = new LinkedHashMap<>();
         final Map<String, Pattern> patterns = new LinkedHashMap<>();
         final Map<String, Rule> rules = new LinkedHashMap<>();
-        final Map<String, Assert> asserts = new LinkedHashMap<>();
+        final Map<String, Assertion> assertions = new LinkedHashMap<>();
 
         schema.getPhase().forEach(phase -> phases.put(phase.getId(), phase));
 
@@ -150,7 +168,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
             pattern.getRule().forEach(rule -> {
                 rules.put(rule.getId(), rule);
 
-                rule.getAssert().forEach(azzert -> asserts.put(azzert.getId(), azzert));
+                rule.getAssert().forEach(assertion -> assertions.put(assertion.getId(), assertion));
             });
         });
 
@@ -164,7 +182,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         Map<String, ResolvedRule> resolvedRules;
         ResolvedRule resolvedRule;
         String ruleId;
-        Map<String, ResolvedAssert> resolvedAsserts;
+        Map<String, ResolvedAssertion> resolvedAssertions;
 
         for (String phaseId : phases.keySet()) {
             resolvedPhases.put(phaseId, (resolvedPhase = new ResolvedPhaseImpl(phaseId)));
@@ -187,16 +205,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
                     resolvedRules.put(ruleId, (resolvedRule = new ResolvedRuleImpl(ruleId)));
                     resolvedRule.setContext(rule.getContext());
-                    resolvedRule.setAsserts((resolvedAsserts = this.resolveAsserts(new LinkedHashMap<>(), rule)));
+                    resolvedRule.setAssertions((resolvedAssertions = this.resolveAssertions(new LinkedHashMap<>(), rule)));
 
-                    ((RuleImpl) rule).withReport(resolvedAsserts.values().stream().map(resolvedAssert -> {
+                    ((RuleImpl) rule).setReport(resolvedAssertions.values().stream().map(resolvedAssertion -> {
                         Report report = new ReportImpl();
-                        report.setId(resolvedAssert.getId());
-                        report.setTest(resolvedAssert.getTest());
-                        report.getMixedContent().addAll(Arrays.asList(resolvedAssert.getText()));
+                        report.setId(resolvedAssertion.getId());
+                        report.setTest(resolvedAssertion.getTest());
+                        report.getMixedContent().addAll(Arrays.asList(resolvedAssertion.getText()));
 
                         return report;
-                    }).toArray(Report[]::new));
+                    }).collect(Collectors.toList()));
                 }
             }
         }
@@ -204,25 +222,25 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         return resolvedPhases;
     }
 
-    private Map<String, ResolvedAssert> resolveAsserts(Map<String, ResolvedAssert> resolvedAsserts, Rule rule) throws SaxonApiException {
-        for (Extends extendz : rule.getExtends()) {
-            this.resolveAsserts(resolvedAsserts, ((Rule) extendz.getRule()));
+    private Map<String, ResolvedAssertion> resolveAssertions(Map<String, ResolvedAssertion> resolvedAssertions, Rule rule) throws SaxonApiException {
+        for (Extension extension : rule.getExtends()) {
+            this.resolveAssertions(resolvedAssertions, ((Rule) extension.getRule()));
         }
 
-        ResolvedAssert resolvedAssert;
-        String assertId;
+        ResolvedAssertion resolvedAssertion;
+        String assertionId;
 
-        for (Assert azzert : rule.getAssert()) {
-            if (StringUtils.isEmpty((assertId = azzert.getId()))) {
+        for (Assertion assertion : rule.getAssert()) {
+            if (StringUtils.isEmpty((assertionId = assertion.getId()))) {
                 continue;
             }
 
-            resolvedAsserts.put(assertId, (resolvedAssert = new ResolvedAssertImpl(assertId)));
-            resolvedAssert.setTest(azzert.getTest());
-            resolvedAssert.setText(azzert.getMixedContent().stream().toArray(String[]::new));
+            resolvedAssertions.put(assertionId, (resolvedAssertion = new ResolvedAssertionImpl(assertionId)));
+            resolvedAssertion.setTest(assertion.getTest());
+            resolvedAssertion.setText(assertion.getMixedContent().stream().toArray(String[]::new));
         }
 
-        return resolvedAsserts;
+        return resolvedAssertions;
     }
 
     @Override
@@ -266,6 +284,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
+    public String getQueryBinding() {
+        return this.queryBinding;
+    }
+
+    @Override
+    public void setQueryBinding(String queryBinding) {
+        this.queryBinding = queryBinding;
+    }
+
+    @Override
     public Map<String, Source> getReferencedDocuments() {
         return this.referencedDocs;
     }
@@ -282,6 +310,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
+    public String getSchemaVersion() {
+        return this.schemaVersion;
+    }
+
+    @Override
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
+    }
+
+    @Override
     public Source getSource() {
         return this.src;
     }
@@ -289,6 +327,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     @Override
     public void setSource(Source src) {
         this.src = src;
+    }
+
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

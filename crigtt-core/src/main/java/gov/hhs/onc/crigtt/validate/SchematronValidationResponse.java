@@ -1,6 +1,6 @@
 package gov.hhs.onc.crigtt.validate;
 
-import gov.hhs.onc.crigtt.api.schematron.svrl.SchematronOutput;
+import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -23,9 +23,9 @@ public interface SchematronValidationResponse extends CrigttValidationResponse {
     public boolean hasOutput();
 
     @Nullable
-    public SchematronOutput getOutput();
+    public Output getOutput();
 
-    public void setOutput(@Nullable SchematronOutput out);
+    public void setOutput(@Nullable Output out);
 
     public CrigttSchematron getSchematron();
 }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaxb:bindings
-    jaxb:extensionBindingPrefixes="annox basics inherit simplify xjc"
+    jaxb:extensionBindingPrefixes="annox inherit simplify wildcard xjc"
     jaxb:version="2.1"
+    node="/xsd:schema"
     schemaLocation="../../schema/iso-schematron/schematron.xsd"
     xmlns:annox="http://annox.dev.java.net"
-    xmlns:basic="http://jaxb2-commons.dev.java.net/basic"
     xmlns:inherit="http://jaxb2-commons.dev.java.net/basic/inheritance"
     xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
     xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
+    xmlns:wildcard="http://jaxb2-commons.dev.java.net/basic/wildcard"
     xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
@@ -19,31 +20,74 @@
     </jaxb:schemaBindings>
     
     <!--====================================================================================================
+    = ROOT
+    =====================================================================================================-->
+    <wildcard:skip/>
+    
+    <!--====================================================================================================
     = ELEMENTS
     =====================================================================================================-->
-    <jaxb:bindings node="xsd:element[@name='active']/xsd:complexType">
-        <simplify:as-element-property/>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:element[@name='assert']/xsd:complexType">
-        <simplify:as-element-property/>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:element[@name='diagnostic']/xsd:complexType">
-        <simplify:as-element-property/>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:element[@name='p']/xsd:complexType">
-        <simplify:as-element-property/>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:element[@name='report']/xsd:complexType">
-        <simplify:as-element-property/>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:element[@name='schema']/xsd:complexType">
-        <simplify:property name="anyOrIncludeOrTitle">
+    <jaxb:bindings node="xsd:element[@name='active']">
+        <jaxb:bindings node="xsd:complexType">
             <simplify:as-element-property/>
-        </simplify:property>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='assert']">
+        <jaxb:class name="Assertion"/>
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:as-element-property/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='diagnostic']">
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:as-element-property/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='dir']">
+        <jaxb:class name="Direction"/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='extends']">
+        <jaxb:class name="Extension"/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='ns']">
+        <jaxb:class name="Namespace"/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='p']">
+        <jaxb:class name="Paragraph"/>
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:as-element-property/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='param']">
+        <jaxb:class name="Parameter"/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='pattern']">
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:property name="anyOrIncludeOrTitle">
+                <simplify:as-element-property/>
+            </simplify:property>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='report']">
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:as-element-property/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='schema']">
+        <jaxb:bindings node="xsd:complexType">
+            <simplify:property name="anyOrIncludeOrTitle">
+                <simplify:as-element-property/>
+            </simplify:property>
+        </jaxb:bindings>
     </jaxb:bindings>
  </jaxb:bindings>

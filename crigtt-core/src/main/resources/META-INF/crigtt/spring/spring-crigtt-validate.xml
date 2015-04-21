@@ -20,7 +20,11 @@
     <!--====================================================================================================
     = SCHEMATRONS
     =====================================================================================================-->
-    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true">
+    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true"/>
+    
+    <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true"
+        p:queryBinding="xslt2"
+        p:schemaVersion="ISO19757-3">
         <beans:property name="parameters">
             <beans:map>
                 <beans:entry key="diagnose" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
@@ -29,9 +33,6 @@
                 <beans:entry key="langCode" value="#{ T(java.util.Locale).ENGLISH.language }"/>
             </beans:map>
         </beans:property>
-    </beans:bean>
-    
-    <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true">
         <beans:property name="xsltExecutables">
             <beans:array>
                 <beans:ref bean="xsltExecSchematronInclude"/>
@@ -45,7 +46,8 @@
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:displayId="C-CDA R2"
         p:id="ccda-r2"
-        p:source="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
+        p:source="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"
+        p:title="Consolidated Clinical Document Architecture (C-CDA) Release 2.0">
         <beans:property name="referencedDocuments">
             <beans:map>
                 <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
@@ -57,7 +59,8 @@
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry"
         p:displayId="C-CDA R2 Cancer Registry"
         p:id="ccda-r2-cancer-reg"
-        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch">
+        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch"
+        p:title="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry">
         <beans:property name="referencedDocuments">
             <beans:map>
                 <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>

@@ -3,9 +3,9 @@ package gov.hhs.onc.crigtt.api.schematron;
 import java.util.Map;
 
 public interface ResolvedRule extends ResolvedSchematronBean {
-    public Map<String, ResolvedAssert> getAsserts();
+    public Map<String, ResolvedAssertion> getAssertions();
 
-    public void setAsserts(Map<String, ResolvedAssert> asserts);
+    public void setAssertions(Map<String, ResolvedAssertion> assertions);
 
     public String getContext();
 

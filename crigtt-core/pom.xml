@@ -257,35 +257,11 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>process-sources-jaxb</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <scripts>
-                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-process-sources-jaxb.groovy</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>0.12.3</version>
                 <dependencies>
                     <dependency>
                         <groupId>net.codesup.util</groupId>
                         <artifactId>jaxb2-rich-contract-plugin</artifactId>
                         <version>1.6.7</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-lang3</artifactId>
-                        <version>3.4</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
@@ -294,13 +270,18 @@
                     </dependency>
                     <dependency>
                         <groupId>org.glassfish.jaxb</groupId>
-                        <artifactId>jaxb-runtime</artifactId>
-                        <version>2.2.11</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.glassfish.jaxb</groupId>
                         <artifactId>jaxb-xjc</artifactId>
                         <version>2.2.11</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>com.sun.istack</groupId>
+                                <artifactId>istack-commons-tools</artifactId>
+                            </exclusion>
+                            <exclusion>
+                                <groupId>com.sun.xml.dtd-parser</groupId>
+                                <artifactId>dtd-parser</artifactId>
+                            </exclusion>
+                        </exclusions>
                     </dependency>
                     <dependency>
                         <groupId>org.jvnet.annox</groupId>
@@ -318,55 +299,71 @@
                         <version>1.0.1</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <args>
-                        <arg>-Xannotate</arg>
-                        <arg>-Xclone</arg>
-                        <arg>-Xdv</arg>
-                        <arg>-Xinheritance</arg>
-                        <arg>-Xsetters</arg>
-                        <arg>-Xsetters-mode=direct</arg>
-                        <arg>-Xsimplify</arg>
-                        <arg>-Xwildcard</arg>
-                    </args>
-                    <bindingDirectory>${project.build.jaxbSourceDirectory}</bindingDirectory>
-                    <bindingIncludes combine.children="append">
-                        <include>crigtt.xjb</include>
-                    </bindingIncludes>
-                    <cleanPackageDirectories>false</cleanPackageDirectories>
-                    <episode>false</episode>
-                    <markGenerated>true</markGenerated>
-                    <schemaDirectory>${project.build.schemaSourceDirectory}</schemaDirectory>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>generate-schematron</id>
+                        <id>generate-sources-jaxb-schematron</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <bindingIncludes>
-                                <include>iso-schematron/schematron.xjb</include>
-                            </bindingIncludes>
-                            <generateDirectory>${project.build.jaxbSchematronGeneratedSourceDirectory}</generateDirectory>
-                            <schemaIncludes>
-                                <include>iso-schematron/schematron.xsd</include>
-                            </schemaIncludes>
+                            <properties>
+                                <property>
+                                    <name>bindingIncludes</name>
+                                    <value>
+                                        crigtt.xjb
+                                        iso-schematron/schematron.xjb
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>outDir</name>
+                                    <value>${project.build.jaxbSchematronGeneratedSourceDirectory}</value>
+                                </property>
+                                <property>
+                                    <name>schemaIncludes</name>
+                                    <value>iso-schematron/schematron.xsd</value>
+                                </property>
+                            </properties>
+                            <scripts>
+                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-generate-sources-jaxb.groovy</script>
+                            </scripts>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>generate-schematron-svrl</id>
+                        <id>generate-sources-jaxb-schematron-svrl</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <bindingIncludes>
-                                <include>iso-schematron/svrl.xjb</include>
-                            </bindingIncludes>
-                            <generateDirectory>${project.build.jaxbSchematronSvrlGeneratedSourceDirectory}</generateDirectory>
-                            <schemaIncludes>
-                                <include>iso-schematron/svrl.xsd</include>
-                            </schemaIncludes>
+                            <properties>
+                                <property>
+                                    <name>bindingIncludes</name>
+                                    <value>
+                                        crigtt.xjb
+                                        iso-schematron/svrl.xjb
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>fieldNameSuffix</name>
+                                    <value>_SVRL</value>
+                                </property>
+                                <property>
+                                    <name>outDir</name>
+                                    <value>${project.build.jaxbSchematronSvrlGeneratedSourceDirectory}</value>
+                                </property>
+                                <property>
+                                    <name>pkgNameSuffix</name>
+                                    <value>.svrl</value>
+                                </property>
+                                <property>
+                                    <name>schemaIncludes</name>
+                                    <value>iso-schematron/svrl.xsd</value>
+                                </property>
+                            </properties>
+                            <scripts>
+                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-generate-sources-jaxb.groovy</script>
+                            </scripts>
                         </configuration>
                     </execution>
                 </executions>

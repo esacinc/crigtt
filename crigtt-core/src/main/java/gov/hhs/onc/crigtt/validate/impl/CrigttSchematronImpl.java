@@ -18,7 +18,6 @@ import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedAssertionImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPatternImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPhaseImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedRuleImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.RuleImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
@@ -111,7 +110,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
             this.pooledReferencedDocs.put(new DocumentURI(referencedDocUri),
                 this.docBuilder.build((referencedDocSrc = this.referencedDocs.get(referencedDocUri))).getUnderlyingNode());
 
-            LOGGER.debug(String.format("Built Schematron schema (sysId=%s) referenced document (uri=%s, sysId=%s).", sysId, referencedDocUri,
+            LOGGER.info(String.format("Built Schematron schema (sysId=%s) referenced document (uri=%s, sysId=%s).", sysId, referencedDocUri,
                 referencedDocSrc.getSystemId()));
         }
 
@@ -122,7 +121,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         if (this.title != null) {
             Title title = new TitleImpl();
             title.getContent().add(this.title);
-            schema.getTitle().add(title);
+            schema.getTitles().add(title);
         }
 
         this.resolvedPhases = this.resolvePhases(schema);
@@ -150,8 +149,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
         this.xsltExec = this.xsltCompiler.compile(schemaDest.getXdmNode().getUnderlyingNode());
 
-        LOGGER.info(String.format("Prepared Schematron schema (title=%s, sysId=%s) with %d resolved phase(s).", schema.getTitle(), sysId,
-            this.resolvedPhases.size()));
+        LOGGER.info(String.format("Prepared Schematron schema (title=%s, sysId=%s) with %d resolved phase(s).", this.title, sysId, this.resolvedPhases.size()));
     }
 
     private Map<String, ResolvedPhase> resolvePhases(Schema schema) throws SaxonApiException {
@@ -160,15 +158,15 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         final Map<String, Rule> rules = new LinkedHashMap<>();
         final Map<String, Assertion> assertions = new LinkedHashMap<>();
 
-        schema.getPhase().forEach(phase -> phases.put(phase.getId(), phase));
+        schema.getPhases().forEach(phase -> phases.put(phase.getId(), phase));
 
-        schema.getPattern().forEach(pattern -> {
+        schema.getPatterns().forEach(pattern -> {
             patterns.put(pattern.getId(), pattern);
 
-            pattern.getRule().forEach(rule -> {
+            pattern.getRules().forEach(rule -> {
                 rules.put(rule.getId(), rule);
 
-                rule.getAssert().forEach(assertion -> assertions.put(assertion.getId(), assertion));
+                rule.getAssertions().forEach(assertion -> assertions.put(assertion.getId(), assertion));
             });
         });
 
@@ -188,7 +186,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
             resolvedPhases.put(phaseId, (resolvedPhase = new ResolvedPhaseImpl(phaseId)));
             resolvedPhase.setPatterns((resolvedPatterns =
                 new LinkedHashMap<>((activePatterns =
-                    phases.get(phaseId).getActive().stream().map(active -> ((Pattern) active.getPattern())).collect(Collectors.toList())).size())));
+                    phases.get(phaseId).getActives().stream().map(active -> ((Pattern) active.getPattern())).collect(Collectors.toList())).size())));
 
             for (Pattern activePattern : activePatterns) {
                 if (StringUtils.isEmpty((patternId = activePattern.getId())) || ((pattern = patterns.get(patternId)).isSetAbstract() && pattern.isAbstract())) {
@@ -198,7 +196,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
                 resolvedPatterns.put(patternId, (resolvedPattern = new ResolvedPatternImpl(patternId)));
                 resolvedPattern.setRules((resolvedRules = new LinkedHashMap<>()));
 
-                for (Rule rule : pattern.getRule()) {
+                for (Rule rule : pattern.getRules()) {
                     if (StringUtils.isEmpty((ruleId = rule.getId())) || (rule.isSetAbstract() && rule.isAbstract())) {
                         continue;
                     }
@@ -207,11 +205,11 @@ public class CrigttSchematronImpl implements CrigttSchematron {
                     resolvedRule.setContext(rule.getContext());
                     resolvedRule.setAssertions((resolvedAssertions = this.resolveAssertions(new LinkedHashMap<>(), rule)));
 
-                    ((RuleImpl) rule).setReport(resolvedAssertions.values().stream().map(resolvedAssertion -> {
+                    rule.setReports(resolvedAssertions.values().stream().map(resolvedAssertion -> {
                         Report report = new ReportImpl();
                         report.setId(resolvedAssertion.getId());
                         report.setTest(resolvedAssertion.getTest());
-                        report.getMixedContent().addAll(Arrays.asList(resolvedAssertion.getText()));
+                        report.getContent().addAll(Arrays.asList(resolvedAssertion.getText()));
 
                         return report;
                     }).collect(Collectors.toList()));
@@ -223,21 +221,21 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     private Map<String, ResolvedAssertion> resolveAssertions(Map<String, ResolvedAssertion> resolvedAssertions, Rule rule) throws SaxonApiException {
-        for (Extension extension : rule.getExtends()) {
+        for (Extension extension : rule.getExtensions()) {
             this.resolveAssertions(resolvedAssertions, ((Rule) extension.getRule()));
         }
 
         ResolvedAssertion resolvedAssertion;
         String assertionId;
 
-        for (Assertion assertion : rule.getAssert()) {
+        for (Assertion assertion : rule.getAssertions()) {
             if (StringUtils.isEmpty((assertionId = assertion.getId()))) {
                 continue;
             }
 
             resolvedAssertions.put(assertionId, (resolvedAssertion = new ResolvedAssertionImpl(assertionId)));
             resolvedAssertion.setTest(assertion.getTest());
-            resolvedAssertion.setText(assertion.getMixedContent().stream().toArray(String[]::new));
+            resolvedAssertion.setText(assertion.getContent().stream().toArray(String[]::new));
         }
 
         return resolvedAssertions;

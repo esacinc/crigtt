@@ -82,9 +82,9 @@
     </logger>
     
     <!--====================================================================================================
-    = LOGGERS: HELGER
+    = LOGGERS: SAXON
     =====================================================================================================-->
-    <logger name="com.helger" level="info" additivity="false">
+    <logger name="net.sf.saxon" level="info" additivity="false">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </logger>

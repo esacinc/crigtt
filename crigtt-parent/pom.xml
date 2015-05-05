@@ -71,6 +71,11 @@
                 <version>1.1.3</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>5.0.1</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.sebhoss</groupId>
                 <artifactId>suppress-warnings</artifactId>
                 <version>1.0.0</version>
@@ -114,9 +119,37 @@
                 <version>1.2.1</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>2.0.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>2.2.12</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.msv</groupId>
+                <artifactId>msv-core</artifactId>
+                <version>2013.6.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.sun.xml.bind.jaxb</groupId>
+                        <artifactId>isorelax</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.msv</groupId>
+                <artifactId>xsdlib</artifactId>
+                <version>2013.6.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>relaxngDatatype</groupId>
+                        <artifactId>relaxngDatatype</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>net.sf.saxon</groupId>
@@ -145,6 +178,27 @@
                 <version>3.4</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>3.0.4</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.woodstox</groupId>
+                        <artifactId>woodstox-core-asl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>3.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>3.0.4</version>
+            </dependency>
+            <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
                 <version>2.4.3</version>
@@ -153,6 +207,11 @@
                 <groupId>org.codehaus.janino</groupId>
                 <artifactId>janino</artifactId>
                 <version>2.7.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>stax2-api</artifactId>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.fusesource.jansi</groupId>
@@ -199,6 +258,24 @@
                     <exclusion>
                         <groupId>org.jvnet.staxex</groupId>
                         <artifactId>stax-ex</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>2.17</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet</artifactId>
+                <version>2.17</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.glassfish.hk2</groupId>
+                        <artifactId>osgi-resource-locator</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -495,6 +572,87 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <inherited>true</inherited>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-api</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-coyote</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-dbcp</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-jasper</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-jasper-el</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-jdbc</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-jsp-api</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-annotations-api</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-catalina</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-el-api</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-servlet-api</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-util</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-core</artifactId>
+                            <version>7.0.61</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <charset>${project.build.sourceEncoding}</charset>
+                        <password>${tomcat.manager.password}</password>
+                        <path>/${project.artifactId}</path>
+                        <update>true</update>
+                        <url>${tomcat.manager.url}</url>
+                        <username>${tomcat.manager.username}</username>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.gmavenplus</groupId>
                     <artifactId>gmavenplus-plugin</artifactId>
                     <version>1.5</version>
@@ -582,6 +740,39 @@
             </activation>
             <properties>
                 <skipTests>false</skipTests>
+            </properties>
+        </profile>
+        <profile>
+            <id>tomcat-manager-password-default</id>
+            <activation>
+                <property>
+                    <name>!tomcat.manager.password</name>
+                </property>
+            </activation>
+            <properties>
+                <tomcat.manager.password/>
+            </properties>
+        </profile>
+        <profile>
+            <id>tomcat-manager-url-default</id>
+            <activation>
+                <property>
+                    <name>!tomcat.manager.url</name>
+                </property>
+            </activation>
+            <properties>
+                <tomcat.manager.url>http://localhost/manager/text</tomcat.manager.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>tomcat-manager-username-default</id>
+            <activation>
+                <property>
+                    <name>!tomcat.manager.username</name>
+                </property>
+            </activation>
+            <properties>
+                <tomcat.manager.username/>
             </properties>
         </profile>
     </profiles>

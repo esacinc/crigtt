@@ -1,10 +1,10 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
+import gov.hhs.onc.crigtt.api.schematron.Assertion;
+import gov.hhs.onc.crigtt.api.schematron.Pattern;
+import gov.hhs.onc.crigtt.api.schematron.Phase;
+import gov.hhs.onc.crigtt.api.schematron.Rule;
 import gov.hhs.onc.crigtt.api.schematron.svrl.FailedAssertion;
 import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.api.schematron.svrl.SuccessfulReport;
@@ -99,7 +99,11 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
                             (respSuccessfulReport1, respSuccessfulReport2) -> respSuccessfulReport2, LinkedHashMap::new));
 
             List<SchematronValidationEvent> respEvents = new ArrayList<>();
-            Map<String, ResolvedPhase> phases = this.schematron.getResolvedPhases();
+            Map<String, Phase> phases = this.schematron.getPhases();
+            Map<String, List<Pattern>> activePatterns = this.schematron.getActivePatterns();
+            Map<String, List<Rule>> activeRules = this.schematron.getActiveRules();
+            Map<String, List<Assertion>> activeAssertions = this.schematron.getActiveAssertions();
+            Phase phase;
             ValidationEventLevel phaseLevel;
             String assertionId;
             SchematronValidationEvent respEvent;
@@ -108,16 +112,18 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
             NodeInfo respAssertionLocNodeInfo;
 
             for (String phaseId : phases.keySet()) {
+                phase = phases.get(phaseId);
                 phaseLevel = this.phaseLevels.get(phaseId);
 
-                for (ResolvedPattern pattern : phases.get(phaseId).getPatterns().values()) {
-                    for (ResolvedRule rule : pattern.getRules().values()) {
-                        for (ResolvedAssertion assertion : rule.getAssertions().values()) {
-                            (respEvent = new SchematronValidationEventImpl()).setPattern(pattern);
-                            respEvent.setRule(rule);
-                            respEvent.setAssert(assertion);
+                for (Pattern activePattern : activePatterns.get(phaseId)) {
+                    for (Rule activeRule : activeRules.get(activePattern.getId())) {
+                        for (Assertion activeAssertion : activeAssertions.get(activeRule.getId())) {
+                            (respEvent = new SchematronValidationEventImpl()).setPhase(phase);
+                            respEvent.setPattern(activePattern);
+                            respEvent.setRule(activeRule);
+                            respEvent.setAssertion(activeAssertion);
 
-                            if (respFailedAssertions.containsKey((assertionId = assertion.getId()))) {
+                            if (respFailedAssertions.containsKey((assertionId = activeAssertion.getId()))) {
                                 respSuccess = false;
 
                                 respEvent.setLevel(phaseLevel);

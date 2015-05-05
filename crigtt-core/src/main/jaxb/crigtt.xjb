@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaxb:bindings
     jaxb:extensionBindingPrefixes="annox inherit simplify wildcard xjc"
-    jaxb:version="2.1"
+    jaxb:version="2.0"
     xmlns:annox="http://annox.dev.java.net"
     xmlns:inherit="http://jaxb2-commons.dev.java.net/basic/inheritance"
     xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
@@ -13,5 +13,8 @@
     <!--====================================================================================================
     = GLOBAL
     =====================================================================================================-->
-    <jaxb:globalBindings choiceContentProperty="true" fixedAttributeAsConstantProperty="true" generateIsSetMethod="true" generateValueClass="false"/>
+    <jaxb:globalBindings fixedAttributeAsConstantProperty="true" generateIsSetMethod="true" generateMixedExtensions="true" generateValueClass="false"
+        localScoping="toplevel">
+        <xjc:smartWildcardDefaultBinding/>
+    </jaxb:globalBindings>
  </jaxb:bindings>

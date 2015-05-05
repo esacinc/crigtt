@@ -1,14 +1,15 @@
 package gov.hhs.onc.crigtt.validate;
 
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
+import gov.hhs.onc.crigtt.api.schematron.Assertion;
+import gov.hhs.onc.crigtt.api.schematron.Pattern;
+import gov.hhs.onc.crigtt.api.schematron.Phase;
+import gov.hhs.onc.crigtt.api.schematron.Rule;
 import net.sf.saxon.expr.parser.ExpressionLocation;
 
 public interface SchematronValidationEvent {
-    public ResolvedAssertion getAssert();
+    public Assertion getAssertion();
 
-    public void setAssert(ResolvedAssertion azzert);
+    public void setAssertion(Assertion assertion);
 
     public ValidationEventLevel getLevel();
 
@@ -18,11 +19,15 @@ public interface SchematronValidationEvent {
 
     public void setLocation(ExpressionLocation loc);
 
-    public ResolvedPattern getPattern();
+    public Pattern getPattern();
 
-    public void setPattern(ResolvedPattern pattern);
+    public void setPattern(Pattern pattern);
 
-    public ResolvedRule getRule();
+    public Phase getPhase();
 
-    public void setRule(ResolvedRule rule);
+    public void setPhase(Phase phase);
+
+    public Rule getRule();
+
+    public void setRule(Rule rule);
 }

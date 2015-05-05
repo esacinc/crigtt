@@ -9,6 +9,7 @@ import com.sun.tools.xjc.ErrorReceiver
 import com.sun.tools.xjc.Language
 import com.sun.tools.xjc.ModelLoader
 import com.sun.tools.xjc.Options
+import com.sun.tools.xjc.generator.bean.DualObjectFactoryGenerator
 import java.util.stream.Collectors
 import javax.annotation.Nullable
 import javax.xml.bind.annotation.XmlNs
@@ -62,7 +63,7 @@ def String[] tokenize(@Nullable String str, @Nullable String defaultStr) {
         ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS), ArrayUtils.EMPTY_STRING_ARRAY);
 }
 
-def final BASE_ARGS = ArrayUtils.toArray(
+def final BASE_ARGS = [
     "-mark-generated",
     "-Xannotate",
     "-Xclone",
@@ -72,7 +73,7 @@ def final BASE_ARGS = ArrayUtils.toArray(
     "-Xsetters-mode=direct",
     "-Xsimplify",
     "-Xwildcard"
-)
+] as String[]
 
 def final IMPL_PKG_NAME_SUFFIX = ".impl"
 
@@ -111,11 +112,7 @@ def final PLURAL_VAR_NAMES = [
     "valueOf": "valueOfs"
 ]
 
-def final PLURAL_PROP_NAMES = new HashMap<String, String>(PLURAL_VAR_NAMES.size())
-
-PLURAL_VAR_NAMES.each{
-    PLURAL_PROP_NAMES[StringUtils.capitalize(it.key)] = StringUtils.capitalize(it.value)
-}
+def final PLURAL_PROP_NAMES = PLURAL_VAR_NAMES.collectEntries{ [ StringUtils.capitalize(it.key), StringUtils.capitalize(it.value) ] }
 
 ((LoggerContext) StaticLoggerBinder.singleton.loggerFactory).getLogger(Logger.ROOT_LOGGER_NAME).setLevel(Level.INFO)
 
@@ -220,20 +217,24 @@ def uncheckedFieldName = "UNCHECKED"
 def rawTypesStaticRef = compilerWarningsClassModel.staticRef(rawTypesFieldName)
 def uncheckedStaticRef = compilerWarningsClassModel.staticRef(uncheckedFieldName)
 def apiBeanClassModel = codeModel.directClass((API_PKG_NAME + ".ApiBean"))
-def identifiableApiBeanClassModel = codeModel.directClass((API_PKG_NAME + ".IdentifiableApiBean"))
+def identityApiBeanClassModel = codeModel.directClass((API_PKG_NAME + ".IdentityApiBean"))
+def objFactoryGen
 def classRef
 def classMethodTypes
 def propSetterName
 
 outline.allPackageContexts.each{
-    it.objectFactory().annotate(SuppressWarnings.class).paramArray("value").param(rawTypesStaticRef).param(uncheckedStaticRef)
+    [
+        (objFactoryGen = ((DualObjectFactoryGenerator) it.objectFactoryGenerator())).publicOFG,
+        objFactoryGen.privateOFG
+    ].each{ it.objectFactory.annotate(SuppressWarnings.class).paramArray("value").param(rawTypesStaticRef).param(uncheckedStaticRef) }
     
     it.classes.each{
         (classRef = it.ref).method(JMod.NONE, classRef, CLONE_METHOD_NAME)
         
         classMethodTypes = classRef.methods().stream().collect(Collectors.toMap({ it.name() }, { it.type() }))
         
-        classRef._implements((classMethodTypes.containsKey(ID_GETTER_METHOD_NAME) ? identifiableApiBeanClassModel : apiBeanClassModel))
+        classRef._implements((classMethodTypes.containsKey(ID_GETTER_METHOD_NAME) ? identityApiBeanClassModel : apiBeanClassModel))
         
         it.target.properties.findAll{ it.collection }.each{
             if (!classMethodTypes.containsKey((propSetterName = (SETTER_METHOD_NAME_PREFIX + (publicPropName = it.getName(true)))))) {

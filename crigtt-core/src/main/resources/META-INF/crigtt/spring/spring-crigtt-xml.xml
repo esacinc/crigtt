@@ -18,6 +18,41 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
+    = XML INPUT FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="xmlInputFactory" class="javax.xml.stream.XMLInputFactory" abstract="true"/>
+    
+    <beans:bean id="xmlInputFactoryWoodstox" class="com.ctc.wstx.stax.WstxInputFactory" parent="xmlInputFactory" abstract="true"/>
+    
+    <beans:bean id="xmlInputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlInputFactory" parent="xmlInputFactoryWoodstox">
+        <beans:property name="properties">
+            <beans:map>
+                <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_REPLACING_ENTITY_REFERENCES }" value="false" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_SUPPORTING_EXTERNAL_ENTITIES }" value="false" value-type="java.lang.Boolean"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = SAX PARSER FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="saxParserFactory" class="javax.xml.parsers.SAXParserFactory" abstract="true"/>
+    
+    <beans:bean id="saxParserFactoryWoodstox" class="com.ctc.wstx.sax.WstxSAXParserFactory" parent="saxParserFactory" abstract="true"/>
+    
+    <beans:bean id="saxParserFactoryCrigtt" parent="saxParserFactoryWoodstox"
+        c:f-ref="xmlInputFactoryCrigtt"/>
+    
+    <!--====================================================================================================
+    = XML OUTPUT FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="xmlOutputFactory" class="javax.xml.stream.XMLOutputFactory" abstract="true"/>
+    
+    <beans:bean id="xmlOutputFactoryWoodstox" class="com.ctc.wstx.stax.WstxOutputFactory" parent="xmlOutputFactory" abstract="true"/>
+    
+    <beans:bean id="xmlOutputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory" parent="xmlOutputFactoryWoodstox"/>
+    
+    <!--====================================================================================================
     = OBJECT FACTORIES
     =====================================================================================================-->
     <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.api.schematron.impl.ObjectFactory"/>

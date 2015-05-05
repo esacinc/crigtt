@@ -1,8 +1,13 @@
 package gov.hhs.onc.crigtt.validate;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
+import gov.hhs.onc.crigtt.api.schematron.Assertion;
+import gov.hhs.onc.crigtt.api.schematron.Pattern;
+import gov.hhs.onc.crigtt.api.schematron.Phase;
+import gov.hhs.onc.crigtt.api.schematron.Rule;
+import gov.hhs.onc.crigtt.api.schematron.Schema;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import javax.xml.transform.Source;
@@ -14,6 +19,14 @@ import org.springframework.beans.factory.InitializingBean;
 public interface CrigttSchematron extends InitializingBean {
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     public XdmDocument transform(Source docSrc, Function<Receiver, Receiver> ... docResultFilterBuilders) throws SaxonApiException;
+
+    public Map<String, List<Assertion>> getActiveAssertions();
+
+    public Map<String, List<Pattern>> getActivePatterns();
+
+    public Map<String, List<Rule>> getActiveRules();
+
+    public Map<String, Assertion> getAssertions();
 
     public String getDescription();
 
@@ -31,6 +44,10 @@ public interface CrigttSchematron extends InitializingBean {
 
     public void setParameters(Map<String, ?> params);
 
+    public Map<String, Pattern> getPatterns();
+
+    public Map<String, Phase> getPhases();
+
     public String getQueryBinding();
 
     public void setQueryBinding(String queryBinding);
@@ -39,7 +56,9 @@ public interface CrigttSchematron extends InitializingBean {
 
     public void setReferencedDocuments(Map<String, Source> referencedDocs);
 
-    public Map<String, ResolvedPhase> getResolvedPhases();
+    public Map<String, Rule> getRules();
+
+    public Schema getSchema();
 
     public String getSchemaVersion();
 

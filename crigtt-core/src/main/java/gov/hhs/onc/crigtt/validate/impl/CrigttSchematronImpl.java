@@ -1,36 +1,32 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
+import gov.hhs.onc.crigtt.api.IdentityApiBean;
 import gov.hhs.onc.crigtt.api.schematron.Assertion;
-import gov.hhs.onc.crigtt.api.schematron.Extension;
 import gov.hhs.onc.crigtt.api.schematron.Pattern;
 import gov.hhs.onc.crigtt.api.schematron.Phase;
 import gov.hhs.onc.crigtt.api.schematron.Report;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedAssertion;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPattern;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedPhase;
-import gov.hhs.onc.crigtt.api.schematron.ResolvedRule;
 import gov.hhs.onc.crigtt.api.schematron.Rule;
 import gov.hhs.onc.crigtt.api.schematron.Schema;
 import gov.hhs.onc.crigtt.api.schematron.Title;
 import gov.hhs.onc.crigtt.api.schematron.impl.ReportImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedAssertionImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPatternImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedPhaseImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.ResolvedRuleImpl;
 import gov.hhs.onc.crigtt.api.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
+import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocumentDestination;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,17 +41,19 @@ import net.sf.saxon.om.DocumentURI;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmAtomicValue;
-import net.sf.saxon.s9api.XdmDestination;
 import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
+import net.sf.saxon.stax.XMLStreamWriterDestination;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CrigttSchematronImpl implements CrigttSchematron {
     private final static Logger LOGGER = LoggerFactory.getLogger(CrigttSchematronImpl.class);
+
+    @Resource(name = "xmlOutputFactoryCrigtt")
+    private CrigttXmlOutputFactory xmlOutFactory;
 
     @Resource(name = "docBuilderBase")
     private CrigttDocumentBuilder docBuilder;
@@ -76,7 +74,14 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     private Source src;
     private String title;
     private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
-    private Map<String, ResolvedPhase> resolvedPhases;
+    private Schema schema;
+    private Map<String, Phase> phases;
+    private Map<String, Pattern> patterns;
+    private Map<String, Rule> rules;
+    private Map<String, Assertion> assertions;
+    private Map<String, List<Pattern>> activePatterns;
+    private Map<String, List<Rule>> activeRules;
+    private Map<String, List<Assertion>> activeAssertions;
     private XsltExecutable[] xsltExecs;
     private XsltExecutable xsltExec;
 
@@ -85,10 +90,6 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     public XdmDocument transform(Source docSrc, Function<Receiver, Receiver> ... docResultFilterBuilders) throws SaxonApiException {
         XsltTransformer docTransformer = this.xsltExec.load();
         docTransformer.setSource(docSrc);
-
-        DocumentPool docPool = docTransformer.getUnderlyingController().getDocumentPool();
-
-        this.pooledReferencedDocs.forEach((pooledReferencedDocUri, pooledReferencedDocInfo) -> docPool.add(pooledReferencedDocInfo, pooledReferencedDocUri));
 
         XdmDocumentDestination docDest = new XdmDocumentDestination(docResultFilterBuilders);
         docTransformer.setDestination(docDest);
@@ -114,29 +115,112 @@ public class CrigttSchematronImpl implements CrigttSchematron {
                 referencedDocSrc.getSystemId()));
         }
 
-        Schema schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class);
-        schema.setQueryBinding(this.queryBinding);
-        schema.setSchemaVersion(this.schemaVersion);
+        (this.schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class)).setQueryBinding(this.queryBinding);
+        this.schema.setSchemaVersion(this.schemaVersion);
 
         if (this.title != null) {
             Title title = new TitleImpl();
             title.getContent().add(this.title);
-            schema.getTitles().add(title);
+            this.schema.getTitles().add(title);
         }
 
-        this.resolvedPhases = this.resolvePhases(schema);
+        List<Phase> schemaPhases = this.schema.getPhases();
 
-        ByteArrayResult resolvedResult = new ByteArrayResult(sysId);
+        schemaPhases.retainAll((this.phases =
+            schemaPhases.stream().filter(IdentityApiBean::isSetId)
+                .collect(Collectors.toMap(IdentityApiBean::getId, Function.<Phase> identity(), (phase1, phase2) -> phase2, LinkedHashMap::new))).values());
 
-        this.schematronJaxbMarshaller.marshal(schema, resolvedResult);
+        List<Pattern> schemaPatterns = this.schema.getPatterns();
+
+        schemaPatterns.retainAll((this.patterns =
+            schemaPatterns.stream().filter(IdentityApiBean::isSetId)
+                .collect(Collectors.toMap(IdentityApiBean::getId, Function.<Pattern> identity(), (pattern1, pattern2) -> pattern2, LinkedHashMap::new)))
+            .values());
+
+        this.rules = this.patterns.values().stream().flatMap(pattern -> {
+            List<Rule> patternRules = pattern.getRules();
+            Iterator<Rule> patternRuleIterator = patternRules.iterator();
+
+            while (patternRuleIterator.hasNext()) {
+                if (!patternRuleIterator.next().isSetId()) {
+                    patternRuleIterator.remove();
+                }
+            }
+
+            return patternRules.stream();
+        }).collect(Collectors.toMap(IdentityApiBean::getId, Function.<Rule> identity(), (rule1, rule2) -> rule2, LinkedHashMap::new));
+
+        this.assertions = this.rules.values().stream().flatMap(rule -> {
+            List<Assertion> ruleAssertions = rule.getAssertions();
+            Iterator<Assertion> ruleAssertionIterator = ruleAssertions.iterator();
+
+            while (ruleAssertionIterator.hasNext()) {
+                if (!ruleAssertionIterator.next().isSetId()) {
+                    ruleAssertionIterator.remove();
+                }
+            }
+
+            return ruleAssertions.stream();
+        }).collect(Collectors.toMap(IdentityApiBean::getId, Function.<Assertion> identity(), (assertion1, assertion2) -> assertion2, LinkedHashMap::new));
+
+        this.activePatterns =
+            this.phases
+                .entrySet()
+                .stream()
+                .collect(
+                    Collectors.toMap(Entry::getKey, phaseEntry -> phaseEntry.getValue().getActives().stream().map(active -> ((Pattern) active.getPattern()))
+                        .collect(Collectors.toList()), (activePatterns1, activePatterns2) -> activePatterns2, LinkedHashMap::new));
+
+        this.activeRules = new LinkedHashMap<>(this.rules.size());
+        this.activeAssertions = new LinkedHashMap<>(this.assertions.size());
+
+        List<Rule> activePatternRules;
+        List<Assertion> activeRuleAssertions;
+        List<Report> activeRuleReports;
+        Report activeRuleReport;
+
+        for (Pattern activePattern : this.activePatterns.values().stream().flatMap(Collection::stream).toArray(Pattern[]::new)) {
+            this.activeRules.put(activePattern.getId(), (activePatternRules = new ArrayList<>()));
+
+            for (Pattern activePatternItem : buildPatternHierarchy(new ArrayList<>(), activePattern)) {
+                for (Rule activeRule : activePatternItem.getRules().stream()
+                    .filter(activePatternRule -> (!activePatternRule.isSetAbstract() || !activePatternRule.isAbstract())).toArray(Rule[]::new)) {
+                    this.activeAssertions.put(activeRule.getId(), (activeRuleAssertions = new ArrayList<>()));
+
+                    activePatternRules.add(activeRule);
+
+                    activeRule.setReports((activeRuleReports = activeRule.getReports()));
+
+                    for (Rule activeRuleItem : buildRuleHierarchy(new ArrayList<>(), activeRule)) {
+                        for (Assertion activeAssertion : activeRuleItem.getAssertions()) {
+                            activeRuleAssertions.add(activeAssertion);
+
+                            activeRuleReports.add((activeRuleReport = new ReportImpl()));
+                            activeRuleReport.setId(activeAssertion.getId());
+                            activeRuleReport.setContent(activeAssertion.getContent());
+                            activeRuleReport.setTest(activeAssertion.getTest());
+                        }
+                    }
+                }
+            }
+        }
+
+        ByteArrayResult schemaResult = new ByteArrayResult(sysId);
+
+        this.schematronJaxbMarshaller.marshal(schema, schemaResult);
 
         XsltTransformer[] transformers = Stream.of(this.xsltExecs).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
-        transformers[0].setSource(new ByteArraySource(resolvedResult.getBytes(), sysId));
+        transformers[0].setSource(new ByteArraySource(schemaResult.getBytes(), sysId));
+
+        DocumentPool docPool = transformers[0].getUnderlyingController().getDocumentPool();
+
+        this.pooledReferencedDocs.forEach((pooledReferencedDocUri, pooledReferencedDocInfo) -> docPool.add(pooledReferencedDocInfo, pooledReferencedDocUri));
 
         IntStream.range(0, (transformers.length - 1)).forEach(
             transformerIndex -> transformers[transformerIndex].setDestination(transformers[(transformerIndex + 1)]));
 
-        XdmDestination schemaDest = new XdmDestination();
+        XMLStreamWriterDestination schemaDest =
+            new XMLStreamWriterDestination(this.xmlOutFactory.createXMLStreamWriter((schemaResult = new ByteArrayResult(sysId))));
         transformers[(transformers.length - 1)].setDestination(schemaDest);
 
         Optional.ofNullable(this.params)
@@ -147,98 +231,52 @@ public class CrigttSchematronImpl implements CrigttSchematron {
 
         transformers[0].transform();
 
-        this.xsltExec = this.xsltCompiler.compile(schemaDest.getXdmNode().getUnderlyingNode());
+        this.xsltExec = this.xsltCompiler.compile(new ByteArraySource(schemaResult.getBytes(), sysId));
 
-        LOGGER.info(String.format("Prepared Schematron schema (title=%s, sysId=%s) with %d resolved phase(s).", this.title, sysId, this.resolvedPhases.size()));
+        LOGGER.info(String.format(
+            "Prepared Schematron schema (title=%s, sysId=%s, numPhases=%d, numActivePatterns=%d, numActiveRules=%d, numActiveAssertions=%d).", this.title,
+            sysId, this.phases.size(), this.activePatterns.values().stream().mapToInt(Collection::size).sum(),
+            this.activeRules.values().stream().mapToInt(Collection::size).sum(), this.activeAssertions.values().stream().mapToInt(Collection::size).sum()));
     }
 
-    private Map<String, ResolvedPhase> resolvePhases(Schema schema) throws SaxonApiException {
-        final Map<String, Phase> phases = new LinkedHashMap<>();
-        final Map<String, Pattern> patterns = new LinkedHashMap<>();
-        final Map<String, Rule> rules = new LinkedHashMap<>();
-        final Map<String, Assertion> assertions = new LinkedHashMap<>();
+    private static List<Rule> buildRuleHierarchy(List<Rule> rules, Rule rootRule) {
+        rules.add(rootRule);
 
-        schema.getPhases().forEach(phase -> phases.put(phase.getId(), phase));
-
-        schema.getPatterns().forEach(pattern -> {
-            patterns.put(pattern.getId(), pattern);
-
-            pattern.getRules().forEach(rule -> {
-                rules.put(rule.getId(), rule);
-
-                rule.getAssertions().forEach(assertion -> assertions.put(assertion.getId(), assertion));
-            });
+        rootRule.getExtensions().forEach(ext -> {
+            buildRuleHierarchy(rules, ((Rule) ext.getRule()));
         });
 
-        Map<String, ResolvedPhase> resolvedPhases = new LinkedHashMap<>(phases.size());
-        List<Pattern> activePatterns;
-        ResolvedPhase resolvedPhase;
-        Map<String, ResolvedPattern> resolvedPatterns;
-        String patternId;
-        ResolvedPattern resolvedPattern;
-        Pattern pattern;
-        Map<String, ResolvedRule> resolvedRules;
-        ResolvedRule resolvedRule;
-        String ruleId;
-        Map<String, ResolvedAssertion> resolvedAssertions;
-
-        for (String phaseId : phases.keySet()) {
-            resolvedPhases.put(phaseId, (resolvedPhase = new ResolvedPhaseImpl(phaseId)));
-            resolvedPhase.setPatterns((resolvedPatterns =
-                new LinkedHashMap<>((activePatterns =
-                    phases.get(phaseId).getActives().stream().map(active -> ((Pattern) active.getPattern())).collect(Collectors.toList())).size())));
-
-            for (Pattern activePattern : activePatterns) {
-                if (StringUtils.isEmpty((patternId = activePattern.getId())) || ((pattern = patterns.get(patternId)).isSetAbstract() && pattern.isAbstract())) {
-                    continue;
-                }
-
-                resolvedPatterns.put(patternId, (resolvedPattern = new ResolvedPatternImpl(patternId)));
-                resolvedPattern.setRules((resolvedRules = new LinkedHashMap<>()));
-
-                for (Rule rule : pattern.getRules()) {
-                    if (StringUtils.isEmpty((ruleId = rule.getId())) || (rule.isSetAbstract() && rule.isAbstract())) {
-                        continue;
-                    }
-
-                    resolvedRules.put(ruleId, (resolvedRule = new ResolvedRuleImpl(ruleId)));
-                    resolvedRule.setContext(rule.getContext());
-                    resolvedRule.setAssertions((resolvedAssertions = this.resolveAssertions(new LinkedHashMap<>(), rule)));
-
-                    rule.setReports(resolvedAssertions.values().stream().map(resolvedAssertion -> {
-                        Report report = new ReportImpl();
-                        report.setId(resolvedAssertion.getId());
-                        report.setTest(resolvedAssertion.getTest());
-                        report.getContent().addAll(Arrays.asList(resolvedAssertion.getText()));
-
-                        return report;
-                    }).collect(Collectors.toList()));
-                }
-            }
-        }
-
-        return resolvedPhases;
+        return rules;
     }
 
-    private Map<String, ResolvedAssertion> resolveAssertions(Map<String, ResolvedAssertion> resolvedAssertions, Rule rule) throws SaxonApiException {
-        for (Extension extension : rule.getExtensions()) {
-            this.resolveAssertions(resolvedAssertions, ((Rule) extension.getRule()));
+    private static List<Pattern> buildPatternHierarchy(List<Pattern> patterns, Pattern rootPattern) {
+        patterns.add(rootPattern);
+
+        if (rootPattern.isSetIsA()) {
+            buildPatternHierarchy(patterns, ((Pattern) rootPattern.getIsA()));
         }
 
-        ResolvedAssertion resolvedAssertion;
-        String assertionId;
+        return patterns;
+    }
 
-        for (Assertion assertion : rule.getAssertions()) {
-            if (StringUtils.isEmpty((assertionId = assertion.getId()))) {
-                continue;
-            }
+    @Override
+    public Map<String, List<Assertion>> getActiveAssertions() {
+        return this.activeAssertions;
+    }
 
-            resolvedAssertions.put(assertionId, (resolvedAssertion = new ResolvedAssertionImpl(assertionId)));
-            resolvedAssertion.setTest(assertion.getTest());
-            resolvedAssertion.setText(assertion.getContent().stream().toArray(String[]::new));
-        }
+    @Override
+    public Map<String, List<Pattern>> getActivePatterns() {
+        return this.activePatterns;
+    }
 
-        return resolvedAssertions;
+    @Override
+    public Map<String, List<Rule>> getActiveRules() {
+        return this.activeRules;
+    }
+
+    @Override
+    public Map<String, Assertion> getAssertions() {
+        return this.assertions;
     }
 
     @Override
@@ -282,6 +320,16 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
+    public Map<String, Pattern> getPatterns() {
+        return this.patterns;
+    }
+
+    @Override
+    public Map<String, Phase> getPhases() {
+        return this.phases;
+    }
+
+    @Override
     public String getQueryBinding() {
         return this.queryBinding;
     }
@@ -303,8 +351,13 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     }
 
     @Override
-    public Map<String, ResolvedPhase> getResolvedPhases() {
-        return this.resolvedPhases;
+    public Map<String, Rule> getRules() {
+        return this.rules;
+    }
+
+    @Override
+    public Schema getSchema() {
+        return this.schema;
     }
 
     @Override

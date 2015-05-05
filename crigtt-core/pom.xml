@@ -44,6 +44,10 @@
             <artifactId>logback-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.sebhoss</groupId>
             <artifactId>suppress-warnings</artifactId>
         </dependency>
@@ -62,6 +66,14 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.msv</groupId>
+            <artifactId>msv-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.msv</groupId>
+            <artifactId>xsdlib</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.saxon</groupId>
@@ -86,6 +98,10 @@
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>stax2-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.fusesource.jansi</groupId>

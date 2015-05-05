@@ -39,6 +39,10 @@
             <artifactId>logback-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.sebhoss</groupId>
             <artifactId>suppress-warnings</artifactId>
         </dependency>
@@ -74,6 +78,19 @@
             <artifactId>javax.servlet.jsp.jstl-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.msv</groupId>
+            <artifactId>msv-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.msv</groupId>
+            <artifactId>xsdlib</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
         </dependency>
@@ -90,12 +107,28 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>stax2-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.fusesource.jansi</groupId>
@@ -113,6 +146,14 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -239,6 +280,58 @@
                     </execution>
                     <execution>
                         <id>war-test</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <ignorePackaging>true</ignorePackaging>
+                    <jarScanAllDirectories>false</jarScanAllDirectories>
+                    <uriEncoding>${project.build.sourceEncoding}</uriEncoding>
+                    <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>run-war-it</id>
+                        <!-- TEMP: dev -->
+                        <phase>none</phase>
+                        <!--<phase>pre-integration-test</phase>-->
+                        <goals>
+                            <goal>run-war-only</goal>
+                        </goals>
+                        <configuration>
+                            <hostName>localhost</hostName>
+                            <path>/</path>
+                            <port>18080</port>
+                            <systemProperties>
+                                <crigtt.logging.console.tty>true</crigtt.logging.console.tty>
+                                <crigtt.logging.file.dir>${project.build.directory}/surefire-logs</crigtt.logging.file.dir>
+                                <crigtt.logging.file.name>${project.artifactId}-test-it-tomcat</crigtt.logging.file.name>
+                                <logback.configurationFile>META-INF/crigtt/logback/logback-crigtt.xml</logback.configurationFile>
+                            </systemProperties>
+                            <webapps>
+                                <webapp>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <asWebapp>true</asWebapp>
+                                    <classifier>test</classifier>
+                                    <contextPath>/${project.artifactId}</contextPath>
+                                </webapp>
+                            </webapps>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>shutdown-it</id>
+                        <!-- TEMP: dev -->
+                        <phase>none</phase>
+                        <!--<phase>post-integration-test</phase>-->
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -47,7 +47,7 @@
         p:displayId="C-CDA R2"
         p:id="ccda-r2"
         p:source="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"
-        p:title="Consolidated Clinical Document Architecture (C-CDA) Release 2.0">
+        p:title="C-CDA Release 2.0">
         <beans:property name="referencedDocuments">
             <beans:map>
                 <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
@@ -56,11 +56,11 @@
     </beans:bean>
     
     <beans:bean id="schematronCcdaR2CancerReg" parent="schematronImpl"
-        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry"
-        p:displayId="C-CDA R2 Cancer Registry"
+        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
+        p:displayId="C-CDA R2 Cancer Registry DSTU 1.1"
         p:id="ccda-r2-cancer-reg"
-        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1.sch"
-        p:title="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry">
+        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch"
+        p:title="C-CDA Release 2.0 Cancer Registry DSTU 1.1">
         <beans:property name="referencedDocuments">
             <beans:map>
                 <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>

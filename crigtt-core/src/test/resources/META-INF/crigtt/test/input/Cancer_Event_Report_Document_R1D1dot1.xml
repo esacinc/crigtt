@@ -5,7 +5,7 @@
 	<!-- US Realm Header template -->
 	<templateId root="2.16.840.1.113883.10.20.22.1.1" extension="2014-06-09"/>
 	<!-- Cancer Event Report Document template -->
-	<templateId root="2.16.840.1.113883.10.13.1" extension="2014-08-08"/>
+	<templateId root="2.16.840.1.113883.10.13.1" extension="2015-01-29"/>
 	<!-- Globally unique identifier for the document  -->
 	<id extension="TT988" root="2.16.840.1.113883.19.5.99999.1"/>
 	<code code="72134-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Cancer event report"/>
@@ -133,7 +133,7 @@
 	<author>
 		<time value="201209151030-0800"/>
 		<assignedAuthor>
-		<id nullFlavor="NA"/>
+			<id nullFlavor="NA"/>
 			<addr>
 				<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 				<city>Portland</city>
@@ -151,7 +151,7 @@
 	<custodian>
 		<assignedCustodian>
 			<representedCustodianOrganization>
-			    <id extension="88888888" root="2.16.840.1.113883.4.6"/>
+				<id extension="88888888" root="2.16.840.1.113883.4.6"/>
 				<id extension="321CX" root="1.1.1.1.1.1.1.1.3"/>
 				<name>Medical Oncology Associates</name>
 				<telecom use="WP" value="tel:+1(555)555-1009"/>
@@ -289,7 +289,7 @@
 			<!--*****Cancer Diagnosis section*****-->
 			<component>
 				<section>
-					<templateId root="2.16.840.1.113883.10.13.2" extension="2014-08-08"/>
+					<templateId root="2.16.840.1.113883.10.13.2" extension="2015-02-05"/>
 					<code code="72135-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Cancer diagnosis"/>
 					<title>Cancer Diagnosis</title>
 					<text>
@@ -324,20 +324,21 @@
 					<entry typeCode="DRIV">
 						<act classCode="ACT" moodCode="EVN">
 							<!-- ** Cancer Diagnosis concern act ** -->
-							<templateId root="2.16.840.1.113883.10.13.3" extension="2014-08-08"/>
+							<templateId root="2.16.840.1.113883.10.13.3" extension="2015-02-05"/>
 							<id root="ec8a6ff8-ed4b-4f7e-82c3-e98e58b45de7"/>
 							<code code="CONC" codeSystem="2.16.840.1.113883.5.6" codeSystemName="HL7ActClass" displayName="Concern"/>
 							<!-- The statusCode represents the need to continue tracking the problem -->
 							<!-- This is of ongoing concern to the provider -->
 							<statusCode code="active"/>
 							<effectiveTime>
-								<!-- The low value represents when the problem was first recorded in the patient's chart -->
+								<!-- The low value represents when the problem was first recorded 
+                 in the patient's chart -->
 								<!-- Concern was documented on July 6, 2013 -->
 								<low value="20140730132515"/>
 							</effectiveTime>
 							<entryRelationship typeCode="SUBJ">
 								<observation classCode="OBS" moodCode="EVN">
-									<templateId root="2.16.840.1.113883.10.13.4" extension="2014-08-08"/>
+									<templateId root="2.16.840.1.113883.10.13.4" extension="2015-02-05"/>
 									<id root="5e0584ad-b4b0-421f-85f9-2c2c83c510cc"/>
 									<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
 									<text>
@@ -354,7 +355,7 @@
 										</originalText>
 										<qualifier>
 											<name code="31206-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Behavior ICD-O-3 Cancer"/>
-											<value code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, Primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
+											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, Primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 													<reference value="#Behavior_1"/>
 												</originalText>
@@ -370,7 +371,7 @@
 										</qualifier>
 										<qualifier>
 											<name code="21861-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Dx confirmed by Cancer"/>
-											<value code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive Histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
+											<value xsi:type="CD" code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive Histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
 												<originalText>
 													<reference value="#Confirmation_1"/>
 												</originalText>
@@ -392,7 +393,7 @@
 									</targetSiteCode>
 									<entryRelationship typeCode="SUBJ" inversionInd="true">
 										<observation classCode="OBS" moodCode="EVN">
-											<templateId root="2.16.840.1.113883.10.13.5" extension="2014-08-08"/>
+											<templateId root="2.16.840.1.113883.10.13.5" extension="2015-02-05"/>
 											<id root="91473759-6678-48a2-a0d5-084c5ded5afc"/>
 											<code code="75620-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="TNM clinical staging before treatment panel Cancer"/>
 											<statusCode code="completed"/>
@@ -401,6 +402,7 @@
 											</effectiveTime>
 											<entryRelationship typeCode="COMP">
 												<observation classCode="OBS" moodCode="EVN">
+													<templateId root="2.16.840.1.113883.10.13.35" extension="2015-02-05"/>
 													<code code="21908-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stage group.clinical"/>
 													<statusCode code="completed"/>
 													<value xsi:type="CD" code="IIB" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.9">
@@ -414,10 +416,11 @@
 																	<reference value="#ClinicalNarrative_1"/>
 																</originalText>
 															</value>
-														</qualifier>														
+														</qualifier>
 													</value>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.36" extension="2015-02-05"/>
 															<code code="21905-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Primary tumor.clinical [Class] Cancer"/>
 															<value xsi:type="CD" code="T2" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension" sdtc:valueSet="2.16.840.1.113883.3.520.4.6">
 																<originalText>
@@ -428,6 +431,7 @@
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.37" extension="2015-02-05"/>
 															<code code="21906-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Regional lymph nodes.clinical [Class] Cancer"/>
 															<value xsi:type="CD" code="N1" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Metastases to movable ipsilateral level I, II axillary lymph node(s)" sdtc:valueSet="2.16.840.1.113883.3.520.4.7">
 																<originalText>
@@ -438,6 +442,7 @@
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.38" extension="2015-02-05"/>
 															<code code="21907-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Distant metastases.clinical [Class] Cancer"/>
 															<value xsi:type="CD" code="M0" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="No clinical or radiographic evidence of distant metastases" sdtc:valueSet="2.16.840.1.113883.3.520.4.8">
 																<originalText>
@@ -448,6 +453,7 @@
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.39" extension="2015-02-05"/>
 															<code code="21910-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stager.clinical Cancer "/>
 															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.4" codeSystemName="NAACCR TNM Clinical Staged By " displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.4">
 																<originalText>
@@ -462,7 +468,7 @@
 									</entryRelationship>
 									<entryRelationship typeCode="SUBJ" inversionInd="true">
 										<observation classCode="OBS" moodCode="EVN">
-											<templateId root="2.16.840.1.113883.10.13.7" extension="2014-08-08"/>
+											<templateId root="2.16.840.1.113883.10.13.7" extension="2015-02-06"/>
 											<id root="6d064a91-fdae-4acf-9eb8-e1695cf301c9"/>
 											<code code="75621-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="TNM pathologic staging after surgery panel"/>
 											<statusCode code="completed"/>
@@ -471,6 +477,7 @@
 											</effectiveTime>
 											<entryRelationship typeCode="COMP">
 												<observation classCode="OBS" moodCode="EVN">
+													<templateId root="2.16.840.1.113883.10.13.40" extension="2015-02-05"/>
 													<code code="21902-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stage group.pathology Cancer"/>
 													<statusCode code="completed"/>
 													<value xsi:type="CD" code="IIB" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.20">
@@ -481,30 +488,33 @@
 															<name code="21903-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Descriptor.pathology Cancer Narrative "/>
 															<value code="0" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.21"/>
 														</qualifier>
-														
 													</value>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.41" extension="2015-02-05"/>
 															<code code="21899-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Primary tumor.pathology Cancer"/>
-															<value xsi:type="CD" code="T2" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Tumor &gt; 20 mm but &lt;= to 50 mm in &#xD;&#xD;&#xA;greatest dimension" sdtc:valueSet="2.16.840.1.113883.3.520.4.17"/>
+															<value xsi:type="CD" code="T2" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension" sdtc:valueSet="2.16.840.1.113883.3.520.4.17"/>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.42" extension="2015-02-05"/>
 															<code code="21900-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Regional lymph nodes.pathology [Class] Cancer"/>
-															<value xsi:type="CD" code="N1" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Micrometastases; or metastases in 1 to 3 &#xD;&#xD;&#xA;axillary lymph nodes; and/or in internal mammary nodes with metastases detected by &#xD;&#xD;&#xA;sentinel lymph node biopsy but not clinically detected." sdtc:valueSet="2.16.840.1.113883.3.520.4.18"/>
+															<value xsi:type="CD" code="N1" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected." sdtc:valueSet="2.16.840.1.113883.3.520.4.18"/>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.43" extension="2015-02-05"/>
 															<code code="21901-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Distant metastases.pathology [Class] Cancer"/>
 															<value xsi:type="CD" code="MX" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.19"/>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
+															<templateId root="2.16.840.1.113883.10.13.44" extension="2015-02-05"/>
 															<code code="21904-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stager.pathology Cancer"/>
-															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.17" codeSystemName="NAACCR TNM Pathologic Staged By" displayName="Pathologist and managing &#xD;&#xD;&#xA;physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.27"/>
+															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.17" codeSystemName="NAACCR TNM Pathologic Staged By" displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.27"/>
 														</observation>
 													</entryRelationship>
 												</observation>
@@ -520,15 +530,6 @@
 								</observation>
 							</entryRelationship>
 						</act>
-					</entry>
-					<entry typeCode="DRIV">
-						<observation classCode="OBS" moodCode="EVN">
-							<templateId root="2.16.840.1.113883.10.20.22.4.5" extension="2014-06-09"/>
-							<id root="ec8a6ff8-ed4b-4f7e-82c3-e98e58b45de9"/>
-							<code code="11323-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Health status"/>
-							<statusCode code="completed"/>
-							<value xsi:type="CD" code="81323004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Alive and well" sdtc:valueSet="2.16.840.1.113883.1.11.20.12"/>
-						</observation>
 					</entry>
 				</section>
 			</component>
@@ -1297,7 +1298,7 @@
 							<statusCode code="completed"/>
 							<effectiveTime>
 								<low value="20130512"/>
-							</effectiveTime> 
+							</effectiveTime>
 							<targetSiteCode code="181131000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Entire breast" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9"/>
 							<specimen typeCode="SPC">
 								<specimenRole classCode="SPEC">
@@ -1449,6 +1450,7 @@
 													<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
 													<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition HL7.CCDAR2"/>
 													<statusCode code="completed"/>
+													<effectiveTime value="20140731124200"/>
 												</observation>
 											</entryRelationship>
 											<entryRelationship typeCode="SUBJ" inversionInd="true">
@@ -1549,7 +1551,7 @@
 													<statusCode code="completed"/>
 													<effectiveTime value="20140731124200"/>
 													<value xsi:type="CD" code="408643008" displayName="Infiltrating duct carcinoma of breast" codeSystem="2.16.840.1.113883.6.96" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
-										 		</observation>
+												</observation>
 											</entryRelationship>
 										</procedure>
 									</component>
@@ -1819,7 +1821,7 @@
 				<section>
 					<templateId root="2.16.840.1.113883.10.20.22.2.17" extension="2014-06-09"/>
 					<!-- Social History Section -->
-					<templateId root="2.16.840.1.113883.10.13.11" extension="2014-08-08"/>
+					<templateId root="2.16.840.1.113883.10.13.11" extension="2015-01-29"/>
 					<!-- Social History Section (V2) - Cancer IG Specific Constraints -->
 					<code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History"/>
 					<title>SOCIAL HISTORY</title>
@@ -1829,32 +1831,30 @@
 					</text>
 					<entry typeCode="DRIV">
 						<observation classCode="OBS" moodCode="EVN">
-							<!-- ** Social history observation ** -->
-							<templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2014-06-09"/>
-							<id root="37f76c51-6411-4e1d-8a37-957fd49d2cef"/>
-							<code code="74013-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Alcoholic drinks per day"/>
+							<templateId root="2.16.840.1.113883.10.20.22.4.78" extension="2014-06-09"/>
+							<id extension="123456789" root="2.16.840.1.113883.19"/>
+							<code code="72166-2" codeSystem="2.16.840.1.113883.6.1" displayName="Tobacco smoking status NHIS"/>
 							<statusCode code="completed"/>
-							<effectiveTime>
-								<low value="20120215"/>
-							</effectiveTime>
-							<value xsi:type="PQ" value="2" unit="d"/>
+							<!-- The effectiveTime reflects when the current smoking status was observed. -->
+							<effectiveTime value="20120910"/>
+							<!-- The value represents the patient's smoking status currently observed. -->
+							<value xsi:type="CD" code="8517006" displayName="Former smoker" codeSystem="2.16.840.1.113883.6.96"/>
 							<author typeCode="AUT">
-								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-								<time value="201209101145-0800"/>
+								<time value="199803161030-0800"/>
 								<assignedAuthor>
-									<id extension="555555555" root="2.16.840.1.113883.4.6"/>
-									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC"/>
+									<id extension="555555555" root="1.1.1.1.1.1.1.2"/>
 								</assignedAuthor>
 							</author>
 						</observation>
 					</entry>
 					<entry>
 						<organizer classCode="CLUSTER" moodCode="EVN">
-							<templateId root="2.16.840.1.113883.10.13.16" extension="2014-08-08"/>
+							<templateId root="2.16.840.1.113883.10.13.16" extension="2015-01-29"/>
 							<!-- Emplyment history observation organizer -->
 							<statusCode code="completed"/>
 							<component typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.10.13.33" extension="2015-01-29"/>
 									<code code="21844-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Usual industry Hx"/>
 									<effectiveTime>
 										<low value="20010101"/>
@@ -1868,6 +1868,7 @@
 							</component>
 							<component typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.10.13.34" extension="2015-01-29"/>
 									<code code="21843-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Usual occupation Hx"/>
 									<effectiveTime>
 										<low value="20010101"/>

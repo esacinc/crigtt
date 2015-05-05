@@ -30,6 +30,7 @@
         p:xsltVersion="#{ T(net.sf.saxon.value.DecimalValue).TWO.stringValue }">
         <beans:property name="configurationProperties">
             <beans:map>
+                <beans:entry key="#{ T(net.sf.saxon.lib.FeatureKeys).GENERATE_BYTE_CODE }" value="true" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(net.sf.saxon.lib.FeatureKeys).PRE_EVALUATE_DOC_FUNCTION }" value="true" value-type="java.lang.Boolean"/>
             </beans:map>
         </beans:property>

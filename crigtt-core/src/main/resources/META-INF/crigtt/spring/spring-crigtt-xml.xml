@@ -29,6 +29,12 @@
             <beans:map>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_REPLACING_ENTITY_REFERENCES }" value="false" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_SUPPORTING_EXTERNAL_ENTITIES }" value="false" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_VALIDATING }" value="true" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_CACHE_DTDS }" value="false" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_INPUT_BUFFER_LENGTH }" value="#{ 512 * 1024 }" value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).SUPPORT_DTD }" value="false" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_SUPPORT_XMLID }"
+                    value="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_V_XMLID_NONE }"/>
             </beans:map>
         </beans:property>
     </beans:bean>

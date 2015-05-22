@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "crigtt.test.validate.all", "crigtt.test.validate.validator.all", "crigtt.test.validate.validator.doc" })
 public class DocumentValidatorTests extends AbstractCrigttTests {
-    @Value("classpath:${crigtt.test.input.file.1.path}")
+    @Value("classpath*:${crigtt.test.input.file.1.path}")
     private ResourceSource testInputSrc1;
 
     @Value("${crigtt.test.output.dir.path}")

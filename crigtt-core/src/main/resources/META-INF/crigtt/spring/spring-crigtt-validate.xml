@@ -18,6 +18,24 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
+    = DOCUMENTS
+    =====================================================================================================-->
+    <beans:bean id="docSchematronSkeleton" parent="doc" factory-bean="docBuilderBase" factory-method="build"
+        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"/>
+    
+    <!--====================================================================================================
+    = XSLT EXECUTABLES
+    =====================================================================================================-->
+    <beans:bean id="xsltExecSchematronInclude" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
+    
+    <beans:bean id="xsltExecSchematronExpand" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
+    
+    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
+    
+    <!--====================================================================================================
     = SCHEMATRONS
     =====================================================================================================-->
     <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true"/>
@@ -33,6 +51,11 @@
                 <beans:entry key="langCode" value="#{ T(java.util.Locale).ENGLISH.language }"/>
             </beans:map>
         </beans:property>
+        <beans:property name="referencedDocuments">
+            <beans:map>
+                <beans:entry key="iso_schematron_skeleton_for_saxon.xsl" value="#{ docSchematronSkeleton.underlyingNode }"/>
+            </beans:map>
+        </beans:property>
         <beans:property name="xsltExecutables">
             <beans:array>
                 <beans:ref bean="xsltExecSchematronInclude"/>
@@ -46,11 +69,11 @@
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:displayId="C-CDA R2"
         p:id="ccda-r2"
-        p:source="classpath:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"
+        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"
         p:title="C-CDA Release 2.0">
         <beans:property name="referencedDocuments">
-            <beans:map>
-                <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
+            <beans:map merge="true">
+                <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
             </beans:map>
         </beans:property>
     </beans:bean>
@@ -59,11 +82,11 @@
         p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:displayId="C-CDA R2 Cancer Registry DSTU 1.1"
         p:id="ccda-r2-cancer-reg"
-        p:source="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch"
+        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch"
         p:title="C-CDA Release 2.0 Cancer Registry DSTU 1.1">
         <beans:property name="referencedDocuments">
-            <beans:map>
-                <beans:entry key="voc.xml" value="classpath:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>
+            <beans:map merge="true">
+                <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>
             </beans:map>
         </beans:property>
     </beans:bean>

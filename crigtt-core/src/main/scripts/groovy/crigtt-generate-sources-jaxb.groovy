@@ -36,11 +36,15 @@ def class MavenErrorReceiver extends ErrorReceiver {
     @Override
     void fatalError(SAXParseException exception) throws AbortException {
         this.log.error(this.msg, exception)
+        
+        throw new AbortException()
     }
     
     @Override
     void error(SAXParseException exception) throws AbortException {
         this.log.error(this.msg, exception)
+        
+        throw new AbortException()
     }
 
     @Override
@@ -65,28 +69,28 @@ def String[] tokenize(@Nullable String str, @Nullable String defaultStr) {
 
 def final BASE_ARGS = [
     "-mark-generated",
-    "-Xannotate",
-    "-Xclone",
     "-Xdv",
-    "-Xinheritance",
     "-Xsetters",
     "-Xsetters-mode=direct",
-    "-Xsimplify",
     "-Xwildcard"
 ] as String[]
 
 def final IMPL_PKG_NAME_SUFFIX = ".impl"
 
 def final BASE_PKG_NAME = "gov.hhs.onc.crigtt"
-def final API_PKG_NAME = BASE_PKG_NAME + ".api"
-def final SCHEMATRON_API_PKG_NAME = API_PKG_NAME + ".schematron"
+def final BEANS_PKG_NAME = BASE_PKG_NAME + ".beans"
+def final SCHEMATRON_PKG_NAME = BASE_PKG_NAME + ".schematron"
 def final XML_PKG_NAME = BASE_PKG_NAME + ".xml"
 
 def final GETTER_METHOD_NAME_PREFIX = "get"
 def final SETTER_METHOD_NAME_PREFIX = "set"
 
-def final CLONE_METHOD_NAME = "clone"
+def final CONTENT_VAR_NAME = "content"
+def final CONTENT_PROP_NAME = StringUtils.capitalize(CONTENT_VAR_NAME)
+
 def final ID_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + "Id"
+def final CONTENT_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + CONTENT_PROP_NAME
+def final CONTENT_SETTER_METHOD_NAME = SETTER_METHOD_NAME_PREFIX + CONTENT_PROP_NAME
 
 def final PLURAL_VAR_NAMES = [
     "active": "actives",
@@ -101,6 +105,7 @@ def final PLURAL_VAR_NAMES = [
     "mixedContent": "content",
     "name": "names",
     "ns": "namespaces",
+    "nsPrefixInAttributeValues": "attributeValueNamespaces",
     "p": "paragraphs",
     "param": "parameters",
     "pattern": "patterns",
@@ -109,6 +114,7 @@ def final PLURAL_VAR_NAMES = [
     "rule": "rules",
     "span": "spans",
     "title": "titles",
+    "value": "values",
     "valueOf": "valueOfs"
 ]
 
@@ -200,7 +206,7 @@ log.info("Generated code outline for ${numBeans} class(es).")
 
 def fieldNameSuffix = StringUtils.defaultString(bindingVars["fieldNameSuffix"])
 def pkgNameSuffix = StringUtils.defaultString(bindingVars["pkgNameSuffix"])
-def pkgName = SCHEMATRON_API_PKG_NAME + pkgNameSuffix
+def pkgName = SCHEMATRON_PKG_NAME + pkgNameSuffix
 def implPkgName = pkgName + IMPL_PKG_NAME_SUFFIX
 def xmlNsClassModel = codeModel.directClass((XML_PKG_NAME + ".CrigttXmlNs"))
 def nsUriStaticRef = xmlNsClassModel.staticRef(("SCHEMATRON" + fieldNameSuffix + "_URI"))
@@ -216,12 +222,13 @@ def rawTypesFieldName = "RAWTYPES"
 def uncheckedFieldName = "UNCHECKED"
 def rawTypesStaticRef = compilerWarningsClassModel.staticRef(rawTypesFieldName)
 def uncheckedStaticRef = compilerWarningsClassModel.staticRef(uncheckedFieldName)
-def apiBeanClassModel = codeModel.directClass((API_PKG_NAME + ".ApiBean"))
-def identityApiBeanClassModel = codeModel.directClass((API_PKG_NAME + ".IdentityApiBean"))
+def identityBeanClassModel = codeModel.directClass((SCHEMATRON_PKG_NAME + ".IdentityBean"))
+def wildcardBeanClassModel = codeModel.directClass((SCHEMATRON_PKG_NAME + ".WildcardBean"))
 def objFactoryGen
 def classRef
 def classMethodTypes
 def propSetterName
+def propTypeParam
 
 outline.allPackageContexts.each{
     [
@@ -230,16 +237,21 @@ outline.allPackageContexts.each{
     ].each{ it.objectFactory.annotate(SuppressWarnings.class).paramArray("value").param(rawTypesStaticRef).param(uncheckedStaticRef) }
     
     it.classes.each{
-        (classRef = it.ref).method(JMod.NONE, classRef, CLONE_METHOD_NAME)
-        
-        classMethodTypes = classRef.methods().stream().collect(Collectors.toMap({ it.name() }, { it.type() }))
-        
-        classRef._implements((classMethodTypes.containsKey(ID_GETTER_METHOD_NAME) ? identityApiBeanClassModel : apiBeanClassModel))
+        classMethodTypes = (classRef = it.ref).methods().stream().collect(Collectors.toMap({ it.name() }, { it.type() }))
         
         it.target.properties.findAll{ it.collection }.each{
             if (!classMethodTypes.containsKey((propSetterName = (SETTER_METHOD_NAME_PREFIX + (publicPropName = it.getName(true)))))) {
-                classRef.method(JMod.NONE, codeModel.VOID, propSetterName).param(classMethodTypes[(GETTER_METHOD_NAME_PREFIX + publicPropName)], "value")
+                classRef.method(JMod.NONE, codeModel.VOID, propSetterName).param(classMethodTypes[(GETTER_METHOD_NAME_PREFIX + publicPropName)], "values")
             }
+        }
+        
+        if (classMethodTypes.containsKey(ID_GETTER_METHOD_NAME)) {
+            classRef._implements(identityBeanClassModel)
+        }
+        
+        if (classMethodTypes.containsKey(CONTENT_GETTER_METHOD_NAME) &&
+            ((propTypeParam = classMethodTypes[CONTENT_GETTER_METHOD_NAME].typeParameters[0]) != null)) {
+            classRef._implements(wildcardBeanClassModel.narrow(propTypeParam))
         }
     }
 }

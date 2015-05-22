@@ -1,19 +1,21 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.api.schematron.Assertion;
-import gov.hhs.onc.crigtt.api.schematron.Pattern;
-import gov.hhs.onc.crigtt.api.schematron.Phase;
-import gov.hhs.onc.crigtt.api.schematron.Rule;
-import gov.hhs.onc.crigtt.api.schematron.svrl.FailedAssertion;
-import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
-import gov.hhs.onc.crigtt.api.schematron.svrl.SuccessfulReport;
+import gov.hhs.onc.crigtt.schematron.Assertion;
+import gov.hhs.onc.crigtt.schematron.IdentityBean;
+import gov.hhs.onc.crigtt.schematron.Pattern;
+import gov.hhs.onc.crigtt.schematron.Phase;
+import gov.hhs.onc.crigtt.schematron.Rule;
+import gov.hhs.onc.crigtt.schematron.svrl.FailedAssertion;
+import gov.hhs.onc.crigtt.schematron.svrl.Output;
+import gov.hhs.onc.crigtt.schematron.svrl.SuccessfulReport;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXpathCompiler;
+import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
-import gov.hhs.onc.crigtt.validate.SchematronValidationEvent;
 import gov.hhs.onc.crigtt.validate.SchematronValidationRequest;
 import gov.hhs.onc.crigtt.validate.SchematronValidationResponse;
 import gov.hhs.onc.crigtt.validate.SchematronValidator;
+import gov.hhs.onc.crigtt.validate.ValidationEvent;
 import gov.hhs.onc.crigtt.validate.ValidationEventLevel;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
@@ -22,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import net.sf.saxon.event.CommentStripper;
 import net.sf.saxon.event.ProxyReceiver;
@@ -80,25 +81,19 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
 
             reqNamespaces.forEach(xpathContext::declareNamespace);
 
-            respOut.getNsPrefixInAttributeValues().stream()
-                .forEach(attrValueNs -> xpathContext.declareNamespace(attrValueNs.getPrefix(), attrValueNs.getUri()));
+            respOut.getAttributeValueNamespaces().stream().forEach(attrValueNs -> xpathContext.declareNamespace(attrValueNs.getPrefix(), attrValueNs.getUri()));
+
+            List<Object> respContent = respOut.getContent();
 
             Map<String, FailedAssertion> respFailedAssertions =
-                respOut
-                    .getFailedAssert()
-                    .stream()
-                    .collect(
-                        Collectors.toMap(FailedAssertion::getId, Function.<FailedAssertion> identity(),
-                            (respFailedAssertion1, respFailedAssertion2) -> respFailedAssertion2, LinkedHashMap::new));
-            Map<String, SuccessfulReport> respSuccessfulReports =
-                respOut
-                    .getSuccessfulReport()
-                    .stream()
-                    .collect(
-                        Collectors.toMap(SuccessfulReport::getId, Function.<SuccessfulReport> identity(),
-                            (respSuccessfulReport1, respSuccessfulReport2) -> respSuccessfulReport2, LinkedHashMap::new));
+                CrigttStreamUtils.toMap(IdentityBean::getId, Function.<FailedAssertion>identity(), LinkedHashMap::new,
+                    CrigttStreamUtils.instances(respContent.stream(), FailedAssertion.class));
 
-            List<SchematronValidationEvent> respEvents = new ArrayList<>();
+            Map<String, SuccessfulReport> respSuccessfulReports =
+                CrigttStreamUtils.toMap(IdentityBean::getId, Function.<SuccessfulReport>identity(), LinkedHashMap::new,
+                    CrigttStreamUtils.instances(respContent.stream(), SuccessfulReport.class));
+
+            List<ValidationEvent> respEvents = new ArrayList<>();
             Map<String, Phase> phases = this.schematron.getPhases();
             Map<String, List<Pattern>> activePatterns = this.schematron.getActivePatterns();
             Map<String, List<Rule>> activeRules = this.schematron.getActiveRules();
@@ -106,7 +101,7 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
             Phase phase;
             ValidationEventLevel phaseLevel;
             String assertionId;
-            SchematronValidationEvent respEvent;
+            ValidationEvent respEvent;
             String respAssertionLocExpr;
             XdmNode respAssertionLocNode;
             NodeInfo respAssertionLocNodeInfo;
@@ -118,7 +113,7 @@ public class SchematronValidatorImpl extends AbstractCrigttValidator<SchematronV
                 for (Pattern activePattern : activePatterns.get(phaseId)) {
                     for (Rule activeRule : activeRules.get(activePattern.getId())) {
                         for (Assertion activeAssertion : activeAssertions.get(activeRule.getId())) {
-                            (respEvent = new SchematronValidationEventImpl()).setPhase(phase);
+                            (respEvent = new ValidationEventImpl()).setPhase(phase);
                             respEvent.setPattern(activePattern);
                             respEvent.setRule(activeRule);
                             respEvent.setAssertion(activeAssertion);

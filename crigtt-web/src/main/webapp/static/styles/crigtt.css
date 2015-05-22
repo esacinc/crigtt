@@ -1,0 +1,58 @@
+body {
+    position: relative;
+    padding-top: 72px;
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+}
+
+a:focus {
+    outline-style: none;
+}
+
+a.link:hover {
+    cursor: pointer;
+}
+
+nav.navbar {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.176);
+}
+
+nav.navbar div.container-fluid div.navbar-header a.navbar-brand img {
+    display: inline-block;
+}
+
+nav.navbar div.container-fluid ul.navbar-nav {
+    font-size: 18px;
+}
+
+nav.navbar div.container-fluid ul.navbar-nav.nav-tabs {
+    border-bottom: none;
+}
+
+nav.navbar div.container-fluid ul.navbar-nav.nav-tabs li a {
+    border-radius: 0;
+}
+
+nav.navbar div.container-fluid ul.navbar-nav.nav-tabs li a:hover {
+    cursor: pointer;
+}
+
+nav.navbar div.container-fluid ul.navbar-nav li.dropdown {
+    font-size: 14px;
+}
+
+span.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+span.btn-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0;
+    outline: none;
+}

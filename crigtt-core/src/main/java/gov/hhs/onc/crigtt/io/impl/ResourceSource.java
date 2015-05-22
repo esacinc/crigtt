@@ -14,7 +14,11 @@ public class ResourceSource extends ByteArraySource {
     }
 
     public ResourceSource(Resource resource, @Nullable String sysId) throws IOException {
-        super(((sysId != null) ? sysId : resource.getURL().toExternalForm()));
+        this(resource, null, sysId);
+    }
+
+    public ResourceSource(Resource resource, @Nullable String publicId, @Nullable String sysId) throws IOException {
+        super(publicId, ((sysId != null) ? sysId : resource.getURL().toExternalForm()));
 
         try (InputStream resourceInStream = (this.resource = resource).getInputStream()) {
             this.bytes = IOUtils.toByteArray(resourceInStream);

@@ -35,6 +35,11 @@
     <beans:bean id="docBuilderBase" parent="docBuilderCrigtt" factory-bean="processorCrigtt" factory-method="newDocumentBuilder"/>
     
     <!--====================================================================================================
+    = DOCUMENTS
+    =====================================================================================================-->
+    <beans:bean id="doc" class="gov.hhs.onc.crigtt.xml.impl.XdmDocument" abstract="true"/>
+    
+    <!--====================================================================================================
     = SERIALIZER FACTORIES
     =====================================================================================================-->
     <beans:bean id="serializerFactory" class="net.sf.saxon.lib.SerializerFactory" abstract="true"/>
@@ -116,13 +121,4 @@
     = XSLT EXECUTABLES
     =====================================================================================================-->
     <beans:bean id="xsltExec" class="net.sf.saxon.s9api.XsltExecutable" abstract="true"/>
-    
-    <beans:bean id="xsltExecSchematronInclude" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
-    
-    <beans:bean id="xsltExecSchematronExpand" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
-    
-    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
 </beans:beans>

@@ -22,11 +22,6 @@
         <!-- Project build JAXB source properties -->
         <project.build.jaxbSchematronGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron</project.build.jaxbSchematronGeneratedSourceDirectory>
         <project.build.jaxbSchematronSvrlGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron-svrl</project.build.jaxbSchematronSvrlGeneratedSourceDirectory>
-        <project.build.jaxbSourceDirectory>${project.basedir}/src/main/jaxb</project.build.jaxbSourceDirectory>
-        <!-- Project build XML schema properties -->
-        <project.build.schemaDirectory>${project.build.outputDirectory}/META-INF/crigtt/schema</project.build.schemaDirectory>
-        <!-- Project build XML schema source properties -->
-        <project.build.schemaSourceDirectory>${project.basedir}/src/main/schema</project.build.schemaSourceDirectory>
         <!-- Project build Schematron properties -->
         <project.build.schematronDirectory>${project.build.outputDirectory}/META-INF/crigtt/schematron</project.build.schematronDirectory>
         <!-- Project build Schematron source properties -->
@@ -42,6 +37,38 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr353</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -66,6 +93,10 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
             <groupId>net.java.dev.msv</groupId>
@@ -96,6 +127,10 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
@@ -112,12 +147,12 @@
             <artifactId>jansi</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-annotate</artifactId>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -167,10 +202,23 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
         <!-- Test dependencies (inherited) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -209,21 +257,6 @@
                 <executions>
                     <execution>
                         <id>copy-resources-schema</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.schemaDirectory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.schemaSourceDirectory}</directory>
-                                    <includes>
-                                        <include>**/*.xsd</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>copy-resources-schematron</id>
@@ -272,17 +305,20 @@
                             </suiteXmlFiles>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>test-integration</id>
+                        <configuration>
+                            <suiteXmlFiles combine.self="override">
+                                <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-crigtt-it.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
                 <dependencies>
-                    <dependency>
-                        <groupId>net.codesup.util</groupId>
-                        <artifactId>jaxb2-rich-contract-plugin</artifactId>
-                        <version>1.6.7</version>
-                    </dependency>
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
                         <artifactId>cxf-xjc-dv</artifactId>
@@ -304,19 +340,9 @@
                         </exclusions>
                     </dependency>
                     <dependency>
-                        <groupId>org.jvnet.annox</groupId>
-                        <artifactId>annox</artifactId>
-                        <version>1.0.1</version>
-                    </dependency>
-                    <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
                         <version>0.9.4</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics-annotate</artifactId>
-                        <version>1.0.1</version>
                     </dependency>
                 </dependencies>
                 <executions>

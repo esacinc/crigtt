@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaxb:bindings
-    jaxb:extensionBindingPrefixes="annox inherit simplify wildcard xjc"
+    jaxb:extensionBindingPrefixes="wildcard xjc"
     jaxb:version="2.0"
     node="/xsd:schema"
     schemaLocation="../../schema/iso-schematron/schematron.xsd"
-    xmlns:annox="http://annox.dev.java.net"
-    xmlns:inherit="http://jaxb2-commons.dev.java.net/basic/inheritance"
     xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-    xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
     xmlns:wildcard="http://jaxb2-commons.dev.java.net/basic/wildcard"
     xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -16,7 +13,7 @@
     = SCHEMA
     =====================================================================================================-->
     <jaxb:schemaBindings>
-        <jaxb:package name="gov.hhs.onc.crigtt.api.schematron"/>
+        <jaxb:package name="gov.hhs.onc.crigtt.schematron"/>
     </jaxb:schemaBindings>
     
     <!--====================================================================================================
@@ -27,27 +24,24 @@
     <!--====================================================================================================
     = ELEMENTS
     =====================================================================================================-->
-    <jaxb:bindings node="xsd:element[@name='active']">
-        <jaxb:bindings node="xsd:complexType">
-            <simplify:as-element-property/>
-        </jaxb:bindings>
-    </jaxb:bindings>
-    
     <jaxb:bindings node="xsd:element[@name='assert']">
         <jaxb:class name="Assertion"/>
-        <jaxb:bindings node="xsd:complexType">
-            <simplify:as-element-property/>
-        </jaxb:bindings>
     </jaxb:bindings>
     
-    <jaxb:bindings node="xsd:element[@name='diagnostic']">
+    <jaxb:bindings node="xsd:element[@name='diagnostics']">
         <jaxb:bindings node="xsd:complexType">
-            <simplify:as-element-property/>
+            <jaxb:bindings node="xsd:choice">
+                <jaxb:property name="content"/>
+            </jaxb:bindings>
         </jaxb:bindings>
     </jaxb:bindings>
     
     <jaxb:bindings node="xsd:element[@name='dir']">
         <jaxb:class name="Direction"/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='emph']">
+        <jaxb:class name="Emphasis"/>
     </jaxb:bindings>
     
     <jaxb:bindings node="xsd:element[@name='extends']">
@@ -60,9 +54,6 @@
     
     <jaxb:bindings node="xsd:element[@name='p']">
         <jaxb:class name="Paragraph"/>
-        <jaxb:bindings node="xsd:complexType">
-            <simplify:as-element-property/>
-        </jaxb:bindings>
     </jaxb:bindings>
     
     <jaxb:bindings node="xsd:element[@name='param']">
@@ -71,23 +62,33 @@
     
     <jaxb:bindings node="xsd:element[@name='pattern']">
         <jaxb:bindings node="xsd:complexType">
-            <simplify:property name="anyOrIncludeOrTitle">
-                <simplify:as-element-property/>
-            </simplify:property>
+            <jaxb:bindings node="xsd:choice">
+                <jaxb:property name="content"/>
+            </jaxb:bindings>
         </jaxb:bindings>
     </jaxb:bindings>
     
-    <jaxb:bindings node="xsd:element[@name='report']">
+    <jaxb:bindings node="xsd:element[@name='phase']">
         <jaxb:bindings node="xsd:complexType">
-            <simplify:as-element-property/>
+            <jaxb:bindings node="xsd:choice">
+                <jaxb:property name="content"/>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:element[@name='rule']">
+        <jaxb:bindings node="xsd:complexType">
+            <jaxb:bindings node="xsd:choice">
+                <jaxb:property name="content"/>
+            </jaxb:bindings>
         </jaxb:bindings>
     </jaxb:bindings>
     
     <jaxb:bindings node="xsd:element[@name='schema']">
         <jaxb:bindings node="xsd:complexType">
-            <simplify:property name="anyOrIncludeOrTitle">
-                <simplify:as-element-property/>
-            </simplify:property>
+            <jaxb:bindings node="xsd:choice">
+                <jaxb:property name="content"/>
+            </jaxb:bindings>
         </jaxb:bindings>
     </jaxb:bindings>
  </jaxb:bindings>

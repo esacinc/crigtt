@@ -53,6 +53,12 @@
         <project.basedir.parent>${project.basedir}/${project.parent.relativePath}</project.basedir.parent>
         <!-- Project build Groovy source properties -->
         <project.build.groovyScriptSourceDirectory>${project.build.scriptSourceDirectory}/groovy</project.build.groovyScriptSourceDirectory>
+        <!-- Project build JAXB source properties -->
+        <project.build.jaxbSourceDirectory>${project.basedir}/src/main/jaxb</project.build.jaxbSourceDirectory>
+        <!-- Project build XML schema properties -->
+        <project.build.schemaDirectory>${project.build.outputDirectory}/META-INF/crigtt/schema</project.build.schemaDirectory>
+        <!-- Project build XML schema source properties -->
+        <project.build.schemaSourceDirectory>${project.basedir}/src/main/schema</project.build.schemaSourceDirectory>
         <!-- Project build source properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -69,6 +75,46 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>1.1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-joda</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr353</artifactId>
+                <version>2.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>2.5.3</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.woodstox</groupId>
@@ -102,32 +148,14 @@
                 <version>1</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet.jsp</groupId>
-                <artifactId>javax.servlet.jsp-api</artifactId>
-                <version>2.3.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet.jsp.jstl</groupId>
-                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-                <version>1.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>2.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>2.2.12</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.7</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.msv</groupId>
@@ -191,23 +219,13 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-core</artifactId>
-                <version>3.0.4</version>
+                <version>3.1.0</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.codehaus.woodstox</groupId>
                         <artifactId>woodstox-core-asl</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>3.0.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>3.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
@@ -222,7 +240,7 @@
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
-                <version>4.0.0</version>
+                <version>3.1.4</version>
             </dependency>
             <dependency>
                 <groupId>org.fusesource.jansi</groupId>
@@ -236,19 +254,9 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>javax.servlet.jsp.jstl</artifactId>
-                <version>1.2.4</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.servlet</groupId>
-                        <artifactId>servlet-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.servlet.jsp</groupId>
-                        <artifactId>jsp-api</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.json</artifactId>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
@@ -269,35 +277,6 @@
                     <exclusion>
                         <groupId>org.jvnet.staxex</groupId>
                         <artifactId>stax-ex</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey</groupId>
-                <artifactId>jersey-bom</artifactId>
-                <version>2.17</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.containers</groupId>
-                <artifactId>jersey-container-servlet</artifactId>
-                <version>2.17</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.glassfish.hk2</groupId>
-                        <artifactId>osgi-resource-locator</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-annotate</artifactId>
-                <version>1.0.1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -353,11 +332,18 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>1.2.3.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- Test dependencies -->
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>6.8.21</version>
+                <version>6.9.4</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -463,6 +449,27 @@
                         <resources combine.children="append"/>
                         <useDefaultDelimiters>false</useDefaultDelimiters>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>copy-resources-schema</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <inherited>true</inherited>
+                            <configuration>
+                                <outputDirectory>${project.build.schemaDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.schemaSourceDirectory}</directory>
+                                        <includes>
+                                            <include>**/*.xsd</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -496,9 +503,6 @@
                             -Xms128m -Xmx256m -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=4
                         </argLine>
                         <reportFormat>plain</reportFormat>
-                        <suiteXmlFiles>
-                            <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}.xml</suiteXmlFile>
-                        </suiteXmlFiles>
                         <systemPropertyVariables combine.children="append">
                             <crigtt.logging.console.tty>true</crigtt.logging.console.tty>
                             <crigtt.logging.file.dir>${project.build.directory}/surefire-logs</crigtt.logging.file.dir>
@@ -514,6 +518,9 @@
                             <inherited>true</inherited>
                             <configuration>
                                 <skip>${skipTests}</skip>
+                                <suiteXmlFiles>
+                                    <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}.xml</suiteXmlFile>
+                                </suiteXmlFiles>
                             </configuration>
                         </execution>
                         <execution>
@@ -525,143 +532,13 @@
                             <inherited>true</inherited>
                             <configuration>
                                 <reportNameSuffix>it</reportNameSuffix>
-                                <skip>true</skip>
+                                <skip>${skipTests}</skip>
+                                <suiteXmlFiles>
+                                    <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}-it.xml</suiteXmlFile>
+                                </suiteXmlFiles>
                             </configuration>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>2.6</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <archiveClasses>true</archiveClasses>
-                        <failOnMissingWebXml>false</failOnMissingWebXml>
-                        <packagingExcludes>WEB-INF/classes/**</packagingExcludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-war</id>
-                            <inherited>true</inherited>
-                            <configuration>
-                                <warSourceDirectory>${project.basedir}/src/main/webapp</warSourceDirectory>
-                                <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
-                                <webResources>
-                                    <resource>
-                                        <directory>${project.build.directory}</directory>
-                                        <includes>
-                                            <include>${project.build.finalName}.jar</include>
-                                        </includes>
-                                        <targetPath>WEB-INF/lib</targetPath>
-                                    </resource>
-                                </webResources>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>war-test</id>
-                            <goals>
-                                <goal>war</goal>
-                            </goals>
-                            <inherited>true</inherited>
-                            <configuration>
-                                <classifier>test</classifier>
-                                <primaryArtifact>false</primaryArtifact>
-                                <warSourceDirectory>${project.build.directory}/${project.artifactId}</warSourceDirectory>
-                                <webappDirectory>${project.build.directory}/${project.artifactId}-test</webappDirectory>
-                                <webResources>
-                                    <resource>
-                                        <directory>${project.build.directory}</directory>
-                                        <includes>
-                                            <include>${project.build.finalName}-tests.jar</include>
-                                        </includes>
-                                        <targetPath>WEB-INF/lib</targetPath>
-                                    </resource>
-                                </webResources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <inherited>true</inherited>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-api</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-coyote</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-dbcp</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-jasper</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-jasper-el</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-jdbc</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-jsp-api</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-annotations-api</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-catalina</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-el-api</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-servlet-api</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-util</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.tomcat.embed</groupId>
-                            <artifactId>tomcat-embed-core</artifactId>
-                            <version>7.0.61</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <charset>${project.build.sourceEncoding}</charset>
-                        <password>${tomcat.manager.password}</password>
-                        <path>/${project.artifactId}</path>
-                        <update>true</update>
-                        <url>${tomcat.manager.url}</url>
-                        <username>${tomcat.manager.username}</username>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.gmavenplus</groupId>
@@ -720,7 +597,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.1</version>
+                    <version>2.2</version>
                     <inherited>true</inherited>
                 </plugin>
             </plugins>
@@ -751,39 +628,6 @@
             </activation>
             <properties>
                 <skipTests>false</skipTests>
-            </properties>
-        </profile>
-        <profile>
-            <id>tomcat-manager-password-default</id>
-            <activation>
-                <property>
-                    <name>!tomcat.manager.password</name>
-                </property>
-            </activation>
-            <properties>
-                <tomcat.manager.password/>
-            </properties>
-        </profile>
-        <profile>
-            <id>tomcat-manager-url-default</id>
-            <activation>
-                <property>
-                    <name>!tomcat.manager.url</name>
-                </property>
-            </activation>
-            <properties>
-                <tomcat.manager.url>http://localhost/manager/text</tomcat.manager.url>
-            </properties>
-        </profile>
-        <profile>
-            <id>tomcat-manager-username-default</id>
-            <activation>
-                <property>
-                    <name>!tomcat.manager.username</name>
-                </property>
-            </activation>
-            <properties>
-                <tomcat.manager.username/>
             </properties>
         </profile>
     </profiles>

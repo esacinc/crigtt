@@ -108,7 +108,9 @@ provided this notice is included in all copies.
         </xsd:complexType>
     </xsd:element>
     
-    <xsd:element name="emph" type="xsd:string"/>
+    <xsd:element name="emph">
+        <xsd:complexType mixed="true"/>
+    </xsd:element>
     
     <xsd:element name="extends">
         <xsd:complexType>

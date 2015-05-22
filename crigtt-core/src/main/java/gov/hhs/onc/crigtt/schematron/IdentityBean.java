@@ -1,6 +1,6 @@
-package gov.hhs.onc.crigtt.api;
+package gov.hhs.onc.crigtt.schematron;
 
-public interface IdentityApiBean extends ApiBean {
+public interface IdentityBean {
     public boolean isSetId();
 
     public String getId();

@@ -9,7 +9,6 @@ import net.sf.saxon.s9api.XdmNode;
 
 public class XdmDocument extends XdmNode {
     private DocumentOverNodeInfo doc;
-    private DOMSource src;
 
     public XdmDocument(DocumentInfo docInfo) {
         this(docInfo, null);
@@ -18,7 +17,7 @@ public class XdmDocument extends XdmNode {
     public XdmDocument(DocumentInfo docInfo, @Nullable String sysId) {
         super(docInfo);
 
-        this.src = new DOMSource((this.doc = ((DocumentOverNodeInfo) NodeOverNodeInfo.wrap(docInfo))), sysId);
+        this.doc = ((DocumentOverNodeInfo) NodeOverNodeInfo.wrap(docInfo));
     }
 
     public DocumentOverNodeInfo getDocument() {
@@ -26,7 +25,7 @@ public class XdmDocument extends XdmNode {
     }
 
     public DOMSource getSource() {
-        return this.src;
+        return new DOMSource(this.doc);
     }
 
     @Override

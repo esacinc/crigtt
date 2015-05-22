@@ -1,11 +1,11 @@
 package gov.hhs.onc.crigtt.validate;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.api.schematron.Assertion;
-import gov.hhs.onc.crigtt.api.schematron.Pattern;
-import gov.hhs.onc.crigtt.api.schematron.Phase;
-import gov.hhs.onc.crigtt.api.schematron.Rule;
-import gov.hhs.onc.crigtt.api.schematron.Schema;
+import gov.hhs.onc.crigtt.schematron.Pattern;
+import gov.hhs.onc.crigtt.schematron.Phase;
+import gov.hhs.onc.crigtt.schematron.Rule;
+import gov.hhs.onc.crigtt.schematron.Schema;
+import gov.hhs.onc.crigtt.schematron.Assertion;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.List;
 import java.util.Map;

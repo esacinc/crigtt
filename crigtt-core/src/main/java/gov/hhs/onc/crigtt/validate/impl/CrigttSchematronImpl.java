@@ -1,19 +1,23 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.api.IdentityApiBean;
-import gov.hhs.onc.crigtt.api.schematron.Assertion;
-import gov.hhs.onc.crigtt.api.schematron.Pattern;
-import gov.hhs.onc.crigtt.api.schematron.Phase;
-import gov.hhs.onc.crigtt.api.schematron.Report;
-import gov.hhs.onc.crigtt.api.schematron.Rule;
-import gov.hhs.onc.crigtt.api.schematron.Schema;
-import gov.hhs.onc.crigtt.api.schematron.Title;
-import gov.hhs.onc.crigtt.api.schematron.impl.ReportImpl;
-import gov.hhs.onc.crigtt.api.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
+import gov.hhs.onc.crigtt.schematron.Active;
+import gov.hhs.onc.crigtt.schematron.Assertion;
+import gov.hhs.onc.crigtt.schematron.Extension;
+import gov.hhs.onc.crigtt.schematron.IdentityBean;
+import gov.hhs.onc.crigtt.schematron.Pattern;
+import gov.hhs.onc.crigtt.schematron.Phase;
+import gov.hhs.onc.crigtt.schematron.Report;
+import gov.hhs.onc.crigtt.schematron.Rule;
+import gov.hhs.onc.crigtt.schematron.Schema;
+import gov.hhs.onc.crigtt.schematron.Title;
+import gov.hhs.onc.crigtt.schematron.impl.ReportImpl;
+import gov.hhs.onc.crigtt.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
+import gov.hhs.onc.crigtt.utils.CrigttIteratorUtils;
+import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
@@ -106,13 +110,19 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         this.pooledReferencedDocs = new HashMap<>(this.referencedDocs.size());
 
         Source referencedDocSrc;
+        DocumentInfo referencedDocInfo;
 
         for (String referencedDocUri : this.referencedDocs.keySet()) {
-            this.pooledReferencedDocs.put(new DocumentURI(referencedDocUri),
-                this.docBuilder.build((referencedDocSrc = this.referencedDocs.get(referencedDocUri))).getUnderlyingNode());
+            if ((referencedDocSrc = this.referencedDocs.get(referencedDocUri)) instanceof DocumentInfo) {
+                referencedDocInfo = ((DocumentInfo) referencedDocSrc);
+            } else {
+                referencedDocInfo = this.docBuilder.build(referencedDocSrc).getUnderlyingNode();
 
-            LOGGER.info(String.format("Built Schematron schema (sysId=%s) referenced document (uri=%s, sysId=%s).", sysId, referencedDocUri,
-                referencedDocSrc.getSystemId()));
+                LOGGER.info(String.format("Built Schematron schema (sysId=%s) referenced document (uri=%s, sysId=%s).", sysId, referencedDocUri,
+                    referencedDocSrc.getSystemId()));
+            }
+
+            this.pooledReferencedDocs.put(new DocumentURI(referencedDocUri), referencedDocInfo);
         }
 
         (this.schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class)).setQueryBinding(this.queryBinding);
@@ -121,89 +131,101 @@ public class CrigttSchematronImpl implements CrigttSchematron {
         if (this.title != null) {
             Title title = new TitleImpl();
             title.getContent().add(this.title);
-            this.schema.getTitles().add(title);
+            this.schema.getContent().add(title);
         }
 
-        List<Phase> schemaPhases = this.schema.getPhases();
+        List<Object> schemaContent = this.schema.getContent();
 
-        schemaPhases.retainAll((this.phases =
-            schemaPhases.stream().filter(IdentityApiBean::isSetId)
-                .collect(Collectors.toMap(IdentityApiBean::getId, Function.<Phase> identity(), (phase1, phase2) -> phase2, LinkedHashMap::new))).values());
+        this.phases =
+            CrigttStreamUtils.toMap(IdentityBean::getId, Function.<Phase> identity(), LinkedHashMap::new,
+                CrigttStreamUtils.instances(schemaContent.stream(), Phase.class).filter(IdentityBean::isSetId));
 
-        List<Pattern> schemaPatterns = this.schema.getPatterns();
+        this.patterns =
+            CrigttStreamUtils.toMap(IdentityBean::getId, Function.<Pattern> identity(), LinkedHashMap::new,
+                CrigttStreamUtils.instances(schemaContent.stream(), Pattern.class).filter(IdentityBean::isSetId));
 
-        schemaPatterns.retainAll((this.patterns =
-            schemaPatterns.stream().filter(IdentityApiBean::isSetId)
-                .collect(Collectors.toMap(IdentityApiBean::getId, Function.<Pattern> identity(), (pattern1, pattern2) -> pattern2, LinkedHashMap::new)))
-            .values());
+        this.rules =
+            CrigttStreamUtils.toMap(IdentityBean::getId, Function.<Rule> identity(), LinkedHashMap::new, this.patterns.values().stream().flatMap(pattern -> {
+                List<Object> patternContent = pattern.getContent();
+                Iterator<Rule> patternRuleIterator = CrigttIteratorUtils.instances(patternContent.iterator(), Rule.class);
 
-        this.rules = this.patterns.values().stream().flatMap(pattern -> {
-            List<Rule> patternRules = pattern.getRules();
-            Iterator<Rule> patternRuleIterator = patternRules.iterator();
+                CrigttIteratorUtils.stream(patternRuleIterator).forEach(patternRule -> {
+                    if (!patternRule.isSetId()) {
+                        patternRuleIterator.remove();
+                    }
+                });
 
-            while (patternRuleIterator.hasNext()) {
-                if (!patternRuleIterator.next().isSetId()) {
-                    patternRuleIterator.remove();
-                }
-            }
+                return CrigttStreamUtils.instances(patternContent.stream(), Rule.class);
+            }));
 
-            return patternRules.stream();
-        }).collect(Collectors.toMap(IdentityApiBean::getId, Function.<Rule> identity(), (rule1, rule2) -> rule2, LinkedHashMap::new));
+        this.assertions =
+            CrigttStreamUtils.toMap(IdentityBean::getId, Function.<Assertion> identity(), LinkedHashMap::new, this.rules.values().stream().flatMap(rule -> {
+                List<Object> ruleContent = rule.getContent();
+                Iterator<Assertion> ruleAssertionIterator = CrigttIteratorUtils.instances(rule.getContent().iterator(), Assertion.class);
 
-        this.assertions = this.rules.values().stream().flatMap(rule -> {
-            List<Assertion> ruleAssertions = rule.getAssertions();
-            Iterator<Assertion> ruleAssertionIterator = ruleAssertions.iterator();
+                CrigttIteratorUtils.stream(ruleAssertionIterator).forEach(ruleAssertion -> {
+                    if (!ruleAssertion.isSetId()) {
+                        ruleAssertionIterator.remove();
+                    }
+                });
 
-            while (ruleAssertionIterator.hasNext()) {
-                if (!ruleAssertionIterator.next().isSetId()) {
-                    ruleAssertionIterator.remove();
-                }
-            }
-
-            return ruleAssertions.stream();
-        }).collect(Collectors.toMap(IdentityApiBean::getId, Function.<Assertion> identity(), (assertion1, assertion2) -> assertion2, LinkedHashMap::new));
+                return CrigttStreamUtils.instances(ruleContent.stream(), Assertion.class);
+            }));
 
         this.activePatterns =
-            this.phases
-                .entrySet()
-                .stream()
-                .collect(
-                    Collectors.toMap(Entry::getKey, phaseEntry -> phaseEntry.getValue().getActives().stream().map(active -> ((Pattern) active.getPattern()))
-                        .collect(Collectors.toList()), (activePatterns1, activePatterns2) -> activePatterns2, LinkedHashMap::new));
+            CrigttStreamUtils.toMap(
+                Entry::getKey,
+                phaseEntry -> CrigttStreamUtils.instances(phaseEntry.getValue().getContent().stream(), Active.class)
+                    .map(active -> ((Pattern) active.getPattern())).collect(Collectors.toList()), LinkedHashMap::new, this.phases.entrySet().stream());
 
         this.activeRules = new LinkedHashMap<>(this.rules.size());
         this.activeAssertions = new LinkedHashMap<>(this.assertions.size());
 
-        List<Rule> activePatternRules;
-        List<Assertion> activeRuleAssertions;
-        List<Report> activeRuleReports;
-        Report activeRuleReport;
+        this.activePatterns
+            .values()
+            .stream()
+            .flatMap(Collection::stream)
+            .forEach(
+                activePattern -> {
+                    List<Rule> activePatternRules = new ArrayList<>();
+                    this.activeRules.put(activePattern.getId(), activePatternRules);
 
-        for (Pattern activePattern : this.activePatterns.values().stream().flatMap(Collection::stream).toArray(Pattern[]::new)) {
-            this.activeRules.put(activePattern.getId(), (activePatternRules = new ArrayList<>()));
+                    buildPatternHierarchy(new ArrayList<>(), activePattern)
+                        .stream()
+                        .flatMap(activeHierarchyPattern -> CrigttStreamUtils.instances(activeHierarchyPattern.getContent().stream(), Rule.class))
+                        .filter(activePatternRule -> (!activePatternRule.isSetAbstract() || !activePatternRule.isAbstract()))
+                        .forEach(
+                            activeRule -> {
+                                activePatternRules.add(activeRule);
 
-            for (Pattern activePatternItem : buildPatternHierarchy(new ArrayList<>(), activePattern)) {
-                for (Rule activeRule : activePatternItem.getRules().stream()
-                    .filter(activePatternRule -> (!activePatternRule.isSetAbstract() || !activePatternRule.isAbstract())).toArray(Rule[]::new)) {
-                    this.activeAssertions.put(activeRule.getId(), (activeRuleAssertions = new ArrayList<>()));
+                                List<Assertion> activeRuleAssertions = new ArrayList<>();
+                                this.activeAssertions.put(activeRule.getId(), activeRuleAssertions);
 
-                    activePatternRules.add(activeRule);
+                                List<Object> activeRuleContent = activeRule.getContent();
 
-                    activeRule.setReports((activeRuleReports = activeRule.getReports()));
+                                CrigttStreamUtils
+                                    .instances(
+                                        buildRuleHierarchy(new ArrayList<>(), activeRule).stream().flatMap(
+                                            activeHierarchyRule -> activeHierarchyRule.getContent().stream()), Assertion.class).collect(Collectors.toList())
+                                    .stream().forEach(activeAssertion -> {
+                                        activeRuleAssertions.add(activeAssertion);
 
-                    for (Rule activeRuleItem : buildRuleHierarchy(new ArrayList<>(), activeRule)) {
-                        for (Assertion activeAssertion : activeRuleItem.getAssertions()) {
-                            activeRuleAssertions.add(activeAssertion);
-
-                            activeRuleReports.add((activeRuleReport = new ReportImpl()));
-                            activeRuleReport.setId(activeAssertion.getId());
-                            activeRuleReport.setContent(activeAssertion.getContent());
-                            activeRuleReport.setTest(activeAssertion.getTest());
-                        }
-                    }
-                }
-            }
-        }
+                                        Report activeReport = new ReportImpl();
+                                        activeReport.setContent(activeAssertion.getContent());
+                                        activeReport.setDiagnostics(activeAssertion.getDiagnostics());
+                                        activeReport.setFlag(activeAssertion.getFlag());
+                                        activeReport.setFpi(activeAssertion.getFpi());
+                                        activeReport.setId(activeAssertion.getId());
+                                        activeReport.setIcon(activeAssertion.getIcon());
+                                        activeReport.setRole(activeAssertion.getRole());
+                                        activeReport.setSee(activeAssertion.getSee());
+                                        activeReport.setSubject(activeAssertion.getSubject());
+                                        activeReport.setRole(activeAssertion.getRole());
+                                        activeReport.setTest(activeAssertion.getTest());
+                                        activeRuleContent.add(activeReport);
+                                    });
+                            });
+                });
 
         ByteArrayResult schemaResult = new ByteArrayResult(sysId);
 
@@ -242,7 +264,7 @@ public class CrigttSchematronImpl implements CrigttSchematron {
     private static List<Rule> buildRuleHierarchy(List<Rule> rules, Rule rootRule) {
         rules.add(rootRule);
 
-        rootRule.getExtensions().forEach(ext -> {
+        CrigttStreamUtils.instances(rootRule.getContent().stream(), Extension.class).forEach(ext -> {
             buildRuleHierarchy(rules, ((Rule) ext.getRule()));
         });
 

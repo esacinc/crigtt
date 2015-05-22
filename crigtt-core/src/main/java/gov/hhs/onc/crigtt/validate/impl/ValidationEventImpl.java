@@ -1,14 +1,14 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.Assertion;
-import gov.hhs.onc.crigtt.api.schematron.Pattern;
-import gov.hhs.onc.crigtt.api.schematron.Phase;
-import gov.hhs.onc.crigtt.api.schematron.Rule;
-import gov.hhs.onc.crigtt.validate.SchematronValidationEvent;
+import gov.hhs.onc.crigtt.schematron.Assertion;
+import gov.hhs.onc.crigtt.schematron.Pattern;
+import gov.hhs.onc.crigtt.schematron.Phase;
+import gov.hhs.onc.crigtt.schematron.Rule;
+import gov.hhs.onc.crigtt.validate.ValidationEvent;
 import gov.hhs.onc.crigtt.validate.ValidationEventLevel;
 import net.sf.saxon.expr.parser.ExpressionLocation;
 
-public class SchematronValidationEventImpl implements SchematronValidationEvent {
+public class ValidationEventImpl implements ValidationEvent {
     private Assertion assertion;
     private ValidationEventLevel level;
     private ExpressionLocation loc;

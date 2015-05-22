@@ -1,99 +1,74 @@
 package gov.hhs.onc.crigtt.config.impl;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import com.ctc.wstx.sax.WstxSAXParserFactory;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
+import com.ctc.wstx.sax.WstxSAXParser;
+import gov.hhs.onc.crigtt.xml.impl.CrigttSaxParserFactory;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.stream.StreamResult;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.lib.FeatureKeys;
-import net.sf.saxon.lib.Logger;
+import net.sf.saxon.lib.ParseOptions;
+import net.sf.saxon.lib.StandardURIResolver;
 import net.sf.saxon.trans.LicenseException;
 import net.sf.saxon.trans.XPathException;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.springframework.beans.factory.InitializingBean;
+import org.xml.sax.ErrorHandler;
 
-public class CrigttConfiguration extends Configuration {
-    private static class CrigttSaxonLogger extends Logger {
-        private final static Map<Integer, Level> SEVERITY_LEVELS = Stream.of(new ImmutablePair<>(INFO, Level.INFO), new ImmutablePair<>(WARNING, Level.WARN),
-            new ImmutablePair<>(ERROR, Level.ERROR), new ImmutablePair<>(DISASTER, Level.ERROR)).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-
-        private final static Set<String> STACK_SKIP_CLASS_NAMES = new HashSet<>(ClassUtils.convertClassesToClassNames(Arrays.asList(Logger.class,
-            CrigttSaxonLogger.class)));
-
-        private final static ch.qos.logback.classic.Logger LOGGER = ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(CrigttSaxonLogger.class));
-
-        @Override
-        public void println(String msg, int severity) {
-            LoggingEvent event = new LoggingEvent(ch.qos.logback.classic.Logger.FQCN, LOGGER, SEVERITY_LEVELS.get(severity), msg, null, null);
-
-            StackTraceElement[] stackFrames = new Throwable().getStackTrace();
-
-            for (int a = 1; a < stackFrames.length; a++) {
-                if (!STACK_SKIP_CLASS_NAMES.contains(stackFrames[a].getClassName())) {
-                    stackFrames = ArrayUtils.subarray(stackFrames, a, stackFrames.length);
-
-                    break;
-                }
-            }
-
-            event.setCallerData(stackFrames);
-
-            LOGGER.callAppenders(event);
+public class CrigttConfiguration extends Configuration implements InitializingBean {
+    private static class CrigttUriResolver extends StandardURIResolver {
+        public CrigttUriResolver(CrigttConfiguration config) {
+            super(config);
         }
 
+        @Nullable
         @Override
-        public StreamResult asStreamResult() {
-            return new StreamResult(new StringWriter() {
-                @Override
-                public void close() throws IOException {
-                    super.close();
-
-                    CrigttSaxonLogger.this.println(this.getBuffer().toString(), INFO);
-                }
-            });
+        public Source resolve(String sysId, @Nullable String baseUri) throws XPathException {
+            return ((sysId.isEmpty() && !StringUtils.isEmpty(baseUri)) ? super.resolve(baseUri, null) : super.resolve(sysId, baseUri));
         }
     }
 
     @Resource(name = "saxParserFactoryCrigtt")
-    private WstxSAXParserFactory saxParserFactory;
+    private CrigttSaxParserFactory saxParserFactory;
 
-    {
-        this.setLogger(new CrigttSaxonLogger());
-        this.setSourceParserClass(StringUtils.EMPTY);
-        this.setStyleParserClass(StringUtils.EMPTY);
+    @Override
+    public WstxSAXParser makeParser(@Nullable String className) throws TransformerFactoryConfigurationError {
+        return this.saxParserFactory.newSAXParser();
     }
 
     @Override
-    public XMLReader makeParser(String className) throws TransformerFactoryConfigurationError {
-        try {
-            return this.saxParserFactory.newSAXParser().getXMLReader();
-        } catch (SAXException e) {
-            throw new TransformerFactoryConfigurationError(new XPathException(e));
-        }
+    public CrigttPipelineConfiguration makePipelineConfiguration() {
+        CrigttPipelineConfiguration pipelineConfig = new CrigttPipelineConfiguration(this);
+        pipelineConfig.setErrorListener(this.getErrorListener());
+        pipelineConfig.setParseOptions(new ParseOptions(this.getParseOptions()));
+        pipelineConfig.setURIResolver(this.getURIResolver());
+
+        return pipelineConfig;
     }
 
     @Override
     public void checkLicensedFeature(int featureId, String featureName) throws LicenseException {
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.setSourceParserClass(StringUtils.EMPTY);
+        this.setStyleParserClass(StringUtils.EMPTY);
+        this.setURIResolver(new CrigttUriResolver(this));
+    }
+
     public void setConfigurationProperties(Map<String, ?> configProps) {
         configProps.forEach(this::setConfigurationProperty);
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return this.getParseOptions().getErrorHandler();
+    }
+
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.getParseOptions().setErrorHandler(errorHandler);
     }
 
     public boolean isSchemaAware() {

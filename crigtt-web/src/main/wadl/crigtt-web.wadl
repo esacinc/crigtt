@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wadl:application
+    xmlns:crigtt-web="urn:gov.hhs.onc:crigtt-web"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    
+    <!--====================================================================================================
+    = RESOURCES
+    =====================================================================================================-->
+    <wadl:resources>
+        <wadl:resource id="validator" path="/validator">
+            <wadl:method id="validate" name="POST">
+                <wadl:request>
+                    <wadl:representation mediaType="multipart/form-data"/>
+                </wadl:request>
+                <wadl:response>
+                    <wadl:representation mediaType="application/json"/>
+                </wadl:response>
+            </wadl:method>
+        </wadl:resource>
+    </wadl:resources>
+</wadl:application>

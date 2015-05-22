@@ -12,14 +12,16 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
 
-@Component("srcResourceConv")
+@Component("convResourceSrc")
 public class ResourceSourceConverter implements ConditionalGenericConverter, ResourceLoaderAware {
     private final static Set<ConvertiblePair> CONV_TYPES = Stream.of(new ConvertiblePair(String.class, Source.class),
         new ConvertiblePair(String.class, ResourceSource.class)).collect(Collectors.toSet());
 
-    private ResourceLoader resourceLoader;
+    private ResourcePatternResolver resourcePatternResolver;
 
     @Nullable
     @Override
@@ -28,10 +30,10 @@ public class ResourceSourceConverter implements ConditionalGenericConverter, Res
             return null;
         }
 
-        Resource resource = this.resourceLoader.getResource(((String) src));
-
         try {
-            return (resource.exists() ? new ResourceSource(resource) : null);
+            Resource resource = Stream.of(this.resourcePatternResolver.getResources(((String) src))).filter(Resource::exists).findFirst().orElse(null);
+
+            return ((resource != null) ? new ResourceSource(resource) : null);
         } catch (IOException e) {
             throw new ConversionFailedException(TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(ResourceSource.class), src, e);
         }
@@ -51,6 +53,6 @@ public class ResourceSourceConverter implements ConditionalGenericConverter, Res
 
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+        this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
     }
 }

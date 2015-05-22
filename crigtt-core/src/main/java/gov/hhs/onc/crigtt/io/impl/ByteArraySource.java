@@ -12,13 +12,17 @@ public class ByteArraySource extends AbstractCrigttSource {
     }
 
     public ByteArraySource(byte[] bytes, @Nullable String sysId) {
-        this(sysId);
+        this(bytes, null, sysId);
+    }
+
+    public ByteArraySource(byte[] bytes, @Nullable String publicId, @Nullable String sysId) {
+        this(publicId, sysId);
 
         this.bytes = bytes;
     }
 
-    protected ByteArraySource(@Nullable String sysId) {
-        super(sysId);
+    protected ByteArraySource(@Nullable String publicId, @Nullable String sysId) {
+        super(publicId, sysId);
     }
 
     public byte[] getBytes() {

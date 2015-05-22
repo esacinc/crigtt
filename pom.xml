@@ -26,6 +26,7 @@
         <module>crigtt-parent</module>
         <module>crigtt-core</module>
         <module>crigtt-cli</module>
+        <module>crigtt-web-parent</module>
         <module>crigtt-web</module>
     </modules>
     

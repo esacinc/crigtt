@@ -7,9 +7,9 @@
     
     <parent>
         <groupId>gov.hhs.onc.crigtt</groupId>
-        <artifactId>crigtt-parent</artifactId>
+        <artifactId>crigtt-web-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../crigtt-parent</relativePath>
+        <relativePath>../crigtt-web-parent</relativePath>
     </parent>
     
     <artifactId>crigtt-web</artifactId>
@@ -20,6 +20,10 @@
     <properties>
         <!-- Project properties -->
         <project.basedir.all>${project.basedir}/..</project.basedir.all>
+        <!-- Project build WADL properties -->
+        <project.build.wadlDirectory>${project.build.outputDirectory}/META-INF/crigtt/wadl</project.build.wadlDirectory>
+        <!-- Project build WADL source properties -->
+        <project.build.wadlSourceDirectory>${project.basedir}/src/main/wadl</project.build.wadlSourceDirectory>
     </properties>
     
     <dependencies>
@@ -37,6 +41,46 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr353</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-xml-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -80,7 +124,10 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
             <groupId>net.java.dev.msv</groupId>
@@ -116,6 +163,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
         </dependency>
         <dependency>
@@ -140,6 +191,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>javax.servlet.jsp.jstl</artifactId>
         </dependency>
@@ -149,15 +204,31 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
+            <artifactId>jersey-container-servlet-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
+            <artifactId>jersey-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics-annotate</artifactId>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-bean-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-jaxb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -215,6 +286,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
         <!-- Test dependencies (project) -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -225,8 +300,33 @@
         </dependency>
         <!-- Test dependencies (inherited) -->
         <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-el</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-log4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -261,6 +361,30 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources-wadl</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.wadlDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.wadlSourceDirectory}</directory>
+                                    <includes>
+                                        <include>**/*.wadl</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
                     <execution>
@@ -273,6 +397,21 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                    </execution>
+                    <execution>
+                        <id>test-integration</id>
+                        <configuration>
+                            <workingDirectory>${project.build.directory}/${project.artifactId}-test</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <executions>
                     <execution>
@@ -280,58 +419,6 @@
                     </execution>
                     <execution>
                         <id>war-test</id>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <ignorePackaging>true</ignorePackaging>
-                    <jarScanAllDirectories>false</jarScanAllDirectories>
-                    <uriEncoding>${project.build.sourceEncoding}</uriEncoding>
-                    <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-war-it</id>
-                        <!-- TEMP: dev -->
-                        <phase>none</phase>
-                        <!--<phase>pre-integration-test</phase>-->
-                        <goals>
-                            <goal>run-war-only</goal>
-                        </goals>
-                        <configuration>
-                            <hostName>localhost</hostName>
-                            <path>/</path>
-                            <port>18080</port>
-                            <systemProperties>
-                                <crigtt.logging.console.tty>true</crigtt.logging.console.tty>
-                                <crigtt.logging.file.dir>${project.build.directory}/surefire-logs</crigtt.logging.file.dir>
-                                <crigtt.logging.file.name>${project.artifactId}-test-it-tomcat</crigtt.logging.file.name>
-                                <logback.configurationFile>META-INF/crigtt/logback/logback-crigtt.xml</logback.configurationFile>
-                            </systemProperties>
-                            <webapps>
-                                <webapp>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                    <asWebapp>true</asWebapp>
-                                    <classifier>test</classifier>
-                                    <contextPath>/${project.artifactId}</contextPath>
-                                </webapp>
-                            </webapps>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>shutdown-it</id>
-                        <!-- TEMP: dev -->
-                        <phase>none</phase>
-                        <!--<phase>post-integration-test</phase>-->
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

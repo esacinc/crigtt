@@ -23,7 +23,10 @@
     <beans:bean id="config" class="net.sf.saxon.Configuration" abstract="true"/>
     
     <beans:bean id="configCrigtt" class="gov.hhs.onc.crigtt.config.impl.CrigttConfiguration" parent="config"
+        p:errorHandler-ref="errorListenerCrigtt"
+        p:errorListener-ref="errorListenerCrigtt"
         p:lineNumbering="true"
+        p:logger-ref="loggerCrigtt"
         p:recoveryPolicy="#{ T(net.sf.saxon.Configuration).DO_NOT_RECOVER }"
         p:stripsAllWhiteSpace="false"
         p:stripsWhiteSpace="#{ T(net.sf.saxon.value.Whitespace).NONE }"

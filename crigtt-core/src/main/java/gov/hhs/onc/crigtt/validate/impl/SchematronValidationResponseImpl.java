@@ -1,8 +1,8 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import gov.hhs.onc.crigtt.api.schematron.svrl.Output;
+import gov.hhs.onc.crigtt.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.validate.CrigttSchematron;
-import gov.hhs.onc.crigtt.validate.SchematronValidationEvent;
+import gov.hhs.onc.crigtt.validate.ValidationEvent;
 import gov.hhs.onc.crigtt.validate.SchematronValidationResponse;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 public class SchematronValidationResponseImpl extends AbstractCrigttValidationResponse implements SchematronValidationResponse {
     private CrigttSchematron schematron;
     private XdmDocument doc;
-    private List<SchematronValidationEvent> events;
+    private List<ValidationEvent> events;
     private Output out;
 
     public SchematronValidationResponseImpl(CrigttSchematron schematron) {
@@ -41,12 +41,12 @@ public class SchematronValidationResponseImpl extends AbstractCrigttValidationRe
 
     @Nullable
     @Override
-    public List<SchematronValidationEvent> getEvents() {
+    public List<ValidationEvent> getEvents() {
         return this.events;
     }
 
     @Override
-    public void setEvents(@Nullable List<SchematronValidationEvent> events) {
+    public void setEvents(@Nullable List<ValidationEvent> events) {
         this.events = events;
     }
 

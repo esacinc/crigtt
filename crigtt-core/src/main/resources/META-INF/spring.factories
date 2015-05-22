@@ -1,0 +1,5 @@
+org.springframework.boot.SpringApplicationRunListener=\
+    gov.hhs.onc.crigtt.context.impl.ProfileApplicationRunListener
+
+org.springframework.context.ApplicationListener=\
+    ch.qos.logback.ext.spring.ApplicationContextHolder

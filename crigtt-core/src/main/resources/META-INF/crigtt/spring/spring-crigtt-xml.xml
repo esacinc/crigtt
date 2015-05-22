@@ -24,7 +24,8 @@
     
     <beans:bean id="xmlInputFactoryWoodstox" class="com.ctc.wstx.stax.WstxInputFactory" parent="xmlInputFactory" abstract="true"/>
     
-    <beans:bean id="xmlInputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlInputFactory" parent="xmlInputFactoryWoodstox">
+    <beans:bean id="xmlInputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlInputFactory" parent="xmlInputFactoryWoodstox"
+        p:XMLReporter-ref="errorListenerCrigtt">
         <beans:property name="properties">
             <beans:map>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_REPLACING_ENTITY_REFERENCES }" value="false" value-type="java.lang.Boolean"/>
@@ -46,8 +47,8 @@
     
     <beans:bean id="saxParserFactoryWoodstox" class="com.ctc.wstx.sax.WstxSAXParserFactory" parent="saxParserFactory" abstract="true"/>
     
-    <beans:bean id="saxParserFactoryCrigtt" parent="saxParserFactoryWoodstox"
-        c:f-ref="xmlInputFactoryCrigtt"/>
+    <beans:bean id="saxParserFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttSaxParserFactory" parent="saxParserFactoryWoodstox"
+        c:xmlInputFactory-ref="xmlInputFactoryCrigtt"/>
     
     <!--====================================================================================================
     = XML OUTPUT FACTORIES
@@ -56,14 +57,15 @@
     
     <beans:bean id="xmlOutputFactoryWoodstox" class="com.ctc.wstx.stax.WstxOutputFactory" parent="xmlOutputFactory" abstract="true"/>
     
-    <beans:bean id="xmlOutputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory" parent="xmlOutputFactoryWoodstox"/>
+    <beans:bean id="xmlOutputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory" parent="xmlOutputFactoryWoodstox"
+        p:problemReporter-ref="errorListenerCrigtt"/>
     
     <!--====================================================================================================
     = OBJECT FACTORIES
     =====================================================================================================-->
-    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.api.schematron.impl.ObjectFactory"/>
+    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.schematron.impl.ObjectFactory"/>
     
-    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.api.schematron.svrl.impl.ObjectFactory"/>
+    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.schematron.svrl.impl.ObjectFactory"/>
     
     <!--====================================================================================================
     = JAXB MARSHALLERS

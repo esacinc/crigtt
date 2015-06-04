@@ -1,10 +1,11 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
+import gov.hhs.onc.crigtt.beans.impl.AbstractCrigttStatusBean;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorEventLevel;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 
-public class ValidatorEventImpl implements ValidatorEvent {
+public class ValidatorEventImpl extends AbstractCrigttStatusBean implements ValidatorEvent {
     private String assertion;
     private ValidatorEventLevel level;
     private CrigttLocation loc;

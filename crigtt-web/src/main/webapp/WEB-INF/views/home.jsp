@@ -10,17 +10,28 @@
 <spring:url var="urlStaticImages" value="/static/images" scope="request"/>
 <spring:url var="urlStaticScripts" value="/static/scripts" scope="request"/>
 <spring:url var="urlStaticStyles" value="/static/styles" scope="request"/>
+<spring:url var="urlWebjars" value="/webjars" scope="request"/>
+<spring:url var="urlWebjarsBootstrap" value="/webjars/bootstrap/3.3.4" scope="request"/>
+<spring:url var="urlWebjarsFontAwesome" value="/webjars/font-awesome/4.3.0" scope="request"/>
+<spring:url var="urlWebjarsJquery" value="/webjars/jquery/2.1.4" scope="request"/>
+<spring:url var="urlWebjarsJqueryUi" value="/webjars/jquery-ui/1.11.4" scope="request"/>
+<spring:url var="urlWebjarsJqueryUiThemes" value="/webjars/jquery-ui-themes/1.11.4" scope="request"/>
+<spring:url var="urlWebjarsMoment" value="/webjars/moment/2.10.3" scope="request"/>
+<spring:url var="urlService" value="/service" scope="request"/>
+<spring:url var="urlServiceValidator" value="/service/validator" scope="request"/>
+<spring:url var="urlServiceValidatorValidate" value="/service/validator/validate" scope="request"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-        <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"/>
-        <link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-        <link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+        <link type="text/css" rel="stylesheet" href="${urlWebjarsJqueryUiThemes}/smoothness/jquery-ui.min.css"/>
+        <link type="text/css" rel="stylesheet" href="${urlWebjarsBootstrap}/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="${urlWebjarsFontAwesome}/css/font-awesome.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlStaticStyles}/crigtt.css"/>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsJquery}/jquery.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsJqueryUi}/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsBootstrap}/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsMoment}/min/moment.min.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt.js"></script>
         <title><spring:message code="crigtt.msg.title.home"/></title>
     </head>
@@ -67,11 +78,15 @@
         </nav>
         <div id="content" class="container-fluid">
             <div id="content-tabs" class="tab-content">
-                <div id="content-tab-home" class="tab-pane content-tab active" role="tabpanel">
-                    
+                <div id="content-tab-home" class="tab-pane active" role="tabpanel">
+                    <!-- TODO: implement -->
                 </div>
-                <div id="content-tab-validator" class="tab-pane content-tab" role="tabpanel">
-                    <form name="form-validator" action="service/validator/validate" enctype="multipart/form-data" method="post" target="_blank">
+                <div id="content-tab-validator" class="tab-pane" role="tabpanel">
+                    <h1>
+                        <i class="fa fa-fw fa-check-circle-o"></i>
+                        Submit
+                    </h1>
+                    <form id="form-validator" name="form-validator" action="${urlServiceValidatorValidate}" enctype="multipart/form-data" method="post">
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-btn">
@@ -88,11 +103,20 @@
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-default form-control" type="submit" data-toggle="tooltip" data-placement="top">
                                     <i class="fa fa-fw fa-upload"></i>
-                                    Submit
+                                    Upload
                                 </button>
                             </div>
                         </div>
                     </form>
+                    <h1>
+                        <i class="fa fa-fw fa-table"></i>
+                        Results
+                    </h1>
+                    <div id="well-validator-results-empty" class="text-muted well well-sm">
+                        <i class="fa fa-fw fa-circle-o"></i>
+                        <strong><em>None</em></strong>
+                    </div>
+                    <div id="panel-group-validator-results" class="panel-group" aria-multiselectable="true" role="tablist"></div>
                 </div>
             </div>
         </div>

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
@@ -92,6 +93,7 @@ public class ValidatorServiceImpl implements ValidatorService {
 
     @Override
     public ValidatorResponse validate(ValidatorRequest req) throws Exception {
+        req.setId(UUID.randomUUID());
         req.setSubmissionTimestamp(Instant.now());
 
         ValidatorResponse resp = new ValidatorResponseImpl();
@@ -113,7 +115,7 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         docObj.setHash(Hex.toHexString(this.digester.digest(docContentBytes)));
 
-        boolean success = true;
+        boolean status = true;
         List<ValidatorEvent> events = new ArrayList<>();
         Map<String, List<Pattern>> activePatterns;
         Map<String, List<Rule>> activeRules;
@@ -166,15 +168,15 @@ public class ValidatorServiceImpl implements ValidatorService {
                             event.setPattern(patternId);
                             event.setRule(ruleId);
                             event.setAssertion(assertionId);
-                            event.setLevel(ValidatorEventLevel.INFO);
+                            event.setLevel(eventLevel);
 
                             if (failedAssertions.containsKey(assertionId)) {
-                                success = false;
-
-                                event.setLevel(eventLevel);
+                                status = false;
 
                                 assertionLocExpr = failedAssertions.get(assertionId).getLocation();
                             } else if (successfulReports.containsKey(assertionId)) {
+                                event.setStatus(true);
+
                                 assertionLocExpr = successfulReports.get(assertionId).getLocation();
                             }
 
@@ -191,8 +193,9 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
 
         resp.setEvents(events);
-        resp.setProcessedTimestamp(Instant.now());
-        resp.setSuccess(success);
+        resp.setStatus(status);
+
+        req.setProcessedTimestamp(Instant.now());
 
         return resp;
     }

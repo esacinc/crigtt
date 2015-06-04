@@ -22,7 +22,8 @@
     =====================================================================================================-->
     <beans:bean id="module" class="com.fasterxml.jackson.databind.Module" abstract="true"/>
     
-    <beans:bean id="moduleJaxbAnno" class="com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule" parent="module"/>
+    <beans:bean id="moduleJaxbAnno" class="com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule" parent="module"
+        p:priority="SECONDARY"/>
     
     <beans:bean id="moduleJdk8" class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module" parent="module"/>
     
@@ -44,6 +45,7 @@
         p:autoDetectGettersSetters="false"
         p:dateFormat-ref="dateFormatUtcDisplay"
         p:indentOutput="true"
+        p:serializationInclusion="NON_NULL"
         p:timeZone="#{ dateFormatUtcDisplay.timeZone }">
         <beans:property name="features">
             <beans:map>

@@ -5,6 +5,24 @@ body {
     font-size: 11px;
 }
 
+h1 {
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+h3 {
+    font-size: 14px;
+}
+
+h1 i.fa,
+h2 i.fa,
+h3 i.fa {
+    font-size: inherit;
+}
+
 a:focus {
     outline-style: none;
 }
@@ -55,4 +73,43 @@ span.btn-file input[type="file"] {
     min-height: 100%;
     opacity: 0;
     outline: none;
+}
+
+div.panel-group#panel-group-validator-results {
+    display: none;
+}
+
+div.panel-group div.panel div.panel-heading div.panel-title {
+    font-size: 11px;
+}
+
+div.panel-group div.panel div.panel-heading div.panel-title a:focus,
+div.panel-group div.panel div.panel-heading div.panel-title a:hover {
+    text-decoration: none;
+}
+
+div.panel-group div.panel div.panel-heading div.panel-title a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.panel-group div.panel div.panel-heading div.panel-title a span:nth-of-type(1) {
+    text-align: center;
+}
+
+div.panel-group div.panel div.panel-heading div.panel-title a span:nth-of-type(1) i.fa {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table thead th,
+div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 9px;
+}
+
+div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td:nth-last-of-type(2),
+div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td:nth-last-of-type(1) {
+    text-align: left;
 }

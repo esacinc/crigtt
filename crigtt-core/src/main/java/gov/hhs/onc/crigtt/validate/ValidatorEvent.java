@@ -3,11 +3,12 @@ package gov.hhs.onc.crigtt.validate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import gov.hhs.onc.crigtt.beans.CrigttStatusBean;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorEventImpl;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 
 @JsonSubTypes({ @Type(ValidatorEventImpl.class) })
-public interface ValidatorEvent {
+public interface ValidatorEvent extends CrigttStatusBean {
     @JsonProperty
     public String getAssertion();
 

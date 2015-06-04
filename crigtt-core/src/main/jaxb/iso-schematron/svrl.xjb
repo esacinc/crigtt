@@ -35,7 +35,7 @@
     <jaxb:bindings node="xsd:element[@name='schematron-output']">
         <jaxb:class name="Output"/>
         <jaxb:bindings node="xsd:complexType">
-            <jaxb:bindings node="xsd:sequence/xsd:sequence">
+            <jaxb:bindings node="xsd:sequence">
                 <jaxb:property name="content"/>
             </jaxb:bindings>
         </jaxb:bindings>

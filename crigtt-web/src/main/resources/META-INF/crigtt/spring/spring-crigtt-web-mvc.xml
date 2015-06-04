@@ -66,6 +66,12 @@
     <beans:bean id="regBeanServletDispatcher" parent="regBeanServlet"
         p:loadOnStartup="1"
         p:name="dispatcherServlet">
+        <beans:property name="multipartConfig">
+            <!--suppress SpringPlaceholdersInspection -->
+            <beans:bean parent="multipartConfigElemMem"
+                c:maxFileSize="${crigtt.servlet.dispatcher.multipart.max.size.file}"
+                c:maxRequestSize="${crigtt.servlet.dispatcher.multipart.max.size.req}"/>
+        </beans:property>
         <beans:property name="servlet">
             <beans:bean class="org.springframework.web.servlet.DispatcherServlet" parent="servletHttp"/>
         </beans:property>

@@ -36,11 +36,11 @@
         c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
     
     <!--====================================================================================================
-    = SCHEMATRONS
+    = VALIDATOR SCHEMATRONS
     =====================================================================================================-->
-    <beans:bean id="schematron" class="gov.hhs.onc.crigtt.validate.CrigttSchematron" abstract="true"/>
+    <beans:bean id="validatorSchematron" class="gov.hhs.onc.crigtt.validate.ValidatorSchematron" abstract="true"/>
     
-    <beans:bean id="schematronImpl" class="gov.hhs.onc.crigtt.validate.impl.CrigttSchematronImpl" parent="schematron" abstract="true"
+    <beans:bean id="validatorSchematronImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorSchematronImpl" parent="validatorSchematron" abstract="true"
         p:queryBinding="xslt2"
         p:schemaVersion="ISO19757-3">
         <beans:property name="parameters">
@@ -65,12 +65,11 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="schematronCcdaR2" parent="schematronImpl"
-        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
-        p:displayId="C-CDA R2"
+    <beans:bean id="validatorSchematronCcdaR2" parent="validatorSchematronImpl"
+        p:displayName="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:id="ccda-r2"
-        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch"
-        p:title="C-CDA Release 2.0">
+        p:name="C-CDA Release 2.0"
+        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
         <beans:property name="referencedDocuments">
             <beans:map merge="true">
                 <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
@@ -78,12 +77,11 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="schematronCcdaR2CancerReg" parent="schematronImpl"
-        p:description="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
-        p:displayId="C-CDA R2 Cancer Registry DSTU 1.1"
+    <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
+        p:displayName="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:id="ccda-r2-cancer-reg"
-        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch"
-        p:title="C-CDA Release 2.0 Cancer Registry DSTU 1.1">
+        p:name="C-CDA Release 2.0 Cancer Registry DSTU 1.1"
+        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
         <beans:property name="referencedDocuments">
             <beans:map merge="true">
                 <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>
@@ -92,37 +90,19 @@
     </beans:bean>
     
     <!--====================================================================================================
-    = VALIDATORS
+    = VALIDATOR SERVICES
     =====================================================================================================-->
-    <beans:bean id="validator" class="gov.hhs.onc.crigtt.validate.CrigttValidator" abstract="true"/>
+    <beans:bean id="validatorService" class="gov.hhs.onc.crigtt.validate.ValidatorService" abstract="true"/>
     
-    <!--====================================================================================================
-    = SCHEMATRON VALIDATORS
-    =====================================================================================================-->
-    <beans:bean id="validatorSchematron" class="gov.hhs.onc.crigtt.validate.SchematronValidator" parent="validator" abstract="true"/>
-    
-    <beans:bean id="validatorSchematronImpl" class="gov.hhs.onc.crigtt.validate.impl.SchematronValidatorImpl" parent="validatorSchematron" abstract="true">
+    <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
+        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
         <beans:property name="phaseLevels">
             <beans:map>
                 <beans:entry key="warnings" value="WARN"/>
                 <beans:entry key="errors" value="ERROR"/>
             </beans:map>
         </beans:property>
-    </beans:bean>
-    
-    <beans:bean id="validatorSchematronCcdaR2" parent="validatorSchematronImpl"
-        p:schematron-ref="schematronCcdaR2"/>
-    
-    <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
-        p:schematron-ref="schematronCcdaR2CancerReg"/>
-    
-    <!--====================================================================================================
-    = DOCUMENT VALIDATORS
-    =====================================================================================================-->
-    <beans:bean id="validatorDoc" class="gov.hhs.onc.crigtt.validate.DocumentValidator" parent="validator" abstract="true"/>
-    
-    <beans:bean id="validatorDocImpl" class="gov.hhs.onc.crigtt.validate.impl.DocumentValidatorImpl" parent="validatorDoc">
-        <beans:property name="schematronValidators">
+        <beans:property name="schematrons">
             <beans:array>
                 <beans:ref bean="validatorSchematronCcdaR2"/>
                 <beans:ref bean="validatorSchematronCcdaR2CancerReg"/>

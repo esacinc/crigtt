@@ -31,6 +31,14 @@
     <dependencies>
         <!-- Compile dependencies (inherited) -->
         <dependency>
+            <groupId>br.net.woodstock.rockframework</groupId>
+            <artifactId>rockframework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.net.woodstock.rockframework</groupId>
+            <artifactId>rockframework-security</artifactId>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
@@ -129,6 +137,10 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

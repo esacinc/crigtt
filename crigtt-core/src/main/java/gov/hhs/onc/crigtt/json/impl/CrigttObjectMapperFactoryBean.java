@@ -10,7 +10,7 @@ public class CrigttObjectMapperFactoryBean extends Jackson2ObjectMapperFactoryBe
     public void setFeatures(Map<Object, Boolean> features) {
         features.forEach(this::setFeature);
     }
-    
+
     public void setFeature(Object feature, boolean featureValue) {
         if (featureValue) {
             this.setFeaturesToEnable(feature);

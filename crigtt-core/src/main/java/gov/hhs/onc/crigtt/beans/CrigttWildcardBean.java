@@ -1,10 +1,10 @@
-package gov.hhs.onc.crigtt.schematron;
+package gov.hhs.onc.crigtt.beans;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
 import java.util.Arrays;
 import java.util.List;
 
-public interface WildcardBean<T> {
+public interface CrigttWildcardBean<T> {
     public void unsetContent();
 
     public boolean isSetContent();

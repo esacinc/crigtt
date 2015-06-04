@@ -90,7 +90,6 @@ def final CONTENT_PROP_NAME = StringUtils.capitalize(CONTENT_VAR_NAME)
 
 def final ID_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + "Id"
 def final CONTENT_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + CONTENT_PROP_NAME
-def final CONTENT_SETTER_METHOD_NAME = SETTER_METHOD_NAME_PREFIX + CONTENT_PROP_NAME
 
 def final PLURAL_VAR_NAMES = [
     "active": "actives",
@@ -222,8 +221,8 @@ def rawTypesFieldName = "RAWTYPES"
 def uncheckedFieldName = "UNCHECKED"
 def rawTypesStaticRef = compilerWarningsClassModel.staticRef(rawTypesFieldName)
 def uncheckedStaticRef = compilerWarningsClassModel.staticRef(uncheckedFieldName)
-def identityBeanClassModel = codeModel.directClass((SCHEMATRON_PKG_NAME + ".IdentityBean"))
-def wildcardBeanClassModel = codeModel.directClass((SCHEMATRON_PKG_NAME + ".WildcardBean"))
+def identifiedBeanClassModel = codeModel.directClass((BEANS_PKG_NAME + ".CrigttIdentifiedBean"))
+def wildcardBeanClassModel = codeModel.directClass((BEANS_PKG_NAME + ".CrigttWildcardBean"))
 def objFactoryGen
 def classRef
 def classMethodTypes
@@ -246,7 +245,7 @@ outline.allPackageContexts.each{
         }
         
         if (classMethodTypes.containsKey(ID_GETTER_METHOD_NAME)) {
-            classRef._implements(identityBeanClassModel)
+            classRef._implements(identifiedBeanClassModel)
         }
         
         if (classMethodTypes.containsKey(CONTENT_GETTER_METHOD_NAME) &&

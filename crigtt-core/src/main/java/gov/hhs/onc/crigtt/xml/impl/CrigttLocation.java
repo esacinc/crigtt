@@ -1,10 +1,12 @@
 package gov.hhs.onc.crigtt.xml.impl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Nullable;
 import javax.xml.stream.Location;
 import javax.xml.transform.SourceLocator;
 import net.sf.saxon.event.LocationProvider;
 import net.sf.saxon.expr.parser.ExpressionLocation;
+import net.sf.saxon.om.NodeInfo;
 import org.xml.sax.SAXParseException;
 
 public class CrigttLocation extends ExpressionLocation implements Location {
@@ -25,6 +27,10 @@ public class CrigttLocation extends ExpressionLocation implements Location {
 
     public CrigttLocation(SAXParseException cause) {
         this(cause.getPublicId(), cause.getSystemId(), cause.getLineNumber(), cause.getColumnNumber());
+    }
+
+    public CrigttLocation(NodeInfo nodeInfo) {
+        this(nodeInfo.getSystemId(), nodeInfo.getLineNumber(), nodeInfo.getColumnNumber());
     }
 
     public CrigttLocation(LocationProvider locProv, int locId) {
@@ -53,6 +59,18 @@ public class CrigttLocation extends ExpressionLocation implements Location {
 
     public void setCharacterOffset(int charOffset) {
         this.charOffset = charOffset;
+    }
+
+    @JsonProperty
+    @Override
+    public int getColumnNumber() {
+        return super.getColumnNumber();
+    }
+
+    @JsonProperty
+    @Override
+    public int getLineNumber() {
+        return super.getLineNumber();
     }
 
     @Override

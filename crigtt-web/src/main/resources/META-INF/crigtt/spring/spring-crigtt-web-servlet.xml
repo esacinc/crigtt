@@ -19,6 +19,18 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
+    = MULTIPART CONFIGURATION ELEMENTS
+    =====================================================================================================-->
+    <beans:bean id="multipartConfigElem" class="javax.servlet.MultipartConfigElement" abstract="true"/>
+    
+    <beans:bean id="multipartConfigElemMem" parent="multipartConfigElem" abstract="true">
+        <beans:constructor-arg name="fileSizeThreshold" value="0"/>
+        <beans:constructor-arg name="location">
+            <beans:null/>
+        </beans:constructor-arg>
+    </beans:bean>
+    
+    <!--====================================================================================================
     = SERVLETS
     =====================================================================================================-->
     <beans:bean id="servlet" class="javax.servlet.Servlet" abstract="true"/>

@@ -1,18 +1,30 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
+import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 import gov.hhs.onc.crigtt.validate.ValidatorRequest;
-import javax.xml.transform.Source;
+import org.joda.time.Instant;
 
-public class ValidatorRequestImpl extends AbstractValidatorServiceBean implements ValidatorRequest {
-    private Source docSrc;
+public class ValidatorRequestImpl implements ValidatorRequest {
+    private ValidatorDocument doc;
+    private Instant submissionTimestamp;
 
     @Override
-    public Source getDocumentSource() {
-        return this.docSrc;
+    public ValidatorDocument getDocument() {
+        return this.doc;
     }
 
     @Override
-    public void setDocumentSource(Source docSrc) {
-        this.docSrc = docSrc;
+    public void setDocument(ValidatorDocument doc) {
+        this.doc = doc;
+    }
+
+    @Override
+    public Instant getSubmissionTimestamp() {
+        return this.submissionTimestamp;
+    }
+
+    @Override
+    public void setSubmissionTimestamp(Instant submissionTimestamp) {
+        this.submissionTimestamp = submissionTimestamp;
     }
 }

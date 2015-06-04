@@ -37,7 +37,8 @@
     <beans:bean id="busCrigtt" parent="busSpring" primary="true">
         <beans:property name="features">
             <beans:list>
-                <beans:bean class="org.apache.cxf.feature.LoggingFeature"/>
+                <beans:bean class="org.apache.cxf.feature.LoggingFeature"
+                    p:limit="-1"/>
             </beans:list>
         </beans:property>
     </beans:bean>
@@ -46,8 +47,7 @@
     <!--====================================================================================================
     = PROVIDERS
     =====================================================================================================-->
-    <beans:bean id="provJsonJacksonJaxb" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"
-        c:annotationsToUse="#{ T(com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider).DEFAULT_ANNOTATIONS }"
+    <beans:bean id="provJsonJackson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
         c:mapper-ref="objMapperCrigtt"/>
     
     <!--====================================================================================================
@@ -59,7 +59,7 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJacksonJaxb"/>
+                <beans:ref bean="provJsonJackson"/>
             </beans:list>
         </beans:property>
     </beans:bean>
@@ -79,7 +79,7 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJacksonJaxb"/>
+                <beans:ref bean="provJsonJackson"/>
             </beans:list>
         </beans:property>
     </beans:bean>

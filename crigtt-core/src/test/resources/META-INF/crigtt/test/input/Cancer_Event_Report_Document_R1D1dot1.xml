@@ -363,7 +363,7 @@
 										</qualifier>
 										<qualifier>
 											<name code="21858-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Grade Cancer"/>
-											<value code="II" codeSystem="2.16.840.1.113883.3.520.3.15" codeSystemName="NAACCR Grade" displayName="Grade II" sdtc:valueSet="2.16.840.1.113883.3.520.4.15">
+											<value code="2" codeSystem="2.16.840.1.113883.3.520.3.15" codeSystemName="NAACCR Grade" displayName="Grade II" sdtc:valueSet="2.16.840.1.113883.3.520.4.15">
 												<originalText>
 													<reference value="#Grade_1"/>
 												</originalText>

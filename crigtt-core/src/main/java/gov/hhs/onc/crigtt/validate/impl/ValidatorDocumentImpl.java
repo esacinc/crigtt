@@ -1,7 +1,9 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 
+@JsonTypeName("validatorDoc")
 public class ValidatorDocumentImpl implements ValidatorDocument {
     private String content;
     private String fileName;

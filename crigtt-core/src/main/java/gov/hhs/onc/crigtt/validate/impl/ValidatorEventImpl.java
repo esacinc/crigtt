@@ -1,10 +1,12 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import gov.hhs.onc.crigtt.beans.impl.AbstractCrigttStatusBean;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorEventLevel;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 
+@JsonTypeName("validatorEvent")
 public class ValidatorEventImpl extends AbstractCrigttStatusBean implements ValidatorEvent {
     private String assertion;
     private ValidatorEventLevel level;

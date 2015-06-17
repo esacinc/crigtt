@@ -52,6 +52,6 @@ public class ValidatorServiceTests extends AbstractCrigttTests {
 
         this.objMapper.writer(new DefaultPrettyPrinter(StringUtils.repeat(" ", 4))).writeValue(
             new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_results" + CrigttFileExtensions.JSON)),
-            this.validatorService.validate(testReq));
+            this.validatorService.validate(testReq, new ValidatorResponseImpl()));
     }
 }

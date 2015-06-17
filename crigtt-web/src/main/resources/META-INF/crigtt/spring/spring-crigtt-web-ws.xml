@@ -47,8 +47,27 @@
     <!--====================================================================================================
     = PROVIDERS
     =====================================================================================================-->
-    <beans:bean id="provJsonJackson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
+    <beans:bean id="provJacksonJson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
         c:mapper-ref="objMapperCrigtt"/>
+    
+    <beans:bean id="provJacksonJaxbXml" class="com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider"
+        c:annotationsToUse="#{ T(com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider).DEFAULT_ANNOTATIONS }"
+        c:mapper-ref="xmlMapperCrigtt"/>
+    
+    <!--====================================================================================================
+    = WADL GENERATORS
+    =====================================================================================================-->
+    <beans:bean id="wadlGen" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator" abstract="true"/>
+    
+    <beans:bean id="wadlGenBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttWadlGenerator" parent="wadlGen" abstract="true"/>
+    
+    <beans:bean id="wadlGenCrigtt" parent="wadlGenBase"
+        c:bus-ref="busCrigtt"/>
+    
+    <!--====================================================================================================
+    = VALIDATOR SERVICE INTERCEPTORS
+    =====================================================================================================-->
+    <beans:bean id="validatorWebServiceInterceptor" class="gov.hhs.onc.crigtt.web.ws.impl.ValidatorWebServiceInterceptor" parent="validatorServiceInterceptor"/>
     
     <!--====================================================================================================
     = SERVERS
@@ -57,16 +76,30 @@
     
     <beans:bean id="serverBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttJaxRsServerFactoryBean" parent="server" abstract="true"
         p:bus-ref="busCrigtt">
+        <beans:property name="extensionMappings">
+            <beans:map>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).JSON_NAME }"
+                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).JSON.type.toString() }"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).PDF_NAME }"
+                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).PDF.type.toString() }"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).XML_NAME }"
+                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).XML.type.toString() }"/>
+            </beans:map>
+        </beans:property>
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJackson"/>
+                <beans:ref bean="exceptionMapperValidator"/>
+                <beans:ref bean="provJacksonJaxbXml"/>
+                <beans:ref bean="provJacksonJson"/>
+                <beans:ref bean="wadlGenCrigtt"/>
+                <beans:ref bean="validatorWebServiceInterceptor"/>
             </beans:list>
         </beans:property>
     </beans:bean>
     
     <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="serverValidator" parent="serverBase"
-        p:address=""
+        p:address="/"
         p:docLocation="/META-INF/crigtt/wadl/crigtt-web.wadl"
         p:serviceBean-ref="validatorWebServiceImpl"/>
     
@@ -79,7 +112,8 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJackson"/>
+                <beans:ref bean="provJacksonJaxbXml"/>
+                <beans:ref bean="provJacksonJson"/>
             </beans:list>
         </beans:property>
     </beans:bean>

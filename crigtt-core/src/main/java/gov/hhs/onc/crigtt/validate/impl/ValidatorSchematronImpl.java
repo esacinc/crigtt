@@ -80,7 +80,7 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private ObjectMapper objMapper;
 
-    @Resource(name = "xmlOutputFactoryCrigtt")
+    @Resource(name = "xmlOutFactoryCrigtt")
     private CrigttXmlOutputFactory xmlOutFactory;
 
     @Resource(name = "docBuilderBase")
@@ -146,7 +146,7 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
             } else if (contentItem instanceof Span) {
                 buildTextContent(textContent, ((Span) contentItem).getContent());
             } else if (contentItem instanceof Element) {
-                CrigttXmlUtils.buildTextContent(textContent, ((Element) contentItem));
+                CrigttXmlUtils.extractTextContent(textContent, ((Element) contentItem));
             } else if (contentItem instanceof String) {
                 textContent.add(((String) contentItem));
             }

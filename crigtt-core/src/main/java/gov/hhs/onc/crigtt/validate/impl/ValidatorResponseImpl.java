@@ -1,44 +1,51 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import com.fasterxml.jackson.databind.util.TokenBuffer;
-import gov.hhs.onc.crigtt.beans.impl.AbstractCrigttStatusBean;
-import gov.hhs.onc.crigtt.validate.ValidatorEvent;
-import gov.hhs.onc.crigtt.validate.ValidatorRequest;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import gov.hhs.onc.crigtt.validate.ValidatorError;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
-import java.util.List;
+import gov.hhs.onc.crigtt.validate.ValidatorResult;
+import javax.annotation.Nullable;
+import org.joda.time.Instant;
 
-public class ValidatorResponseImpl extends AbstractCrigttStatusBean implements ValidatorResponse {
-    private List<ValidatorEvent> events;
-    private ValidatorRequest req;
-    private TokenBuffer schemas;
+@JsonTypeName("validatorResp")
+public class ValidatorResponseImpl extends AbstractValidatorBean implements ValidatorResponse {
+    private ValidatorError error;
+    private Instant processedTimestamp;
+    private ValidatorResult result;
 
     @Override
-    public List<ValidatorEvent> getEvents() {
-        return this.events;
+    public boolean isSetError() {
+        return (this.error != null);
+    }
+
+    @Nullable
+    @Override
+    public ValidatorError getError() {
+        return this.error;
     }
 
     @Override
-    public void setEvents(List<ValidatorEvent> events) {
-        this.events = events;
+    public void setError(@Nullable ValidatorError error) {
+        this.error = error;
     }
 
     @Override
-    public ValidatorRequest getRequest() {
-        return this.req;
+    public Instant getProcessedTimestamp() {
+        return this.processedTimestamp;
     }
 
     @Override
-    public void setRequest(ValidatorRequest req) {
-        this.req = req;
+    public void setProcessedTimestamp(Instant processedTimestamp) {
+        this.processedTimestamp = processedTimestamp;
     }
 
     @Override
-    public TokenBuffer getSchemas() {
-        return this.schemas;
+    public ValidatorResult getResult() {
+        return this.result;
     }
 
     @Override
-    public void setSchemas(TokenBuffer schemas) {
-        this.schemas = schemas;
+    public void setResult(ValidatorResult result) {
+        this.result = result;
     }
 }

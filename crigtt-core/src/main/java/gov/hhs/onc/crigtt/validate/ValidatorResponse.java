@@ -1,34 +1,34 @@
 package gov.hhs.onc.crigtt.validate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.util.TokenBuffer;
-import gov.hhs.onc.crigtt.beans.CrigttStatusBean;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorEventImpl;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorRequestImpl;
+import gov.hhs.onc.crigtt.validate.impl.ValidatorErrorImpl;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorResponseImpl;
-import java.util.List;
+import gov.hhs.onc.crigtt.validate.impl.ValidatorResultImpl;
+import javax.annotation.Nullable;
+import org.joda.time.Instant;
 
-@JsonPropertyOrder({ "request", "schemas", "events" })
 @JsonSubTypes({ @Type(ValidatorResponseImpl.class) })
-public interface ValidatorResponse extends CrigttStatusBean {
-    @JsonDeserialize(contentAs = ValidatorEventImpl.class)
+public interface ValidatorResponse extends ValidatorBean {
+    public boolean isSetError();
+
+    @JsonDeserialize(as = ValidatorErrorImpl.class)
     @JsonProperty
-    public List<ValidatorEvent> getEvents();
+    @Nullable
+    public ValidatorError getError();
 
-    public void setEvents(List<ValidatorEvent> events);
-
-    @JsonDeserialize(as = ValidatorRequestImpl.class)
-    @JsonProperty
-    public ValidatorRequest getRequest();
-
-    public void setRequest(ValidatorRequest req);
+    public void setError(@Nullable ValidatorError error);
 
     @JsonProperty
-    public TokenBuffer getSchemas();
+    public Instant getProcessedTimestamp();
 
-    public void setSchemas(TokenBuffer schemas);
+    public void setProcessedTimestamp(Instant processedTimestamp);
+
+    @JsonDeserialize(as = ValidatorResultImpl.class)
+    @JsonProperty
+    public ValidatorResult getResult();
+
+    public void setResult(ValidatorResult result);
 }

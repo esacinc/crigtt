@@ -3,6 +3,7 @@ package gov.hhs.onc.crigtt.config.impl;
 import com.ctc.wstx.sax.WstxSAXParser;
 import gov.hhs.onc.crigtt.xml.impl.CrigttSaxParserFactory;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
@@ -46,6 +47,39 @@ public class CrigttConfiguration extends Configuration implements InitializingBe
         pipelineConfig.setURIResolver(this.getURIResolver());
 
         return pipelineConfig;
+    }
+
+    public int getInteger(Properties props, String propName, int defaultIfNull) {
+        return this.getInteger(propName, props.getProperty(propName), defaultIfNull);
+    }
+
+    public int getInteger(String propName, @Nullable Object propValue, int defaultIfNull) {
+        if (propValue == null) {
+            return defaultIfNull;
+        } else if (propValue instanceof Integer) {
+            return ((Integer) propValue);
+        } else if (propValue instanceof String) {
+            return Integer.parseInt(((String) propValue));
+        } else {
+            throw new IllegalArgumentException(String.format("Property (name=%s) value (class=%s) must be an integer.", propName, propValue.getClass()
+                .getName()));
+        }
+    }
+
+    public boolean getBoolean(Properties props, String propName) {
+        return this.getBoolean(propName, props.getProperty(propName));
+    }
+
+    public boolean getBoolean(Properties props, String propName, boolean defaultIfNull) {
+        return this.getBoolean(propName, props.getProperty(propName), defaultIfNull);
+    }
+
+    public boolean getBoolean(String propName, @Nullable Object propValue) {
+        return this.getBoolean(propName, propValue, false);
+    }
+
+    public boolean getBoolean(String propName, @Nullable Object propValue, boolean defaultIfNull) {
+        return ((propValue != null) ? super.requireBoolean(propName, propValue) : defaultIfNull);
     }
 
     @Override

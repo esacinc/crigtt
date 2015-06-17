@@ -1,6 +1,5 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import br.net.woodstock.rockframework.security.digest.Digester;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
 import gov.hhs.onc.crigtt.beans.CrigttIdentifiedBean;
@@ -22,6 +21,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorEventLevel;
 import gov.hhs.onc.crigtt.validate.ValidatorRequest;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
+import gov.hhs.onc.crigtt.validate.ValidatorResult;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
 import gov.hhs.onc.crigtt.validate.ValidatorService;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
@@ -51,8 +50,6 @@ import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.type.SimpleType;
 import org.apache.commons.collections4.IteratorUtils;
-import org.bouncycastle.util.encoders.Hex;
-import org.joda.time.Instant;
 
 public class ValidatorServiceImpl implements ValidatorService {
     private static class DocumentAttributeStripper extends ProxyReceiver {
@@ -86,24 +83,22 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Resource(name = "jaxbMarshallerSchematronSvrl")
     private CrigttJaxbMarshaller schematronSvrlJaxbMarshaller;
 
-    private Digester digester;
     private Map<String, ValidatorEventLevel> phaseLevels;
     private ValidatorSchematron[] schematrons;
     private TokenBuffer schemasJson;
 
     @Override
-    public ValidatorResponse validate(ValidatorRequest req) throws Exception {
-        req.setId(UUID.randomUUID());
-        req.setSubmissionTimestamp(Instant.now());
+    public ValidatorResponse validate(ValidatorRequest req, ValidatorResponse resp) throws Exception {
+        ValidatorResult result = resp.getResult();
 
-        ValidatorResponse resp = new ValidatorResponseImpl();
-        resp.setRequest(req);
-        resp.setSchemas(this.schemasJson);
+        if (result.isCached()) {
+            return resp;
+        }
+
+        result.setSchemas(this.schemasJson);
 
         ValidatorDocument docObj = req.getDocument();
-        String docContent = docObj.getContent();
-        byte[] docContentBytes = docContent.getBytes(this.enc);
-        ByteArraySource docSrc = new ByteArraySource(docContentBytes, docObj.getFileName());
+        ByteArraySource docSrc = new ByteArraySource(docObj.getContent().getBytes(this.enc), docObj.getFileName());
         XdmDocument doc = this.docBuilder.build(docSrc);
         NodeInfo docElemInfo = ((ElementOverNodeInfo) doc.getDocument().getDocumentElement()).getUnderlyingNodeInfo();
         NamespaceBinding[] docElemNsBindings = docElemInfo.getDeclaredNamespaces(null);
@@ -112,8 +107,6 @@ public class ValidatorServiceImpl implements ValidatorService {
         docNamespaces.put(docElemInfo.getPrefix(), docElemInfo.getURI());
 
         Stream.of(docElemNsBindings).forEach(docElemNsBinding -> docNamespaces.put(docElemNsBinding.getPrefix(), docElemNsBinding.getURI()));
-
-        docObj.setHash(Hex.toHexString(this.digester.digest(docContentBytes)));
 
         boolean status = true;
         List<ValidatorEvent> events = new ArrayList<>();
@@ -192,10 +185,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             }
         }
 
-        resp.setEvents(events);
-        resp.setStatus(status);
-
-        req.setProcessedTimestamp(Instant.now());
+        result.setEvents(events);
+        result.setStatus(status);
 
         return resp;
     }
@@ -218,16 +209,6 @@ public class ValidatorServiceImpl implements ValidatorService {
         augmentedDocSrc.addFilter(CommentStripper::new);
 
         return augmentedDocSrc;
-    }
-
-    @Override
-    public Digester getDigester() {
-        return this.digester;
-    }
-
-    @Override
-    public void setDigester(Digester digester) {
-        this.digester = digester;
     }
 
     @Override

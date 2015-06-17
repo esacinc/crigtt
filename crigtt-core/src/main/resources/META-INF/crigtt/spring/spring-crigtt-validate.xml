@@ -90,12 +90,17 @@
     </beans:bean>
     
     <!--====================================================================================================
+    = VALIDATOR SERVICE INTERCEPTORS
+    =====================================================================================================-->
+    <beans:bean id="validatorServiceInterceptor" class="gov.hhs.onc.crigtt.validate.ValidatorServiceInterceptor" abstract="true"
+        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }"/>
+    
+    <!--====================================================================================================
     = VALIDATOR SERVICES
     =====================================================================================================-->
     <beans:bean id="validatorService" class="gov.hhs.onc.crigtt.validate.ValidatorService" abstract="true"/>
     
-    <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
-        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
+    <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService">
         <beans:property name="phaseLevels">
             <beans:map>
                 <beans:entry key="warnings" value="WARN"/>

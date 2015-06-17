@@ -25,9 +25,7 @@
     
     <beans:bean id="multipartConfigElemMem" parent="multipartConfigElem" abstract="true">
         <beans:constructor-arg name="fileSizeThreshold" value="0"/>
-        <beans:constructor-arg name="location">
-            <beans:null/>
-        </beans:constructor-arg>
+        <beans:constructor-arg name="location" value=""/>
     </beans:bean>
     
     <!--====================================================================================================

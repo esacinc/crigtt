@@ -7,6 +7,7 @@ import gov.hhs.onc.crigtt.validate.impl.ValidatorDocumentImpl;
 
 @JsonSubTypes({ @Type(ValidatorDocumentImpl.class) })
 public interface ValidatorDocument {
+    @JsonProperty
     public String getContent();
 
     public void setContent(String content);

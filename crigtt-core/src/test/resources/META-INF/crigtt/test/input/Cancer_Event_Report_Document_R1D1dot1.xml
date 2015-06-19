@@ -355,7 +355,7 @@
 										</originalText>
 										<qualifier>
 											<name code="31206-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Behavior ICD-O-3 Cancer"/>
-											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, Primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
+											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 													<reference value="#Behavior_1"/>
 												</originalText>
@@ -972,9 +972,9 @@
 											</entryRelationship>
 										</act>
 									</entryRelationship>
-									<!-- The above entryRelationship OR the following. <entryRelationship 
+									<!-- The above entryRelationship OR the following. <entryRelationship
 										typeCode="REFR"> <act classCode="ACT" moodCode="DEF"> <id root="f4dce790-8328-11db-9fe1-0800200c9a66"/> 
-										<code nullFlavor="UNK"/> <text>Health Plan Name<reference value="PntrToHealthPlanNameInSectionText"/> 
+										<code nullFlavor="UNK"/> <text>Health Plan Name<reference value="PntrToHealthPlanNameInSectionText"/>
 										</text> <statusCode code="active"/> </act> </entryRelationship> -->
 								</act>
 							</entryRelationship>

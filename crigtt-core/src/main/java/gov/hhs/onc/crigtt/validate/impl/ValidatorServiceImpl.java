@@ -13,7 +13,6 @@ import gov.hhs.onc.crigtt.utils.CrigttFunctionUtils;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorAssertion;
 import gov.hhs.onc.crigtt.validate.ValidatorCacheService;
-import gov.hhs.onc.crigtt.validate.ValidatorContentType;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorEventLevel;
@@ -54,9 +53,7 @@ import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.type.SimpleType;
-import org.apache.commons.collections4.BidiMap;
 import org.joda.time.Instant;
-import org.springframework.http.MediaType;
 
 public class ValidatorServiceImpl implements ValidatorService {
     private static class DocumentAttributeStripper extends ProxyReceiver {
@@ -86,7 +83,6 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Resource(name = "validatorCacheServiceImpl")
     private ValidatorCacheService cacheService;
 
-    private BidiMap<ValidatorContentType, MediaType> contentTypes;
     private Digester digester;
     private Map<String, ValidatorEventLevel> phaseLevels;
     private ValidatorSchematron[] schematrons;
@@ -96,9 +92,9 @@ public class ValidatorServiceImpl implements ValidatorService {
     public ValidatorReport validate(ValidatorSubmission submission) throws Exception {
         ValidatorReport report = new ValidatorReportImpl();
 
-        CrigttFunctionUtils.consume(submission::getSubmittedTimestamp, () -> Instant.now().getMillis(), submission::setSubmittedTimestamp,
+        CrigttFunctionUtils.consume(() -> Instant.now().getMillis(), submission::setSubmittedTimestamp,
             report::setSubmittedTimestamp);
-        CrigttFunctionUtils.consume(submission::getId, () -> UUID.randomUUID().toString(), submission::setId, report::setId);
+        CrigttFunctionUtils.consume(() -> UUID.randomUUID().toString(), submission::setId, report::setId);
 
         ValidatorDocument docObj = submission.getDocument();
         report.setDocument(docObj);
@@ -146,7 +142,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         Map<ValidatorEventLevel, Integer> eventLevelTotals =
             CrigttStreamUtils.toMap(Function.identity(), eventLevelItem -> 0, () -> new EnumMap<>(ValidatorEventLevel.class),
                 EnumSet.allOf(ValidatorEventLevel.class).stream());
-        int eventLevelTotal = 0;
+        int eventLevelTotal;
         int eventTotal = 0;
         ValidatorEvent event;
         String activeAssertionId;
@@ -238,16 +234,6 @@ public class ValidatorServiceImpl implements ValidatorService {
         augmentedDocSrc.addFilter(CommentStripper::new);
 
         return augmentedDocSrc;
-    }
-
-    @Override
-    public BidiMap<ValidatorContentType, MediaType> getContentTypes() {
-        return this.contentTypes;
-    }
-
-    @Override
-    public void setContentTypes(BidiMap<ValidatorContentType, MediaType> contentTypes) {
-        this.contentTypes = contentTypes;
     }
 
     @Override

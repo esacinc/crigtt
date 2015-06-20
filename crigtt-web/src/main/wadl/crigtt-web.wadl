@@ -13,21 +13,18 @@
     <!--====================================================================================================
     = RESOURCES
     =====================================================================================================-->
-    <wadl:resources>
+    <wadl:resources base="/">
         <wadl:resource id="validator" path="/validator">
             <wadl:method id="validate" name="POST">
                 <wadl:request>
-                    <wadl:representation mediaType="multipart/form-data">
-                        <wadl:param name="type" style="query" type="crigtt-validate:ValidatorContentType" default="JSON"/>
-                    </wadl:representation>
+                    <wadl:representation mediaType="multipart/form-data"/>
                 </wadl:request>
                 <wadl:response status="200">
-                    <wadl:representation mediaType="application/json" element="crigtt-validate:ValidatorReport"/>
-                    <wadl:representation mediaType="application/pdf"/>
-                    <wadl:representation mediaType="text/xml" element="crigtt-validate:ValidatorReport"/>
+                    <wadl:representation mediaType="application/json" element="crigtt-validate:report"/>
+                    <wadl:representation mediaType="text/xml" element="crigtt-validate:report"/>
                 </wadl:response>
                 <wadl:response>
-                    <wadl:representation mediaType="application/json" element="crigtt-validate:ValidatorError"/>
+                    <wadl:representation element="crigtt-validate:error"/>
                 </wadl:response>
             </wadl:method>
         </wadl:resource>

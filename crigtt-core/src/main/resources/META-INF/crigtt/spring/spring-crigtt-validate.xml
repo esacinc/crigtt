@@ -106,13 +106,6 @@
     
     <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
         p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
-        <beans:property name="contentTypes">
-            <util:map map-class="org.apache.commons.collections4.bidimap.DualHashBidiMap">
-                <beans:entry key="JSON" value="APPLICATION_JSON"/>
-                <beans:entry key="PDF" value="#{ T(gov.hhs.onc.crigtt.io.CrigttMediaTypes).APP_PDF }"/>
-                <beans:entry key="XML" value="TEXT_XML"/>
-            </util:map>
-        </beans:property>
         <beans:property name="phaseLevels">
             <beans:map>
                 <beans:entry key="warnings" value="WARN"/>

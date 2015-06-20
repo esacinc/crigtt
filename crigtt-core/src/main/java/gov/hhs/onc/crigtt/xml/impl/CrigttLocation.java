@@ -1,7 +1,6 @@
 package gov.hhs.onc.crigtt.xml.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import gov.hhs.onc.crigtt.validate.ValidatorEventLocation;
 import javax.annotation.Nullable;
 import javax.xml.stream.Location;
@@ -11,7 +10,6 @@ import net.sf.saxon.expr.parser.ExpressionLocation;
 import net.sf.saxon.om.NodeInfo;
 import org.xml.sax.SAXParseException;
 
-@JsonTypeName("validatorLoc")
 public class CrigttLocation extends ExpressionLocation implements ValidatorEventLocation, Location {
     private int charOffset;
     private String publicId;

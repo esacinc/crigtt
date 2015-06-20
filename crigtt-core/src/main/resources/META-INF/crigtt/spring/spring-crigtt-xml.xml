@@ -32,7 +32,7 @@
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_SUPPORTING_EXTERNAL_ENTITIES }" value="false" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_VALIDATING }" value="true" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_CACHE_DTDS }" value="false" value-type="java.lang.Boolean"/>
-                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_INPUT_BUFFER_LENGTH }" value="#{ 512 * 1024 }" value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_INPUT_BUFFER_LENGTH }" value="#{ 1024 * 1024 }" value-type="java.lang.Integer"/>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).SUPPORT_DTD }" value="false" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_SUPPORT_XMLID }"
                     value="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_V_XMLID_NONE }"/>
@@ -82,7 +82,9 @@
     <!--====================================================================================================
     = JAXB MARSHALLERS
     =====================================================================================================-->
-    <beans:bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" abstract="true">
+    <beans:bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" abstract="true"/>
+    
+    <beans:bean id="jaxbMarshallerCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" parent="jaxbMarshaller" abstract="true">
         <beans:property name="marshallerProperties">
             <beans:map>
                 <beans:entry key="#{ T(javax.xml.bind.Marshaller).JAXB_ENCODING }" value="#{ charsetUtf8.name() }"/>
@@ -90,12 +92,9 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="jaxbMarshallerCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" parent="jaxbMarshaller" abstract="true"/>
-    
     <beans:bean id="jaxbMarshallerValidator" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
-                <!--suppress SpringModelInspection -->
                 <beans:value>#{ objFactoryBeansImpl.class.package.name }</beans:value>
                 <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>
             </beans:array>
@@ -105,7 +104,6 @@
     <beans:bean id="jaxbMarshallerSchematron" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
-                <!--suppress SpringModelInspection -->
                 <beans:value>#{ objFactorySchematronImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
@@ -114,7 +112,6 @@
     <beans:bean id="jaxbMarshallerSchematronSvrl" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
-                <!--suppress SpringModelInspection -->
                 <beans:value>#{ objFactorySchematronSvrlImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>

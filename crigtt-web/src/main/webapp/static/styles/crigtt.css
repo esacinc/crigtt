@@ -103,9 +103,13 @@ div.panel-title span {
 }
 
 div.panel-title > span:nth-of-type(1) {
-    margin-left: 5px;
-    padding-left: 5px;
-    border-left: 1px solid rgb(221, 221, 221);
+    margin-left: 25px;
+    padding-left: 25px;
+    border-left: 1px solid inherit;
+}
+
+div.panel-title > span:nth-of-type(1) button.btn {
+    font-size: 11px;
 }
 
 div.panel-title > span:nth-of-type(2):hover {

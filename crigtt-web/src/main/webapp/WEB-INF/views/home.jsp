@@ -25,6 +25,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <link type="image/png" rel="icon" href="${urlStaticImages}/crigtt-logo-16x16.png"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorJqueryUiThemes}/smoothness/jquery-ui.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorBootstrap}/css/bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorFontAwesome}/css/font-awesome.min.css"/>
@@ -47,6 +48,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#" class="navbar-brand">
+                        <img src="${urlStaticImages}/crigtt-logo-32x32.png" alt="CRIGTT Logo"/>
                         <strong><spring:message code="crigtt.msg.header.home"/></strong>
                     </a>
                 </div>

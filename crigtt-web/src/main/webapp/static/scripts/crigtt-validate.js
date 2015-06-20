@@ -21,7 +21,7 @@
         "contentMediaType": undefined,
         "dataType": undefined,
         "ext": undefined,
-        "mediaType": undefined
+        "type": undefined
     });
     
     //====================================================================================================
@@ -30,7 +30,6 @@
     $.extend($.crigtt.validate, {
         "ValidatorContentType": new Enum({
             "JSON": new $.crigtt.validate.ValidatorContentTypeItem(".json", "json", "application/json"),
-            "PDF": new $.crigtt.validate.ValidatorContentTypeItem(".pdf", "text", "application/pdf"),
             "XML": new $.crigtt.validate.ValidatorContentTypeItem(".xml", "xml", "text/xml")
         })
     });
@@ -130,12 +129,7 @@
                         "class": "btn btn-default"
                     }).data($.crigtt.validate.Validator.CONTENT_TYPE_DATA_ENTRY_NAME, $.crigtt.validate.ValidatorContentType.XML).append(
                         $.crigtt.ui.icon("fa-file-code-o"), "XML"
-                    ),
-                    $("<button/>", {
-                        "class": "btn btn-default"
-                    }).data($.crigtt.validate.Validator.CONTENT_TYPE_DATA_ENTRY_NAME, $.crigtt.validate.ValidatorContentType.PDF).append(
-                        $.crigtt.ui.icon("fa-file-pdf-o"), "PDF"
-                    ).disable()
+                    )
                 ).find("button.btn").click($.proxy(function (event) {
                     this.downloadResults.apply(this, [ docHash, $(event.target).data($.crigtt.validate.Validator.CONTENT_TYPE_DATA_ENTRY_NAME) ]);
                 }, this)).end(),
@@ -378,7 +372,7 @@
         
         "validate": function (contentType, opts) {
             $.ajax((opts = $.extend({
-                "accepts": contentType.value.mediaType,
+                "accepts": contentType.value.type,
                 "cache": false,
                 "contentType": false,
                 "dataType": contentType.value.dataType,
@@ -391,7 +385,7 @@
                     opts.process(resp, req.status, req.statusText);
                 },
                 "type": this.formElem.attr("method"),
-                "url": this.formElem.attr("action") + "?type=" + contentType.key
+                "url": this.formElem.attr("action") + "?_type=" + contentType.key.toLowerCase()
             }, opts)));
         }
     });

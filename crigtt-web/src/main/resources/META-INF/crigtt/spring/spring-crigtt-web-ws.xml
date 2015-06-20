@@ -43,9 +43,8 @@
     <beans:bean id="provJacksonJson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
         c:mapper-ref="objMapperCrigtt"/>
     
-    <beans:bean id="provJacksonJaxbXml" class="com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider"
-        c:annotationsToUse="#{ T(com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider).DEFAULT_ANNOTATIONS }"
-        c:mapper-ref="xmlMapperCrigtt"/>
+    <beans:bean id="provJaxbElem" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"
+        p:bus-ref="busCrigtt"/>
     
     <!--====================================================================================================
     = WADL GENERATORS
@@ -55,7 +54,9 @@
     <beans:bean id="wadlGenBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttWadlGenerator" parent="wadlGen" abstract="true"/>
     
     <beans:bean id="wadlGenCrigtt" parent="wadlGenBase"
-        c:bus-ref="busCrigtt"/>
+        c:bus-ref="busCrigtt"
+        p:keepRelativeDocLinks="true"
+        p:linkAnyMediaTypeToXmlSchema="true"/>
     
     <!--====================================================================================================
     = SERVERS
@@ -64,22 +65,13 @@
     
     <beans:bean id="serverBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttJaxRsServerFactoryBean" parent="server" abstract="true"
         p:bus-ref="busCrigtt">
-        <beans:property name="extensionMappings">
-            <beans:map>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).JSON_NAME }"
-                    value="#{ T(org.springframework.http.MediaType).APPLICATION_JSON_VALUE }"/>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).PDF_NAME }"
-                    value="#{ T(gov.hhs.onc.crigtt.io.CrigttMediaTypes).APP_PDF_VALUE }"/>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).XML_NAME }"
-                    value="#{ T(org.springframework.http.MediaType).TEXT_XML_VALUE }"/>
-            </beans:map>
-        </beans:property>
         <beans:property name="providers">
             <beans:list>
                 <beans:ref bean="exceptionMapperValidator"/>
+                <beans:ref bean="contextResolverJaxbContext"/>
                 <beans:ref bean="wadlGenCrigtt"/>
-                <beans:ref bean="provJacksonJaxbXml"/>
                 <beans:ref bean="provJacksonJson"/>
+                <beans:ref bean="provJaxbElem"/>
             </beans:list>
         </beans:property>
     </beans:bean>
@@ -99,8 +91,9 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJacksonJaxbXml"/>
+                <beans:ref bean="contextResolverJaxbContext"/>
                 <beans:ref bean="provJacksonJson"/>
+                <beans:ref bean="provJaxbElem"/>
             </beans:list>
         </beans:property>
     </beans:bean>

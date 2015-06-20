@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.web.jaxrs.impl;
 
 import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
 import javax.annotation.Nullable;
+import javax.annotation.Priority;
 import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,9 +20,10 @@ import org.apache.cxf.jaxrs.model.wadl.WadlGenerator;
 import org.apache.cxf.message.Message;
 import org.w3c.dom.Document;
 
+@Priority(1)
 public class CrigttWadlGenerator extends WadlGenerator {
     @Resource(name = "serializerXmlDisplay")
-    private CrigttSerializer xmlSerializer;
+    private CrigttSerializer displayXmlSerializer;
 
     public CrigttWadlGenerator(Bus bus) {
         super(bus);
@@ -46,7 +48,7 @@ public class CrigttWadlGenerator extends WadlGenerator {
         Document wadlDoc = DOMUtils.createDocument();
 
         try {
-            this.xmlSerializer.serializeToResult(augmentedWadlSrc, new DOMResult(wadlDoc));
+            this.displayXmlSerializer.serializeToResult(augmentedWadlSrc, new DOMResult(wadlDoc));
         } catch (SaxonApiException e) {
             throw new SaxonApiUncheckedException(e);
         }

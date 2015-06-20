@@ -1,7 +1,11 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
 import gov.hhs.onc.crigtt.config.impl.CrigttConfiguration;
-import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -11,6 +15,7 @@ import javax.annotation.Resource;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamResult;
 import net.sf.saxon.event.FilterFactory;
 import net.sf.saxon.event.Receiver;
 import net.sf.saxon.event.Sender;
@@ -45,6 +50,18 @@ public class CrigttSerializer extends Serializer {
         return this.serializeToString(node.getUnderlyingNode());
     }
 
+    public void serializeToFile(Source src, File file) throws SaxonApiException {
+        this.serializeToFile(src, file, this.getOutputProperties());
+    }
+
+    public void serializeToFile(Source src, File file, Properties outProps) throws SaxonApiException {
+        try (FileOutputStream outStream = new FileOutputStream(file)) {
+            this.serializeToStream(src, outStream, outProps);
+        } catch (IOException e) {
+            throw new SaxonApiException(e);
+        }
+    }
+
     public String serializeToString(Source src) throws SaxonApiException {
         return this.serializeToString(src, this.getOutputProperties());
     }
@@ -65,7 +82,17 @@ public class CrigttSerializer extends Serializer {
     }
 
     public byte[] serializeToBytes(Source src, Properties outProps) throws SaxonApiException {
-        return this.serializeToResult(src, new ByteArrayResult(), outProps).getBytes();
+        return this.serializeToStream(src, new ByteArrayOutputStream(), outProps).toByteArray();
+    }
+
+    public <T extends OutputStream> T serializeToStream(Source src, T outStream) throws SaxonApiException {
+        return this.serializeToStream(src, outStream, this.getOutputProperties());
+    }
+
+    public <T extends OutputStream> T serializeToStream(Source src, T outStream, Properties outProps) throws SaxonApiException {
+        this.serializeToResult(src, new StreamResult(outStream), outProps);
+
+        return outStream;
     }
 
     public <T extends Result> T serializeToResult(Source src, T result) throws SaxonApiException {

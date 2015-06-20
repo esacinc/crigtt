@@ -1,28 +1,25 @@
 package gov.hhs.onc.crigtt.web.ws.impl;
 
-import gov.hhs.onc.crigtt.validate.ValidatorResponse;
+import gov.hhs.onc.crigtt.validate.ValidatorError;
+import gov.hhs.onc.crigtt.validate.impl.ValidatorErrorImpl;
+import java.util.Arrays;
+import java.util.Optional;
+import javax.annotation.Priority;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
-import org.apache.cxf.jaxrs.utils.JAXRSUtils;
-import org.apache.cxf.message.Exchange;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 
 @Component("exceptionMapperValidator")
+@Priority(0)
 public class ValidatorExceptionMapper implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(Exception exception) {
-        Exchange exchange = JAXRSUtils.getCurrentMessage().getExchange();
-        exchange.put(Exception.class, exception);
+        ValidatorError error = new ValidatorErrorImpl();
+        error.setMessage(Optional.ofNullable(ExceptionUtils.getRootCause(exception)).orElse(exception).getMessage());
+        error.setStackTrace(Arrays.asList(ExceptionUtils.getRootCauseStackTrace(exception)));
 
-        ResponseBuilder respBuilder = Response.serverError();
-
-        if (exchange.containsKey(ValidatorResponse.class.getName())) {
-            ValidatorResponse resp = exchange.get(ValidatorResponse.class);
-
-            respBuilder.entity(resp).type(resp.getContentType().getType().toString());
-        }
-
-        return respBuilder.build();
+        return Response.serverError().type(MediaType.APPLICATION_JSON_TYPE).entity(error).build();
     }
 }

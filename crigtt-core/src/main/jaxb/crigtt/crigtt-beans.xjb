@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+    jaxb:extensionBindingPrefixes="annox xjc"
+    jaxb:version="2.0"
+    node="/xsd:schema"
+    schemaLocation="../../schema/crigtt/crigtt-beans.xsd"
+    xmlns:annox="http://annox.dev.java.net"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <!--====================================================================================================
+    = SCHEMA
+    =====================================================================================================-->
+    <jaxb:schemaBindings>
+        <jaxb:package name="gov.hhs.onc.crigtt.beans"/>
+    </jaxb:schemaBindings>
+    
+    <!--====================================================================================================
+    = GROUPS
+    =====================================================================================================-->
+    <jaxb:bindings node="xsd:group[@name='StatusElements']">
+        <jaxb:bindings node="xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='status']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <!--====================================================================================================
+    = COMPLEX TYPES
+    =====================================================================================================-->
+    <jaxb:bindings node="xsd:complexType[@name='IdentifiedBean']">
+        <jaxb:class implClass="gov.hhs.onc.crigtt.beans.impl.AbstractIdentifiedBean"/>
+        <jaxb:bindings node="xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='id']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="xsd:complexType[@name='NamedBean']">
+        <jaxb:class implClass="gov.hhs.onc.crigtt.beans.impl.AbstractNamedBean"/>
+        <jaxb:bindings node="xsd:complexContent/xsd:extension/xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='name']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+ </jaxb:bindings>

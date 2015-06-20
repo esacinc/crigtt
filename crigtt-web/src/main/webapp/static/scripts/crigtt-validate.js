@@ -10,11 +10,10 @@
     // CLASS: VALIDATOR CONTENT TYPE ITEM
     //====================================================================================================
     $.extend($.crigtt.validate, {
-        "ValidatorContentTypeItem": function (ext, dataType, mediaType, contentMediaType) {
+        "ValidatorContentTypeItem": function (ext, dataType, type) {
             this.ext = ext;
             this.dataType = dataType;
-            this.mediaType = mediaType;
-            this.contentMediaType = (contentMediaType ? contentMediaType : this.mediaType);
+            this.type = type;
         }
     });
     
@@ -31,7 +30,7 @@
     $.extend($.crigtt.validate, {
         "ValidatorContentType": new Enum({
             "JSON": new $.crigtt.validate.ValidatorContentTypeItem(".json", "json", "application/json"),
-            "PDF": new $.crigtt.validate.ValidatorContentTypeItem(".pdf", "json", "application/json", "application/pdf"),
+            "PDF": new $.crigtt.validate.ValidatorContentTypeItem(".pdf", "text", "application/pdf"),
             "XML": new $.crigtt.validate.ValidatorContentTypeItem(".xml", "xml", "text/xml")
         })
     });
@@ -80,12 +79,10 @@
             var id = resp.id;
             var submittedTimestamp = $.crigtt.format.timestamp(resp.submittedTimestamp);
             var doc = resp.document;
-            var hash = doc.hash;
-            var error = resp.error;
-            var result = resp.result;
-            var schemas = result.schemas;
-            var events = result.events;
-            var status = result.status;
+            var docHash = doc.hash;
+            var results = resp.results;
+            var events = results.events;
+            var status = results.status;
             var panelHeadingElemId = "panel-heading-validator-result-" + id;
             var panelCollapseElemId = "panel-collapse-validator-result-" + id;
             var panelInfoTabPaneElemId = "tab-pane-validator-result-info-" + id;
@@ -140,7 +137,7 @@
                         $.crigtt.ui.icon("fa-file-pdf-o"), "PDF"
                     ).disable()
                 ).find("button.btn").click($.proxy(function (event) {
-                    this.downloadResults.apply(this, [ hash, $(event.target).data($.crigtt.validate.Validator.CONTENT_TYPE_DATA_ENTRY_NAME) ]);
+                    this.downloadResults.apply(this, [ docHash, $(event.target).data($.crigtt.validate.Validator.CONTENT_TYPE_DATA_ENTRY_NAME) ]);
                 }, this)).end(),
                 $("<span/>", {
                     "class": "pull-right text-muted"
@@ -201,7 +198,8 @@
             
             panelTabsElem.append(panelInfoTabElem);
             
-            if (error) {
+            // TEMP: dev
+            if (false) {
                 var panelErrorTabElem = $("<li/>", {
                     "class": "active",
                     "role": "presentation"
@@ -248,14 +246,15 @@
                     $("<li/>").append($.crigtt.ui.strong("Processed"), ": " + $.crigtt.format.timestamp(resp.processedTimestamp)),
                     $("<li/>").append($.crigtt.ui.strong("Document"), ": ", $("<ul/>").append(
                         $("<li/>").append($.crigtt.ui.strong("File Name"), ": " + doc.fileName),
-                        $("<li/>").append($.crigtt.ui.strong("Hash (SHA-512)"), ": " + hash)
+                        $("<li/>").append($.crigtt.ui.strong("Hash (SHA-512)"), ": " + docHash)
                     ))
                 )
             );
             
             panelTabContentElem.append(panelInfoTabPaneElem);
             
-            if (error) {
+            // TEMP: dev
+            if (false) {
                 var panelErrorTabPaneElem = $("<div/>", {
                     "class": "active tab-pane",
                     "id": panelErrorTabPaneElemId,
@@ -292,28 +291,24 @@
                         )
                     ),
                     $("<tbody/>").append(
-                        $.map(events, function (event, eventIndex) {
+                        $.map(events, function (event) {
                             var eventStatus = event.status;
                             var eventLevel = $.crigtt.validate.ValidatorEventLevel.get(event.level);
                             var eventLoc = event.location;
-                            var eventSchemaId = event.schema;
-                            var eventSchema = schemas[eventSchemaId];
-                            var eventPatternId = event.pattern;
-                            var eventPattern = eventSchema.patterns[eventPatternId];
-                            var eventRuleId = event.rule;
-                            var eventRule = eventSchema.rules[eventRuleId];
-                            var eventAssertionId = event.assertion;
-                            var eventAssertion = eventSchema.assertions[eventAssertionId];
+                            var eventSchema = event.schema;
+                            var eventPattern = event.pattern;
+                            var eventRule = event.rule;
+                            var eventAssertion = event.assertion;
                             
                             return $("<tr/>", {
                                 "class": (eventStatus ? $.crigtt.ui.UiEventLevel.SUCCESS : eventLevel.value.uiEventLevel).value.classNameSuffix
                             }).append(
-                                $("<td/>").text((eventIndex + 1)),
+                                $("<td/>").text((event.id)),
                                 $("<td/>").text((eventStatus ? "Pass" : "Fail")),
-                                $("<td/>").text(eventSchemaId),
-                                $("<td/>").text(eventPatternId),
-                                $("<td/>").text(eventRuleId),
-                                $("<td/>").append(eventAssertionId,
+                                $("<td/>").text(eventSchema.id),
+                                $("<td/>").text(eventPattern.id),
+                                $("<td/>").text(eventRule.id),
+                                $("<td/>").append(eventAssertion.id,
                                     $("<span/>", {
                                         "class": "hidden popover-data"
                                     }).append(
@@ -324,9 +319,8 @@
                                             "class": "popover-data-content"
                                         }).append(
                                             $("<ul/>").append(
-                                                $("<li/>").append($.crigtt.ui.strong("ID"), ": " + eventAssertionId),
+                                                $("<li/>").append($.crigtt.ui.strong("ID"), ": " + eventAssertion.id),
                                                 $("<li/>").append($.crigtt.ui.strong("Name"), ": " + eventAssertion.name),
-                                                $("<li/>").append($.crigtt.ui.strong("Display Name"), ": " + eventAssertion.displayName),
                                                 $("<li/>").append($.crigtt.ui.strong("Test"), ": ", $("<pre/>").text(eventAssertion.test)),
                                                 $("<li/>").append($.crigtt.ui.strong("Description"), ": ", $("<pre/>").text(eventAssertion.text))
                                             )
@@ -371,9 +365,15 @@
             return panelElem;
         },
         
-        "downloadResults": function (hash, contentType) {
-            // TEMP: dev
-            console.info("downloadResults: hash=" + hash + ", contentType=" + contentType);
+        "downloadResults": function (docHash, contentType) {
+            this.validate(contentType, {
+                "data": new FormData(this.formElem.get(0)),
+                "process": function (resp, httpStatus, httpStatusText) {
+                    var blob = new Blob([ JSON.stringify(resp) ], { "type": contentType.value.type });
+                    
+                    open(URL.createObjectURL(blob));
+                }
+            });
         },
         
         "validate": function (contentType, opts) {
@@ -383,10 +383,7 @@
                 "contentType": false,
                 "dataType": contentType.value.dataType,
                 "error": function (req) {
-                    var respText = req.responseText;
-                    
-                    opts.process(((contentType == $.crigtt.validate.ValidatorContentType.XML) ? $.parseXML(respText) : $.parseJSON(respText)), req.status,
-                        req.statusText);
+                    opts.process($.parseJSON(req.responseText), req.status, req.statusText);
                 },
                 "mimeType": this.formElem.attr("enctype"),
                 "processData": false,
@@ -394,7 +391,7 @@
                     opts.process(resp, req.status, req.statusText);
                 },
                 "type": this.formElem.attr("method"),
-                "url": this.formElem.attr("action") + contentType.value.ext
+                "url": this.formElem.attr("action") + "?type=" + contentType.key
             }, opts)));
         }
     });

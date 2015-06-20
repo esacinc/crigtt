@@ -63,9 +63,21 @@
     <!--====================================================================================================
     = OBJECT FACTORIES
     =====================================================================================================-->
-    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.schematron.impl.ObjectFactory"/>
+    <beans:bean id="objFactoryBeans" class="gov.hhs.onc.crigtt.beans.ObjectFactory"/>
     
-    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.schematron.svrl.impl.ObjectFactory"/>
+    <beans:bean id="objFactoryBeansImpl" class="gov.hhs.onc.crigtt.beans.impl.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.schematron.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematronImpl" class="gov.hhs.onc.crigtt.schematron.impl.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.schematron.svrl.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematronSvrlImpl" class="gov.hhs.onc.crigtt.schematron.svrl.impl.ObjectFactory"/>
+    
+    <beans:bean id="objFactoryValidate" class="gov.hhs.onc.crigtt.validate.ObjectFactory"/>
+    
+    <beans:bean id="objFactoryValidateImpl" class="gov.hhs.onc.crigtt.validate.impl.ObjectFactory"/>
     
     <!--====================================================================================================
     = JAXB MARSHALLERS
@@ -80,11 +92,21 @@
     
     <beans:bean id="jaxbMarshallerCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" parent="jaxbMarshaller" abstract="true"/>
     
+    <beans:bean id="jaxbMarshallerValidator" parent="jaxbMarshallerCrigtt">
+        <beans:property name="packagesToScan">
+            <beans:array>
+                <!--suppress SpringModelInspection -->
+                <beans:value>#{ objFactoryBeansImpl.class.package.name }</beans:value>
+                <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
     <beans:bean id="jaxbMarshallerSchematron" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
                 <!--suppress SpringModelInspection -->
-                <beans:value>#{ objFactorySchematron.class.package.name }</beans:value>
+                <beans:value>#{ objFactorySchematronImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
     </beans:bean>
@@ -93,7 +115,7 @@
         <beans:property name="packagesToScan">
             <beans:array>
                 <!--suppress SpringModelInspection -->
-                <beans:value>#{ objFactorySchematronSvrl.class.package.name }</beans:value>
+                <beans:value>#{ objFactorySchematronSvrlImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
     </beans:bean>

@@ -66,9 +66,8 @@
     </beans:bean>
     
     <beans:bean id="validatorSchematronCcdaR2" parent="validatorSchematronImpl"
-        p:displayName="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:id="ccda-r2"
-        p:name="C-CDA Release 2.0"
+        p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
         <beans:property name="referencedDocuments">
             <beans:map merge="true">
@@ -78,9 +77,8 @@
     </beans:bean>
     
     <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
-        p:displayName="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:id="ccda-r2-cancer-reg"
-        p:name="C-CDA Release 2.0 Cancer Registry DSTU 1.1"
+        p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
         <beans:property name="referencedDocuments">
             <beans:map merge="true">
@@ -90,17 +88,31 @@
     </beans:bean>
     
     <!--====================================================================================================
-    = VALIDATOR SERVICE INTERCEPTORS
+    = CACHES
     =====================================================================================================-->
-    <beans:bean id="validatorServiceInterceptor" class="gov.hhs.onc.crigtt.validate.ValidatorServiceInterceptor" abstract="true"
-        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }"/>
+    <beans:bean id="cacheValidator" parent="cacheCrigtt">
+        <beans:property name="configuration">
+            <!--suppress SpringPlaceholdersInspection -->
+            <beans:bean parent="configCacheCrigtt"
+                p:maxElementsInMemory="${crigtt.cache.validator.mem.elems.max}"
+                p:name="cacheValidator"/>
+        </beans:property>
+    </beans:bean>
     
     <!--====================================================================================================
     = VALIDATOR SERVICES
     =====================================================================================================-->
     <beans:bean id="validatorService" class="gov.hhs.onc.crigtt.validate.ValidatorService" abstract="true"/>
     
-    <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService">
+    <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
+        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
+        <beans:property name="contentTypes">
+            <util:map map-class="org.apache.commons.collections4.bidimap.DualHashBidiMap">
+                <beans:entry key="JSON" value="APPLICATION_JSON"/>
+                <beans:entry key="PDF" value="#{ T(gov.hhs.onc.crigtt.io.CrigttMediaTypes).APP_PDF }"/>
+                <beans:entry key="XML" value="TEXT_XML"/>
+            </util:map>
+        </beans:property>
         <beans:property name="phaseLevels">
             <beans:map>
                 <beans:entry key="warnings" value="WARN"/>

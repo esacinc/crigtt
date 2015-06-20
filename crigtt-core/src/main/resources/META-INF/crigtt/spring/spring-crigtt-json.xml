@@ -22,8 +22,7 @@
     =====================================================================================================-->
     <beans:bean id="module" class="com.fasterxml.jackson.databind.Module" abstract="true"/>
     
-    <beans:bean id="moduleJaxbAnno" class="com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule" parent="module"
-        p:priority="SECONDARY"/>
+    <beans:bean id="moduleXml" class="com.fasterxml.jackson.dataformat.xml.JacksonXmlModule" parent="module"/>
     
     <beans:bean id="moduleJdk8" class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module" parent="module"/>
     
@@ -32,6 +31,9 @@
     <beans:bean id="moduleJsr310" class="com.fasterxml.jackson.datatype.jsr310.JSR310Module" parent="module"/>
     
     <beans:bean id="moduleJsr353" class="com.fasterxml.jackson.datatype.jsr353.JSR353Module" parent="module"/>
+    
+    <beans:bean id="moduleJaxbAnno" class="com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule" parent="module"
+        p:priority="SECONDARY"/>
     
     <!--====================================================================================================
     = OBJECT MAPPERS

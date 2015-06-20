@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.xml.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import gov.hhs.onc.crigtt.validate.ValidatorEventLocation;
 import javax.annotation.Nullable;
 import javax.xml.stream.Location;
 import javax.xml.transform.SourceLocator;
@@ -11,7 +12,7 @@ import net.sf.saxon.om.NodeInfo;
 import org.xml.sax.SAXParseException;
 
 @JsonTypeName("validatorLoc")
-public class CrigttLocation extends ExpressionLocation implements Location {
+public class CrigttLocation extends ExpressionLocation implements ValidatorEventLocation, Location {
     private int charOffset;
     private String publicId;
 
@@ -63,10 +64,20 @@ public class CrigttLocation extends ExpressionLocation implements Location {
         this.charOffset = charOffset;
     }
 
+    @Override
+    public boolean isSetColumnNumber() {
+        return (this.getColumnNumber() > 0);
+    }
+
     @JsonProperty
     @Override
     public int getColumnNumber() {
         return super.getColumnNumber();
+    }
+
+    @Override
+    public boolean isSetLineNumber() {
+        return (this.getLineNumber() > 0);
     }
 
     @JsonProperty

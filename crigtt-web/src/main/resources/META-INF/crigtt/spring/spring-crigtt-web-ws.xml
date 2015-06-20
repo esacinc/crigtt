@@ -34,14 +34,7 @@
     
     <beans:bean id="busSpring" class="org.apache.cxf.bus.spring.SpringBus" parent="bus" abstract="true"/>
     
-    <beans:bean id="busCrigtt" parent="busSpring" primary="true">
-        <beans:property name="features">
-            <beans:list>
-                <beans:bean class="org.apache.cxf.feature.LoggingFeature"
-                    p:limit="-1"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+    <beans:bean id="busCrigtt" parent="busSpring" primary="true"/>
     <beans:alias name="busCrigtt" alias="cxf"/>
     
     <!--====================================================================================================
@@ -65,11 +58,6 @@
         c:bus-ref="busCrigtt"/>
     
     <!--====================================================================================================
-    = VALIDATOR SERVICE INTERCEPTORS
-    =====================================================================================================-->
-    <beans:bean id="validatorWebServiceInterceptor" class="gov.hhs.onc.crigtt.web.ws.impl.ValidatorWebServiceInterceptor" parent="validatorServiceInterceptor"/>
-    
-    <!--====================================================================================================
     = SERVERS
     =====================================================================================================-->
     <beans:bean id="server" class="org.apache.cxf.endpoint.Server" abstract="true"/>
@@ -79,20 +67,19 @@
         <beans:property name="extensionMappings">
             <beans:map>
                 <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).JSON_NAME }"
-                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).JSON.type.toString() }"/>
+                    value="#{ T(org.springframework.http.MediaType).APPLICATION_JSON_VALUE }"/>
                 <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).PDF_NAME }"
-                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).PDF.type.toString() }"/>
+                    value="#{ T(gov.hhs.onc.crigtt.io.CrigttMediaTypes).APP_PDF_VALUE }"/>
                 <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).XML_NAME }"
-                    value="#{ T(gov.hhs.onc.crigtt.validate.ValidatorContentType).XML.type.toString() }"/>
+                    value="#{ T(org.springframework.http.MediaType).TEXT_XML_VALUE }"/>
             </beans:map>
         </beans:property>
         <beans:property name="providers">
             <beans:list>
                 <beans:ref bean="exceptionMapperValidator"/>
+                <beans:ref bean="wadlGenCrigtt"/>
                 <beans:ref bean="provJacksonJaxbXml"/>
                 <beans:ref bean="provJacksonJson"/>
-                <beans:ref bean="wadlGenCrigtt"/>
-                <beans:ref bean="validatorWebServiceInterceptor"/>
             </beans:list>
         </beans:property>
     </beans:bean>

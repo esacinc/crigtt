@@ -3,10 +3,14 @@ package gov.hhs.onc.crigtt.web.ws.impl;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.onc.crigtt.io.CrigttFileExtensions;
+import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
-import gov.hhs.onc.crigtt.validate.ValidatorResponse;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorResponseImpl;
+import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
+import gov.hhs.onc.crigtt.validate.ObjectFactory;
+import gov.hhs.onc.crigtt.validate.ValidatorReport;
+import gov.hhs.onc.crigtt.validate.impl.ValidatorReportImpl;
 import gov.hhs.onc.crigtt.web.test.impl.AbstractCrigttWebIntegrationTests;
+import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import java.io.File;
 import javax.annotation.Resource;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -37,6 +41,18 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private ObjectMapper objMapper;
 
+    @Resource(name = "objFactoryValidate")
+    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
+    private ObjectFactory validateObjFactory;
+    
+    @Resource(name = "jaxbMarshallerValidator")
+    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
+    private CrigttJaxbMarshaller validatorJaxbMarshaller;
+    
+    @Resource(name = "serializerXmlDisplay")
+    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
+    private CrigttSerializer displayXmlSerializer;
+
     @Resource(name = "clientValidatorValidate")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private Client validatorValidateClient;
@@ -47,7 +63,7 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
         testOutputDir.mkdir();
 
         String testDocFileName = this.testInputSrc1.getResource().getFilename();
-        
+
         WebClient validatorValidateWebClient = WebClient.fromClient(this.validatorValidateClient);
         validatorValidateWebClient.type(MediaType.MULTIPART_FORM_DATA_VALUE);
 
@@ -57,12 +73,15 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
         MultivaluedHashMap<String, String> jaxRsReqHeaders = new MultivaluedHashMap<>();
         jaxRsReqHeaders.putAll(reqHeaders);
 
-        ValidatorResponse resp =
+        ValidatorReport testReport =
             validatorValidateWebClient.post(
                 new MultipartBody(new Attachment(this.docFileNameFieldName, new InputStreamDataSource(this.testInputSrc1.getInputStream(),
-                    MediaType.TEXT_XML_VALUE, this.docFileNameFieldName), jaxRsReqHeaders)), ValidatorResponseImpl.class);
+                    MediaType.TEXT_XML_VALUE, this.docFileNameFieldName), jaxRsReqHeaders)), ValidatorReportImpl.class);
 
         this.objMapper.writer(new DefaultPrettyPrinter(StringUtils.repeat(" ", 4))).writeValue(
-            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_results" + CrigttFileExtensions.JSON)), resp);
+            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
+        
+        this.displayXmlSerializer.serializeToFile(new ByteArraySource(this.validatorJaxbMarshaller.marshal(this.validateObjFactory.createReport(testReport))),
+            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.XML)));
     }
 }

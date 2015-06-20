@@ -1,6 +1,7 @@
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.sebhoss.warnings.CompilerWarnings
 import com.sun.codemodel.JCodeModel
 import com.sun.codemodel.JMod
@@ -10,12 +11,15 @@ import com.sun.tools.xjc.Language
 import com.sun.tools.xjc.ModelLoader
 import com.sun.tools.xjc.Options
 import com.sun.tools.xjc.generator.bean.DualObjectFactoryGenerator
+import java.util.regex.Pattern
 import java.util.stream.Collectors
+import java.util.stream.Stream
 import javax.annotation.Nullable
 import javax.xml.bind.annotation.XmlNs
 import javax.xml.bind.annotation.XmlSchema
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.BooleanUtils
+import org.apache.commons.lang3.ClassUtils
 import org.apache.commons.lang3.ObjectUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.maven.plugin.MojoExecutionException
@@ -58,6 +62,24 @@ def class MavenErrorReceiver extends ErrorReceiver {
     }
 }
 
+def String extractClassSimpleName(String className) {
+    return className.substring((className.lastIndexOf(ClassUtils.PACKAGE_SEPARATOR) + 1), className.length())
+}
+
+def String extractPackageName(String className) {
+    return className.substring(0, className.lastIndexOf(ClassUtils.PACKAGE_SEPARATOR))
+}
+
+def Map<String, String> tokenizeMap(@Nullable String str) {
+    def tokens = this.tokenize(str)
+    def tokenMap = new LinkedHashMap<String, String>(tokens.length)
+    def tokenParts
+    
+    Stream.of(tokens).each{ tokenMap.put((tokenParts = StringUtils.split(it, "=", 2))[0], tokenParts[1]) }
+    
+    return tokenMap
+}
+
 def String[] tokenize(@Nullable String str) {
     return this.tokenize(str, null);
 }
@@ -69,55 +91,26 @@ def String[] tokenize(@Nullable String str, @Nullable String defaultStr) {
 
 def final BASE_ARGS = [
     "-mark-generated",
-    "-Xdv",
+    "-Xannotate",
     "-Xsetters",
-    "-Xsetters-mode=direct",
-    "-Xwildcard"
+    "-Xsetters-mode=direct"
 ] as String[]
+
+def final JAVA_SRC_FILE_EXT = ".java"
 
 def final IMPL_PKG_NAME_SUFFIX = ".impl"
 
-def final BASE_PKG_NAME = "gov.hhs.onc.crigtt"
-def final BEANS_PKG_NAME = BASE_PKG_NAME + ".beans"
-def final SCHEMATRON_PKG_NAME = BASE_PKG_NAME + ".schematron"
-def final XML_PKG_NAME = BASE_PKG_NAME + ".xml"
+def final ABSTRACT_CLASS_NAME_PREFIX = "Abstract"
+
+def final IMPL_CLASS_NAME_SUFFIX = "Impl"
+def final BEAN_CLASS_NAME_SUFFIX = "Bean"
+def final BEAN_IMPL_CLASS_NAME_SUFFIX = BEAN_CLASS_NAME_SUFFIX + IMPL_CLASS_NAME_SUFFIX
+
+def final JAXB_CONTEXT_FACTORY_SIMPLE_CLASS_NAME = "JAXBContextFactory"
 
 def final GETTER_METHOD_NAME_PREFIX = "get"
+def final IS_GETTER_METHOD_NAME_PREFIX = "is"
 def final SETTER_METHOD_NAME_PREFIX = "set"
-
-def final CONTENT_VAR_NAME = "content"
-def final CONTENT_PROP_NAME = StringUtils.capitalize(CONTENT_VAR_NAME)
-
-def final ID_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + "Id"
-def final CONTENT_GETTER_METHOD_NAME = GETTER_METHOD_NAME_PREFIX + CONTENT_PROP_NAME
-
-def final PLURAL_VAR_NAMES = [
-    "active": "actives",
-    "assert": "assertions",
-    "diagnostic": "diagnostics",
-    "dir": "directions",
-    "emph": "emphases",
-    "extends": "extensions",
-    "href": "hrefs",
-    "include": "includes",
-    "let": "lets",
-    "mixedContent": "content",
-    "name": "names",
-    "ns": "namespaces",
-    "nsPrefixInAttributeValues": "attributeValueNamespaces",
-    "p": "paragraphs",
-    "param": "parameters",
-    "pattern": "patterns",
-    "phase": "phases",
-    "report": "reports",
-    "rule": "rules",
-    "span": "spans",
-    "title": "titles",
-    "value": "values",
-    "valueOf": "valueOfs"
-]
-
-def final PLURAL_PROP_NAMES = PLURAL_VAR_NAMES.collectEntries{ [ StringUtils.capitalize(it.key), StringUtils.capitalize(it.value) ] }
 
 ((LoggerContext) StaticLoggerBinder.singleton.loggerFactory).getLogger(Logger.ROOT_LOGGER_NAME).setLevel(Level.INFO)
 
@@ -135,6 +128,7 @@ opts.automaticNameConflictResolution = true
 opts.compatibilityMode = Options.EXTENSION
 opts.contentForWildcard = true
 opts.encoding = project.properties["project.build.sourceEncoding"]
+opts.noFileHeader = true
 opts.schemaLanguage = Language.XMLSCHEMA
 opts.targetDir = outDir
 opts.verbose = BooleanUtils.toBoolean(((String) bindingVars["verbose"]))
@@ -178,20 +172,6 @@ def codeModel = new JCodeModel()
 def model = ModelLoader.load(opts, codeModel, new MavenErrorReceiver(log, "Unable to parse XML schema(s)."));
 def beans = model.beans()
 def numBeans = beans.size()
-def privatePropName
-def publicPropName
-
-beans.values().each{
-    it.properties.findAll{ it.collection }.each{
-        if (PLURAL_VAR_NAMES.containsKey((privatePropName = it.getName(false)))) {
-            it.setName(false, PLURAL_VAR_NAMES[privatePropName])
-        }
-        
-        if (PLURAL_PROP_NAMES.containsKey((publicPropName = it.getName(true)))) {
-            it.setName(true, PLURAL_PROP_NAMES[publicPropName])
-        }
-    }
-}
 
 def outline
 
@@ -203,17 +183,20 @@ try {
 
 log.info("Generated code outline for ${numBeans} class(es).")
 
-def fieldNameSuffix = StringUtils.defaultString(bindingVars["fieldNameSuffix"])
-def pkgNameSuffix = StringUtils.defaultString(bindingVars["pkgNameSuffix"])
-def pkgName = SCHEMATRON_PKG_NAME + pkgNameSuffix
-def implPkgName = pkgName + IMPL_PKG_NAME_SUFFIX
-def xmlNsClassModel = codeModel.directClass((XML_PKG_NAME + ".CrigttXmlNs"))
-def nsUriStaticRef = xmlNsClassModel.staticRef(("SCHEMATRON" + fieldNameSuffix + "_URI"))
-def prefixStaticRef = xmlNsClassModel.staticRef(("SCHEMATRON" + fieldNameSuffix + "_PREFIX"))
+def pkgNames = this.tokenizeMap(bindingVars["pkgNames"])
+def implPkgNames = pkgNames.collectEntries{ [ it.key, (it.value + IMPL_PKG_NAME_SUFFIX) ] }
+def xmlNsPrefixes = this.tokenizeMap(bindingVars["xmlNsPrefixes"])
+def xmlNsPrefixStaticRefs = xmlNsPrefixes.collectEntries(new LinkedHashMap<String, String>(xmlNsPrefixes.size()),
+    { [ it.key, codeModel.directClass(this.extractPackageName(it.value)).staticRef(this.extractClassSimpleName(it.value)) ] })
+def xmlNsUris = this.tokenizeMap(bindingVars["xmlNsUris"])
+def xmlNsUriStaticRefs = xmlNsUris.collectEntries(new LinkedHashMap<String, String>(xmlNsUris.size()),
+    { [ it.key, codeModel.directClass(this.extractPackageName(it.value)).staticRef(this.extractClassSimpleName(it.value)) ] })
 
-codeModel._package(implPkgName).annotations().find({ it.annotationClass.name() == XmlSchema.class.simpleName })
-    .param("namespace", nsUriStaticRef)
-    .paramArray("xmlns").annotate(XmlNs.class).param("prefix", prefixStaticRef).param("namespaceURI", nsUriStaticRef)
+implPkgNames.each{
+    codeModel._package(it.value).annotations().find{ it.annotationClass.name() == XmlSchema.class.simpleName }
+        .param("namespace", xmlNsUriStaticRefs[it.key])
+        .paramArray("xmlns").annotate(XmlNs.class).param("prefix", xmlNsPrefixStaticRefs[it.key]).param("namespaceURI", xmlNsUriStaticRefs[it.key])
+}
 
 def compilerWarningsClassName = CompilerWarnings.class.name
 def compilerWarningsClassModel = codeModel.directClass(compilerWarningsClassName)
@@ -221,13 +204,16 @@ def rawTypesFieldName = "RAWTYPES"
 def uncheckedFieldName = "UNCHECKED"
 def rawTypesStaticRef = compilerWarningsClassModel.staticRef(rawTypesFieldName)
 def uncheckedStaticRef = compilerWarningsClassModel.staticRef(uncheckedFieldName)
-def identifiedBeanClassModel = codeModel.directClass((BEANS_PKG_NAME + ".CrigttIdentifiedBean"))
-def wildcardBeanClassModel = codeModel.directClass((BEANS_PKG_NAME + ".CrigttWildcardBean"))
 def objFactoryGen
 def classRef
-def classMethodTypes
+def implClass
+def classMethods
+def publicPropName
+def propGetterName
+def propIsGetter
+def propGetter
+def implPropGetter
 def propSetterName
-def propTypeParam
 
 outline.allPackageContexts.each{
     [
@@ -235,22 +221,33 @@ outline.allPackageContexts.each{
         objFactoryGen.privateOFG
     ].each{ it.objectFactory.annotate(SuppressWarnings.class).paramArray("value").param(rawTypesStaticRef).param(uncheckedStaticRef) }
     
-    it.classes.each{
-        classMethodTypes = (classRef = it.ref).methods().stream().collect(Collectors.toMap({ it.name() }, { it.type() }))
+    it.classes?.each{
+        if (((classRef = it.ref) == null) || ((implClass = it.implClass) == null)) {
+            return;
+        }
         
-        it.target.properties.findAll{ it.collection }.each{
-            if (!classMethodTypes.containsKey((propSetterName = (SETTER_METHOD_NAME_PREFIX + (publicPropName = it.getName(true)))))) {
-                classRef.method(JMod.NONE, codeModel.VOID, propSetterName).param(classMethodTypes[(GETTER_METHOD_NAME_PREFIX + publicPropName)], "values")
+        classMethods = classRef.methods().stream().collect(Collectors.toMap({ it.name() }, { it }))
+        implClassMethods = implClass.methods().stream().collect(Collectors.toMap({ it.name() }, { it }))
+
+        it.target.properties.each {
+            if (implClassMethods.containsKey((propGetterName = (GETTER_METHOD_NAME_PREFIX + (publicPropName = it.getName(true))))) ||
+                (propIsGetter = implClassMethods.containsKey((propGetterName = (IS_GETTER_METHOD_NAME_PREFIX + publicPropName))))) {
+                propGetter = classMethods[propGetterName]
+                
+                (implPropGetter = implClassMethods[propGetterName]).annotations().find{ it.annotationClass.name() == JsonProperty.class.simpleName }.each{
+                    implPropGetter.removeAnnotation(it)
+                    
+                    propGetter.annotate(JsonProperty.class)
+                }
+                
+                if (propIsGetter) {
+                    [ propGetter, implPropGetter ].each{ it.name((GETTER_METHOD_NAME_PREFIX + publicPropName)) }
+                }
             }
-        }
-        
-        if (classMethodTypes.containsKey(ID_GETTER_METHOD_NAME)) {
-            classRef._implements(identifiedBeanClassModel)
-        }
-        
-        if (classMethodTypes.containsKey(CONTENT_GETTER_METHOD_NAME) &&
-            ((propTypeParam = classMethodTypes[CONTENT_GETTER_METHOD_NAME].typeParameters[0]) != null)) {
-            classRef._implements(wildcardBeanClassModel.narrow(propTypeParam))
+            
+            if (it.collection && !classMethods.containsKey((propSetterName = (SETTER_METHOD_NAME_PREFIX + publicPropName)))) {
+                classRef.method(JMod.NONE, codeModel.VOID, propSetterName).param(classMethods[propGetterName].type(), "values")
+            }
         }
     }
 }
@@ -263,7 +260,24 @@ try {
 
 log.info("Built code model for ${numBeans} class(es).")
 
-ant.fileset(dir: outDir, includes: "**/JAXBContextFactory.java").each{
-    it.file.write(it.file.text.replaceFirst(~/(\npublic\s+class\s+JAXBContextFactory\s+)/,
-        "\n@${SuppressWarnings.class.simpleName}({ ${compilerWarningsClassName}.${rawTypesFieldName}, ${compilerWarningsClassName}.${uncheckedFieldName} })\$1"))
+def srcFile
+def srcFileBaseName
+def srcFileContent
+
+ant.fileset(dir: outDir, includes: "**/*${JAVA_SRC_FILE_EXT}").each{
+    srcFileContent = (srcFile = it.file).text.replaceAll(Pattern.compile("(\\s+)([^\\s]+${BEAN_IMPL_CLASS_NAME_SUFFIX})(\\s+|\\.)"), {
+        it[1] + ABSTRACT_CLASS_NAME_PREFIX + StringUtils.removeEnd(it[2], IMPL_CLASS_NAME_SUFFIX) + it[3]
+    })
+    
+    if ((srcFileBaseName = StringUtils.removeEnd(srcFile.name, JAVA_SRC_FILE_EXT)) == JAXB_CONTEXT_FACTORY_SIMPLE_CLASS_NAME) {
+        srcFileContent = srcFileContent.replaceFirst(Pattern.compile("(\\npublic\\s+class\\s+${JAXB_CONTEXT_FACTORY_SIMPLE_CLASS_NAME}\\s+)"),
+        "\n@${SuppressWarnings.class.simpleName}({ ${compilerWarningsClassName}.${rawTypesFieldName}, ${compilerWarningsClassName}.${uncheckedFieldName} })\$1")
+    }
+    
+    srcFile.write(srcFileContent)
+    
+    if (srcFileBaseName.endsWith(BEAN_IMPL_CLASS_NAME_SUFFIX)) {
+        srcFile.renameTo(new File(srcFile.parentFile,
+            (ABSTRACT_CLASS_NAME_PREFIX + StringUtils.removeEnd(srcFileBaseName, IMPL_CLASS_NAME_SUFFIX) + JAVA_SRC_FILE_EXT)))
+    }
 }

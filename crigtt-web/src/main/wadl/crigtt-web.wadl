@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wadl:application
-    xmlns:crigtt-web="urn:gov.hhs.onc:crigtt-web"
+    xmlns:crigtt-validate="urn:gov.hhs.onc.crigtt:validate"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    
+    <!--====================================================================================================
+    = GRAMMARS
+    =====================================================================================================-->
+    <wadl:grammars>
+        <wadl:include href="../schema/crigtt/crigtt-validate.xsd"/>
+    </wadl:grammars>
     
     <!--====================================================================================================
     = RESOURCES
@@ -10,11 +17,17 @@
         <wadl:resource id="validator" path="/validator">
             <wadl:method id="validate" name="POST">
                 <wadl:request>
-                    <wadl:representation mediaType="multipart/form-data"/>
+                    <wadl:representation mediaType="multipart/form-data">
+                        <wadl:param name="type" style="query" type="crigtt-validate:ValidatorContentType" default="JSON"/>
+                    </wadl:representation>
                 </wadl:request>
+                <wadl:response status="200">
+                    <wadl:representation mediaType="application/json" element="crigtt-validate:ValidatorReport"/>
+                    <wadl:representation mediaType="application/pdf"/>
+                    <wadl:representation mediaType="text/xml" element="crigtt-validate:ValidatorReport"/>
+                </wadl:response>
                 <wadl:response>
-                    <wadl:representation mediaType="application/json"/>
-                    <wadl:representation mediaType="text/xml"/>
+                    <wadl:representation mediaType="application/json" element="crigtt-validate:ValidatorError"/>
                 </wadl:response>
             </wadl:method>
         </wadl:resource>

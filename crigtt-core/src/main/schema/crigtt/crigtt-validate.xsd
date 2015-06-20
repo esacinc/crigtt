@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    elementFormDefault="qualified"
+    targetNamespace="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:crigtt-beans="urn:gov.hhs.onc.crigtt:beans"
+    xmlns:crigtt-validate="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:import namespace="urn:gov.hhs.onc.crigtt:beans" schemaLocation="crigtt-beans.xsd"/>
+    
+    <!--====================================================================================================
+    = GROUPS
+    =====================================================================================================-->
+    <xsd:group name="DocumentElements">
+        <xsd:sequence>
+            <xsd:element name="document" type="crigtt-validate:ValidatorDocument"/>
+        </xsd:sequence>
+    </xsd:group>
+    
+    <!--====================================================================================================
+    = SIMPLE TYPES
+    =====================================================================================================-->
+    <xsd:simpleType name="ValidatorContentType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="json"/>
+            <xsd:enumeration value="pdf"/>
+            <xsd:enumeration value="xml"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="ValidatorEventLevel">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="info"/>
+            <xsd:enumeration value="warn"/>
+            <xsd:enumeration value="error"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <!--====================================================================================================
+    = COMPLEX TYPES
+    =====================================================================================================-->
+    <xsd:complexType name="ValidatorSchematronBean" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-beans:NamedBean">
+                <xsd:sequence>
+                    <xsd:element name="text" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorSchema">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorSchematronBean"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorPhase">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorSchematronBean"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorPattern">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorSchematronBean"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorRule">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorSchematronBean">
+                <xsd:sequence>
+                    <xsd:element name="context" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorAssertion">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorSchematronBean">
+                <xsd:sequence>
+                    <xsd:element name="test" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorEventLocation">
+        <xsd:sequence>
+            <xsd:element name="lineNumber" type="xsd:int"/>
+            <xsd:element name="columnNumber" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorEvent">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-beans:IdentifiedBean">
+                <xsd:sequence>
+                    <xsd:group ref="crigtt-beans:StatusElements"/>
+                    <xsd:element name="level" type="crigtt-validate:ValidatorEventLevel"/>
+                    <xsd:element name="location" type="crigtt-validate:ValidatorEventLocation"/>
+                    <xsd:element name="schema" type="crigtt-validate:ValidatorSchema"/>
+                    <xsd:element name="phase" type="crigtt-validate:ValidatorPhase"/>
+                    <xsd:element name="pattern" type="crigtt-validate:ValidatorPattern"/>
+                    <xsd:element name="rule" type="crigtt-validate:ValidatorRule"/>
+                    <xsd:element name="assertion" type="crigtt-validate:ValidatorAssertion"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorEventTotals">
+        <xsd:sequence>
+            <xsd:element name="all" type="xsd:int"/>
+            <xsd:element name="info" type="xsd:int"/>
+            <xsd:element name="warn" type="xsd:int"/>
+            <xsd:element name="error" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorResults">
+        <xsd:sequence>
+            <xsd:group ref="crigtt-beans:StatusElements"/>
+            <xsd:element name="eventTotals" type="crigtt-validate:ValidatorEventTotals"/>
+            <xsd:element name="events" type="crigtt-validate:ValidatorEvent" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorDocument">
+        <xsd:sequence>
+            <xsd:element name="fileName" type="xsd:string"/>
+            <xsd:element name="hash" type="xsd:hexBinary"/>
+            <xsd:element name="contentType" type="xsd:string"/>
+            <xsd:element name="content" type="xsd:base64Binary"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorTransactionBean" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-beans:IdentifiedBean">
+                <xsd:sequence>
+                    <xsd:element name="submittedTimestamp" type="crigtt-beans:Timestamp"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorSubmission">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorTransactionBean">
+                <xsd:sequence>
+                    <xsd:group ref="crigtt-validate:DocumentElements"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorReport">
+        <xsd:complexContent>
+            <xsd:extension base="crigtt-validate:ValidatorTransactionBean">
+                <xsd:sequence>
+                    <xsd:element name="processedTimestamp" type="crigtt-beans:Timestamp"/>
+                    <xsd:element name="results" type="crigtt-validate:ValidatorResults"/>
+                    <xsd:group ref="crigtt-validate:DocumentElements"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ValidatorError">
+        <xsd:sequence>
+            <xsd:element name="message" type="xsd:string"/>
+            <xsd:element name="stackTrace" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!--====================================================================================================
+    = ELEMENTS
+    =====================================================================================================-->
+    <xsd:element name="submission" type="crigtt-validate:ValidatorSubmission"/>
+    
+    <xsd:element name="report" type="crigtt-validate:ValidatorReport"/>
+    
+    <xsd:element name="error" type="crigtt-validate:ValidatorError"/>
+</xsd:schema>

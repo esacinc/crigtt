@@ -1,11 +1,10 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.onc.crigtt.io.CrigttFileExtensions;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
-import gov.hhs.onc.crigtt.test.impl.AbstractCrigttTests;
+import gov.hhs.onc.crigtt.test.impl.AbstractCrigttIntegrationTests;
 import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 import gov.hhs.onc.crigtt.validate.ValidatorReport;
@@ -19,17 +18,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.Test;
 
-@Test(groups = { "crigtt.test.validate.all", "crigtt.test.validate.validator.all", "crigtt.test.validate.validator.service" })
-public class ValidatorServiceTests extends AbstractCrigttTests {
+@Test(groups = { "crigtt.test.it.validate.all", "crigtt.test.it.validate.validator.all", "crigtt.test.it.validate.validator.service" })
+public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationTests {
     @Value("classpath*:${crigtt.test.input.file.1.path}")
     private ResourceSource testInputSrc1;
 
     @Value("${crigtt.test.output.dir.path}")
     private FileSystemResource testOutputDirPath;
 
-    @Resource(name = "objMapperCrigtt")
+    @Resource(name = "objMapperDisplay")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private ObjectMapper objMapper;
+    private ObjectMapper displayObjMapper;
 
     @Resource(name = "objFactoryValidate")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
@@ -63,8 +62,8 @@ public class ValidatorServiceTests extends AbstractCrigttTests {
 
         ValidatorReport testReport = this.validatorService.validate(testSubmission);
 
-        this.objMapper.writer(new DefaultPrettyPrinter(StringUtils.repeat(" ", 4))).writeValue(
-            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
+        this.displayObjMapper.writeValue(new File(testOutputDir,
+            (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
 
         this.displayXmlSerializer.serializeToFile(new ByteArraySource(this.validatorJaxbMarshaller.marshal(this.validateObjFactory.createReport(testReport))),
             new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.XML)));

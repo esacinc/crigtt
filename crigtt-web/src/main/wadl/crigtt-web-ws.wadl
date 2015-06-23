@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wadl:application
-    xmlns:crigtt-validate="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:validate="urn:gov.hhs.onc.crigtt:validate"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
     
     <!--====================================================================================================
@@ -20,11 +20,11 @@
                     <wadl:representation mediaType="multipart/form-data"/>
                 </wadl:request>
                 <wadl:response status="200">
-                    <wadl:representation mediaType="application/json" element="crigtt-validate:report"/>
-                    <wadl:representation mediaType="text/xml" element="crigtt-validate:report"/>
+                    <wadl:representation mediaType="application/json" element="validate:report"/>
+                    <wadl:representation mediaType="text/xml" element="validate:report"/>
                 </wadl:response>
                 <wadl:response>
-                    <wadl:representation element="crigtt-validate:error"/>
+                    <wadl:representation element="validate:error"/>
                 </wadl:response>
             </wadl:method>
         </wadl:resource>

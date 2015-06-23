@@ -9,8 +9,10 @@
             "uitheme": "bootstrap"
         },
         "widgets": [
+            "stickyHeaders",
             "uitheme"
-        ]
+        ],
+        "widthFixed": true
     });
     
     //====================================================================================================
@@ -61,6 +63,18 @@
     // FUNCTIONS: USER INTERFACE COMPONENTS
     //====================================================================================================
     $.extend($.crigtt.ui, {
+        "closeButton": function () {
+            return $("<button/>", {
+                    "aria-label": "Close",
+                    "class": "close",
+                    "type": "button"
+                }).append(
+                    $("<span/>", {
+                        "aria-hidden": true
+                    }).append("&times;")
+                );
+        },
+        
         "br": function () {
             return $("<br/>");
         },

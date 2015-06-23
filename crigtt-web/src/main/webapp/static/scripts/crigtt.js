@@ -78,6 +78,8 @@
         validatorFormElem.submit(function (event) {
             event.preventDefault();
             
+            var validateData = new FormData(this);
+            
             validator.validate.apply(validator, [
                 $.crigtt.validate.ValidatorContentType.JSON,
                 {
@@ -97,9 +99,16 @@
                         
                         validatorResultsPanelGroupElem.show();
                     },
-                    "data": new FormData(this),
-                    "process": function (resp, httpStatus, httpStatusText) {
-                        validatorResultsPanelGroupElem.prepend(validator.resultPanel.apply(validator, [ resp, httpStatus, httpStatusText ]));
+                    "data": validateData,
+                    "process": function (status, resp, httpStatus, httpStatusText) {
+                        if (!status) {
+                            validatorResultsPanelGroupElem.prepend(validator.resultErrorAlert.apply(validator, [ resp, httpStatus, httpStatusText ]));
+                            
+                            return;
+                        }
+                        
+                        validatorResultsPanelGroupElem.prepend(validator.resultPanel.apply(validator, [ resp, httpStatus, httpStatusText ])
+                            .data($.crigtt.validate.Validator.VALIDATE_DATA_DATA_ENTRY_NAME, validateData));
                     }
                 }
             ]);

@@ -114,6 +114,7 @@
     <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" primary="true">
         <beans:property name="converters">
             <beans:set>
+                <beans:ref bean="convDocUri"/>
                 <beans:ref bean="convResourceSrc"/>
             </beans:set>
         </beans:property>

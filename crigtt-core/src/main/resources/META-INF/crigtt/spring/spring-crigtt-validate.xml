@@ -21,7 +21,8 @@
     = DOCUMENTS
     =====================================================================================================-->
     <beans:bean id="docSchematronSkeleton" parent="doc" factory-bean="docBuilderBase" factory-method="build"
-        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"/>
+        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"
+        p:uri="iso_schematron_skeleton_for_saxon.xsl"/>
     
     <!--====================================================================================================
     = XSLT EXECUTABLES
@@ -52,9 +53,9 @@
             </beans:map>
         </beans:property>
         <beans:property name="referencedDocuments">
-            <beans:map>
-                <beans:entry key="iso_schematron_skeleton_for_saxon.xsl" value="#{ docSchematronSkeleton.underlyingNode }"/>
-            </beans:map>
+            <beans:array>
+                <beans:ref bean="docSchematronSkeleton"/>
+            </beans:array>
         </beans:property>
         <beans:property name="xsltExecutables">
             <beans:array>
@@ -69,10 +70,10 @@
         p:id="ccda-r2"
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
-        <beans:property name="referencedDocuments">
-            <beans:map merge="true">
-                <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"/>
-            </beans:map>
+        <beans:property name="staticCodeDocument">
+            <beans:bean parent="doc" factory-bean="docBuilderBase" factory-method="build"
+                c:source="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"
+                p:uri="voc.xml"/>
         </beans:property>
     </beans:bean>
     
@@ -80,10 +81,10 @@
         p:id="ccda-r2-cancer-reg"
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
-        <beans:property name="referencedDocuments">
-            <beans:map merge="true">
-                <beans:entry key="voc.xml" value="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"/>
-            </beans:map>
+        <beans:property name="staticCodeDocument">
+            <beans:bean parent="doc" factory-bean="docBuilderBase" factory-method="build"
+                c:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
+                p:uri="voc.xml"/>
         </beans:property>
     </beans:bean>
     

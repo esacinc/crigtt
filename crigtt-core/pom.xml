@@ -71,14 +71,6 @@
             <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr353</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
@@ -399,7 +391,6 @@
                                     <name>bindingIncludes</name>
                                     <value>
                                         crigtt.xjb
-                                        crigtt/crigtt-beans.xjb
                                         crigtt/crigtt-validate.xjb
                                     </value>
                                 </property>
@@ -410,28 +401,24 @@
                                 <property>
                                     <name>pkgNames</name>
                                     <value>
-                                        beans=gov.hhs.onc.crigtt.beans
                                         validate=gov.hhs.onc.crigtt.validate
                                     </value>
                                 </property>
                                 <property>
                                     <name>schemaIncludes</name>
                                     <value>
-                                        crigtt/crigtt-beans.xsd
                                         crigtt/crigtt-validate.xsd
                                     </value>
                                 </property>
                                 <property>
                                     <name>xmlNsPrefixes</name>
                                     <value>
-                                        beans=gov.hhs.onc.crigtt.xml.CrigttXmlNs.BEANS_PREFIX
                                         validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_PREFIX
                                     </value>
                                 </property>
                                 <property>
                                     <name>xmlNsUris</name>
                                     <value>
-                                        beans=gov.hhs.onc.crigtt.xml.CrigttXmlNs.BEANS_URI
                                         validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_URI
                                     </value>
                                 </property>

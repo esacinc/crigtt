@@ -19,7 +19,6 @@ import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.jaxrs.utils.multipart.AttachmentUtils;
 import org.apache.cxf.message.Exchange;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component("validatorWebServiceImpl")
@@ -45,7 +44,6 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
         Attachment docAttachment = AttachmentUtils.getFirstMatchingPart(this.msgContext, this.docFileNameFieldName);
 
         if (docAttachment != null) {
-            doc.setContentType(docAttachment.getHeader(HttpHeaders.CONTENT_TYPE));
             doc.setFileName(CrigttFileUtils.buildSafeFileName(docAttachment.getContentDisposition().getParameter(ContentDispositionParameters.FILENAME)));
 
             try (InputStream docInStream = docAttachment.getDataHandler().getInputStream()) {

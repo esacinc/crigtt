@@ -79,7 +79,7 @@
     <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="serverValidator" parent="serverBase"
         p:address="/"
-        p:docLocation="/META-INF/crigtt/wadl/crigtt-web.wadl"
+        p:docLocation="/META-INF/crigtt/wadl/crigtt-web-ws.wadl"
         p:serviceBean-ref="validatorWebServiceImpl"/>
     
     <!--====================================================================================================

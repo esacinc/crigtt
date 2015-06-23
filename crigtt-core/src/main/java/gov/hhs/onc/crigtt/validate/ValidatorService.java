@@ -10,9 +10,9 @@ public interface ValidatorService {
 
     public void setDigester(Digester digester);
 
-    public Map<String, ValidatorEventLevel> getPhaseLevels();
+    public Map<String, ValidatorLevel> getPhaseLevels();
 
-    public void setPhaseLevels(Map<String, ValidatorEventLevel> phaseLevels);
+    public void setPhaseLevels(Map<String, ValidatorLevel> phaseLevels);
 
     public ValidatorSchematron[] getSchematrons();
 

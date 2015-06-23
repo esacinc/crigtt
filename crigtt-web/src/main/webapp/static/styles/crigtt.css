@@ -32,6 +32,10 @@ a.link:hover {
 }
 
 pre {
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: normal;
+    word-wrap: normal;
     font: normal 9px monospace;
 }
 
@@ -50,6 +54,10 @@ ul.nav-tabs li a {
 
 ul.nav-tabs li a:hover {
     cursor: pointer;
+}
+
+ul.nav-tabs li a i.fa {
+    font-size: 18px;
 }
 
 nav.navbar {
@@ -133,7 +141,13 @@ div.panel-body div.tab-content {
     border-top: none;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(3):hover,
+div.panel-body div.tab-content div.alert,
+div.panel-body div.tab-content div.tab-pane {
+    position: relative;
+    max-height: 400px;
+    overflow-x: auto;
+}
+
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4):hover,
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(5):hover,
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6):hover {
@@ -152,8 +166,8 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of
     min-width: 70px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-last-of-type(1),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-last-of-type(1) {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(4),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4) {
     min-width: 130px;
 }
 
@@ -161,4 +175,21 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th div,
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
     padding: 2px;
     font-size: 9px;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td pre {
+    max-width: 600px;
+    max-height: 75px;
+    margin: auto;
+}
+
+div.popover {
+    max-width: 800px;
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+}
+
+div.popover pre {
+    max-width: 800px;
+    max-height: 200px;
 }

@@ -1,6 +1,5 @@
 package gov.hhs.onc.crigtt.web.ws.impl;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.onc.crigtt.io.CrigttFileExtensions;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
@@ -37,9 +36,9 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
     @Value("${crigtt.ws.service.validator.op.validate.req.field.doc.file.name}")
     private String docFileNameFieldName;
 
-    @Resource(name = "objMapperCrigtt")
+    @Resource(name = "objMapperDisplay")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private ObjectMapper objMapper;
+    private ObjectMapper displayObjMapper;
 
     @Resource(name = "objFactoryValidate")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
@@ -78,8 +77,8 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
                 new MultipartBody(new Attachment(this.docFileNameFieldName, new InputStreamDataSource(this.testInputSrc1.getInputStream(),
                     MediaType.TEXT_XML_VALUE, this.docFileNameFieldName), jaxRsReqHeaders)), ValidatorReportImpl.class);
 
-        this.objMapper.writer(new DefaultPrettyPrinter(StringUtils.repeat(" ", 4))).writeValue(
-            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
+        this.displayObjMapper.writeValue(new File(testOutputDir,
+            (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
         
         this.displayXmlSerializer.serializeToFile(new ByteArraySource(this.validatorJaxbMarshaller.marshal(this.validateObjFactory.createReport(testReport))),
             new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.XML)));

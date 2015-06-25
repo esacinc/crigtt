@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.PredicateUtils;
+import org.apache.commons.collections4.iterators.FilterIterator;
 
 public final class CrigttIteratorUtils {
     public final static int DEFAULT_ITERATOR_SPLITERATOR_FLAGS = Spliterator.CONCURRENT | Spliterator.ORDERED;
@@ -26,7 +27,7 @@ public final class CrigttIteratorUtils {
     }
 
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
-    public static <T, U> Iterator<U> instances(Iterator<T> iterator, Class<U> clazz) {
-        return ((Iterator<U>) IteratorUtils.filteredIterator(iterator, PredicateUtils.instanceofPredicate(clazz)));
+    public static <T, U> FilterIterator<U> instances(Iterator<T> iterator, Class<U> clazz) {
+        return ((FilterIterator<U>) IteratorUtils.filteredIterator(iterator, PredicateUtils.instanceofPredicate(clazz)));
     }
 }

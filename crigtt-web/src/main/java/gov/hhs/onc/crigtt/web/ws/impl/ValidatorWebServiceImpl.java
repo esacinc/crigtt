@@ -1,20 +1,23 @@
 package gov.hhs.onc.crigtt.web.ws.impl;
 
+import gov.hhs.onc.crigtt.utils.CrigttFileUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
-import gov.hhs.onc.crigtt.validate.ValidatorRequest;
-import gov.hhs.onc.crigtt.validate.ValidatorResponse;
+import gov.hhs.onc.crigtt.validate.ValidatorReport;
 import gov.hhs.onc.crigtt.validate.ValidatorService;
+import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorDocumentImpl;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorRequestImpl;
+import gov.hhs.onc.crigtt.validate.impl.ValidatorSubmissionImpl;
+import gov.hhs.onc.crigtt.web.jaxrs.ContentDispositionParameters;
 import gov.hhs.onc.crigtt.web.ws.ValidatorWebService;
-import java.nio.charset.Charset;
+import java.io.InputStream;
 import javax.annotation.Resource;
 import javax.ws.rs.core.Context;
-import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.ext.MessageContext;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.jaxrs.utils.multipart.AttachmentUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.apache.cxf.message.Exchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,21 +29,31 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
     @Value("${crigtt.ws.service.validator.op.validate.req.field.doc.file.name}")
     private String docFileNameFieldName;
 
-    @Resource(name = "charsetUtf8")
-    private Charset enc;
-
     @Resource(name = "validatorServiceImpl")
     private ValidatorService validatorService;
 
-    public ValidatorResponse validate(StreamSource docSrc) throws Exception {
-        ValidatorRequest req = new ValidatorRequestImpl();
+    public ValidatorReport validate() throws Exception {
+        Exchange exchange = JAXRSUtils.getCurrentMessage().getExchange();
+
+        ValidatorSubmission submission = new ValidatorSubmissionImpl();
+        exchange.put(ValidatorSubmission.class, submission);
 
         ValidatorDocument doc = new ValidatorDocumentImpl();
-        doc.setContent(IOUtils.toString(docSrc.getInputStream(), this.enc));
-        doc.setFileName(new FormDataContentDisposition(AttachmentUtils.getFirstMatchingPart(this.msgContext, this.docFileNameFieldName).getContentDisposition()
-            .toString()).getFileName());
-        req.setDocument(doc);
+        submission.setDocument(doc);
 
-        return this.validatorService.validate(req);
+        Attachment docAttachment = AttachmentUtils.getFirstMatchingPart(this.msgContext, this.docFileNameFieldName);
+
+        if (docAttachment != null) {
+            doc.setFileName(CrigttFileUtils.buildSafeFileName(docAttachment.getContentDisposition().getParameter(ContentDispositionParameters.FILENAME)));
+
+            try (InputStream docInStream = docAttachment.getDataHandler().getInputStream()) {
+                doc.setContent(IOUtils.toByteArray(docInStream));
+            }
+        }
+
+        ValidatorReport report = this.validatorService.validate(submission);
+        exchange.put(ValidatorReport.class, report);
+
+        return report;
     }
 }

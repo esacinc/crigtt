@@ -31,40 +31,49 @@ a.link:hover {
     cursor: pointer;
 }
 
+pre {
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: normal;
+    word-wrap: normal;
+    font: normal 9px monospace;
+}
+
+*.form-control {
+    font-size: 13px;
+}
+
+*.btn {
+    font-size: 13px;
+}
+
+ul.nav-tabs li,
+ul.nav-tabs li a {
+    font-size: 13px;
+}
+
+ul.nav-tabs li a:hover {
+    cursor: pointer;
+}
+
+ul.nav-tabs li a i.fa {
+    font-size: 18px;
+}
+
 nav.navbar {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.176);
 }
 
-nav.navbar div.container-fluid div.navbar-header a.navbar-brand img {
+a.navbar-brand img {
     display: inline-block;
 }
 
-nav.navbar div.container-fluid ul.navbar-nav {
-    font-size: 18px;
-}
-
-nav.navbar div.container-fluid ul.navbar-nav.nav-tabs {
-    border-bottom: none;
-}
-
-nav.navbar div.container-fluid ul.navbar-nav.nav-tabs li a {
-    border-radius: 0;
-}
-
-nav.navbar div.container-fluid ul.navbar-nav.nav-tabs li a:hover {
-    cursor: pointer;
-}
-
-nav.navbar div.container-fluid ul.navbar-nav li.dropdown {
-    font-size: 14px;
-}
-
-span.btn-file {
+span#btn-file-doc {
     position: relative;
     overflow: hidden;
 }
 
-span.btn-file input[type="file"] {
+input#input-file-doc {
     position: absolute;
     top: 0;
     right: 0;
@@ -75,41 +84,112 @@ span.btn-file input[type="file"] {
     outline: none;
 }
 
-div.panel-group#panel-group-validator-results {
+input#input-file-doc-display:hover {
+    cursor: pointer;
+}
+
+div#well-validator-results-processing {
     display: none;
 }
 
-div.panel-group div.panel div.panel-heading div.panel-title {
+div#panel-group-validator-results {
+    display: none;
+}
+
+div.panel-title {
     font-size: 11px;
 }
 
-div.panel-group div.panel div.panel-heading div.panel-title a:focus,
-div.panel-group div.panel div.panel-heading div.panel-title a:hover {
+div.panel-title a:focus,
+div.panel-title a:hover {
     text-decoration: none;
 }
 
-div.panel-group div.panel div.panel-heading div.panel-title a span {
+div.panel-title span {
     display: inline-block;
     vertical-align: middle;
 }
 
-div.panel-group div.panel div.panel-heading div.panel-title a span:nth-of-type(1) {
+div.panel-title > span:nth-of-type(1) {
+    margin-left: 25px;
+    padding-left: 25px;
+    border-left: 1px solid inherit;
+}
+
+div.panel-title > span:nth-of-type(1) button.btn {
+    font-size: 11px;
+}
+
+div.panel-title > span:nth-of-type(2):hover {
+    cursor: pointer;
+}
+
+div.panel-title > span:nth-of-type(1),
+div.panel-title a span:nth-of-type(1) {
     text-align: center;
 }
 
-div.panel-group div.panel div.panel-heading div.panel-title a span:nth-of-type(1) i.fa {
+div.panel-title > span:nth-of-type(1) i.fa,
+div.panel-title a span:nth-of-type(1) i.fa {
     margin-right: 10px;
     font-size: 18px;
 }
 
-div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table thead th,
-div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td {
+div.panel-body div.tab-content {
+    padding: 5px;
+    border: 1px solid rgb(221, 221, 221);
+    border-top: none;
+}
+
+div.panel-body div.tab-content div.alert,
+div.panel-body div.tab-content div.tab-pane {
+    position: relative;
+    max-height: 400px;
+    overflow-x: auto;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4):hover,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(5):hover,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6):hover {
+    cursor: pointer;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
+    min-width: 90px;
     text-align: center;
     vertical-align: middle;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(1),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(1) {
+    min-width: 70px;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(4),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4) {
+    min-width: 130px;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th div,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
+    padding: 2px;
     font-size: 9px;
 }
 
-div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td:nth-last-of-type(2),
-div.panel-group div.panel div.panel-collapse div.panel-body div.tab-content div.tab-pane:nth-of-type(3) table.table tbody tr td:nth-last-of-type(1) {
-    text-align: left;
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td pre {
+    max-width: 600px;
+    max-height: 75px;
+    margin: auto;
+}
+
+div.popover {
+    max-width: 800px;
+    font-family: "Tahoma", sans-serif;
+    font-size: 11px;
+}
+
+div.popover pre {
+    max-width: 800px;
+    max-height: 200px;
 }

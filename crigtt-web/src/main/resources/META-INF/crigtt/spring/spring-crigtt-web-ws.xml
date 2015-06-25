@@ -34,21 +34,29 @@
     
     <beans:bean id="busSpring" class="org.apache.cxf.bus.spring.SpringBus" parent="bus" abstract="true"/>
     
-    <beans:bean id="busCrigtt" parent="busSpring" primary="true">
-        <beans:property name="features">
-            <beans:list>
-                <beans:bean class="org.apache.cxf.feature.LoggingFeature"
-                    p:limit="-1"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+    <beans:bean id="busCrigtt" parent="busSpring" primary="true"/>
     <beans:alias name="busCrigtt" alias="cxf"/>
     
     <!--====================================================================================================
     = PROVIDERS
     =====================================================================================================-->
-    <beans:bean id="provJsonJackson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
+    <beans:bean id="provJacksonJson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
         c:mapper-ref="objMapperCrigtt"/>
+    
+    <beans:bean id="provJaxbElem" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"
+        p:bus-ref="busCrigtt"/>
+    
+    <!--====================================================================================================
+    = WADL GENERATORS
+    =====================================================================================================-->
+    <beans:bean id="wadlGen" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator" abstract="true"/>
+    
+    <beans:bean id="wadlGenBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttWadlGenerator" parent="wadlGen" abstract="true"/>
+    
+    <beans:bean id="wadlGenCrigtt" parent="wadlGenBase"
+        c:bus-ref="busCrigtt"
+        p:keepRelativeDocLinks="true"
+        p:linkAnyMediaTypeToXmlSchema="true"/>
     
     <!--====================================================================================================
     = SERVERS
@@ -59,15 +67,19 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJackson"/>
+                <beans:ref bean="exceptionMapperValidator"/>
+                <beans:ref bean="contextResolverJaxbContext"/>
+                <beans:ref bean="wadlGenCrigtt"/>
+                <beans:ref bean="provJacksonJson"/>
+                <beans:ref bean="provJaxbElem"/>
             </beans:list>
         </beans:property>
     </beans:bean>
     
     <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="serverValidator" parent="serverBase"
-        p:address=""
-        p:docLocation="/META-INF/crigtt/wadl/crigtt-web.wadl"
+        p:address="/"
+        p:docLocation="/META-INF/crigtt/wadl/crigtt-web-ws.wadl"
         p:serviceBean-ref="validatorWebServiceImpl"/>
     
     <!--====================================================================================================
@@ -79,7 +91,9 @@
         p:bus-ref="busCrigtt">
         <beans:property name="providers">
             <beans:list>
-                <beans:ref bean="provJsonJackson"/>
+                <beans:ref bean="contextResolverJaxbContext"/>
+                <beans:ref bean="provJacksonJson"/>
+                <beans:ref bean="provJaxbElem"/>
             </beans:list>
         </beans:property>
     </beans:bean>

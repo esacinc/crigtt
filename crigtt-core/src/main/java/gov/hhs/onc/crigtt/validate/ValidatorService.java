@@ -2,18 +2,17 @@ package gov.hhs.onc.crigtt.validate;
 
 import br.net.woodstock.rockframework.security.digest.Digester;
 import java.util.Map;
-import org.springframework.beans.factory.InitializingBean;
 
-public interface ValidatorService extends InitializingBean {
-    public ValidatorResponse validate(ValidatorRequest req) throws Exception;
+public interface ValidatorService {
+    public ValidatorReport validate(ValidatorSubmission submission) throws Exception;
 
     public Digester getDigester();
 
     public void setDigester(Digester digester);
 
-    public Map<String, ValidatorEventLevel> getPhaseLevels();
+    public Map<String, ValidatorLevel> getPhaseLevels();
 
-    public void setPhaseLevels(Map<String, ValidatorEventLevel> phaseLevels);
+    public void setPhaseLevels(Map<String, ValidatorLevel> phaseLevels);
 
     public ValidatorSchematron[] getSchematrons();
 

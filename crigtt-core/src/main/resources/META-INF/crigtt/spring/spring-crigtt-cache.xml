@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!--====================================================================================================
+    = CONTEXT
+    =====================================================================================================-->
+    <cache:annotation-driven cache-manager="cacheManagerCrigtt"/>
+    
+    <!--====================================================================================================
+    = EHCACHE CACHE CONFIGURATIONS
+    =====================================================================================================-->
+    <beans:bean id="configCacheEhCache" class="net.sf.ehcache.config.CacheConfiguration" abstract="true"/>
+    
+    <beans:bean id="configCacheCrigtt" parent="configCacheEhCache" abstract="true"
+        p:diskPersistent="false"
+        p:logging="true"
+        p:overflowToDisk="false"
+        p:statistics="true"/>
+    
+    <!--====================================================================================================
+    = EHCACHE CONFIGURATIONS
+    =====================================================================================================-->
+    <beans:bean id="configEhCache" class="net.sf.ehcache.config.Configuration" abstract="true"/>
+    
+    <!--====================================================================================================
+    = CACHE MANAGERS
+    =====================================================================================================-->
+    <beans:bean id="cacheManager" class="org.springframework.cache.CacheManager" abstract="true"/>
+    
+    <beans:bean id="cacheManagerEhCache" class="org.springframework.cache.ehcache.EhCacheCacheManager" parent="cacheManager" abstract="true"/>
+    
+    <beans:bean id="cacheManagerBase" class="gov.hhs.onc.crigtt.cache.impl.CrigttEhCacheManagerFactoryBean" parent="cacheManagerEhCache" abstract="true"/>
+    
+    <beans:bean id="cacheManagerCrigtt" parent="cacheManagerBase">
+        <beans:property name="configuration">
+            <beans:bean parent="configEhCache"
+                p:name="cacheManagerCrigtt"/>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = CACHES
+    =====================================================================================================-->
+    <beans:bean id="cache" class="org.springframework.cache.Cache" abstract="true"/>
+    
+    <beans:bean id="cacheEhCache" class="org.springframework.cache.ehcache.EhCacheCache" parent="cache" abstract="true"/>
+    
+    <beans:bean id="cacheBase" class="gov.hhs.onc.crigtt.cache.impl.CrigttEhCacheFactoryBean" parent="cacheEhCache" abstract="true"/>
+    
+    <beans:bean id="cacheCrigtt" parent="cacheBase" abstract="true"
+        p:manager="#{ cacheManagerCrigtt.cacheManager }"/>
+</beans:beans>

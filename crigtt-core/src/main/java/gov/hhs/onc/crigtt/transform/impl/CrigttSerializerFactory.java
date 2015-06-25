@@ -1,85 +1,45 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
+import gov.hhs.onc.crigtt.config.CrigttConfigurationValues;
 import gov.hhs.onc.crigtt.config.impl.CrigttConfiguration;
-import gov.hhs.onc.crigtt.transform.CrigttOutputMethods;
 import java.util.Properties;
-import javax.annotation.Nonnegative;
+import javax.annotation.Nullable;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import net.sf.saxon.event.PipelineConfiguration;
 import net.sf.saxon.event.Receiver;
+import net.sf.saxon.event.StreamWriterToReceiver;
 import net.sf.saxon.lib.SaxonOutputKeys;
 import net.sf.saxon.lib.SerializerFactory;
-import net.sf.saxon.serialize.HTMLIndenter;
-import net.sf.saxon.serialize.XMLEmitter;
-import net.sf.saxon.serialize.XMLIndenter;
+import net.sf.saxon.serialize.CharacterMapIndex;
+import net.sf.saxon.stax.ReceiverToXMLStreamWriter;
+import net.sf.saxon.trans.XPathException;
+import org.apache.cxf.staxutils.PrettyPrintXMLStreamWriter;
 
 public class CrigttSerializerFactory extends SerializerFactory {
-    private static class CrigttHtmlIndenter extends HTMLIndenter {
-        private int indentSpaces;
-        private int lineLen;
-
-        public CrigttHtmlIndenter(Receiver nextReceiver, Properties outProps) {
-            super(nextReceiver, CrigttOutputMethods.HTML);
-
-            this.indentSpaces =
-                (outProps.containsKey(SaxonOutputKeys.INDENT_SPACES) ? Integer.parseInt(outProps.getProperty(SaxonOutputKeys.INDENT_SPACES)) : this
-                    .getIndentation());
-            this.lineLen =
-                (outProps.containsKey(SaxonOutputKeys.LINE_LENGTH) ? Integer.parseInt(outProps.getProperty(SaxonOutputKeys.LINE_LENGTH)) : this.getLineLength());
-        }
-
-        @Nonnegative
-        @Override
-        public int getIndentation() {
-            return this.indentSpaces;
-        }
-
-        @Nonnegative
-        @Override
-        public int getLineLength() {
-            return this.lineLen;
-        }
-    }
-
-    private static class CrigttXmlIndenter extends XMLIndenter {
-        private int indentSpaces;
-        private int lineLen;
-
-        public CrigttXmlIndenter(XMLEmitter nextReceiver, Properties outProps) {
-            super(nextReceiver);
-
-            this.setOutputProperties(outProps);
-            this.indentSpaces =
-                (outProps.containsKey(SaxonOutputKeys.INDENT_SPACES) ? Integer.parseInt(outProps.getProperty(SaxonOutputKeys.INDENT_SPACES)) : this
-                    .getIndentation());
-            this.lineLen =
-                (outProps.containsKey(SaxonOutputKeys.LINE_LENGTH) ? Integer.parseInt(outProps.getProperty(SaxonOutputKeys.LINE_LENGTH)) : this.getLineLength());
-        }
-
-        @Nonnegative
-        @Override
-        public int getIndentation() {
-            return this.indentSpaces;
-        }
-
-        @Nonnegative
-        @Override
-        public int getLineLength() {
-            return this.lineLen;
-        }
-    }
+    private CrigttConfiguration config;
 
     public CrigttSerializerFactory(CrigttConfiguration config) {
         super(config);
 
-        config.setSerializerFactory(this);
+        (this.config = config).setSerializerFactory(this);
     }
 
     @Override
-    protected CrigttHtmlIndenter newHTMLIndenter(Receiver nextReceiver, Properties outProps) {
-        return new CrigttHtmlIndenter(nextReceiver, outProps);
-    }
+    public Receiver getReceiver(Result result, PipelineConfiguration pipelineConfig, Properties outProps, @Nullable CharacterMapIndex charMapIndex)
+        throws XPathException {
+        int indentSpaces = config.getInteger(outProps, SaxonOutputKeys.INDENT_SPACES, -1);
+        boolean indent = (this.config.getBoolean(outProps, OutputKeys.INDENT) && (indentSpaces > 0));
 
-    @Override
-    protected CrigttXmlIndenter newXMLIndenter(XMLEmitter nextReceiver, Properties outProps) {
-        return new CrigttXmlIndenter(nextReceiver, outProps);
+        outProps.setProperty(OutputKeys.INDENT, CrigttConfigurationValues.NO);
+
+        Receiver receiver = super.getReceiver(result, pipelineConfig, outProps, charMapIndex);
+
+        if (indent) {
+            (receiver = new ReceiverToXMLStreamWriter(new PrettyPrintXMLStreamWriter(new StreamWriterToReceiver(receiver), indentSpaces)))
+                .setPipelineConfiguration(pipelineConfig);
+        }
+
+        return receiver;
     }
 }

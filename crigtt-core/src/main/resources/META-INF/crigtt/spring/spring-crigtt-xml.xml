@@ -20,11 +20,11 @@
     <!--====================================================================================================
     = XML INPUT FACTORIES
     =====================================================================================================-->
-    <beans:bean id="xmlInputFactory" class="javax.xml.stream.XMLInputFactory" abstract="true"/>
+    <beans:bean id="xmlInFactory" class="javax.xml.stream.XMLInputFactory" abstract="true"/>
     
-    <beans:bean id="xmlInputFactoryWoodstox" class="com.ctc.wstx.stax.WstxInputFactory" parent="xmlInputFactory" abstract="true"/>
+    <beans:bean id="xmlInFactoryWoodstox" class="com.ctc.wstx.stax.WstxInputFactory" parent="xmlInFactory" abstract="true"/>
     
-    <beans:bean id="xmlInputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlInputFactory" parent="xmlInputFactoryWoodstox"
+    <beans:bean id="xmlInFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlInputFactory" parent="xmlInFactoryWoodstox"
         p:XMLReporter-ref="errorListenerCrigtt">
         <beans:property name="properties">
             <beans:map>
@@ -32,7 +32,7 @@
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_SUPPORTING_EXTERNAL_ENTITIES }" value="false" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).IS_VALIDATING }" value="true" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_CACHE_DTDS }" value="false" value-type="java.lang.Boolean"/>
-                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_INPUT_BUFFER_LENGTH }" value="#{ 512 * 1024 }" value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(com.ctc.wstx.api.WstxInputProperties).P_INPUT_BUFFER_LENGTH }" value="#{ 1024 * 1024 }" value-type="java.lang.Integer"/>
                 <beans:entry key="#{ T(javax.xml.stream.XMLInputFactory).SUPPORT_DTD }" value="false" value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_SUPPORT_XMLID }"
                     value="#{ T(org.codehaus.stax2.XMLStreamProperties).XSP_V_XMLID_NONE }"/>
@@ -48,29 +48,39 @@
     <beans:bean id="saxParserFactoryWoodstox" class="com.ctc.wstx.sax.WstxSAXParserFactory" parent="saxParserFactory" abstract="true"/>
     
     <beans:bean id="saxParserFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttSaxParserFactory" parent="saxParserFactoryWoodstox"
-        c:xmlInputFactory-ref="xmlInputFactoryCrigtt"/>
+        c:xmlInputFactory-ref="xmlInFactoryCrigtt"/>
     
     <!--====================================================================================================
     = XML OUTPUT FACTORIES
     =====================================================================================================-->
-    <beans:bean id="xmlOutputFactory" class="javax.xml.stream.XMLOutputFactory" abstract="true"/>
+    <beans:bean id="xmlOutFactory" class="javax.xml.stream.XMLOutputFactory" abstract="true"/>
     
-    <beans:bean id="xmlOutputFactoryWoodstox" class="com.ctc.wstx.stax.WstxOutputFactory" parent="xmlOutputFactory" abstract="true"/>
+    <beans:bean id="xmlOutFactoryWoodstox" class="com.ctc.wstx.stax.WstxOutputFactory" parent="xmlOutFactory" abstract="true"/>
     
-    <beans:bean id="xmlOutputFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory" parent="xmlOutputFactoryWoodstox"
+    <beans:bean id="xmlOutFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory" parent="xmlOutFactoryWoodstox"
         p:problemReporter-ref="errorListenerCrigtt"/>
     
     <!--====================================================================================================
     = OBJECT FACTORIES
     =====================================================================================================-->
-    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.schematron.impl.ObjectFactory"/>
+    <beans:bean id="objFactorySchematron" class="gov.hhs.onc.crigtt.schematron.ObjectFactory"/>
     
-    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.schematron.svrl.impl.ObjectFactory"/>
+    <beans:bean id="objFactorySchematronImpl" class="gov.hhs.onc.crigtt.schematron.impl.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematronSvrl" class="gov.hhs.onc.crigtt.schematron.svrl.ObjectFactory"/>
+    
+    <beans:bean id="objFactorySchematronSvrlImpl" class="gov.hhs.onc.crigtt.schematron.svrl.impl.ObjectFactory"/>
+    
+    <beans:bean id="objFactoryValidate" class="gov.hhs.onc.crigtt.validate.ObjectFactory"/>
+    
+    <beans:bean id="objFactoryValidateImpl" class="gov.hhs.onc.crigtt.validate.impl.ObjectFactory"/>
     
     <!--====================================================================================================
     = JAXB MARSHALLERS
     =====================================================================================================-->
-    <beans:bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" abstract="true">
+    <beans:bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" abstract="true"/>
+    
+    <beans:bean id="jaxbMarshallerCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" parent="jaxbMarshaller" abstract="true">
         <beans:property name="marshallerProperties">
             <beans:map>
                 <beans:entry key="#{ T(javax.xml.bind.Marshaller).JAXB_ENCODING }" value="#{ charsetUtf8.name() }"/>
@@ -78,13 +88,10 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="jaxbMarshallerCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller" parent="jaxbMarshaller" abstract="true"/>
-    
     <beans:bean id="jaxbMarshallerSchematron" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
-                <!--suppress SpringModelInspection -->
-                <beans:value>#{ objFactorySchematron.class.package.name }</beans:value>
+                <beans:value>#{ objFactorySchematronImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
     </beans:bean>
@@ -92,9 +99,46 @@
     <beans:bean id="jaxbMarshallerSchematronSvrl" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
-                <!--suppress SpringModelInspection -->
-                <beans:value>#{ objFactorySchematronSvrl.class.package.name }</beans:value>
+                <beans:value>#{ objFactorySchematronSvrlImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="jaxbMarshallerValidator" parent="jaxbMarshallerCrigtt">
+        <beans:property name="packagesToScan">
+            <beans:array>
+                <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = XML FACTORIES
+    =====================================================================================================-->
+    <beans:bean id="xmlFactory" class="com.fasterxml.jackson.dataformat.xml.XmlFactory" abstract="true"/>
+    
+    <beans:bean id="xmlFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlFactory" parent="xmlFactory" abstract="true"/>
+    
+    <!--====================================================================================================
+    = XML MAPPERS
+    =====================================================================================================-->
+    <beans:bean id="xmlMapper" class="com.fasterxml.jackson.dataformat.xml.XmlMapper" abstract="true"/>
+    
+    <beans:bean id="xmlMapperCrigtt" parent="xmlMapper">
+        <beans:constructor-arg name="xmlFactory">
+            <!--suppress SpringPlaceholdersInspection -->
+            <beans:bean parent="xmlFactoryCrigtt"
+                c:objMapper-ref="objMapperCrigtt"
+                c:xmlInFactory-ref="xmlInFactoryCrigtt"
+                c:xmlOutFactory-ref="xmlOutFactoryCrigtt"
+                p:indent="true"
+                p:indentSpaces="${crigtt.transform.serialize.indent.spaces}">
+                <beans:property name="features">
+                    <beans:map>
+                        <beans:entry key="#{ T(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator.Feature).WRITE_XML_DECLARATION }" value="true"/>
+                    </beans:map>
+                </beans:property>
+            </beans:bean>
+        </beans:constructor-arg>
     </beans:bean>
 </beans:beans>

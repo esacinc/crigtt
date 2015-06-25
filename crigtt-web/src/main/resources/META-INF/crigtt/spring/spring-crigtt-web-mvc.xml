@@ -33,9 +33,9 @@
     <!--====================================================================================================
     = INTERCEPTORS
     =====================================================================================================-->
-    <beans:bean id="interceptor" class="org.springframework.web.servlet.HandlerInterceptor" abstract="true"/>
+    <beans:bean id="interceptorHandler" class="org.springframework.web.servlet.HandlerInterceptor" abstract="true"/>
     
-    <beans:bean id="interceptorWebContent" class="org.springframework.web.servlet.mvc.WebContentInterceptor" parent="interceptor"
+    <beans:bean id="interceptorWebContent" class="org.springframework.web.servlet.mvc.WebContentInterceptor" parent="interceptorHandler"
         p:cacheSeconds="0"
         p:useCacheControlHeader="true"
         p:useCacheControlNoStore="true"

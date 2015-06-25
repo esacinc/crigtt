@@ -62,8 +62,6 @@
                 <beans:entry key="#{ T(javax.xml.transform.OutputKeys).INDENT }" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
                 <!--suppress SpringPlaceholdersInspection -->
                 <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }" value="${crigtt.transform.serialize.indent.spaces}"/>
-                <!--suppress SpringPlaceholdersInspection -->
-                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }" value="${crigtt.transform.serialize.line.len}"/>
                 <beans:entry key="#{ T(javax.xml.transform.OutputKeys).METHOD }" value="#{ T(gov.hhs.onc.crigtt.transform.CrigttOutputMethods).HTML }"/>
                 <beans:entry key="#{ T(javax.xml.transform.OutputKeys).OMIT_XML_DECLARATION }"
                     value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
@@ -89,8 +87,6 @@
                 <beans:entry key="#{ T(javax.xml.transform.OutputKeys).INDENT }" value="#{ T(gov.hhs.onc.crigtt.config.CrigttConfigurationValues).YES }"/>
                 <!--suppress SpringPlaceholdersInspection -->
                 <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).INDENT_SPACES }" value="${crigtt.transform.serialize.indent.spaces}"/>
-                <!--suppress SpringPlaceholdersInspection -->
-                <beans:entry key="#{ T(net.sf.saxon.lib.SaxonOutputKeys).LINE_LENGTH }" value="${crigtt.transform.serialize.line.len}"/>
             </beans:map>
         </beans:constructor-arg>
     </beans:bean>

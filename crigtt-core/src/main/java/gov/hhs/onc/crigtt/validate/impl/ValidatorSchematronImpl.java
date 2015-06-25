@@ -1,58 +1,48 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.TokenBuffer;
-import gov.hhs.onc.crigtt.beans.CrigttIdentifiedBean;
-import gov.hhs.onc.crigtt.beans.impl.AbstractCrigttNamedBean;
+import gov.hhs.onc.crigtt.beans.IdentifiedBean;
+import gov.hhs.onc.crigtt.beans.impl.AbstractNamedBean;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.schematron.Active;
 import gov.hhs.onc.crigtt.schematron.Assertion;
-import gov.hhs.onc.crigtt.schematron.Direction;
-import gov.hhs.onc.crigtt.schematron.Emphasis;
-import gov.hhs.onc.crigtt.schematron.Extension;
 import gov.hhs.onc.crigtt.schematron.Name;
-import gov.hhs.onc.crigtt.schematron.Paragraph;
+import gov.hhs.onc.crigtt.schematron.Namespace;
 import gov.hhs.onc.crigtt.schematron.Pattern;
 import gov.hhs.onc.crigtt.schematron.Phase;
 import gov.hhs.onc.crigtt.schematron.Report;
 import gov.hhs.onc.crigtt.schematron.Rule;
 import gov.hhs.onc.crigtt.schematron.Schema;
-import gov.hhs.onc.crigtt.schematron.Span;
 import gov.hhs.onc.crigtt.schematron.Title;
-import gov.hhs.onc.crigtt.schematron.dto.AssertionDto;
-import gov.hhs.onc.crigtt.schematron.dto.PatternDto;
-import gov.hhs.onc.crigtt.schematron.dto.PhaseDto;
-import gov.hhs.onc.crigtt.schematron.dto.RuleDto;
-import gov.hhs.onc.crigtt.schematron.dto.SchemaDto;
-import gov.hhs.onc.crigtt.schematron.dto.impl.AssertionDtoImpl;
-import gov.hhs.onc.crigtt.schematron.dto.impl.PatternDtoImpl;
-import gov.hhs.onc.crigtt.schematron.dto.impl.PhaseDtoImpl;
-import gov.hhs.onc.crigtt.schematron.dto.impl.RuleDtoImpl;
-import gov.hhs.onc.crigtt.schematron.dto.impl.SchemaDtoImpl;
 import gov.hhs.onc.crigtt.schematron.impl.ReportImpl;
 import gov.hhs.onc.crigtt.schematron.impl.TitleImpl;
-import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
 import gov.hhs.onc.crigtt.utils.CrigttIteratorUtils;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
+import gov.hhs.onc.crigtt.validate.ValidatorStaticCodeXmlNames;
+import gov.hhs.onc.crigtt.validate.ValidatorAssertion;
+import gov.hhs.onc.crigtt.validate.ValidatorCode;
+import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
+import gov.hhs.onc.crigtt.validate.ValidatorPattern;
+import gov.hhs.onc.crigtt.validate.ValidatorPhase;
+import gov.hhs.onc.crigtt.validate.ValidatorRule;
+import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
+import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
+import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocumentDestination;
-import gov.hhs.onc.crigtt.xml.utils.CrigttXmlUtils;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
@@ -69,22 +59,21 @@ import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.stax.XMLStreamWriterDestination;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.cxf.helpers.DOMUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements ValidatorSchematron {
+public class ValidatorSchematronImpl extends AbstractNamedBean implements ValidatorSchematron {
+    private final static String STATIC_CODE_DOC_BASE_URI_EXPR_PATTERN_FORMAT =
+        "^([^$]+@\\w+\\s*=\\s*document\\('\\Q%1$s\\E')(\\)/%2$s:systems/%2$s:system\\[@valueSetOid='[^']+'\\]/%2$s:code/@value[^$]*)$";
+
+    private final static String STATIC_CODE_DOC_BASE_URI_EXPR_FRAGMENT = ", $document-uri";
+
     private final static Logger LOGGER = LoggerFactory.getLogger(ValidatorSchematronImpl.class);
 
-    @Resource(name = "objMapperCrigtt")
-    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private ObjectMapper objMapper;
-
-    @Resource(name = "xmlOutputFactoryCrigtt")
+    @Resource(name = "xmlOutFactoryCrigtt")
     private CrigttXmlOutputFactory xmlOutFactory;
-
-    @Resource(name = "docBuilderBase")
-    private CrigttDocumentBuilder docBuilder;
 
     @Resource(name = "xsltCompilerCrigtt")
     private XsltCompiler xsltCompiler;
@@ -94,22 +83,22 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
 
     private Map<String, ?> params;
     private String queryBinding;
-    private Map<String, Source> referencedDocs = new HashMap<>();
+    private XdmDocument[] referencedDocs;
     private String schemaVersion;
     private Source src;
+    private XdmDocument staticCodeDoc;
     private XsltExecutable[] xsltExecs;
     private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
-    private Schema schema;
-    private Map<String, Phase> phases;
-    private Map<String, Pattern> patterns;
-    private Map<String, Rule> rules;
-    private Map<String, Assertion> assertions;
-    private Map<String, List<Pattern>> activePatterns;
-    private Map<String, List<Rule>> activeRules;
-    private Map<String, List<Assertion>> activeAssertions;
+    private Map<String, String> patternPhases;
+    private ValidatorSchema activeSchema;
+    private Map<String, ValidatorPhase> activePhases;
+    private Map<String, ValidatorPattern> activePatterns;
+    private Map<String, ValidatorRule> activeRules;
+    private Map<String, ValidatorAssertion> activeAssertions;
+    private Map<String, ValidatorValueSet> activeValueSets;
+    private Map<String, ValidatorCode> activeCodes;
+    private Map<String, ValidatorCodeSystem> activeCodeSystems;
     private XsltExecutable schemaXsltExec;
-    private SchemaDto schemaDto;
-    private TokenBuffer schemaJson;
 
     @Override
     public XdmDocument transform(Source docSrc) throws Exception {
@@ -126,226 +115,139 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.initializeReferencedDocuments();
+        (this.pooledReferencedDocs = CrigttStreamUtils.toMap(XdmDocument::getUri, XdmDocument::getUnderlyingNode, Stream.of(this.referencedDocs))).put(
+            this.staticCodeDoc.getUri(), this.staticCodeDoc.getUnderlyingNode());
+
+        this.initializeStaticCodes();
         this.initializeSchema();
-        this.initializeSchemaJson();
     }
 
-    private static List<String> buildTextContent(List<?> content) {
-        return buildTextContent(new ArrayList<>(), content);
+    private static <T extends IdentifiedBean> Map<String, T> mapComponents(List<?> content, Class<T> componentClass) {
+        return CrigttStreamUtils.toMap(IdentifiedBean::getId, Function.<T> identity(), LinkedHashMap::new,
+            CrigttStreamUtils.instances(content.stream(), componentClass));
     }
 
-    private static List<String> buildTextContent(List<String> textContent, List<?> content) {
-        content.stream().forEach(contentItem -> {
-            if (contentItem instanceof Direction) {
-                buildTextContent(textContent, ((Direction) contentItem).getContent());
-            } else if (contentItem instanceof Emphasis) {
-                textContent.add(((Emphasis) contentItem).getContent());
-            } else if (contentItem instanceof Paragraph) {
-                buildTextContent(textContent, ((Paragraph) contentItem).getContent());
-            } else if (contentItem instanceof Span) {
-                buildTextContent(textContent, ((Span) contentItem).getContent());
-            } else if (contentItem instanceof Element) {
-                CrigttXmlUtils.buildTextContent(textContent, ((Element) contentItem));
-            } else if (contentItem instanceof String) {
-                textContent.add(((String) contentItem));
+    private static <T> List<T> filterContent(List<T> content) {
+        Iterator<T> contentIterator = content.iterator();
+
+        CrigttIteratorUtils.stream(CrigttIteratorUtils.instances(contentIterator, IdentifiedBean.class)).forEach(contentItem -> {
+            if (!contentItem.isSetId()) {
+                contentIterator.remove();
             }
         });
 
-        return textContent;
-    }
-
-    private static List<Rule> buildRuleHierarchy(List<Rule> rules, Rule rootRule) {
-        rules.add(rootRule);
-
-        CrigttStreamUtils.instances(rootRule.getContent().stream(), Extension.class).forEach(ext -> {
-            buildRuleHierarchy(rules, ((Rule) ext.getRule()));
-        });
-
-        return rules;
-    }
-
-    private static List<Pattern> buildPatternHierarchy(List<Pattern> patterns, Pattern rootPattern) {
-        patterns.add(rootPattern);
-
-        if (rootPattern.isSetIsA()) {
-            buildPatternHierarchy(patterns, ((Pattern) rootPattern.getIsA()));
-        }
-
-        return patterns;
-    }
-
-    private void initializeSchemaJson() throws IOException {
-        this.schemaDto = new SchemaDtoImpl();
-        this.schemaDto.setDisplayName(this.displayName);
-        this.schemaDto.setId(this.id);
-        this.schemaDto.setName(this.name);
-        this.schemaDto.setQueryBinding(this.queryBinding);
-        this.schemaDto.setVersion(this.schemaVersion);
-
-        Map<String, AssertionDto> assertionDtos = CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, activeAssertion -> {
-            List<?> activeAssertionContent = activeAssertion.getContent();
-
-            AssertionDto assertionDto = new AssertionDtoImpl();
-            assertionDto.setId(activeAssertion.getId());
-            assertionDto.setName(CrigttStreamUtils.instances(activeAssertionContent.stream(), Name.class).findFirst().map(Name::getPath).orElse(null));
-            assertionDto.setTest(activeAssertion.getTest());
-            assertionDto.setText(buildTextContent(activeAssertionContent));
-
-            return assertionDto;
-        }, LinkedHashMap::new, this.activeAssertions.values().stream().flatMap(Collection::stream));
-        this.schemaDto.setAssertions(assertionDtos);
-
-        Map<String, RuleDto> ruleDtos = CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, activeRule -> {
-            List<?> activeRuleContent = activeRule.getContent();
-
-            RuleDto ruleDto = new RuleDtoImpl();
-            ruleDto.setAssertions(this.activeAssertions.get(activeRule.getId()).stream().map(CrigttIdentifiedBean::getId).collect(Collectors.toList()));
-            ruleDto.setContext(activeRule.getContext());
-            ruleDto.setId(activeRule.getId());
-            ruleDto.setText(buildTextContent(activeRuleContent));
-
-            return ruleDto;
-        }, LinkedHashMap::new, this.activeRules.values().stream().flatMap(Collection::stream));
-        this.schemaDto.setRules(ruleDtos);
-
-        Map<String, PatternDto> patternDtos = CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, activePattern -> {
-            List<?> activePatternContent = activePattern.getContent();
-
-            PatternDto patternDto = new PatternDtoImpl();
-            patternDto.setId(activePattern.getId());
-            patternDto.setRules(this.activeRules.get(activePattern.getId()).stream().map(CrigttIdentifiedBean::getId).collect(Collectors.toList()));
-            patternDto.setText(buildTextContent(activePatternContent));
-
-            return patternDto;
-        }, LinkedHashMap::new, this.activePatterns.values().stream().flatMap(Collection::stream));
-        this.schemaDto.setPatterns(patternDtos);
-
-        Map<String, PhaseDto> phaseDtos = CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, phase -> {
-            List<?> phaseContent = phase.getContent();
-
-            PhaseDto phaseDto = new PhaseDtoImpl();
-            phaseDto.setId(phase.getId());
-            phaseDto.setPatterns(this.activePatterns.get(phase.getId()).stream().map(CrigttIdentifiedBean::getId).collect(Collectors.toList()));
-            phaseDto.setText(buildTextContent(phaseContent));
-
-            return phaseDto;
-        }, LinkedHashMap::new, this.phases.values().stream());
-        this.schemaDto.setPhases(phaseDtos);
-
-        (this.schemaJson = new TokenBuffer(this.objMapper, false)).writeObject(this.schemaDto);
+        return content;
     }
 
     private void initializeSchema() throws SaxonApiException, XMLStreamException {
-        this.schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class);
-        this.schema.setQueryBinding(this.queryBinding);
-        this.schema.setSchemaVersion(this.schemaVersion);
+        Schema schema = this.schematronJaxbMarshaller.unmarshal(this.src, Schema.class);
+        schema.setQueryBinding(this.queryBinding);
+        schema.setSchemaVersion(this.schemaVersion);
 
-        List<Object> schemaContent = this.schema.getContent();
+        List<Object> schemaContent = filterContent(schema.getContent());
 
-        if (this.isSetDisplayName()) {
-            Title title = new TitleImpl();
-            title.setContent(this.displayName);
-            schemaContent.add(0, title);
+        this.activeSchema = new ValidatorSchemaImpl();
+
+        if (this.isSetId()) {
+            schema.setId(this.id);
+
+            this.activeSchema.setId(this.id);
         }
 
-        this.phases =
-            CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, Function.<Phase> identity(), LinkedHashMap::new,
-                CrigttStreamUtils.instances(schemaContent.stream(), Phase.class).filter(CrigttIdentifiedBean::isSetId));
+        if (this.isSetName()) {
+            Title title = new TitleImpl();
+            title.setContent(Collections.singletonList(this.name));
+            schemaContent.add(0, title);
 
-        this.patterns =
-            CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, Function.<Pattern> identity(), LinkedHashMap::new,
-                CrigttStreamUtils.instances(schemaContent.stream(), Pattern.class).filter(CrigttIdentifiedBean::isSetId));
+            this.activeSchema.setName(this.name);
+        }
 
-        this.rules =
-            CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, Function.<Rule> identity(), LinkedHashMap::new,
-                this.patterns.values().stream().flatMap(pattern -> {
-                    List<Object> patternContent = pattern.getContent();
-                    Iterator<Rule> patternRuleIterator = CrigttIteratorUtils.instances(patternContent.iterator(), Rule.class);
+        Map<String, Phase> phases = mapComponents(schemaContent, Phase.class);
+        int numPhases = phases.size();
 
-                    CrigttIteratorUtils.stream(patternRuleIterator).forEach(patternRule -> {
-                        if (!patternRule.isSetId()) {
-                            patternRuleIterator.remove();
+        this.activePhases = new LinkedHashMap<>(numPhases);
+
+        phases.forEach((phaseId, phase) -> {
+            ValidatorPhase activePhase = new ValidatorPhaseImpl();
+            activePhase.setId(phaseId);
+            this.activePhases.put(phaseId, activePhase);
+        });
+
+        Map<String, Pattern> patterns = mapComponents(schemaContent, Pattern.class);
+        int numPatterns = patterns.size();
+
+        this.patternPhases = new LinkedHashMap<>(numPatterns);
+        this.activePatterns = new LinkedHashMap<>(numPatterns);
+
+        Map<String, Rule> rules = new LinkedHashMap<>();
+        Map<String, Assertion> assertions = new LinkedHashMap<>();
+
+        this.activeRules = new LinkedHashMap<>();
+        this.activeAssertions = new LinkedHashMap<>();
+
+        java.util.regex.Pattern staticCodeDocBaseUriExprPattern =
+            java.util.regex.Pattern.compile(String.format(STATIC_CODE_DOC_BASE_URI_EXPR_PATTERN_FORMAT, this.staticCodeDoc.getUri().toString(),
+                CrigttStreamUtils.instances(schemaContent.stream(), Namespace.class).filter(ns -> ns.getUri().equals(CrigttXmlNs.STATIC_CODE_URI)).findFirst()
+                    .get().getPrefix()));
+
+        patterns.forEach((patternId, pattern) -> {
+            for (String phaseId : phases.keySet()) {
+                // noinspection ConstantConditions
+            if (CrigttStreamUtils.instances(phases.get(phaseId).getContent().stream(), Active.class).anyMatch(
+                active -> ((Pattern) active.getPattern()).getId().equals(patternId))) {
+                this.patternPhases.put(patternId, phaseId);
+                break;
+            }
+        }
+
+        List<Object> patternContent = filterContent(pattern.getContent());
+
+        CrigttStreamUtils.instances(patternContent.stream(), Rule.class).forEach(
+            rule -> {
+                ListIterator<Object> ruleContentIterator = filterContent(rule.getContent()).listIterator();
+                String ruleId = rule.getId();
+
+                rules.put(ruleId, rule);
+
+                ValidatorRule activeRule = new ValidatorRuleImpl();
+                activeRule.setId(ruleId);
+                activeRules.put(ruleId, activeRule);
+
+                CrigttIteratorUtils.stream(CrigttIteratorUtils.instances(ruleContentIterator, Assertion.class)).forEach(
+                    assertion -> {
+                        List<Serializable> assertionContent = filterContent(assertion.getContent());
+                        String assertionId = assertion.getId(), assertionTest = assertion.getTest();
+                        Matcher staticCodeDocExprMatcher = staticCodeDocBaseUriExprPattern.matcher(assertionTest);
+
+                        if (staticCodeDocExprMatcher.matches()) {
+                            assertion.setTest((assertionTest =
+                                (staticCodeDocExprMatcher.group(1) + STATIC_CODE_DOC_BASE_URI_EXPR_FRAGMENT + staticCodeDocExprMatcher.group(2))));
                         }
+
+                        assertions.put(assertionId, assertion);
+
+                        ValidatorAssertion activeAssertion = new ValidatorAssertionImpl();
+                        activeAssertion.setId(assertionId);
+                        activeAssertion.setName(CrigttStreamUtils.firstInstance(assertionContent.stream(), Name.class).map(Name::getPath).orElse(null));
+
+                        Report report = new ReportImpl();
+                        report.setId(assertionId);
+                        report.setContent(assertionContent);
+                        report.setTest(assertionTest);
+                        ruleContentIterator.add(report);
                     });
+            });
 
-                    return CrigttStreamUtils.instances(patternContent.stream(), Rule.class);
-                }));
-
-        this.assertions =
-            CrigttStreamUtils.toMap(CrigttIdentifiedBean::getId, Function.<Assertion> identity(), LinkedHashMap::new,
-                this.rules.values().stream().flatMap(rule -> {
-                    List<Object> ruleContent = rule.getContent();
-                    Iterator<Assertion> ruleAssertionIterator = CrigttIteratorUtils.instances(ruleContent.iterator(), Assertion.class);
-
-                    CrigttIteratorUtils.stream(ruleAssertionIterator).forEach(ruleAssertion -> {
-                        if (!ruleAssertion.isSetId()) {
-                            ruleAssertionIterator.remove();
-                        }
-                    });
-
-                    return CrigttStreamUtils.instances(ruleContent.stream(), Assertion.class);
-                }));
-
-        this.activePatterns =
-            CrigttStreamUtils.toMap(
-                Entry::getKey,
-                phaseEntry -> CrigttStreamUtils.instances(phaseEntry.getValue().getContent().stream(), Active.class)
-                    .map(active -> ((Pattern) active.getPattern())).collect(Collectors.toList()), LinkedHashMap::new, this.phases.entrySet().stream());
-
-        this.activeRules = new LinkedHashMap<>(this.rules.size());
-        this.activeAssertions = new LinkedHashMap<>(this.assertions.size());
-
-        this.activePatterns
-            .values()
-            .stream()
-            .flatMap(Collection::stream)
-            .forEach(
-                activePattern -> {
-                    List<Rule> activePatternRules = new ArrayList<>();
-                    this.activeRules.put(activePattern.getId(), activePatternRules);
-
-                    buildPatternHierarchy(new ArrayList<>(), activePattern)
-                        .stream()
-                        .flatMap(activeHierarchyPattern -> CrigttStreamUtils.instances(activeHierarchyPattern.getContent().stream(), Rule.class))
-                        .filter(activePatternRule -> (!activePatternRule.isSetAbstract() || !activePatternRule.isAbstract()))
-                        .forEach(
-                            activeRule -> {
-                                activePatternRules.add(activeRule);
-
-                                List<Assertion> activeRuleAssertions = new ArrayList<>();
-                                this.activeAssertions.put(activeRule.getId(), activeRuleAssertions);
-
-                                List<Object> activeRuleContent = activeRule.getContent();
-
-                                CrigttStreamUtils
-                                    .instances(
-                                        buildRuleHierarchy(new ArrayList<>(), activeRule).stream().flatMap(
-                                            activeHierarchyRule -> activeHierarchyRule.getContent().stream()), Assertion.class).collect(Collectors.toList())
-                                    .stream().forEach(activeAssertion -> {
-                                        activeRuleAssertions.add(activeAssertion);
-
-                                        Report activeReport = new ReportImpl();
-                                        activeReport.setContent(activeAssertion.getContent());
-                                        activeReport.setDiagnostics(activeAssertion.getDiagnostics());
-                                        activeReport.setFlag(activeAssertion.getFlag());
-                                        activeReport.setFpi(activeAssertion.getFpi());
-                                        activeReport.setId(activeAssertion.getId());
-                                        activeReport.setIcon(activeAssertion.getIcon());
-                                        activeReport.setRole(activeAssertion.getRole());
-                                        activeReport.setSee(activeAssertion.getSee());
-                                        activeReport.setSubject(activeAssertion.getSubject());
-                                        activeReport.setRole(activeAssertion.getRole());
-                                        activeReport.setTest(activeAssertion.getTest());
-                                        activeRuleContent.add(activeReport);
-                                    });
-                            });
-                });
+        ValidatorPattern activePattern = new ValidatorPatternImpl();
+        activePattern.setId(patternId);
+        activePattern.setName(CrigttStreamUtils.firstInstance(patternContent.stream(), Name.class).map(Name::getPath).orElse(null));
+        this.activePatterns.put(patternId, activePattern);
+    })  ;
 
         String sysId = this.src.getSystemId();
         ByteArrayResult schemaResult = new ByteArrayResult(sysId);
 
-        this.schematronJaxbMarshaller.marshal(this.schema, schemaResult);
+        this.schematronJaxbMarshaller.marshal(schema, schemaResult);
 
         XsltTransformer[] transformers = Stream.of(this.xsltExecs).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
         transformers[0].setSource(new ByteArraySource(schemaResult.getBytes(), sysId));
@@ -371,44 +273,79 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
 
         this.schemaXsltExec = this.xsltCompiler.compile(new ByteArraySource(schemaResult.getBytes(), sysId));
 
-        LOGGER.info(String.format(
-            "Prepared Schematron schema (id=%s, sysId=%s, numPhases=%d, numActivePatterns=%d, numActiveRules=%d, numActiveAssertions=%d).", this.id, sysId,
-            this.phases.size(), this.activePatterns.values().stream().mapToInt(Collection::size).sum(),
-            this.activeRules.values().stream().mapToInt(Collection::size).sum(), this.activeAssertions.values().stream().mapToInt(Collection::size).sum()));
+        LOGGER.info(String.format("Prepared Schematron schema (id=%s, sysId=%s, numPhases=%d, numPatterns=%d, numRules=%d, numAssertions=%d).", this.id, sysId,
+            numPhases, numPatterns, rules.size(), assertions.size()));
     }
 
-    private void initializeReferencedDocuments() throws SaxonApiException {
-        this.pooledReferencedDocs = new HashMap<>(this.referencedDocs.size());
+    private void initializeStaticCodes() {
+        this.activeValueSets = new LinkedHashMap<>();
+        this.activeCodeSystems = new LinkedHashMap<>();
+        this.activeCodes = new LinkedHashMap<>();
 
-        Source referencedDocSrc;
-        DocumentInfo referencedDocInfo;
+        String staticCodeElemId;
+        ValidatorValueSet activeValueSet;
+        ValidatorCodeSystem activeCodeSystem;
+        ValidatorCode activeCode;
 
-        for (String referencedDocUri : this.referencedDocs.keySet()) {
-            if ((referencedDocSrc = this.referencedDocs.get(referencedDocUri)) instanceof DocumentInfo) {
-                referencedDocInfo = ((DocumentInfo) referencedDocSrc);
-            } else {
-                referencedDocInfo = this.docBuilder.build(referencedDocSrc).getUnderlyingNode();
+        for (Element valueSetElem : DOMUtils.findAllElementsByTagNameNS(this.staticCodeDoc.getDocument().getDocumentElement(), CrigttXmlNs.STATIC_CODE_URI,
+            ValidatorStaticCodeXmlNames.SYSTEM_ELEM_NAME)) {
+            this.activeValueSets.put((staticCodeElemId = valueSetElem.getAttribute(ValidatorStaticCodeXmlNames.VALUE_SET_OID_ATTR_NAME)), (activeValueSet =
+                new ValidatorValueSetImpl()));
+            activeValueSet.setId(staticCodeElemId);
+            activeValueSet.setName(valueSetElem.getAttribute(ValidatorStaticCodeXmlNames.VALUE_SET_NAME_ATTR_NAME));
 
-                LOGGER.info(String.format("Built Schematron schema (id=%s) referenced document (uri=%s, sysId=%s).", this.id, referencedDocUri,
-                    referencedDocSrc.getSystemId()));
+            for (Element codeElem : DOMUtils.findAllElementsByTagNameNS(valueSetElem, CrigttXmlNs.STATIC_CODE_URI, ValidatorStaticCodeXmlNames.CODE_ELEM_NAME)) {
+                this.activeCodeSystems.put((staticCodeElemId = codeElem.getAttribute(ValidatorStaticCodeXmlNames.CODE_SYSTEM_ATTR_NAME)), (activeCodeSystem =
+                    new ValidatorCodeSystemImpl()));
+                activeCodeSystem.setId(staticCodeElemId);
+                activeCodeSystem.setName(codeElem.getAttribute(ValidatorStaticCodeXmlNames.CODE_SYSTEM_NAME_ATTR_NAME));
+
+                this.activeCodes.put((staticCodeElemId = codeElem.getAttribute(ValidatorStaticCodeXmlNames.VALUE_ATTR_NAME)), (activeCode =
+                    new ValidatorCodeImpl()));
+                activeCode.setId(staticCodeElemId);
+                activeCode.setName(codeElem.getAttribute(ValidatorStaticCodeXmlNames.DISPLAY_NAME_ATTR_NAME));
             }
-
-            this.pooledReferencedDocs.put(new DocumentURI(referencedDocUri), referencedDocInfo);
         }
     }
 
-    public Map<String, List<Assertion>> getActiveAssertions() {
+    @Override
+    public Map<String, ValidatorAssertion> getActiveAssertions() {
         return this.activeAssertions;
     }
 
     @Override
-    public Map<String, List<Pattern>> getActivePatterns() {
+    public Map<String, ValidatorCode> getActiveCodes() {
+        return this.activeCodes;
+    }
+
+    @Override
+    public Map<String, ValidatorCodeSystem> getActiveCodeSystems() {
+        return this.activeCodeSystems;
+    }
+
+    @Override
+    public Map<String, ValidatorPattern> getActivePatterns() {
         return this.activePatterns;
     }
 
     @Override
-    public Map<String, List<Rule>> getActiveRules() {
+    public Map<String, ValidatorPhase> getActivePhases() {
+        return this.activePhases;
+    }
+
+    @Override
+    public Map<String, ValidatorRule> getActiveRules() {
         return this.activeRules;
+    }
+
+    @Override
+    public ValidatorSchema getActiveSchema() {
+        return this.activeSchema;
+    }
+
+    @Override
+    public Map<String, ValidatorValueSet> getActiveValueSets() {
+        return this.activeValueSets;
     }
 
     @Override
@@ -422,6 +359,11 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
     }
 
     @Override
+    public Map<String, String> getPatternPhases() {
+        return this.patternPhases;
+    }
+
+    @Override
     public String getQueryBinding() {
         return this.queryBinding;
     }
@@ -432,24 +374,13 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
     }
 
     @Override
-    public Map<String, Source> getReferencedDocuments() {
+    public XdmDocument[] getReferencedDocuments() {
         return this.referencedDocs;
     }
 
     @Override
-    public void setReferencedDocuments(Map<String, Source> referencedDocs) {
-        this.referencedDocs.clear();
-        this.referencedDocs.putAll(referencedDocs);
-    }
-
-    @Override
-    public SchemaDto getSchemaDto() {
-        return this.schemaDto;
-    }
-
-    @Override
-    public TokenBuffer getSchemaJson() {
-        return this.schemaJson;
+    public void setReferencedDocuments(XdmDocument ... referencedDocs) {
+        this.referencedDocs = referencedDocs;
     }
 
     @Override
@@ -470,6 +401,16 @@ public class ValidatorSchematronImpl extends AbstractCrigttNamedBean implements 
     @Override
     public void setSource(Source src) {
         this.src = src;
+    }
+
+    @Override
+    public XdmDocument getStaticCodeDocument() {
+        return this.staticCodeDoc;
+    }
+
+    @Override
+    public void setStaticCodeDocument(XdmDocument staticCodeDoc) {
+        this.staticCodeDoc = staticCodeDoc;
     }
 
     @Override

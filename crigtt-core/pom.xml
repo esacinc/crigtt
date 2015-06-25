@@ -20,8 +20,8 @@
         <!-- Project properties -->
         <project.basedir.all>${project.basedir}/..</project.basedir.all>
         <!-- Project build JAXB source properties -->
+        <project.build.jaxbCrigttGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-crigtt</project.build.jaxbCrigttGeneratedSourceDirectory>
         <project.build.jaxbSchematronGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron</project.build.jaxbSchematronGeneratedSourceDirectory>
-        <project.build.jaxbSchematronSvrlGeneratedSourceDirectory>${project.build.directory}/generated-sources/jaxb-schematron-svrl</project.build.jaxbSchematronSvrlGeneratedSourceDirectory>
         <!-- Project build Schematron properties -->
         <project.build.schematronDirectory>${project.build.outputDirectory}/META-INF/crigtt/schematron</project.build.schematronDirectory>
         <!-- Project build Schematron source properties -->
@@ -59,20 +59,16 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr353</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -93,6 +89,10 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -117,6 +117,10 @@
         <dependency>
             <groupId>net.java.dev.stax-utils</groupId>
             <artifactId>stax-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.saxon</groupId>
@@ -168,6 +172,10 @@
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-annotate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
         </dependency>
         <dependency>
@@ -208,11 +216,19 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -332,11 +348,6 @@
                 <artifactId>gmavenplus-plugin</artifactId>
                 <dependencies>
                     <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-dv</artifactId>
-                        <version>3.0.3</version>
-                    </dependency>
-                    <dependency>
                         <groupId>org.glassfish.jaxb</groupId>
                         <artifactId>jaxb-xjc</artifactId>
                         <version>2.2.11</version>
@@ -352,12 +363,71 @@
                         </exclusions>
                     </dependency>
                     <dependency>
+                        <groupId>org.jvnet.annox</groupId>
+                        <artifactId>annox</artifactId>
+                        <version>1.0.1</version>
+                    </dependency>
+                    <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
                         <version>0.9.4</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics-annotate</artifactId>
+                        <version>1.0.1</version>
+                    </dependency>
                 </dependencies>
                 <executions>
+                    <execution>
+                        <id>generate-sources-jaxb-crigtt</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>bindingIncludes</name>
+                                    <value>
+                                        crigtt.xjb
+                                        crigtt/crigtt-validate.xjb
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>outDir</name>
+                                    <value>${project.build.jaxbCrigttGeneratedSourceDirectory}</value>
+                                </property>
+                                <property>
+                                    <name>pkgNames</name>
+                                    <value>
+                                        validate=gov.hhs.onc.crigtt.validate
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>schemaIncludes</name>
+                                    <value>
+                                        crigtt/crigtt-validate.xsd
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>xmlNsPrefixes</name>
+                                    <value>
+                                        validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_PREFIX
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>xmlNsUris</name>
+                                    <value>
+                                        validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_URI
+                                    </value>
+                                </property>
+                            </properties>
+                            <scripts>
+                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-generate-sources-jaxb.groovy</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>generate-sources-jaxb-schematron</id>
                         <phase>generate-sources</phase>
@@ -371,6 +441,7 @@
                                     <value>
                                         crigtt.xjb
                                         iso-schematron/schematron.xjb
+                                        iso-schematron/svrl.xjb
                                     </value>
                                 </property>
                                 <property>
@@ -378,45 +449,32 @@
                                     <value>${project.build.jaxbSchematronGeneratedSourceDirectory}</value>
                                 </property>
                                 <property>
-                                    <name>schemaIncludes</name>
-                                    <value>iso-schematron/schematron.xsd</value>
-                                </property>
-                            </properties>
-                            <scripts>
-                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-generate-sources-jaxb.groovy</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generate-sources-jaxb-schematron-svrl</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <properties>
-                                <property>
-                                    <name>bindingIncludes</name>
+                                    <name>pkgNames</name>
                                     <value>
-                                        crigtt.xjb
-                                        iso-schematron/svrl.xjb
+                                        schematron=gov.hhs.onc.crigtt.schematron
+                                        schematronSvrl=gov.hhs.onc.crigtt.schematron.svrl
                                     </value>
                                 </property>
                                 <property>
-                                    <name>fieldNameSuffix</name>
-                                    <value>_SVRL</value>
-                                </property>
-                                <property>
-                                    <name>outDir</name>
-                                    <value>${project.build.jaxbSchematronSvrlGeneratedSourceDirectory}</value>
-                                </property>
-                                <property>
-                                    <name>pkgNameSuffix</name>
-                                    <value>.svrl</value>
-                                </property>
-                                <property>
                                     <name>schemaIncludes</name>
-                                    <value>iso-schematron/svrl.xsd</value>
+                                    <value>
+                                        iso-schematron/schematron.xsd
+                                        iso-schematron/svrl.xsd
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>xmlNsPrefixes</name>
+                                    <value>
+                                        schematron=gov.hhs.onc.crigtt.xml.CrigttXmlNs.SCHEMATRON_PREFIX
+                                        schematronSvrl=gov.hhs.onc.crigtt.xml.CrigttXmlNs.SCHEMATRON_SVRL_PREFIX
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>xmlNsUris</name>
+                                    <value>
+                                        schematron=gov.hhs.onc.crigtt.xml.CrigttXmlNs.SCHEMATRON_URI
+                                        schematronSvrl=gov.hhs.onc.crigtt.xml.CrigttXmlNs.SCHEMATRON_SVRL_URI
+                                    </value>
                                 </property>
                             </properties>
                             <scripts>

@@ -5,11 +5,13 @@ import javax.xml.transform.dom.DOMSource;
 import net.sf.saxon.dom.DocumentOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.DocumentURI;
 import net.sf.saxon.s9api.XdmNode;
 
 public class XdmDocument extends XdmNode {
     private DocumentOverNodeInfo doc;
     private DOMSource src;
+    private DocumentURI uri;
 
     public XdmDocument(DocumentInfo docInfo) {
         this(docInfo, null);
@@ -32,5 +34,13 @@ public class XdmDocument extends XdmNode {
     @Override
     public DocumentInfo getUnderlyingNode() {
         return ((DocumentInfo) super.getUnderlyingNode());
+    }
+
+    public DocumentURI getUri() {
+        return this.uri;
+    }
+
+    public void setUri(DocumentURI uri) {
+        this.uri = uri;
     }
 }

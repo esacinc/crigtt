@@ -282,7 +282,7 @@
                             $("<td/>", {
                                 "class": "text-" + eventLevel.value.uiEventLevel.value.classNameSuffix
                             }).text(eventLevel.key),
-                            $("<td/>").text((eventLoc.lineNumber + " : " + eventLoc.columnNumber)).append(
+                            (eventLoc ? $("<td/>").append((eventLoc.lineNumber + " : " + eventLoc.columnNumber),
                                 $("<span/>", {
                                     "class": "hidden popover-data"
                                 }).append(
@@ -299,7 +299,7 @@
                                         )
                                     )
                                 )
-                            ),
+                            ) : $("<td/>")),
                             $("<td/>").append($("<pre/>").text(event.testExpression),
                                 $("<span/>", {
                                     "class": "hidden popover-data"

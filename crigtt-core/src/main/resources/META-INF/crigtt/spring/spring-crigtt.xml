@@ -125,14 +125,17 @@
     =====================================================================================================-->
     <beans:bean id="threadGroup" class="java.lang.ThreadGroup" abstract="true"/>
     
-    <beans:bean id="threadGroupRoot" parent="threadGroup">
+    <beans:bean id="threadGroupCrigtt" parent="threadGroup">
         <beans:constructor-arg index="0" type="java.lang.String" value="crigtt"/>
     </beans:bean>
     
     <!--====================================================================================================
     = TASK EXECUTORS
     =====================================================================================================-->
-    <beans:bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" abstract="true"
+    <beans:bean id="taskExecutorThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" abstract="true"/>
+    
+    <beans:bean id="taskExecutorCrigtt" parent="taskExecutorThreadPool" abstract="true"
+        p:allowCoreThreadTimeOut="true"
         p:daemon="true"/>
     
     <!--====================================================================================================

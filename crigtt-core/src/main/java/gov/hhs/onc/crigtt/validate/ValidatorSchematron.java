@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.validate;
 
 import gov.hhs.onc.crigtt.beans.NamedBean;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import java.util.List;
 import java.util.Map;
 import javax.xml.transform.Source;
 import net.sf.saxon.s9api.XsltExecutable;
@@ -26,6 +27,10 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public Map<String, ValidatorValueSet> getActiveValueSets();
 
+    public ThreadLocal<Map<Object, Object>> getContextDataThreadLocal();
+
+    public Map<String, String> getInitialTestExpressions();
+
     public Map<String, ?> getParameters();
 
     public void setParameters(Map<String, ?> params);
@@ -48,9 +53,11 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public void setSource(Source src);
 
-    public XdmDocument getStaticCodeDocument();
+    public XdmDocument getStaticVocabDocument();
 
-    public void setStaticCodeDocument(XdmDocument staticCodeDoc);
+    public void setStaticVocabDocument(XdmDocument staticVocabDoc);
+
+    public Map<String, List<String>> getValueSetCodes();
 
     public XsltExecutable[] getXsltExecutables();
 

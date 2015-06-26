@@ -210,9 +210,9 @@
 			</performer>
 		</serviceEvent>
 	</documentationOf>
-	<!-- This document's <versionNumber value="1"/> (see line 22 above). Therefore, <relatedDocument> element is not present.
+	<!-- This document's <versionNumber value="1"/> (see line 19 above). Therefore, <relatedDocument> element is not present.
 		However, were <versionNumber value="2"/> then <relatedDocument> element must be present and this XML document would refer to version 1 of Cancer Event Report as follows:
-		
+
 			<relatedDocument typeCode="RPLC">
 				<parentDocument>
 					<id root="223769be-f6ee-4b04-a0ce-b56ae998c880" />
@@ -384,7 +384,7 @@
 										</originalText>
 										<qualifier>
 											<name code="20228-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Anatomic part Laterality "/>
-											<value code="24028007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT" displayName="Right (qualifier value)" sdtc:valueSet="2.16.840.1.113883.3.520.4.22">
+											<value code="24028007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Right (qualifier value)" sdtc:valueSet="2.16.840.1.113883.3.520.4.22">
 												<originalText>
 													<reference value="#Laterality_1"/>
 												</originalText>
@@ -1248,7 +1248,7 @@
 									<!-- ** Problem observation - Cancer IG Specific Constraints ** -->
 									<templateId root="2.16.840.1.113883.10.13.23" extension="2014-08-08"/>
 									<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-									<code code="64572001" codeSystem="2.16.840.1.113883.6.96" displayName="Condition"/>
+									<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" displayName="Condition"/>
 									<!-- The statusCode reflects the status of the observation itself -->
 									<statusCode code="completed"/>
 									<effectiveTime>
@@ -1290,7 +1290,7 @@
 							<!-- Procedure Activity Procedure (V2) - Cancer IG Specific Constraints-->
 							<templateId root="2.16.840.1.113883.10.13.15" extension="2014-08-08"/>
 							<id root="d5b614bd-01ce-410d-8726-e1fd01dcc72a"/>
-							<code code="392021009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Lumpectomy of breast  ">
+							<code code="392021009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Lumpectomy of breast">
 								<originalText>
 									<reference value="#Proc1"/>
 								</originalText>
@@ -1448,7 +1448,7 @@
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
 													<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-													<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition HL7.CCDAR2"/>
+													<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition"/>
 													<statusCode code="completed"/>
 													<effectiveTime value="20140731124200"/>
 												</observation>
@@ -1547,7 +1547,7 @@
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
 													<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-													<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition HL7.CCDAR2"/>
+													<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition"/>
 													<statusCode code="completed"/>
 													<effectiveTime value="20140731124200"/>
 													<value xsi:type="CD" code="408643008" displayName="Infiltrating duct carcinoma of breast" codeSystem="2.16.840.1.113883.6.96" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
@@ -1850,7 +1850,7 @@
 					<entry>
 						<organizer classCode="CLUSTER" moodCode="EVN">
 							<templateId root="2.16.840.1.113883.10.13.16" extension="2015-01-29"/>
-							<!-- Emplyment history observation organizer -->
+							<!-- Employment history observation organizer -->
 							<statusCode code="completed"/>
 							<component typeCode="COMP" contextConductionInd="true">
 								<observation classCode="OBS" moodCode="EVN">

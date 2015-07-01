@@ -74,7 +74,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    @Resource(name = "docBuilderBase")
+    @Resource(name = "docBuilderCrigtt")
     private CrigttDocumentBuilder docBuilder;
 
     @Resource(name = "validatorCacheServiceImpl")

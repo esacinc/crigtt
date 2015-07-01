@@ -4,11 +4,11 @@ import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.validate.ValidatorCode;
 import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
+import gov.hhs.onc.crigtt.validate.ValidatorStaticVocabXmlNames;
 import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.s9api.QName;
@@ -18,13 +18,15 @@ import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.value.SequenceType;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.springframework.stereotype.Component;
 
+@Component("extFuncValidatorStaticVocab")
 public class ValidatorStaticVocabFunction extends AbstractCrigttExtensionFunction {
     public final static StructuredQName NAME = new QName(CrigttXmlNs.VALIDATE_PREFIX, CrigttXmlNs.VALIDATE_URI, "static-vocab").getStructuredQName();
 
-    public ValidatorStaticVocabFunction(Supplier<Map<Object, Object>> contextDataSupplier) {
-        super(contextDataSupplier, NAME, SequenceType.STRING_SEQUENCE, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING,
-            SequenceType.OPTIONAL_STRING, SequenceType.OPTIONAL_STRING);
+    public ValidatorStaticVocabFunction() {
+        super(NAME, SequenceType.STRING_SEQUENCE, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING,
+            SequenceType.OPTIONAL_STRING, SequenceType.SINGLE_STRING, SequenceType.OPTIONAL_STRING);
     }
 
     @Override
@@ -38,7 +40,8 @@ public class ValidatorStaticVocabFunction extends AbstractCrigttExtensionFunctio
         Map<String, ValidatorValueSet> activeValueSets = schematron.getActiveValueSets();
         Map<String, ValidatorCodeSystem> activeCodeSystems = schematron.getActiveCodeSystems();
         Map<String, ValidatorCode> activeCodes = schematron.getActiveCodes();
-        Map<String, List<String>> valueSetCodes = schematron.getValueSetCodes();
+        Map<String, List<String>> valueSetCodes = schematron.getValueSetCodes(), valueSetCodeNames = schematron.getValueSetCodeNames();
+        Map<String, String> codeNames = schematron.getCodeNames();
         String patternId = args[0].getUnderlyingValue().head().getStringValue(), assertionId = args[1].getUnderlyingValue().head().getStringValue();
 
         String valueSetId = args[2].getUnderlyingValue().head().getStringValue();
@@ -57,16 +60,23 @@ public class ValidatorStaticVocabFunction extends AbstractCrigttExtensionFunctio
             }
         }
 
-        XdmValue codeValue = args[4];
+        XdmValue codeAttr = args[4], codeValue = args[5];
 
-        if ((codeValue != null) && (codeValue.size() >= 1)) {
+        if ((codeAttr != null) && (codeAttr.size() >= 1) && (codeValue != null) && (codeValue.size() >= 1)) {
+            boolean codeNameAttr = codeAttr.getUnderlyingValue().head().getStringValue().equals(ValidatorStaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME);
             String codeId = codeValue.getUnderlyingValue().head().getStringValue();
+
+            if (codeNameAttr) {
+                codeId = codeNames.get(codeId);
+            }
 
             if (activeCodes.containsKey(codeId)) {
                 contextData.put(new MultiKey<>(patternId, assertionId, ValidatorCode.class.getName()), activeCodes.get(codeId));
 
-                if (valueSetCodes.containsKey(valueSetId)) {
-                    return new XdmValue(IteratorUtils.asIterable(valueSetCodes.get(valueSetId).stream().map(XdmAtomicValue::new).iterator()));
+                List<String> valueSetCodeItems = (!codeNameAttr ? valueSetCodes : valueSetCodeNames).get(valueSetId);
+
+                if (valueSetCodeItems != null) {
+                    return new XdmValue(IteratorUtils.asIterable(valueSetCodeItems.stream().map(XdmAtomicValue::new).iterator()));
                 }
             }
         }

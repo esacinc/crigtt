@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.validate.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
+import gov.hhs.onc.crigtt.io.impl.FileContentResource;
 import gov.hhs.onc.crigtt.validate.ValidatorCode;
 import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
 import gov.hhs.onc.crigtt.validate.ValidatorDynamicVocabTask;
@@ -21,9 +22,6 @@ import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -33,21 +31,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class ValidatorDynamicVocabTaskImpl extends AbstractValidatorTask implements ValidatorDynamicVocabTask {
-    private static class FilePartResource extends ByteArrayResource {
-        private String fileName;
-
-        public FilePartResource(String fileName, byte[] fileContent) {
-            super(fileContent);
-
-            this.fileName = fileName;
-        }
-
-        @Override
-        public String getFilename() {
-            return this.fileName;
-        }
-    }
-
     private static class ValidatorDynamicVocabEvent {
         private String code;
         private String codeSystem;
@@ -185,8 +168,6 @@ public class ValidatorDynamicVocabTaskImpl extends AbstractValidatorTask impleme
         }
     }
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ValidatorDynamicVocabTaskImpl.class);
-
     @Resource(name = "restTemplateValidatorDynamicVocabService")
     private RestTemplate serviceRestTemplate;
 
@@ -202,7 +183,7 @@ public class ValidatorDynamicVocabTaskImpl extends AbstractValidatorTask impleme
     @Override
     public List<ValidatorEvent> call() throws Exception {
         MultiValueMap<String, Object> reqParts = new LinkedMultiValueMap<>();
-        reqParts.add(this.partName, new FilePartResource(this.docFileName, this.docSrc.getBytes()));
+        reqParts.add(this.partName, new FileContentResource(this.docSrc.getBytes(), this.docFileName));
 
         ValidatorDynamicVocabResult dynamicVocabResult =
             this.serviceRestTemplate.exchange(new RequestEntity<>(reqParts, this.reqHeaders, HttpMethod.POST, this.serviceUri),

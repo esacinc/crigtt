@@ -1,71 +1,67 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.hhs.onc.crigtt.io.CrigttFileExtensions;
-import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.test.impl.AbstractCrigttIntegrationTests;
-import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 import gov.hhs.onc.crigtt.validate.ValidatorReport;
 import gov.hhs.onc.crigtt.validate.ValidatorService;
 import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
-import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
-import java.io.File;
+import gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer;
+import gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer;
+import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
+import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
+import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
+import java.util.Collections;
+import java.util.Map;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test(groups = { "crigtt.test.it.validate.all", "crigtt.test.it.validate.validator.all", "crigtt.test.it.validate.validator.service" })
 public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationTests {
+    private final static Map<String, Object> RENDER_OPTS = Collections.singletonMap(ValidatorRenderOptions.FORMAT_NAME, true);
+
     @Value("classpath*:${crigtt.test.input.file.1.path}")
-    private ResourceSource testInputSrc1;
+    private ResourceSource testSrc1;
 
-    @Value("${crigtt.test.output.dir.path}")
-    private FileSystemResource testOutputDirPath;
-
-    @Resource(name = "objMapperDisplay")
+    @Resource(name = "validatorRendererJsonImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private ObjectMapper displayObjMapper;
+    private JsonValidatorRenderer jsonRenderer;
 
-    @Resource(name = "objFactoryValidate")
+    @Resource(name = "validatorRendererXmlImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private gov.hhs.onc.crigtt.validate.ObjectFactory validateObjFactory;
-
-    @Resource(name = "jaxbMarshallerValidator")
+    private XmlValidatorRenderer xmlRenderer;
+    
+    @Resource(name = "validatorRendererHtmlImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private CrigttJaxbMarshaller validatorJaxbMarshaller;
-
-    @Resource(name = "serializerXmlDisplay")
-    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private CrigttSerializer displayXmlSerializer;
+    private HtmlValidatorRenderer htmlRenderer;
 
     @Resource(name = "validatorServiceImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
-    private ValidatorService validatorService;
+    private ValidatorService service;
 
     @Test
     public void testValidate() throws Exception {
-        File testOutputDir = this.testOutputDirPath.getFile();
-        testOutputDir.mkdir();
-
         ValidatorSubmission testSubmission = new ValidatorSubmissionImpl();
 
         ValidatorDocument testDoc = new ValidatorDocumentImpl();
-        testDoc.setContent(this.testInputSrc1.getBytes());
+        testDoc.setContent(this.testSrc1.getBytes());
+        testDoc.setFileName(this.testSrc1.getResource().getFilename());
         testSubmission.setDocument(testDoc);
 
-        String testDocFileName = this.testInputSrc1.getResource().getFilename();
-        testDoc.setFileName(testDocFileName);
+        ValidatorReport testReport = this.service.validate(testSubmission);
+        String testDocFileBaseName = FilenameUtils.getBaseName(testReport.getDocument().getFileName());
 
-        ValidatorReport testReport = this.validatorService.validate(testSubmission);
+        this.writeReport(testDocFileBaseName, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
+        this.writeReport(testDocFileBaseName, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
+        this.writeReport(testDocFileBaseName, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+    }
 
-        this.displayObjMapper.writeValue(new File(testOutputDir,
-            (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.JSON)), testReport);
-
-        this.displayXmlSerializer.serializeToFile(new ByteArraySource(this.validatorJaxbMarshaller.marshal(this.validateObjFactory.createReport(testReport))),
-            new File(testOutputDir, (StringUtils.removeEnd(testDocFileName, CrigttFileExtensions.XML) + "_report" + CrigttFileExtensions.XML)));
+    @BeforeClass(groups = { "crigtt.test.it.all" })
+    @Override
+    protected void initializeFileSystem() throws Exception {
+        super.initializeFileSystem();
     }
 }

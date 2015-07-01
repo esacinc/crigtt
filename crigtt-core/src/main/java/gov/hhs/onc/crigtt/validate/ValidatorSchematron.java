@@ -1,15 +1,19 @@
 package gov.hhs.onc.crigtt.validate;
 
 import gov.hhs.onc.crigtt.beans.NamedBean;
+import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.xml.transform.Source;
-import net.sf.saxon.s9api.XsltExecutable;
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import org.springframework.beans.factory.InitializingBean;
 
 public interface ValidatorSchematron extends NamedBean, InitializingBean {
     public XdmDocument transform(Source docSrc) throws Exception;
+
+    public XdmDocument transform(Source docSrc, @Nullable Map<Object, Object> contextData) throws Exception;
 
     public Map<String, ValidatorAssertion> getActiveAssertions();
 
@@ -27,7 +31,11 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public Map<String, ValidatorValueSet> getActiveValueSets();
 
-    public ThreadLocal<Map<Object, Object>> getContextDataThreadLocal();
+    public Map<String, String> getCodeNames();
+
+    public ExtensionFunctionDefinition[] getExtensionFunctions();
+
+    public void setExtensionFunctions(ExtensionFunctionDefinition ... extFuncs);
 
     public Map<String, String> getInitialTestExpressions();
 
@@ -57,9 +65,11 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public void setStaticVocabDocument(XdmDocument staticVocabDoc);
 
+    public Map<String, List<String>> getValueSetCodeNames();
+
     public Map<String, List<String>> getValueSetCodes();
 
-    public XsltExecutable[] getXsltExecutables();
+    public CrigttXsltExecutable[] getXsltExecutables();
 
-    public void setXsltExecutables(XsltExecutable ... xsltExecs);
+    public void setXsltExecutables(CrigttXsltExecutable ... xsltExecs);
 }

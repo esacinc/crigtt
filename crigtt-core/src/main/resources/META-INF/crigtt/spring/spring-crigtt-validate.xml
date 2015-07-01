@@ -20,21 +20,31 @@
     <!--====================================================================================================
     = DOCUMENTS
     =====================================================================================================-->
-    <beans:bean id="docSchematronSkeleton" parent="doc" factory-bean="docBuilderBase" factory-method="build"
-        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"
+    <beans:bean id="docSchematronSkeleton" parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
+        c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"
         p:uri="iso_schematron_skeleton_for_saxon.xsl"/>
     
     <!--====================================================================================================
     = XSLT EXECUTABLES
     =====================================================================================================-->
-    <beans:bean id="xsltExecSchematronInclude" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
+    <beans:bean id="xsltExecSchematronInclude" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_dsdl_include.xsl"/>
     
-    <beans:bean id="xsltExecSchematronExpand" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
+    <beans:bean id="xsltExecSchematronExpand" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_abstract_expand.xsl"/>
     
-    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExec" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:source="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
+    <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
+    
+    <beans:bean id="xsltExecValidatorResponseHtml" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/style/crigtt/crigtt-validate-response-html.xsl">
+        <beans:constructor-arg name="extFuncs">
+            <beans:array>
+                <beans:ref bean="extFuncEscapeHtml"/>
+                <beans:ref bean="extFuncFormatTimestamp"/>
+            </beans:array>
+        </beans:constructor-arg>
+    </beans:bean>
     
     <!--====================================================================================================
     = VALIDATOR SCHEMATRONS
@@ -44,6 +54,11 @@
     <beans:bean id="validatorSchematronImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorSchematronImpl" parent="validatorSchematron" abstract="true"
         p:queryBinding="xslt2"
         p:schemaVersion="ISO19757-3">
+        <beans:property name="extensionFunctions">
+            <beans:array>
+                <beans:ref bean="extFuncValidatorStaticVocab"/>
+            </beans:array>
+        </beans:property>
         <beans:property name="parameters">
             <beans:map>
                 <beans:entry key="allow-foreign" value="true" value-type="java.lang.Boolean"/>
@@ -72,8 +87,8 @@
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
         <beans:property name="staticVocabDocument">
-            <beans:bean parent="doc" factory-bean="docBuilderBase" factory-method="build"
-                c:source="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"
+            <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
+                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"
                 p:uri="voc.xml"/>
         </beans:property>
     </beans:bean>
@@ -83,8 +98,8 @@
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
         p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
         <beans:property name="staticVocabDocument">
-            <beans:bean parent="doc" factory-bean="docBuilderBase" factory-method="build"
-                c:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
+            <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
+                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
                 p:uri="voc.xml"/>
         </beans:property>
     </beans:bean>
@@ -203,4 +218,40 @@
             </beans:array>
         </beans:property>
     </beans:bean>
+    
+    <!--====================================================================================================
+    = VALIDATOR RENDERERS
+    =====================================================================================================-->
+    <beans:bean id="validatorRenderer" class="gov.hhs.onc.crigtt.validate.render.ValidatorRenderer" abstract="true">
+        <beans:property name="defaultOptions">
+            <beans:map>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions).FORMAT_NAME }" value="false" value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions).TIME_ZONE_NAME }" value-ref="timeZoneDefault"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = JSON VALIDATOR RENDERERS
+    =====================================================================================================-->
+    <beans:bean id="validatorRendererJson" class="gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer" parent="validatorRenderer"
+        abstract="true"/>
+    
+    <beans:bean id="validatorRendererJsonImpl" class="gov.hhs.onc.crigtt.validate.render.impl.JsonValidatorRendererImpl" parent="validatorRendererJson"/>
+    
+    <!--====================================================================================================
+    = XML VALIDATOR RENDERERS
+    =====================================================================================================-->
+    <beans:bean id="validatorRendererXml" class="gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer" parent="validatorRenderer"
+        abstract="true"/>
+    
+    <beans:bean id="validatorRendererXmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.XmlValidatorRendererImpl" parent="validatorRendererXml"/>
+    
+    <!--====================================================================================================
+    = HTML VALIDATOR RENDERERS
+    =====================================================================================================-->
+    <beans:bean id="validatorRendererHtml" class="gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer" parent="validatorRenderer"
+        abstract="true"/>
+    
+    <beans:bean id="validatorRendererHtmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.HtmlValidatorRendererImpl" parent="validatorRendererHtml"/>
 </beans:beans>

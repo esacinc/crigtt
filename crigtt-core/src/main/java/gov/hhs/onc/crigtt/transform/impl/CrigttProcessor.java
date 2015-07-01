@@ -72,6 +72,11 @@ public class CrigttProcessor extends Processor {
     }
 
     @Override
+    public CrigttXsltCompiler newXsltCompiler() {
+        return new CrigttXsltCompiler(this);
+    }
+
+    @Override
     public CrigttConfiguration getUnderlyingConfiguration() {
         return ((CrigttConfiguration) super.getUnderlyingConfiguration());
     }

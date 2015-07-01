@@ -17,6 +17,9 @@ import gov.hhs.onc.crigtt.schematron.Title;
 import gov.hhs.onc.crigtt.schematron.impl.NamespaceImpl;
 import gov.hhs.onc.crigtt.schematron.impl.ReportImpl;
 import gov.hhs.onc.crigtt.schematron.impl.TitleImpl;
+import gov.hhs.onc.crigtt.transform.impl.CrigttXsltCompiler;
+import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
+import gov.hhs.onc.crigtt.transform.impl.CrigttXsltTransformer;
 import gov.hhs.onc.crigtt.utils.CrigttIteratorUtils;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorAssertion;
@@ -47,20 +50,19 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Source;
-import net.sf.saxon.functions.IntegratedFunctionLibrary;
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.DocumentPool;
 import net.sf.saxon.om.DocumentURI;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmAtomicValue;
-import net.sf.saxon.s9api.XsltCompiler;
-import net.sf.saxon.s9api.XsltExecutable;
-import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.stax.XMLStreamWriterDestination;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.cxf.helpers.DOMUtils;
 import org.slf4j.Logger;
@@ -69,10 +71,10 @@ import org.w3c.dom.Element;
 
 public class ValidatorSchematronImpl extends AbstractNamedBean implements ValidatorSchematron {
     private final static String STATIC_VOCAB_EXPR_PATTERN_FORMAT =
-        "^([^$]+)(@\\w+)(\\s*=\\s*)document\\('\\Q%1$s\\E'\\)/%2$s:systems/%2$s:system\\[@valueSetOid='([^']+)'\\]/%2$s:code/@value([^$]*)$";
+        "^([^$]+)(@\\w+)(\\s*=\\s*)document\\('\\Q%1$s\\E'\\)/%2$s:systems/%2$s:system\\[@valueSetOid='([^']+)'\\]/%2$s:code/@(value|displayName)([^$]*)$";
 
     private final static String STATIC_VOCAB_REPLACE_EXPR_FORMAT = "%1$s" + ValidatorStaticVocabFunction.NAME.toString() + "('%2$s', '%3$s', '%4$s', @"
-        + ValidatorStaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME + ", %5$s)%6$s";
+        + ValidatorStaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME + ", '%5$s', %6$s)%7$s";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ValidatorSchematronImpl.class);
 
@@ -80,11 +82,12 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private CrigttXmlOutputFactory xmlOutFactory;
 
     @Resource(name = "xsltCompilerCrigtt")
-    private XsltCompiler xsltCompiler;
+    private CrigttXsltCompiler xsltCompiler;
 
     @Resource(name = "jaxbMarshallerSchematron")
     private CrigttJaxbMarshaller schematronJaxbMarshaller;
 
+    private ExtensionFunctionDefinition[] extFuncs;
     private Map<String, ?> params;
     private String queryBinding;
     private XdmDocument[] referencedDocs;
@@ -92,8 +95,9 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private Source src;
     private XdmDocument staticVocabDoc;
     private Map<String, List<String>> valueSetCodes;
-    private XsltExecutable[] xsltExecs;
-    private ThreadLocal<Map<Object, Object>> contextDataThreadLocal;
+    private Map<String, List<String>> valueSetCodeNames;
+    private Map<String, String> codeNames;
+    private CrigttXsltExecutable[] xsltExecs;
     private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
     private Map<String, String> patternPhases;
     private ValidatorSchema activeSchema;
@@ -105,12 +109,21 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private Map<String, ValidatorValueSet> activeValueSets;
     private Map<String, ValidatorCodeSystem> activeCodeSystems;
     private Map<String, ValidatorCode> activeCodes;
-    private XsltExecutable schemaXsltExec;
+    private CrigttXsltExecutable schemaXsltExec;
 
     @Override
     public XdmDocument transform(Source docSrc) throws Exception {
-        XsltTransformer docTransformer = this.schemaXsltExec.load();
+        return this.transform(docSrc, null);
+    }
+
+    @Override
+    public XdmDocument transform(Source docSrc, @Nullable Map<Object, Object> contextData) throws Exception {
+        CrigttXsltTransformer docTransformer = this.schemaXsltExec.load();
         docTransformer.setSource(docSrc);
+
+        if (!MapUtils.isEmpty(contextData)) {
+            docTransformer.getUnderlyingController().getContextData().putAll(contextData);
+        }
 
         XdmDocumentDestination docDest = new XdmDocumentDestination();
         docTransformer.setDestination(docDest);
@@ -122,10 +135,8 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        (this.pooledReferencedDocs = CrigttStreamUtils.toMap(XdmDocument::getUri, XdmDocument::getUnderlyingNode, Stream.of(this.referencedDocs))).put(
-            this.staticVocabDoc.getUri(), this.staticVocabDoc.getUnderlyingNode());
+        this.pooledReferencedDocs = CrigttStreamUtils.toMap(XdmDocument::getUri, XdmDocument::getUnderlyingNode, Stream.of(this.referencedDocs));
 
-        this.initializeContextData();
         this.initializeStaticVocab();
         this.initializeSchema();
     }
@@ -239,7 +250,8 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
                             assertion.setTest((assertionTest =
                                 String.format(STATIC_VOCAB_REPLACE_EXPR_FORMAT,
                                     (staticVocabExprMatcher.group(1) + staticVocabExprMatcher.group(2) + staticVocabExprMatcher.group(3)), patternId,
-                                    assertionId, staticVocabExprMatcher.group(4), staticVocabExprMatcher.group(2), staticVocabExprMatcher.group(5))));
+                                    assertionId, staticVocabExprMatcher.group(4), staticVocabExprMatcher.group(5), staticVocabExprMatcher.group(2),
+                                    staticVocabExprMatcher.group(6))));
                         }
 
                         assertions.put(assertionId, assertion);
@@ -268,7 +280,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
         this.schematronJaxbMarshaller.marshal(schema, schemaResult);
 
-        XsltTransformer[] transformers = Stream.of(this.xsltExecs).map(XsltExecutable::load).toArray(XsltTransformer[]::new);
+        CrigttXsltTransformer[] transformers = Stream.of(this.xsltExecs).map(CrigttXsltExecutable::load).toArray(CrigttXsltTransformer[]::new);
         transformers[0].setSource(new ByteArraySource(schemaResult.getBytes(), sysId));
 
         DocumentPool docPool = transformers[0].getUnderlyingController().getDocumentPool();
@@ -290,7 +302,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
         transformers[0].transform();
 
-        this.schemaXsltExec = this.xsltCompiler.compile(new ByteArraySource(schemaResult.getBytes(), sysId));
+        this.schemaXsltExec = this.xsltCompiler.compile(new ByteArraySource(schemaResult.getBytes(), sysId), this.extFuncs);
 
         LOGGER.info(String.format("Prepared Schematron schema (id=%s, sysId=%s, numPhases=%d, numPatterns=%d, numRules=%d, numAssertions=%d).", this.id, sysId,
             numPhases, numPatterns, rules.size(), assertions.size()));
@@ -301,10 +313,12 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
         this.activeCodeSystems = new LinkedHashMap<>();
         this.activeCodes = new LinkedHashMap<>();
         this.valueSetCodes = new LinkedHashMap<>();
+        this.valueSetCodeNames = new LinkedHashMap<>();
+        this.codeNames = new LinkedHashMap<>();
 
-        String valueSetId, codeSystemId, codeId;
+        String valueSetId, codeSystemId, codeId, codeName;
         ValidatorValueSet activeValueSet;
-        List<String> valueSetCodeItems;
+        List<String> valueSetCodeItems, valueSetCodeNameItems;
         ValidatorCodeSystem activeCodeSystem;
         ValidatorCode activeCode;
 
@@ -316,6 +330,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
             activeValueSet.setName(valueSetElem.getAttribute(ValidatorStaticVocabXmlNames.VALUE_SET_NAME_ATTR_NAME));
 
             this.valueSetCodes.put(valueSetId, (valueSetCodeItems = new ArrayList<>()));
+            this.valueSetCodeNames.put(valueSetId, (valueSetCodeNameItems = new ArrayList<>()));
 
             for (Element codeElem : DOMUtils
                 .findAllElementsByTagNameNS(valueSetElem, CrigttXmlNs.STATIC_VOCAB_URI, ValidatorStaticVocabXmlNames.CODE_ELEM_NAME)) {
@@ -326,17 +341,14 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
                 this.activeCodes.put((codeId = codeElem.getAttribute(ValidatorStaticVocabXmlNames.VALUE_ATTR_NAME)), (activeCode = new ValidatorCodeImpl()));
                 activeCode.setId(codeId);
-                activeCode.setName(codeElem.getAttribute(ValidatorStaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME));
+                activeCode.setName((codeName = codeElem.getAttribute(ValidatorStaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME)));
 
                 valueSetCodeItems.add(codeId);
+                valueSetCodeNameItems.add(codeName);
+
+                this.codeNames.put(codeName, codeId);
             }
         }
-    }
-
-    private void initializeContextData() {
-        IntegratedFunctionLibrary extFuncLib = new IntegratedFunctionLibrary();
-        extFuncLib.registerFunction(new ValidatorStaticVocabFunction((this.contextDataThreadLocal = ThreadLocal.withInitial(LinkedHashMap::new))::get));
-        this.xsltCompiler.getUnderlyingCompilerInfo().setExtensionFunctionLibrary(extFuncLib);
     }
 
     @Override
@@ -380,8 +392,18 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     }
 
     @Override
-    public ThreadLocal<Map<Object, Object>> getContextDataThreadLocal() {
-        return this.contextDataThreadLocal;
+    public Map<String, String> getCodeNames() {
+        return this.codeNames;
+    }
+
+    @Override
+    public ExtensionFunctionDefinition[] getExtensionFunctions() {
+        return this.extFuncs;
+    }
+
+    @Override
+    public void setExtensionFunctions(ExtensionFunctionDefinition ... extFuncs) {
+        this.extFuncs = extFuncs;
     }
 
     @Override
@@ -455,17 +477,22 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     }
 
     @Override
+    public Map<String, List<String>> getValueSetCodeNames() {
+        return this.valueSetCodeNames;
+    }
+
+    @Override
     public Map<String, List<String>> getValueSetCodes() {
         return this.valueSetCodes;
     }
 
     @Override
-    public XsltExecutable[] getXsltExecutables() {
+    public CrigttXsltExecutable[] getXsltExecutables() {
         return this.xsltExecs;
     }
 
     @Override
-    public void setXsltExecutables(XsltExecutable ... xsltExecs) {
+    public void setXsltExecutables(CrigttXsltExecutable ... xsltExecs) {
         this.xsltExecs = xsltExecs;
     }
 }

@@ -26,6 +26,12 @@
         
         "toggleDisabled": function () {
             return (this.isDisabled() ? this.enable() : this.disable());
+        },
+        
+        "toXml": function () {
+            return (($.isXMLDoc(this) ? '<?xml version="1.0" encoding="UTF-8"?>\n' : String.EMPTY) + $.format($("<root/>").append(this), {
+                "method": "xml"
+            }));
         }
     });
     

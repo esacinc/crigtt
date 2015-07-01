@@ -5,14 +5,12 @@
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:c="http://www.springframework.org/schema/c"
     xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:cxf-jaxrs="http://cxf.apache.org/jaxrs"
     xmlns:lang="http://www.springframework.org/schema/lang"
     xmlns:p="http://www.springframework.org/schema/p"
     xmlns:task="http://www.springframework.org/schema/task"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -21,10 +19,28 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = CLIENTS
+    = PROVIDERS
+    =====================================================================================================-->
+    <beans:bean id="provValidatorRenderer" class="gov.hhs.onc.crigtt.web.validate.impl.ValidatorRendererProvider">
+        <beans:property name="defaultQueryParameters">
+            <beans:map>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.web.validate.ValidatorQueryParameters).FORMAT_NAME }" value="true"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = SERVERS
     =====================================================================================================-->
     <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="clientValidatorValidate" parent="clientBase"
-        p:address="${crigtt.tomcat.ws.service.validator.op.validate.url}"
-        p:serviceClass="gov.hhs.onc.crigtt.web.ws.ValidatorWebService"/>
+    <beans:bean id="serverValidator" parent="serverBase"
+        p:address="/"
+        p:docLocation="/META-INF/crigtt/wadl/crigtt-validate.wadl"
+        p:serviceBean-ref="validatorWebServiceImpl">
+        <beans:property name="providers">
+            <beans:list merge="true">
+                <beans:ref bean="provValidatorRenderer"/>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

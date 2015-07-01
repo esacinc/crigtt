@@ -111,34 +111,4 @@
             </beans:array>
         </beans:property>
     </beans:bean>
-    
-    <!--====================================================================================================
-    = XML FACTORIES
-    =====================================================================================================-->
-    <beans:bean id="xmlFactory" class="com.fasterxml.jackson.dataformat.xml.XmlFactory" abstract="true"/>
-    
-    <beans:bean id="xmlFactoryCrigtt" class="gov.hhs.onc.crigtt.xml.impl.CrigttXmlFactory" parent="xmlFactory" abstract="true"/>
-    
-    <!--====================================================================================================
-    = XML MAPPERS
-    =====================================================================================================-->
-    <beans:bean id="xmlMapper" class="com.fasterxml.jackson.dataformat.xml.XmlMapper" abstract="true"/>
-    
-    <beans:bean id="xmlMapperCrigtt" parent="xmlMapper">
-        <beans:constructor-arg name="xmlFactory">
-            <!--suppress SpringPlaceholdersInspection -->
-            <beans:bean parent="xmlFactoryCrigtt"
-                c:objMapper-ref="objMapperCrigtt"
-                c:xmlInFactory-ref="xmlInFactoryCrigtt"
-                c:xmlOutFactory-ref="xmlOutFactoryCrigtt"
-                p:indent="true"
-                p:indentSpaces="${crigtt.transform.serialize.indent.spaces}">
-                <beans:property name="features">
-                    <beans:map>
-                        <beans:entry key="#{ T(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator.Feature).WRITE_XML_DECLARATION }" value="true"/>
-                    </beans:map>
-                </beans:property>
-            </beans:bean>
-        </beans:constructor-arg>
-    </beans:bean>
 </beans:beans>

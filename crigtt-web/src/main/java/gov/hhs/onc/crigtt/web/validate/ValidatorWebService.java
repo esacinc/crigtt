@@ -1,4 +1,4 @@
-package gov.hhs.onc.crigtt.web.ws;
+package gov.hhs.onc.crigtt.web.validate;
 
 import gov.hhs.onc.crigtt.validate.ValidatorReport;
 import javax.ws.rs.Consumes;
@@ -12,6 +12,6 @@ public interface ValidatorWebService {
     @Consumes({ MediaType.MULTIPART_FORM_DATA_VALUE })
     @Path("/validate")
     @POST
-    @Produces({ MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
+    @Produces({ MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_HTML_VALUE, MediaType.TEXT_XML_VALUE })
     public ValidatorReport validate() throws Exception;
 }

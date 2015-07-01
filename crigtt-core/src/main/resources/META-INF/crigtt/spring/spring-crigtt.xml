@@ -62,21 +62,13 @@
         ]]></lang:inline-script>
     </lang:groovy>
     
-    <!--====================================================================================================
-    = DATE FORMATS
-    =====================================================================================================-->
-    <beans:bean id="dateFormat" class="java.text.DateFormat" abstract="true"/>
-    
-    <beans:bean id="dateFormatSimple" class="java.text.SimpleDateFormat" parent="dateFormat" abstract="true">
-        <beans:constructor-arg index="1" type="java.util.Locale" ref="localeRoot"/>
-    </beans:bean>
-    
-    <beans:bean id="dateFormatUtc" parent="dateFormatSimple" abstract="true"
-        p:timeZone-ref="timeZoneUtc"/>
-    
-    <beans:bean id="dateFormatUtcDisplay" parent="dateFormatUtc">
-        <beans:constructor-arg index="0" type="java.lang.String" value="yyyy-MM-dd HH:mm:ss Z"/>
-    </beans:bean>
+    <lang:groovy id="timeZoneDefault">
+        <lang:inline-script><![CDATA[
+        import org.joda.time.DateTimeZone
+
+        return DateTimeZone.getDefault().toTimeZone()
+        ]]></lang:inline-script>
+    </lang:groovy>
     
     <!--====================================================================================================
     = PROPERTY SOURCES PLACEHOLDER CONFIGURERS

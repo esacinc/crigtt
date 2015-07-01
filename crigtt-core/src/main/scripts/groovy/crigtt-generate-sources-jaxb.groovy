@@ -25,6 +25,7 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 import javax.annotation.Nullable
 import javax.xml.bind.annotation.XmlNs
+import javax.xml.bind.annotation.XmlRootElement
 import javax.xml.bind.annotation.XmlSchema
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.BooleanUtils
@@ -232,7 +233,7 @@ def objFactoryGen
 def CClassInfo classModel
 def JDefinedClass classRef
 def JDefinedClass implClass
-def JAnnotationUse jsonTypeNameAnnoModel
+def JAnnotationUse implAnnoModel
 def Map<String, JFieldVar> fields
 def Map<String, JMethod> classMethods
 def Map<String, JMethod> implClassMethods
@@ -262,11 +263,12 @@ outline.allPackageContexts.each{
             classRef._implements(dtoBeanClassModel)
         }
         
-        classRef.annotations().find{ it.annotationClass.fullName() == JsonTypeName.class.name }?.each{
-            jsonTypeNameAnnoModel = implClass.annotate(JsonTypeName.class)
+        classRef.annotations().findAll{ (it.annotationClass.fullName() == JsonTypeName.class.name) ||
+            (it.annotationClass.fullName() == XmlRootElement.class.name) }?.each{
+            implAnnoModel = implClass.annotate(it.annotationClass)
             
             it.annotationMembers.each{
-                annoModelAddValueMethod.invoke(jsonTypeNameAnnoModel, it.key, it.value)
+                annoModelAddValueMethod.invoke(implAnnoModel, it.key, it.value)
             }
             
             classRef.removeAnnotation(it)

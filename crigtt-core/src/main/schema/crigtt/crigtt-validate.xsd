@@ -14,6 +14,13 @@
         </xsd:sequence>
     </xsd:group>
     
+    <xsd:group name="DtoElements">
+        <xsd:sequence>
+            <xsd:group ref="validate:IdElements"/>
+            <xsd:element name="submittedTimestamp" type="validate:Timestamp"/>
+        </xsd:sequence>
+    </xsd:group>
+    
     <xsd:group name="IdElements">
         <xsd:sequence>
             <xsd:element name="id" type="xsd:string"/>
@@ -154,32 +161,25 @@
     <xsd:complexType name="Document">
         <xsd:sequence>
             <xsd:element name="fileName" type="xsd:string"/>
-            <xsd:element name="hash" type="xsd:hexBinary"/>
+            <xsd:element name="hash" type="xsd:base64Binary"/>
             <xsd:element name="content" type="xsd:base64Binary"/>
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="Dto" abstract="true">
-        <xsd:sequence>
-            <xsd:group ref="validate:IdElements"/>
-            <xsd:element name="submittedTimestamp" type="validate:Timestamp"/>
+    <xsd:complexType name="Submission">
+         <xsd:sequence>
+            <xsd:group ref="validate:DtoElements"/>
+            <xsd:group ref="validate:DocumentElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="Submission">
-        <xsd:complexContent>
-            <xsd:extension base="validate:Dto">
-                <xsd:sequence>
-                    <xsd:group ref="validate:DocumentElements"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+    <xsd:complexType name="Response" abstract="true"/>
     
     <xsd:complexType name="Report">
         <xsd:complexContent>
-            <xsd:extension base="validate:Dto">
+            <xsd:extension base="validate:Response">
                 <xsd:sequence>
+                    <xsd:group ref="validate:DtoElements"/>
                     <xsd:element name="processedTimestamp" type="validate:Timestamp"/>
                     <xsd:element name="results" type="validate:Results"/>
                     <xsd:group ref="validate:DocumentElements"/>
@@ -189,10 +189,14 @@
     </xsd:complexType>
     
     <xsd:complexType name="Error">
-        <xsd:sequence>
-            <xsd:element name="message" type="xsd:string"/>
-            <xsd:element name="stackTrace" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
+        <xsd:complexContent>
+            <xsd:extension base="validate:Response">
+                <xsd:sequence>
+                    <xsd:element name="message" type="xsd:string"/>
+                    <xsd:element name="stackTrace" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
     </xsd:complexType>
     
     <!--====================================================================================================

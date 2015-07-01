@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import net.sf.saxon.sxpath.IndependentContext;
 
 public abstract class AbstractValidatorTask implements ValidatorTask {
-    @Resource(name = "xpathCompilerBase")
+    @Resource(name = "xpathCompilerCrigtt")
     protected CrigttXpathCompiler xpathCompiler;
 
     protected XdmDocument doc;

@@ -10,15 +10,17 @@
     // CLASS: VALIDATOR CONTENT TYPE ITEM
     //====================================================================================================
     $.extend($.crigtt.validate, {
-        "ValidatorContentTypeItem": function (dataType, mediaType) {
+        "ValidatorContentTypeItem": function (dataType, mediaType, ext) {
             this.dataType = dataType;
             this.mediaType = mediaType;
+            this.ext = ext;
         }
     });
     
     $.extend($.crigtt.validate.ValidatorContentTypeItem.prototype, {
         "dataType": undefined,
-        "mediaType": undefined
+        "mediaType": undefined,
+        "ext": undefined
     });
     
     //====================================================================================================
@@ -26,8 +28,9 @@
     //====================================================================================================
     $.extend($.crigtt.validate, {
         "ValidatorContentType": new Enum({
-            "JSON": new $.crigtt.validate.ValidatorContentTypeItem("json", "application/json"),
-            "XML": new $.crigtt.validate.ValidatorContentTypeItem("xml", "text/xml")
+            "HTML": new $.crigtt.validate.ValidatorContentTypeItem("html", "text/html", ".html"),
+            "JSON": new $.crigtt.validate.ValidatorContentTypeItem("json", "application/json", ".json"),
+            "XML": new $.crigtt.validate.ValidatorContentTypeItem("xml", "text/xml", ".xml")
         })
     });
     
@@ -425,7 +428,7 @@
                         return;
                     }
                     
-                    var blob = new Blob([ ((contentType == $.crigtt.validate.ValidatorContentType.JSON) ? JSON.stringify(resp) : resp) ],
+                    var blob = new Blob([ ((contentType == $.crigtt.validate.ValidatorContentType.JSON) ? JSON.stringify(resp, null, 4) : $(resp).toXml()) ],
                         { "type": contentType.value.mediaType });
                     
                     open(URL.createObjectURL(blob));
@@ -458,7 +461,7 @@
                     opts.process(true, resp, req.status, req.statusText);
                 },
                 "type": this.formElem.attr("method"),
-                "url": this.formElem.attr("action") + "?_type=" + contentType.value.mediaType
+                "url": this.formElem.attr("action") + contentType.value.ext
             }, opts)));
         }
     });

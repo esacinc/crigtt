@@ -5,14 +5,12 @@
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:c="http://www.springframework.org/schema/c"
     xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:cxf-jaxrs="http://cxf.apache.org/jaxrs"
     xmlns:lang="http://www.springframework.org/schema/lang"
     xmlns:p="http://www.springframework.org/schema/p"
     xmlns:task="http://www.springframework.org/schema/task"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -38,15 +36,6 @@
     <beans:alias name="busCrigtt" alias="cxf"/>
     
     <!--====================================================================================================
-    = PROVIDERS
-    =====================================================================================================-->
-    <beans:bean id="provJacksonJson" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"
-        c:mapper-ref="objMapperCrigtt"/>
-    
-    <beans:bean id="provJaxbElem" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"
-        p:bus-ref="busCrigtt"/>
-    
-    <!--====================================================================================================
     = WADL GENERATORS
     =====================================================================================================-->
     <beans:bean id="wadlGen" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator" abstract="true"/>
@@ -55,7 +44,6 @@
     
     <beans:bean id="wadlGenCrigtt" parent="wadlGenBase"
         c:bus-ref="busCrigtt"
-        p:keepRelativeDocLinks="true"
         p:linkAnyMediaTypeToXmlSchema="true"/>
     
     <!--====================================================================================================
@@ -65,22 +53,23 @@
     
     <beans:bean id="serverBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttJaxRsServerFactoryBean" parent="server" abstract="true"
         p:bus-ref="busCrigtt">
+        <beans:property name="extensionMappings">
+            <beans:map>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).HTML }"
+                    value="#{ T(org.springframework.http.MediaType).TEXT_HTML_VALUE }"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).JSON }"
+                    value="#{ T(org.springframework.http.MediaType).APPLICATION_JSON_VALUE }"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).XML }"
+                    value="#{ T(org.springframework.http.MediaType).TEXT_XML_VALUE }"/>
+            </beans:map>
+        </beans:property>
         <beans:property name="providers">
             <beans:list>
                 <beans:ref bean="exceptionMapperValidator"/>
-                <beans:ref bean="contextResolverJaxbContext"/>
                 <beans:ref bean="wadlGenCrigtt"/>
-                <beans:ref bean="provJacksonJson"/>
-                <beans:ref bean="provJaxbElem"/>
             </beans:list>
         </beans:property>
     </beans:bean>
-    
-    <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="serverValidator" parent="serverBase"
-        p:address="/"
-        p:docLocation="/META-INF/crigtt/wadl/crigtt-web-ws.wadl"
-        p:serviceBean-ref="validatorWebServiceImpl"/>
     
     <!--====================================================================================================
     = CLIENTS
@@ -88,15 +77,7 @@
     <beans:bean id="client" class="org.apache.cxf.jaxrs.client.Client" abstract="true"/>
     
     <beans:bean id="clientBase" class="gov.hhs.onc.crigtt.web.jaxrs.impl.CrigttJaxRsClientFactoryBean" parent="client" abstract="true"
-        p:bus-ref="busCrigtt">
-        <beans:property name="providers">
-            <beans:list>
-                <beans:ref bean="contextResolverJaxbContext"/>
-                <beans:ref bean="provJacksonJson"/>
-                <beans:ref bean="provJaxbElem"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
+        p:bus-ref="busCrigtt"/>
     
     <!--====================================================================================================
     = CONTROLLERS

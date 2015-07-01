@@ -26,6 +26,7 @@ import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -73,69 +74,64 @@ public class ValidatorSchematronTaskImpl extends AbstractValidatorTask implement
         XdmNode locNode;
         CrigttLocation locObj;
 
-        ThreadLocal<Map<Object, Object>> contextDataThreadLocal = this.schematron.getContextDataThreadLocal();
+        Map<Object, Object> contextData = new HashMap<>();
+        contextData.put(ValidatorSchematron.class.getName(), this.schematron);
 
-        try {
-            Map<Object, Object> contextData = contextDataThreadLocal.get();
-            contextData.put(ValidatorSchematron.class.getName(), this.schematron);
+        CrigttStreamUtils
+            .instances(
+                (outputContent =
+                    this.schematronSvrlJaxbMarshaller.unmarshal(this.schematron.transform(docSrc, contextData).getSource(), Output.class).getContent())
+                    .stream(),
+                AttributeValueNamespace.class).forEach(attrValueNs -> this.xpathContext.declareNamespace(attrValueNs.getPrefix(), attrValueNs.getUri()));
 
-            CrigttStreamUtils
-                .instances(
-                    (outputContent = this.schematronSvrlJaxbMarshaller.unmarshal(this.schematron.transform(docSrc).getSource(), Output.class).getContent())
-                        .stream(),
-                    AttributeValueNamespace.class).forEach(attrValueNs -> this.xpathContext.declareNamespace(attrValueNs.getPrefix(), attrValueNs.getUri()));
+        for (Object outputContentItem : outputContent) {
+            if (outputContentItem instanceof ActivePattern) {
+                activePattern = activePatterns.get((patternId = ((ActivePattern) outputContentItem).getId()));
 
-            for (Object outputContentItem : outputContent) {
-                if (outputContentItem instanceof ActivePattern) {
-                    activePattern = activePatterns.get((patternId = ((ActivePattern) outputContentItem).getId()));
+                activePhase = activePhases.get((phaseId = patternPhases.get(patternId)));
 
-                    activePhase = activePhases.get((phaseId = patternPhases.get(patternId)));
+                level = this.phaseLevels.get(phaseId);
+            } else if (outputContentItem instanceof FiredRule) {
+                activeRule = activeRules.get((firedRule = ((FiredRule) outputContentItem)).getId());
 
-                    level = this.phaseLevels.get(phaseId);
-                } else if (outputContentItem instanceof FiredRule) {
-                    activeRule = activeRules.get((firedRule = ((FiredRule) outputContentItem)).getId());
+                contextExpr = firedRule.getContext();
+            } else if ((assertionStatus = (outputContentItem instanceof SuccessfulReport)) || (outputContentItem instanceof FailedAssertion)) {
+                activeAssertion = activeAssertions.get((assertionId = ((IdentifiedBean) outputContentItem).getId()));
 
-                    contextExpr = firedRule.getContext();
-                } else if ((assertionStatus = (outputContentItem instanceof SuccessfulReport)) || (outputContentItem instanceof FailedAssertion)) {
-                    activeAssertion = activeAssertions.get((assertionId = ((IdentifiedBean) outputContentItem).getId()));
+                events.add((event = new ValidatorEventImpl()));
+                event.setStatus(assertionStatus);
+                event.setLevel(level);
+                event.setLocation((loc = new ValidatorLocationImpl()));
+                event.setContextExpression(contextExpr);
+                event.setSchema(activeSchema);
+                event.setPhase(activePhase);
+                event.setPattern(activePattern);
+                event.setRule(activeRule);
+                event.setAssertion(activeAssertion);
+                event.setValueSet(((ValidatorValueSet) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorValueSet.class.getName()))));
+                event.setCodeSystem(((ValidatorCodeSystem) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCodeSystem.class.getName()))));
+                event.setCode(((ValidatorCode) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCode.class.getName()))));
 
-                    events.add((event = new ValidatorEventImpl()));
-                    event.setStatus(assertionStatus);
-                    event.setLevel(level);
-                    event.setLocation((loc = new ValidatorLocationImpl()));
-                    event.setContextExpression(contextExpr);
-                    event.setSchema(activeSchema);
-                    event.setPhase(activePhase);
-                    event.setPattern(activePattern);
-                    event.setRule(activeRule);
-                    event.setAssertion(activeAssertion);
-                    event.setValueSet(((ValidatorValueSet) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorValueSet.class.getName()))));
-                    event.setCodeSystem(((ValidatorCodeSystem) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCodeSystem.class.getName()))));
-                    event.setCode(((ValidatorCode) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCode.class.getName()))));
+                if (assertionStatus) {
+                    event.setDescription((successfulReport = ((SuccessfulReport) outputContentItem)).getText());
+                    event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : successfulReport.getTest()));
 
-                    if (assertionStatus) {
-                        event.setDescription((successfulReport = ((SuccessfulReport) outputContentItem)).getText());
-                        event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : successfulReport.getTest()));
+                    loc.setNodeExpression((locExpr = successfulReport.getLocation()));
+                } else {
+                    event.setDescription((failedAssertion = ((FailedAssertion) outputContentItem)).getText());
+                    event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : failedAssertion.getTest()));
 
-                        loc.setNodeExpression((locExpr = successfulReport.getLocation()));
-                    } else {
-                        event.setDescription((failedAssertion = ((FailedAssertion) outputContentItem)).getText());
-                        event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : failedAssertion.getTest()));
+                    loc.setNodeExpression((locExpr = failedAssertion.getLocation()));
+                }
 
-                        loc.setNodeExpression((locExpr = failedAssertion.getLocation()));
-                    }
-
-                    if ((locNode = this.xpathCompiler.evaluateNode(locExpr, this.xpathContext, this.doc)) != null) {
-                        loc.setColumnNumber((locObj = new CrigttLocation(locNode.getUnderlyingNode())).getColumnNumber());
-                        loc.setLineNumber(locObj.getLineNumber());
-                    }
+                if ((locNode = this.xpathCompiler.evaluateNode(locExpr, this.xpathContext, this.doc)) != null) {
+                    loc.setColumnNumber((locObj = new CrigttLocation(locNode.getUnderlyingNode())).getColumnNumber());
+                    loc.setLineNumber(locObj.getLineNumber());
                 }
             }
-
-            return events;
-        } finally {
-            contextDataThreadLocal.remove();
         }
+
+        return events;
     }
 
     @Override

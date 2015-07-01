@@ -3,25 +3,17 @@ package gov.hhs.onc.crigtt.transform.impl;
 import javax.annotation.Nullable;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathCompiler;
-import net.sf.saxon.s9api.XPathExecutable;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.sxpath.XPathEvaluator;
-import net.sf.saxon.sxpath.XPathExpression;
 import net.sf.saxon.trans.XPathException;
 
 public class CrigttXpathCompiler extends XPathCompiler {
-    private class CrigttXpathExecutable extends XPathExecutable {
-        public CrigttXpathExecutable(XPathExpression expr, IndependentContext context) {
-            super(expr, CrigttXpathCompiler.this.getProcessor(), context);
-        }
-    }
-
-    public CrigttXpathCompiler(CrigttProcessor processor) {
-        super(processor);
+    public CrigttXpathCompiler(CrigttProcessor proc) {
+        super(proc);
     }
 
     @Nullable
@@ -105,16 +97,18 @@ public class CrigttXpathCompiler extends XPathCompiler {
     }
 
     @Override
-    public XPathExecutable compile(String expr) throws SaxonApiException {
+    public CrigttXpathExecutable compile(String expr) throws SaxonApiException {
         return this.compile(expr, this.getUnderlyingStaticContext());
     }
 
-    public XPathExecutable compile(String expr, IndependentContext context) throws SaxonApiException {
-        XPathEvaluator xpathEval = new XPathEvaluator(this.getProcessor().getUnderlyingConfiguration());
+    public CrigttXpathExecutable compile(String expr, IndependentContext context) throws SaxonApiException {
+        CrigttProcessor proc = this.getProcessor();
+
+        XPathEvaluator xpathEval = new XPathEvaluator(proc.getUnderlyingConfiguration());
         xpathEval.setStaticContext(context);
 
         try {
-            return new CrigttXpathExecutable(xpathEval.createExpression(expr), context);
+            return new CrigttXpathExecutable(xpathEval.createExpression(expr), proc, context);
         } catch (XPathException e) {
             throw new SaxonApiException(e);
         }

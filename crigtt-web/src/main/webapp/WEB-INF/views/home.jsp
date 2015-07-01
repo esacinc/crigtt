@@ -102,7 +102,7 @@
                                     <span id="btn-file-doc" class="btn btn-default">
                                         <i class="fa fa-fw fa-folder-open-o"></i>
                                         Select File
-                                        <input id="input-file-doc" name="documentFile" type="file"/>
+                                        <input id="input-file-doc" name="file" type="file"/>
                                     </span>
                                 </span>
                                 <input id="input-file-doc-display" class="form-control" type="text" readonly="readonly"/>

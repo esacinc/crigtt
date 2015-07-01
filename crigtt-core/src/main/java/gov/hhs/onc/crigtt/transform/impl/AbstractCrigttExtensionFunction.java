@@ -1,7 +1,6 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
 import java.util.Map;
-import java.util.function.Supplier;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -24,7 +23,7 @@ public abstract class AbstractCrigttExtensionFunction extends ExtensionFunctionD
             }
 
             try {
-                return AbstractCrigttExtensionFunction.this.call(context, AbstractCrigttExtensionFunction.this.contextDataSupplier.get(), wrappedArgs)
+                return AbstractCrigttExtensionFunction.this.call(context, ((CrigttController) context.getController()).getContextData(), wrappedArgs)
                     .getUnderlyingValue();
             } catch (Exception e) {
                 throw new SaxonApiUncheckedException(e);
@@ -32,14 +31,11 @@ public abstract class AbstractCrigttExtensionFunction extends ExtensionFunctionD
         }
     }
 
-    protected Supplier<Map<Object, Object>> contextDataSupplier;
     protected StructuredQName name;
     protected SequenceType resultType;
     protected SequenceType[] argTypes;
 
-    protected AbstractCrigttExtensionFunction(Supplier<Map<Object, Object>> contextDataSupplier, StructuredQName name, SequenceType resultType,
-        SequenceType ... argTypes) {
-        this.contextDataSupplier = contextDataSupplier;
+    protected AbstractCrigttExtensionFunction(StructuredQName name, SequenceType resultType, SequenceType ... argTypes) {
         this.name = name;
         this.resultType = resultType;
         this.argTypes = argTypes;

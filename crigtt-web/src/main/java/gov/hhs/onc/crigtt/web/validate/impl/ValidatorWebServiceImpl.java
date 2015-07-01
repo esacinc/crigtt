@@ -1,4 +1,4 @@
-package gov.hhs.onc.crigtt.web.ws.impl;
+package gov.hhs.onc.crigtt.web.validate.impl;
 
 import gov.hhs.onc.crigtt.utils.CrigttFileUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
@@ -8,7 +8,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorDocumentImpl;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorSubmissionImpl;
 import gov.hhs.onc.crigtt.web.jaxrs.ContentDispositionParameters;
-import gov.hhs.onc.crigtt.web.ws.ValidatorWebService;
+import gov.hhs.onc.crigtt.web.validate.ValidatorWebService;
 import java.io.InputStream;
 import javax.annotation.Resource;
 import javax.ws.rs.core.Context;
@@ -26,8 +26,8 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
     @Context
     private MessageContext msgContext;
 
-    @Value("${crigtt.ws.service.validator.op.validate.req.field.doc.file.name}")
-    private String docFileNameFieldName;
+    @Value("${crigtt.ws.service.validator.op.validate.attachment.doc.file.id}")
+    private String docFileAttachmentId;
 
     @Resource(name = "validatorServiceImpl")
     private ValidatorService validatorService;
@@ -41,7 +41,7 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
         ValidatorDocument doc = new ValidatorDocumentImpl();
         submission.setDocument(doc);
 
-        Attachment docAttachment = AttachmentUtils.getFirstMatchingPart(this.msgContext, this.docFileNameFieldName);
+        Attachment docAttachment = AttachmentUtils.getFirstMatchingPart(this.msgContext, this.docFileAttachmentId);
 
         if (docAttachment != null) {
             doc.setFileName(CrigttFileUtils.buildSafeFileName(docAttachment.getContentDisposition().getParameter(ContentDispositionParameters.FILENAME)));

@@ -82,17 +82,6 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="validatorSchematronCcdaR2" parent="validatorSchematronImpl"
-        p:id="ccda-r2"
-        p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0"
-        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2/C-CDA-R2.sch">
-        <beans:property name="staticVocabDocument">
-            <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
-                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2/voc.xml"
-                p:uri="voc.xml"/>
-        </beans:property>
-    </beans:bean>
-    
     <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
         p:id="ccda-r2-cancer-reg"
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
@@ -176,10 +165,6 @@
     </beans:bean>
     
     <!--suppress SpringBeanConstructorArgInspection -->
-    <beans:bean id="validatorTaskSchematronCcdaR2" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
-        p:schematron-ref="validatorSchematronCcdaR2"/>
-    
-    <!--suppress SpringBeanConstructorArgInspection -->
     <beans:bean id="validatorTaskSchematronCcdaR2CancerReg" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
         p:schematron-ref="validatorSchematronCcdaR2CancerReg"/>
     
@@ -212,7 +197,6 @@
         p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
         <beans:property name="taskBeanNames">
             <beans:array>
-                <beans:idref bean="validatorTaskSchematronCcdaR2"/>
                 <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>
                 <beans:idref bean="validatorTaskDynamicVocabCrigtt"/>
             </beans:array>

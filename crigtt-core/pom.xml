@@ -339,6 +339,9 @@
                             <suiteXmlFiles combine.self="override">
                                 <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-crigtt.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <systemPropertyVariables>
+                                <crigtt.logging.file.name>crigtt-test.log</crigtt.logging.file.name>
+                            </systemPropertyVariables>
                         </configuration>
                     </execution>
                     <execution>
@@ -347,6 +350,9 @@
                             <suiteXmlFiles combine.self="override">
                                 <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-crigtt-it.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <systemPropertyVariables>
+                                <crigtt.logging.file.name>crigtt-test-it.log</crigtt.logging.file.name>
+                            </systemPropertyVariables>
                         </configuration>
                     </execution>
                 </executions>

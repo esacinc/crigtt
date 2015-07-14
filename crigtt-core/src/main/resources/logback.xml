@@ -4,12 +4,12 @@
     xmlns="ch.qos.logback">
     
     <!--====================================================================================================
-    = CONTEXT NAME
+    = STATUS LISTENERS
     =====================================================================================================-->
-    <contextName>${crigtt.app.name}</contextName>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
     
     <!--====================================================================================================
-    = INCLUDES
+    = ROOT LOGGER
     =====================================================================================================-->
-    <include resource="META-INF/crigtt/logback/logback-crigtt-include.xml"/>
+    <root level="warn"/>
 </configuration>

@@ -4,6 +4,7 @@ import br.net.woodstock.rockframework.security.digest.Digester;
 import com.github.sebhoss.warnings.CompilerWarnings;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
+import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.utils.CrigttFunctionUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorCacheService;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
@@ -16,6 +17,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.ValidatorTask;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,10 @@ import javax.annotation.Resource;
 import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
+import org.apache.commons.codec.binary.Base64;
 import org.joda.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -74,6 +79,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ValidatorServiceImpl.class);
+
     @Resource(name = "docBuilderCrigtt")
     private CrigttDocumentBuilder docBuilder;
 
@@ -91,33 +98,43 @@ public class ValidatorServiceImpl implements ValidatorService {
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     public ValidatorReport validate(ValidatorSubmission submission) throws Exception {
         ValidatorReport report = new ValidatorReportImpl();
-
-        CrigttFunctionUtils.consume(() -> Instant.now().getMillis(), submission::setSubmittedTimestamp, report::setSubmittedTimestamp);
-        CrigttFunctionUtils.consume(() -> UUID.randomUUID().toString(), submission::setId, report::setId);
+        // noinspection ConstantConditions
+        String formattedSubmittedTimestamp =
+            CrigttDateUtils.DISPLAY_FORMAT.format(new Date(CrigttFunctionUtils.consume(() -> Instant.now().getMillis(), submission::setSubmittedTimestamp,
+                report::setSubmittedTimestamp))), id = CrigttFunctionUtils.consume(() -> UUID.randomUUID().toString(), submission::setId, report::setId);
 
         ValidatorDocument docObj = submission.getDocument();
         report.setDocument(docObj);
 
+        String docFileName = docObj.getFileName();
         byte[] docContent = docObj.getContent(), docHash =
             CrigttFunctionUtils.consume(docObj::getHash, () -> this.digester.digest(docContent), docObj::setHash);
-        ValidatorResults results = this.cacheService.getResults(docHash);
+        String docHashStr = Base64.encodeBase64String(docHash);
+        ValidatorResults results = this.cacheService.getResults(docHashStr);
+        ValidatorEventTotals eventTotals;
+        long processedTimestamp;
 
         if (results != null) {
-            report.setProcessedTimestamp(Instant.now().getMillis());
+            report.setProcessedTimestamp((processedTimestamp = Instant.now().getMillis()));
             report.setResults(results);
+
+            LOGGER
+                .debug(String
+                    .format(
+                        "Retrieved submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) results (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d) from cache.",
+                        id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
+                        (eventTotals = results.getEventTotals()).getAll(), eventTotals.getInfo(), eventTotals.getWarn(), eventTotals.getError()));
 
             return report;
         }
 
         report.setResults((results = new ValidatorResultsImpl()));
 
-        ValidatorEventTotals eventTotals = new ValidatorEventTotalsImpl();
-        results.setEventTotals(eventTotals);
+        results.setEventTotals((eventTotals = new ValidatorEventTotalsImpl()));
 
         List<ValidatorEvent> events = new ArrayList<>();
         results.setEvents(events);
 
-        String docFileName = docObj.getFileName();
         ByteArraySource docSrc = new ByteArraySource(docContent, docFileName);
         XdmDocument doc = this.docBuilder.build(docSrc);
         NodeInfo docElemInfo = ((ElementOverNodeInfo) doc.getDocument().getDocumentElement()).getUnderlyingNodeInfo();
@@ -150,6 +167,9 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         for (ValidatorFutureTask futureTask : futureTasks) {
             if ((taskException = futureTask.getException()) != null) {
+                LOGGER.error(String.format("Unable to validate submission (id=%s, submitted=%s) document (fileName=%s, hash=%s).", id,
+                    formattedSubmittedTimestamp, docFileName, docHashStr), taskException);
+
                 throw taskException;
             }
         }
@@ -196,9 +216,16 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         results.setStatus(status);
 
-        this.cacheService.putResults(docHash, results);
+        this.cacheService.putResults(docHashStr, results);
 
-        report.setProcessedTimestamp(Instant.now().getMillis());
+        report.setProcessedTimestamp((processedTimestamp = Instant.now().getMillis()));
+
+        LOGGER
+            .info(String
+                .format(
+                    "Submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) validated (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
+                    id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
+                    (eventId - 1), numInfoEvents, numWarnEvents, numErrorEvents));
 
         return report;
     }

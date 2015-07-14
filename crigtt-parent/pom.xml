@@ -553,9 +553,7 @@
                         <systemPropertyVariables combine.children="append">
                             <crigtt.logging.console.tty>true</crigtt.logging.console.tty>
                             <crigtt.logging.file.dir>${project.build.directory}/surefire-logs</crigtt.logging.file.dir>
-                            <crigtt.logging.file.name>${project.artifactId}-test</crigtt.logging.file.name>
                             <crigtt.test.output.dir.path>${project.build.directory}/surefire-validations</crigtt.test.output.dir.path>
-                            <logback.configurationFile>META-INF/crigtt/logback/logback-crigtt.xml</logback.configurationFile>
                         </systemPropertyVariables>
                         <trimStackTrace>false</trimStackTrace>
                         <workingDirectory>${project.build.directory}</workingDirectory>
@@ -569,6 +567,9 @@
                                 <suiteXmlFiles>
                                     <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}.xml</suiteXmlFile>
                                 </suiteXmlFiles>
+                                <systemPropertyVariables>
+                                    <crigtt.logging.file.name>${project.artifactId}-test.log</crigtt.logging.file.name>
+                                </systemPropertyVariables>
                             </configuration>
                         </execution>
                         <execution>
@@ -584,6 +585,9 @@
                                 <suiteXmlFiles>
                                     <suiteXmlFile>${project.build.testOutputDirectory}/META-INF/crigtt/testng/testng-${project.artifactId}-it.xml</suiteXmlFile>
                                 </suiteXmlFiles>
+                                <systemPropertyVariables>
+                                    <crigtt.logging.file.name>${project.artifactId}-test-it.log</crigtt.logging.file.name>
+                                </systemPropertyVariables>
                             </configuration>
                         </execution>
                     </executions>

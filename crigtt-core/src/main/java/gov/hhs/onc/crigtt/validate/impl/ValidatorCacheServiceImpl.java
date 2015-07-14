@@ -13,13 +13,13 @@ public class ValidatorCacheServiceImpl implements ValidatorCacheService {
     private EhCacheCache cache;
 
     @Override
-    public void putResults(byte[] docHash, ValidatorResults results) {
-        this.cache.putIfAbsent(docHash, results);
+    public void putResults(String docHashStr, ValidatorResults results) {
+        this.cache.putIfAbsent(docHashStr, results);
     }
 
     @Nullable
     @Override
-    public ValidatorResults getResults(byte[] docHash) {
-        return this.cache.get(docHash, ValidatorResults.class);
+    public ValidatorResults getResults(String docHashStr) {
+        return this.cache.get(docHashStr, ValidatorResults.class);
     }
 }

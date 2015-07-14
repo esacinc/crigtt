@@ -11,7 +11,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Order(Ordered.HIGHEST_PRECEDENCE + 2)
 public class ProfileApplicationRunListener extends AbstractCrigttApplicationRunListener {
     private final static String WEB_CONTEXT_CLASS_NAME = "org.springframework.web.context.support.GenericWebApplicationContext";
 
@@ -25,9 +25,7 @@ public class ProfileApplicationRunListener extends AbstractCrigttApplicationRunL
     public void contextPrepared(ConfigurableApplicationContext appContext) {
         ConfigurableEnvironment env = appContext.getEnvironment();
 
-        if (env.containsProperty(CrigttProperties.APP_NAME_NAME)) {
-            activateProfile(env, (CrigttProfiles.APP_PREFIX + env.getProperty(CrigttProperties.APP_NAME_NAME)));
-        }
+        activateProfile(env, (CrigttProfiles.APP_PREFIX + env.getProperty(CrigttProperties.APP_NAME_NAME)));
 
         try {
             Class<?> webContextClass = ClassUtils.getClass(WEB_CONTEXT_CLASS_NAME);

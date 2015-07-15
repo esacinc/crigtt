@@ -359,9 +359,10 @@
                                     <tbody>
                                         <xsl:for-each select="validate:results/validate:events/validate:event">
                                             <xsl:variable name="eventLevel" select="validate:level/text()"/>
+                                            <xsl:variable name="infoEventLevel" select="$eventLevel = 'info'"/>
                                             <xsl:variable name="eventLevelClassName">
                                                 <xsl:choose>
-                                                    <xsl:when test="$eventLevel = 'info'">info</xsl:when>
+                                                    <xsl:when test="$infoEventLevel">info</xsl:when>
                                                     <xsl:when test="$eventLevel = 'warn'">warning</xsl:when>
                                                     <xsl:when test="$eventLevel = 'error'">danger</xsl:when>
                                                     <xsl:otherwise>default</xsl:otherwise>
@@ -384,8 +385,15 @@
                                                     <xsl:call-template name="propValue">
                                                         <xsl:with-param name="value">
                                                             <xsl:choose>
-                                                                <xsl:when test="$eventStatus">Pass</xsl:when>
-                                                                <xsl:otherwise>Fail</xsl:otherwise>
+                                                                <xsl:when test="$infoEventLevel">
+                                                                    <em>N/A</em>
+                                                                </xsl:when>
+                                                                <xsl:otherwise>
+                                                                    <xsl:choose>
+                                                                        <xsl:when test="xsd:boolean($eventStatus)">Pass</xsl:when>
+                                                                        <xsl:otherwise>Fail</xsl:otherwise>
+                                                                    </xsl:choose>
+                                                                </xsl:otherwise>
                                                             </xsl:choose>
                                                         </xsl:with-param>
                                                     </xsl:call-template>

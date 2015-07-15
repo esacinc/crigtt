@@ -19,19 +19,31 @@
             <wadl:method id="validate" name="POST">
                 <wadl:request>
                     <wadl:representation mediaType="multipart/form-data">
-                        <wadl:param id="format" name="format" style="query" type="xsd:boolean" default="true"/>
-                        <wadl:param id="timeZone" name="timeZone" style="query" type="xsd:string"/>
+                        <wadl:param name="format" style="query" type="xsd:boolean" default="true"/>
+                        <wadl:param name="timeZone" style="query" type="xsd:string"/>
                     </wadl:representation>
                 </wadl:request>
                 <wadl:response status="200">
-                    <wadl:representation mediaType="application/json" element="validate:report"/>
-                    <wadl:representation mediaType="text/html" element="validate:report"/>
-                    <wadl:representation mediaType="text/xml" element="validate:report"/>
+                    <wadl:representation mediaType="application/json" element="validate:report">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
+                    <wadl:representation mediaType="text/html" element="validate:report">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
+                    <wadl:representation mediaType="text/xml" element="validate:report">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
                 </wadl:response>
                 <wadl:response>
-                    <wadl:representation mediaType="application/json" element="validate:error"/>
-                    <wadl:representation mediaType="text/html" element="validate:error"/>
-                    <wadl:representation mediaType="text/xml" element="validate:error"/>
+                    <wadl:representation mediaType="application/json" element="validate:error">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
+                    <wadl:representation mediaType="text/html" element="validate:error">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
+                    <wadl:representation mediaType="text/xml" element="validate:error">
+                        <wadl:param name="X-Crigtt-File-Name" style="header" type="xsd:string"/>
+                    </wadl:representation>
                 </wadl:response>
             </wadl:method>
         </wadl:resource>

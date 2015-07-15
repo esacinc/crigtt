@@ -300,6 +300,10 @@
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
+            <artifactId>filesaver.js</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
             <artifactId>tablesorter</artifactId>
         </dependency>
         <!-- Test dependencies (project) -->

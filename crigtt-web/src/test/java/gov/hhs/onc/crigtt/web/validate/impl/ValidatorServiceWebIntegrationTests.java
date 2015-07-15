@@ -3,6 +3,8 @@ package gov.hhs.onc.crigtt.web.validate.impl;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.web.test.impl.AbstractCrigttWebIntegrationTests;
+import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
+import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -27,9 +29,6 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
     @Value("classpath*:${crigtt.test.input.file.1.path}")
     private ResourceSource testSrc1;
 
-    @Value("${crigtt.ws.service.validator.op.validate.attachment.doc.file.id}")
-    private String docFileAttachmentId;
-
     @Value("${crigtt.tomcat.ws.service.validator.op.validate.url}")
     private String testUrl;
 
@@ -39,13 +38,11 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
 
     @Test
     public void testValidate() throws Exception {
-        String testDocFileName = this.testSrc1.getResource().getFilename(), testDocFileBaseName = FilenameUtils.getBaseName(testDocFileName);
-
         HttpHeaders testReqHeaders = new HttpHeaders();
-        testReqHeaders.setContentDispositionFormData(this.docFileAttachmentId, testDocFileName);
+        testReqHeaders.setContentDispositionFormData(ValidatorParameters.FILE_NAME, this.testSrc1.getResource().getFilename());
 
         MultipartBody testReqBody =
-            new MultipartBody(new Attachment(this.docFileAttachmentId, new ByteDataSource(this.testSrc1.getBytes(), MediaType.TEXT_XML_VALUE),
+            new MultipartBody(new Attachment(ValidatorParameters.FILE_NAME, new ByteDataSource(this.testSrc1.getBytes(), MediaType.TEXT_XML_VALUE),
                 new MultivaluedHashMap<>(testReqHeaders.toSingleValueMap())));
 
         WebClient testWebClient = WebClient.fromClient(this.testClient).type(MediaType.MULTIPART_FORM_DATA_VALUE);
@@ -53,20 +50,12 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
         Map<String, HttpStatus> testRespStatusMap = new LinkedHashMap<>(testRenderTypes.length);
         String testReqUri;
         Response testResp;
-        byte[] testRespContent;
-        HttpStatus testRespStatus;
 
         for (ValidatorRenderType testRenderType : testRenderTypes) {
-            testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())), (testRespStatus =
-                HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus())));
+            testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
+                HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
 
-            testRespContent = testResp.readEntity(byte[].class);
-
-            if (testRespStatus == HttpStatus.OK) {
-                this.writeReport(testDocFileBaseName, testRenderType, testRespContent);
-            } else {
-                this.writeError(testDocFileBaseName, testRenderType, testRespContent);
-            }
+            this.writeResponse(testResp.getHeaderString(ValidatorHeaders.FILE_NAME_NAME), testResp.readEntity(byte[].class));
         }
 
         testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(

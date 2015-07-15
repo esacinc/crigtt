@@ -47,6 +47,10 @@ pre {
     font-size: 13px;
 }
 
+*.well {
+    margin-bottom: 0;
+}
+
 ul.nav-tabs li,
 ul.nav-tabs li a {
     font-size: 13px;
@@ -84,7 +88,9 @@ input#input-file-doc {
     outline: none;
 }
 
-input#input-file-doc-display:hover {
+input#input-file-doc:hover,
+input#input-file-doc-display:hover,
+span#btn-file-doc:hover {
     cursor: pointer;
 }
 
@@ -110,26 +116,31 @@ div.panel-title span {
     vertical-align: middle;
 }
 
-div.panel-title > span:nth-of-type(1) {
+div.panel-title span.well {
     margin-left: 25px;
     padding-left: 25px;
     border-left: 1px solid inherit;
+    color: black;
 }
 
-div.panel-title > span:nth-of-type(1) button.btn {
+div.panel-title span.well button.btn {
     font-size: 11px;
+}
+
+div.panel-title span.well button.btn i.fa {
+    margin-right: 5px;
+    font-size: 13px;
 }
 
 div.panel-title > span:nth-of-type(2):hover {
     cursor: pointer;
 }
 
-div.panel-title > span:nth-of-type(1),
+div.panel-title span.well,
 div.panel-title a span:nth-of-type(1) {
     text-align: center;
 }
 
-div.panel-title > span:nth-of-type(1) i.fa,
 div.panel-title a span:nth-of-type(1) i.fa {
     margin-right: 10px;
     font-size: 18px;
@@ -148,10 +159,18 @@ div.panel-body div.tab-content div.tab-pane {
     overflow-x: auto;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4):hover,
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(5):hover,
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6):hover {
-    cursor: pointer;
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul {
+    display: inline-block;
+    list-style: none;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li:nth-of-type(1) {
+    margin-left: 0;
 }
 
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th,
@@ -171,6 +190,25 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of
     min-width: 130px;
 }
 
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(6),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(7),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(7),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(8),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(8),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(9),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(9),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(10),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(10),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(11),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(11),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(12),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(12),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(13),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(13) {
+    min-width: 200px;
+}
+
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th div,
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
     padding: 2px;
@@ -178,18 +216,7 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
 }
 
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td pre {
-    max-width: 700px;
+    max-width: 500px;
     max-height: 75px;
     margin: auto;
-}
-
-div.popover {
-    max-width: 800px;
-    font-family: "Tahoma", sans-serif;
-    font-size: 11px;
-}
-
-div.popover pre {
-    max-width: 800px;
-    max-height: 200px;
 }

@@ -40,7 +40,9 @@
         c:src="classpath*:META-INF/crigtt/style/crigtt/crigtt-validate-response-html.xsl">
         <beans:constructor-arg name="extFuncs">
             <beans:array>
+                <beans:ref bean="extFuncDefaultIfBlank"/>
                 <beans:ref bean="extFuncEscapeHtml"/>
+                <beans:ref bean="extFuncIsBlank"/>
                 <beans:ref bean="extFuncFormatTimestamp"/>
             </beans:array>
         </beans:constructor-arg>

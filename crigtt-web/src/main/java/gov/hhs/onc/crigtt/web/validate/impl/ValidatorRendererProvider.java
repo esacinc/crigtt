@@ -2,16 +2,20 @@ package gov.hhs.onc.crigtt.web.validate.impl;
 
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
+import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
-import gov.hhs.onc.crigtt.web.validate.ValidatorQueryParameters;
+import gov.hhs.onc.crigtt.validate.utils.ValidatorUtils;
+import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
+import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ import org.apache.cxf.jaxrs.impl.UriInfoImpl;
 import org.apache.cxf.jaxrs.model.ClassResourceInfo;
 import org.apache.cxf.jaxrs.provider.AbstractConfigurableProvider;
 import org.apache.cxf.jaxrs.utils.JAXRSUtils;
+import org.apache.cxf.message.Exchange;
 
 @Priority(2)
 public class ValidatorRendererProvider extends AbstractConfigurableProvider implements MessageBodyWriter<ValidatorResponse> {
@@ -49,24 +54,30 @@ public class ValidatorRendererProvider extends AbstractConfigurableProvider impl
     @Override
     public void writeTo(ValidatorResponse resp, Class<?> type, Type genericType, Annotation[] annos, MediaType mediaType,
         MultivaluedMap<String, Object> headers, OutputStream entityStream) throws IOException, WebApplicationException {
-        MultivaluedMap<String, String> queryParams = new UriInfoImpl(JAXRSUtils.getCurrentMessage().getExchange().getInMessage()).getQueryParameters();
+        Exchange exchange = JAXRSUtils.getCurrentMessage().getExchange();
+        ValidatorRenderer renderer = this.renderers.keySet().stream().filter(mediaType::isCompatible).map(this.renderers::get).findFirst().get();
+
+        headers.putSingle(ValidatorHeaders.FILE_NAME_NAME,
+            ValidatorUtils.buildResponseFileName(true, exchange.get(ValidatorSubmission.class), renderer.getType()));
+
+        MultivaluedMap<String, String> queryParams = new UriInfoImpl(exchange.getInMessage()).getQueryParameters();
         Map<String, String> mergedQueryParams = new HashMap<>(this.defaultQueryParams);
 
         queryParams.keySet().stream().forEach(queryParamName -> mergedQueryParams.put(queryParamName, queryParams.getFirst(queryParamName)));
 
         Map<String, Object> renderOpts = new HashMap<>();
 
-        if (mergedQueryParams.containsKey(ValidatorQueryParameters.FORMAT_NAME)) {
-            renderOpts.put(ValidatorRenderOptions.FORMAT_NAME, BooleanUtils.toBoolean(mergedQueryParams.get(ValidatorQueryParameters.FORMAT_NAME)));
+        if (mergedQueryParams.containsKey(ValidatorParameters.FORMAT_NAME)) {
+            renderOpts.put(ValidatorRenderOptions.FORMAT_NAME, BooleanUtils.toBoolean(mergedQueryParams.get(ValidatorParameters.FORMAT_NAME)));
         }
 
-        if (mergedQueryParams.containsKey(ValidatorQueryParameters.TIME_ZONE_NAME)) {
-            renderOpts.put(ValidatorRenderOptions.TIME_ZONE_NAME, TimeZone.getTimeZone(mergedQueryParams.get(ValidatorQueryParameters.TIME_ZONE_NAME)));
+        if (mergedQueryParams.containsKey(ValidatorParameters.TIME_ZONE_NAME)) {
+            renderOpts.put(ValidatorRenderOptions.TIME_ZONE_NAME,
+                TimeZone.getTimeZone(ZoneOffset.of(mergedQueryParams.get(ValidatorParameters.TIME_ZONE_NAME))));
         }
 
         try {
-            entityStream.write(this.renderers.keySet().stream().filter(mediaType::isCompatible).map(this.renderers::get).findFirst().get()
-                .render(resp, renderOpts));
+            entityStream.write(renderer.render(resp, renderOpts));
         } catch (Exception e) {
             throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
         }

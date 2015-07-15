@@ -9,6 +9,15 @@
     });
     
     //====================================================================================================
+    // EXTENSIONS: DATE
+    //====================================================================================================
+    $.extend(Date.prototype, {
+        "getTimeZoneOffsetString": function () {
+            return moment(this).format("ZZ");
+        }
+    });
+    
+    //====================================================================================================
     // EXTENSIONS: JQUERY FUNCTIONS
     //====================================================================================================
     $.extend($.fn, {
@@ -26,12 +35,6 @@
         
         "toggleDisabled": function () {
             return (this.isDisabled() ? this.enable() : this.disable());
-        },
-        
-        "toXml": function () {
-            return (($.isXMLDoc(this) ? '<?xml version="1.0" encoding="UTF-8"?>\n' : String.EMPTY) + $.format($("<root/>").append(this), {
-                "method": "xml"
-            }));
         }
     });
     
@@ -87,7 +90,7 @@
             var validateData = new FormData(this);
             
             validator.validate.apply(validator, [
-                $.crigtt.validate.ValidatorContentType.JSON,
+                $.crigtt.validate.ValidatorContentType.HTML,
                 {
                     "beforeSend": function () {
                         $("div.panel div.panel-collapse", validatorResultsPanelGroupElem).collapse("hide");
@@ -106,15 +109,11 @@
                         validatorResultsPanelGroupElem.show();
                     },
                     "data": validateData,
-                    "process": function (status, resp, httpStatus, httpStatusText) {
-                        if (!status) {
-                            validatorResultsPanelGroupElem.prepend(validator.resultErrorAlert.apply(validator, [ resp, httpStatus, httpStatusText ]));
-                            
-                            return;
-                        }
+                    "process": function (status, resp, fileName) {
+                        var respElem = $($.parseHTML(resp)[0]);
                         
-                        validatorResultsPanelGroupElem.prepend(validator.resultPanel.apply(validator, [ resp, httpStatus, httpStatusText ])
-                            .data($.crigtt.validate.Validator.VALIDATE_DATA_DATA_ENTRY_NAME, validateData));
+                        validatorResultsPanelGroupElem.prepend((status ? validator.resultPanel.apply(validator, [ respElem ])
+                            .data($.crigtt.validate.Validator.VALIDATE_DATA_DATA_ENTRY_NAME, validateData) : respElem));
                     }
                 }
             ]);

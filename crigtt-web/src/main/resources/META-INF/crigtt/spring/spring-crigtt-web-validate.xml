@@ -24,7 +24,7 @@
     <beans:bean id="provValidatorRenderer" class="gov.hhs.onc.crigtt.web.validate.impl.ValidatorRendererProvider">
         <beans:property name="defaultQueryParameters">
             <beans:map>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.web.validate.ValidatorQueryParameters).FORMAT_NAME }" value="true"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.web.validate.ValidatorParameters).FORMAT_NAME }" value="true"/>
             </beans:map>
         </beans:property>
     </beans:bean>

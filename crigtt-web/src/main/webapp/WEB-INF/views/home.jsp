@@ -12,6 +12,7 @@
 <c:set var="urlStaticStyles" value="${urlStatic}/styles" scope="request"/>
 <c:set var="urlWebjarsLocator" value="${urlBase}webjars-locator" scope="request"/>
 <c:set var="urlWebjarsLocatorBootstrap" value="${urlWebjarsLocator}/bootstrap" scope="request"/>
+<c:set var="urlWebjarsLocatorFileSaver" value="${urlWebjarsLocator}/filesaver.js" scope="request"/>
 <c:set var="urlWebjarsLocatorFontAwesome" value="${urlWebjarsLocator}/font-awesome" scope="request"/>
 <c:set var="urlWebjarsLocatorJquery" value="${urlWebjarsLocator}/jquery" scope="request"/>
 <c:set var="urlWebjarsLocatorJqueryUi" value="${urlWebjarsLocator}/jquery-ui" scope="request"/>
@@ -35,10 +36,10 @@
         <script type="text/javascript" src="${urlWebjarsLocatorJqueryUi}/jquery-ui.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorBootstrap}/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.rawgit.com/adrai/enum/master/enum-2.1.0.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsLocatorFileSaver}/FileSaver.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorMoment}/min/moment.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/jquery.tablesorter.combined.min.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt.js"></script>
-        <script type="text/javascript" src="${urlStaticScripts}/crigtt-format.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-ui.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-validate.js"></script>
         <title><spring:message code="crigtt.msg.title.home"/></title>
@@ -53,15 +54,15 @@
                     </a>
                 </div>
                 <ul class="nav navbar-nav nav-tabs" role="tablist">
-                    <li class="active" role="presentation">
+                    <li role="presentation">
                         <a href="#content-tab-home" aria-controls="content-tab-home" role="tab" data-toggle="tab">
                             <i class="fa fa-home"></i>
                             <strong>Home</strong>
                         </a>
                     </li>
-                    <li role="presentation">
+                    <li class="active" role="presentation">
                         <a href="#content-tab-validator" aria-controls="content-tab-validator" role="tab" data-toggle="tab">
-                            <i class="fa fa-check-circle-o"></i>
+                            <i class="fa fa-check"></i>
                             <strong>Validator</strong>
                         </a>
                     </li>
@@ -87,12 +88,12 @@
         </nav>
         <div id="content" class="container-fluid">
             <div id="content-tabs" class="tab-content">
-                <div id="content-tab-home" class="tab-pane active" role="tabpanel">
+                <div id="content-tab-home" class="tab-pane" role="tabpanel">
                     <!-- TODO: implement -->
                 </div>
-                <div id="content-tab-validator" class="tab-pane" role="tabpanel">
+                <div id="content-tab-validator" class="tab-pane active" role="tabpanel">
                     <h1>
-                        <i class="fa fa-fw fa-check-circle-o"></i>
+                        <i class="fa fa-fw fa-paper-plane"></i>
                         <strong>Submit</strong>
                     </h1>
                     <form id="form-validator" name="form-validator" action="${urlServiceValidatorValidate}" enctype="multipart/form-data" method="post">

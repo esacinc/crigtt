@@ -14,7 +14,6 @@ import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Resource;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,7 +32,7 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
     @Resource(name = "validatorRendererXmlImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private XmlValidatorRenderer xmlRenderer;
-    
+
     @Resource(name = "validatorRendererHtmlImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private HtmlValidatorRenderer htmlRenderer;
@@ -52,11 +51,10 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
         testSubmission.setDocument(testDoc);
 
         ValidatorReport testReport = this.service.validate(testSubmission);
-        String testDocFileBaseName = FilenameUtils.getBaseName(testReport.getDocument().getFileName());
 
-        this.writeReport(testDocFileBaseName, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
-        this.writeReport(testDocFileBaseName, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
-        this.writeReport(testDocFileBaseName, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+        this.writeResponse(true, testSubmission, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
+        this.writeResponse(true, testSubmission, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
+        this.writeResponse(true, testSubmission, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
     }
 
     @BeforeClass(groups = { "crigtt.test.it.all" })

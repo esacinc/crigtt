@@ -5,6 +5,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.springframework.http.MediaType;
 
 @Path("/validator")
@@ -13,5 +15,5 @@ public interface ValidatorWebService {
     @Path("/validate")
     @POST
     @Produces({ MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_HTML_VALUE, MediaType.TEXT_XML_VALUE })
-    public ValidatorReport validate() throws Exception;
+    public ValidatorReport validate(@Multipart(ValidatorParameters.FILE_NAME) Attachment docAttachment) throws Exception;
 }

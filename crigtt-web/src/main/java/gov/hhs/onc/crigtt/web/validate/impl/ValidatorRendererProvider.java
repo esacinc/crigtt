@@ -3,11 +3,8 @@ package gov.hhs.onc.crigtt.web.validate.impl;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
 import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
-import gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer;
-import gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderer;
-import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.utils.ValidatorUtils;
 import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
 import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
@@ -22,9 +19,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.Priority;
-import javax.annotation.Resource;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -36,26 +31,22 @@ import org.apache.cxf.jaxrs.model.ClassResourceInfo;
 import org.apache.cxf.jaxrs.provider.AbstractConfigurableProvider;
 import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.message.Exchange;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Priority(2)
 public class ValidatorRendererProvider extends AbstractConfigurableProvider implements MessageBodyWriter<ValidatorResponse> {
-    @Resource(name = "validatorRendererJsonImpl")
-    private JsonValidatorRenderer jsonRenderer;
-
-    @Resource(name = "validatorRendererXmlImpl")
-    private XmlValidatorRenderer xmlRenderer;
-
-    @Resource(name = "validatorRendererHtmlImpl")
-    private HtmlValidatorRenderer htmlRenderer;
+    @Autowired
+    private List<ValidatorRenderer> renderers;
 
     private Map<String, String> defaultQueryParams = new HashMap<>();
-    private Map<MediaType, ValidatorRenderer> renderers;
+    private Map<MediaType, ValidatorRenderer> rendererContentTypes;
 
     @Override
     public void writeTo(ValidatorResponse resp, Class<?> type, Type genericType, Annotation[] annos, MediaType mediaType,
         MultivaluedMap<String, Object> headers, OutputStream entityStream) throws IOException, WebApplicationException {
         Exchange exchange = JAXRSUtils.getCurrentMessage().getExchange();
-        ValidatorRenderer renderer = this.renderers.keySet().stream().filter(mediaType::isCompatible).map(this.renderers::get).findFirst().get();
+        ValidatorRenderer renderer =
+            this.rendererContentTypes.keySet().stream().filter(mediaType::isCompatible).map(this.rendererContentTypes::get).findFirst().get();
 
         headers.putSingle(ValidatorHeaders.FILE_NAME_NAME,
             ValidatorUtils.buildResponseFileName(true, exchange.get(ValidatorSubmission.class), renderer.getType()));
@@ -85,7 +76,7 @@ public class ValidatorRendererProvider extends AbstractConfigurableProvider impl
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annos, MediaType mediaType) {
-        return this.renderers.keySet().stream().anyMatch(mediaType::isCompatible);
+        return this.rendererContentTypes.keySet().stream().anyMatch(mediaType::isCompatible);
     }
 
     @Override
@@ -95,9 +86,9 @@ public class ValidatorRendererProvider extends AbstractConfigurableProvider impl
 
     @Override
     public void init(List<ClassResourceInfo> classResourceInfos) {
-        this.setProduceMediaTypes((this.renderers =
+        this.setProduceMediaTypes((this.rendererContentTypes =
             CrigttStreamUtils.toMap(renderer -> MediaType.valueOf(renderer.getType().getContentType().toString()), Function.<ValidatorRenderer> identity(),
-                Stream.of(this.jsonRenderer, this.xmlRenderer, this.htmlRenderer))).keySet().stream().map(MediaType::toString).collect(Collectors.toList()));
+                this.renderers.stream())).keySet().stream().map(MediaType::toString).collect(Collectors.toList()));
     }
 
     public Map<String, String> getDefaultQueryParameters() {

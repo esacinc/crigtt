@@ -36,8 +36,7 @@
     <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
         c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
     
-    <beans:bean id="xsltExecValidatorResponseHtml" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
-        c:src="classpath*:META-INF/crigtt/style/crigtt/crigtt-validate-response-html.xsl">
+    <beans:bean id="xsltExecValidatorResponse" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile" abstract="true">
         <beans:constructor-arg name="extFuncs">
             <beans:array>
                 <beans:ref bean="extFuncDefaultIfBlank"/>
@@ -47,6 +46,9 @@
             </beans:array>
         </beans:constructor-arg>
     </beans:bean>
+    
+    <beans:bean id="xsltExecValidatorResponseHtml" parent="xsltExecValidatorResponse" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/style/crigtt/crigtt-validate-response-html.xsl"/>
     
     <!--====================================================================================================
     = VALIDATOR SCHEMATRONS
@@ -235,10 +237,17 @@
     <beans:bean id="validatorRendererXmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.XmlValidatorRendererImpl" parent="validatorRendererXml"/>
     
     <!--====================================================================================================
+    = XML TRANSFORM VALIDATOR RENDERERS
+    =====================================================================================================-->
+    <beans:bean id="validatorRendererXmlTransform" class="gov.hhs.onc.crigtt.validate.render.XmlTransformValidatorRenderer" parent="validatorRenderer"
+        abstract="true"/>
+    
+    <!--====================================================================================================
     = HTML VALIDATOR RENDERERS
     =====================================================================================================-->
-    <beans:bean id="validatorRendererHtml" class="gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer" parent="validatorRenderer"
-        abstract="true"/>
+    <beans:bean id="validatorRendererHtml" class="gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer" parent="validatorRendererXmlTransform"
+        abstract="true"
+        p:xsltExecutable-ref="xsltExecValidatorResponseHtml"/>
     
     <beans:bean id="validatorRendererHtmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.HtmlValidatorRendererImpl" parent="validatorRendererHtml"/>
 </beans:beans>

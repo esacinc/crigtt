@@ -4,7 +4,7 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="spring-form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
-<%@page contentType="text/html; charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" %>
+<%@page contentType="text/html; charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" session="false" %>
 <spring:url var="urlBase" value="/" scope="request"/>
 <c:set var="urlStatic" value="${urlBase}static" scope="request"/>
 <c:set var="urlStaticImages" value="${urlStatic}/images" scope="request"/>
@@ -134,5 +134,12 @@
                 </div>
             </div>
         </div>
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-fw fa-tags"></i>
+                <strong>Version</strong>: 
+                (<strong>Built</strong>: )
+            </div>
+        </footer>
     </body>
 </html>

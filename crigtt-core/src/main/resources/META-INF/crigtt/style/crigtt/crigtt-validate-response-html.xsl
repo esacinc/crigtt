@@ -7,15 +7,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     
     <!--====================================================================================================
-    = CONSTANTS
+    = IMPORTS
     =====================================================================================================-->
-    <xsl:variable name="EMPTY"><xsl:text/></xsl:variable>
-    
-    <xsl:variable name="LF"><xsl:text xml:space="preserve">&#10;</xsl:text></xsl:variable>
-    
-    <xsl:variable name="SPACE"><xsl:text xml:space="preserve"> </xsl:text></xsl:variable>
-    
-    <xsl:variable name="TIMES"><xsl:text>&#215;</xsl:text></xsl:variable>
+    <xsl:import href="crigtt-validate-response.xsl"/>
     
     <!--====================================================================================================
     = TEMPLATES: CALLED
@@ -288,7 +282,7 @@
                                             </li>
                                             <li>
                                                 <xsl:call-template name="prop">
-                                                    <xsl:with-param name="name" select="'Hash (SHA-512)'"/>
+                                                    <xsl:with-param name="name" select="'Hash (SHA-512; Base64 Encoded)'"/>
                                                     <xsl:with-param name="value">
                                                         <xsl:if test="exists($doc/validate:hash)">
                                                             <xsl:value-of

@@ -44,7 +44,13 @@
     
     <beans:bean id="wadlGenCrigtt" parent="wadlGenBase"
         c:bus-ref="busCrigtt"
-        p:linkAnyMediaTypeToXmlSchema="true"/>
+        p:linkAnyMediaTypeToXmlSchema="true">
+        <beans:property name="externalLinks">
+            <beans:list>
+                <beans:value>../schema/crigtt/crigtt-validate.xsd</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
     
     <!--====================================================================================================
     = SERVERS
@@ -55,12 +61,8 @@
         p:bus-ref="busCrigtt">
         <beans:property name="extensionMappings">
             <beans:map>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).HTML }"
-                    value="#{ T(org.springframework.http.MediaType).TEXT_HTML_VALUE }"/>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).JSON }"
-                    value="#{ T(org.springframework.http.MediaType).APPLICATION_JSON_VALUE }"/>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).XML }"
-                    value="#{ T(org.springframework.http.MediaType).TEXT_XML_VALUE }"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.io.CrigttFileExtensions).WADL }"
+                    value="#{ T(org.springframework.http.MediaType).APPLICATION_XML_VALUE }"/>
             </beans:map>
         </beans:property>
         <beans:property name="providers">
@@ -95,6 +97,7 @@
         p:order="#{ T(org.springframework.core.Ordered).HIGHEST_PRECEDENCE + 1 }">
         <beans:property name="urlMap">
             <beans:map>
+                <beans:entry key="/schema/**" value-ref="controllerService"/>
                 <!--suppress SpringPlaceholdersInspection -->
                 <beans:entry key="${crigtt.ws.service.path}/**" value-ref="controllerService"/>
             </beans:map>

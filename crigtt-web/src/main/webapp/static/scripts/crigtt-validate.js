@@ -55,7 +55,16 @@
         "resultPanel": function (respElem) {
             var resultsEmptyWellElem = $("div#well-validator-results-empty");
             var panelGroupElem = this.formElem.find("div.panel-group");
+            var panelCollapseElem = respElem.find("div.panel-collapse");
             var panelEventsTabPaneElem = respElem.find("div.panel-body div.tab-content div.tab-pane").eq(1);
+            
+            respElem.find("div.panel-heading").click($.proxy(function (event) {
+                var target = $(event.target);
+                
+                if (target.hasClass("panel-heading") || target.hasClass("panel-title")) {
+                    panelCollapseElem.collapse("toggle");
+                }
+            }, this));
             
             respElem.find("div.panel-title button.close").click($.proxy(function () {
                 respElem.remove();

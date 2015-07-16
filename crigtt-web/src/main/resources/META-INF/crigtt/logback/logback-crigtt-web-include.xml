@@ -6,7 +6,7 @@
     <!--====================================================================================================
     = LOGGERS: PROJECT
     =====================================================================================================-->
-    <logger name="gov.hhs.onc.crigtt.web.context.impl.CrigttWebApplicationContext" level="info" additivity="false">
+    <logger name="gov.hhs.onc.crigtt.web.context.impl.CrigttWebApplicationContext" level="trace" additivity="false">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </logger>

@@ -3,14 +3,11 @@ package gov.hhs.onc.crigtt.validate.render.impl;
 import gov.hhs.onc.crigtt.io.impl.ByteArrayResult;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttSerializer;
-import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
-import gov.hhs.onc.crigtt.transform.impl.CrigttXsltTransformer;
 import gov.hhs.onc.crigtt.utils.CrigttOptionUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
 import gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
-import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
 import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -25,7 +22,7 @@ import net.sf.saxon.type.SimpleType;
 import net.sf.saxon.value.Whitespace;
 import org.apache.commons.lang3.BooleanUtils;
 
-public class HtmlValidatorRendererImpl extends AbstractValidatorRenderer implements HtmlValidatorRenderer {
+public class HtmlValidatorRendererImpl extends AbstractXmlTransformValidatorRenderer implements HtmlValidatorRenderer {
     private static class NormalizeWhitespaceFilter extends ProxyReceiver {
         private final static String DATA_NORMALIZE_WHITESPACE_ATTR_LOCAL_NAME = "data-normalize-whitespace";
 
@@ -56,12 +53,6 @@ public class HtmlValidatorRendererImpl extends AbstractValidatorRenderer impleme
         }
     }
 
-    @Resource(name = "xsltExecValidatorResponseHtml")
-    private CrigttXsltExecutable xsltExec;
-
-    @Resource(name = "validatorRendererXmlImpl")
-    private XmlValidatorRenderer xmlRenderer;
-
     @Resource(name = "xmlOutFactoryCrigtt")
     private CrigttXmlOutputFactory xmlOutFactory;
 
@@ -77,21 +68,9 @@ public class HtmlValidatorRendererImpl extends AbstractValidatorRenderer impleme
 
     @Override
     protected byte[] renderInternal(ValidatorResponse resp, Map<String, Object> opts) throws Exception {
-        CrigttXsltTransformer xsltTransformer = this.xsltExec.load();
-        xsltTransformer.setSource(new ByteArraySource(this.xmlRenderer.render(resp)));
-
-        xsltTransformer
-            .getUnderlyingController()
-            .getContextData()
-            .put(
-                ValidatorRenderOptions.TIME_ZONE_CONTEXT_DATA_KEY,
-                (opts.containsKey(ValidatorRenderOptions.TIME_ZONE_NAME) ? opts.get(ValidatorRenderOptions.TIME_ZONE_NAME) : this.defaultOpts
-                    .get(ValidatorRenderOptions.TIME_ZONE_NAME)));
-
         ByteArrayResult result = new ByteArrayResult();
-        xsltTransformer.setDestination(new XMLStreamWriterDestination(this.xmlOutFactory.createXMLStreamWriter(result)));
 
-        xsltTransformer.transform();
+        this.renderInternal(resp, opts, new XMLStreamWriterDestination(this.xmlOutFactory.createXMLStreamWriter(result)));
 
         AugmentedSource augmentedSrc = AugmentedSource.makeAugmentedSource(new ByteArraySource(result.getBytes()));
         augmentedSrc.setStripSpace(Whitespace.ALL);

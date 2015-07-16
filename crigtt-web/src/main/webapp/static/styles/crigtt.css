@@ -180,6 +180,16 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li:nth-of-
     margin-left: 0;
 }
 
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li span strong {
+    display: inline-block;
+    text-align: right;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li span strong i.fa {
+    margin-right: 5px;
+    font-size: 13px;
+}
+
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th,
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
     min-width: 90px;

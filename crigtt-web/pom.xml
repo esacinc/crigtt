@@ -380,6 +380,9 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-resources-properties</id>
+                    </execution>
+                    <execution>
                         <id>copy-resources-wadl</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -396,6 +399,9 @@
                                 </resource>
                             </resources>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-test-resources-properties</id>
                     </execution>
                 </executions>
             </plugin>

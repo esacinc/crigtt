@@ -137,8 +137,8 @@
         <footer class="footer">
             <div class="container">
                 <i class="fa fa-fw fa-tags"></i>
-                <strong>Version</strong>: 
-                (<strong>Built</strong>: )
+                <strong>Version</strong>: ${buildVersion}
+                (<strong>Built</strong>: ${formattedBuildTimestamp})
             </div>
         </footer>
     </body>

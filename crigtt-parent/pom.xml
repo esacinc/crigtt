@@ -79,6 +79,12 @@
         <project.build.groovyScriptSourceDirectory>${project.build.scriptSourceDirectory}/groovy</project.build.groovyScriptSourceDirectory>
         <!-- Project build JAXB source properties -->
         <project.build.jaxbSourceDirectory>${project.basedir}/src/main/jaxb</project.build.jaxbSourceDirectory>
+        <!-- Project build properties properties -->
+        <project.build.propertiesDirectory>${project.build.outputDirectory}/META-INF/crigtt</project.build.propertiesDirectory>
+        <project.build.testPropertiesDirectory>${project.build.testOutputDirectory}/META-INF/crigtt</project.build.testPropertiesDirectory>
+        <!-- Project build properties source properties -->
+        <project.build.propertiesSourceDirectory>${project.basedir}/src/main/resources/META-INF/crigtt</project.build.propertiesSourceDirectory>
+        <project.build.testPropertiesSourceDirectory>${project.basedir}/src/test/resources/META-INF/crigtt</project.build.testPropertiesSourceDirectory>
         <!-- Project build XML schema properties -->
         <project.build.schemaDirectory>${project.build.outputDirectory}/META-INF/crigtt/schema</project.build.schemaDirectory>
         <!-- Project build XML schema source properties -->
@@ -445,6 +451,24 @@
     <build>
         <defaultGoal>clean install</defaultGoal>
         
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>META-INF/crigtt/*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/src/test/resources</directory>
+                <excludes>
+                    <exclude>META-INF/crigtt/*.properties</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -550,6 +574,26 @@
                     </configuration>
                     <executions>
                         <execution>
+                            <id>copy-resources-properties</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <inherited>true</inherited>
+                            <configuration>
+                                <outputDirectory>${project.build.propertiesDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.propertiesSourceDirectory}</directory>
+                                        <filtering>true</filtering>
+                                        <includes>
+                                            <include>*.properties</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                        <execution>
                             <id>copy-resources-schema</id>
                             <phase>generate-resources</phase>
                             <goals>
@@ -563,6 +607,26 @@
                                         <directory>${project.build.schemaSourceDirectory}</directory>
                                         <includes>
                                             <include>**/*.xsd</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>copy-test-resources-properties</id>
+                            <phase>generate-test-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <inherited>true</inherited>
+                            <configuration>
+                                <outputDirectory>${project.build.testPropertiesDirectory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.testPropertiesSourceDirectory}</directory>
+                                        <filtering>true</filtering>
+                                        <includes>
+                                            <include>*.properties</include>
                                         </includes>
                                     </resource>
                                 </resources>

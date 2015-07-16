@@ -160,6 +160,7 @@
     <beans:bean id="validatorTaskSchematronCrigtt" parent="validatorTaskSchematronImpl" abstract="true">
         <beans:property name="phaseLevels">
             <beans:map>
+                <beans:entry key="infos" value="INFO"/>
                 <beans:entry key="warnings" value="WARN"/>
                 <beans:entry key="errors" value="ERROR"/>
             </beans:map>

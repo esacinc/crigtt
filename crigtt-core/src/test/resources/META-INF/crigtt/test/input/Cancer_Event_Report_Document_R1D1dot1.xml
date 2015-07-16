@@ -234,7 +234,7 @@
 			</effectiveTime>
 			<encounterParticipant typeCode="REF">
 				<assignedEntity>
-					<id extension="6666666666666" root="2.16.840.1.113883.4.6"/>
+					<id extension="6666666666" root="2.16.840.1.113883.4.6"/>
 					<id extension="1111" root="2.16.840.1.113883.19"/>
 					<addr>
 						<streetAddressLine>1004 Health Drive</streetAddressLine>
@@ -268,7 +268,7 @@
 			</encounterParticipant>
 			<location>
 				<healthCareFacility>
-					<id extension="77777777777" root="2.16.840.1.113883.4.6"/>
+					<id extension="7777777777" root="2.16.840.1.113883.4.6"/>
 					<serviceProviderOrganization>
 						<name>The DoctorsTogether Physician Group</name>
 						<telecom use="WP" value="tel: +(555)-555-5000"/>
@@ -903,7 +903,7 @@
 										</time>
 										<assignedEntity>
 											<id root="329fcdf0-7ab3-11db-9fe1-0800200c9a66"/>
-											<code code="GUAR" codeSystem="2.16.840.1.113883.5.111" codeSystemName="HL7 RoleCode"/>
+											<code code="GUAR" codeSystem="2.16.840.1.113883.5.110" codeSystemName="HL7 RoleCode"/>
 											<addr use="HP">
 												<streetAddressLine>2222 Home Street</streetAddressLine>
 												<city>Beaverton</city>
@@ -1565,8 +1565,7 @@
 			<component>
 				<section>
 					<!-- Results Section (entries required) (V2) -->
-					<!-- This section has been included in Cancer Report Event from C-CDA R2.0 "AS-IS" and no further modification were made.
-					      Therefore, the example provided here is identical to the example available from C-CDA R2.0 final package, file name:"C-CDA_R2_CCD.xml", line 2657-->
+					<templateId root="2.16.840.1.113883.10.20.22.2.3" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2014-06-09"/>
 					<code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="RESULTS"/>
 					<title>RESULTS</title>
@@ -1912,8 +1911,7 @@
 			<component>
 				<section>
 					<!-- ** Vital Signs Section (entries required) (V2) ** -->
-					<!-- This section has been included in Cancer Report Event from C-CDA R2.0 "AS-IS" and no further modification were made.
-					      Therefore, the example provided here is identical to the example available from C-CDA R2.0 final package, file name:"C-CDA_R2_CCD.xml", line 3013-->
+					<templateId root="2.16.840.1.113883.10.20.22.2.4" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.4.1" extension="2014-06-09"/>
 					<code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="VITAL SIGNS"/>
 					<title>VITAL SIGNS</title>

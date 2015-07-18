@@ -284,11 +284,7 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>jquery-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery-ui-themes</artifactId>
+            <artifactId>select2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

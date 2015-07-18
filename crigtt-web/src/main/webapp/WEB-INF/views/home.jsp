@@ -18,6 +18,7 @@
 <c:set var="urlWebjarsLocatorJqueryUi" value="${urlWebjarsLocator}/jquery-ui" scope="request"/>
 <c:set var="urlWebjarsLocatorJqueryUiThemes" value="${urlWebjarsLocator}/jquery-ui-themes" scope="request"/>
 <c:set var="urlWebjarsLocatorMoment" value="${urlWebjarsLocator}/moment" scope="request"/>
+<c:set var="urlWebjarsLocatorSelect2" value="${urlWebjarsLocator}/select2" scope="request"/>
 <c:set var="urlWebjarsLocatorTablesorter" value="${urlWebjarsLocator}/tablesorter" scope="request"/>
 <c:set var="urlService" value="${urlBase}service" scope="request"/>
 <c:set var="urlServiceValidator" value="${urlService}/validator" scope="request"/>
@@ -26,19 +27,22 @@
 <html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link type="image/png" rel="icon" href="${urlStaticImages}/crigtt-logo-16x16.png"/>
-        <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorJqueryUiThemes}/smoothness/jquery-ui.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorBootstrap}/css/bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorFontAwesome}/css/font-awesome.min.css"/>
+        <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorSelect2}/select2.css"/>
+        <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorSelect2}/select2-bootstrap.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorTablesorter}/dist/css/theme.bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlStaticStyles}/crigtt.css"/>
         <script type="text/javascript" src="${urlWebjarsLocatorJquery}/jquery.min.js"></script>
-        <script type="text/javascript" src="${urlWebjarsLocatorJqueryUi}/jquery-ui.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorBootstrap}/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.rawgit.com/adrai/enum/master/enum-2.1.0.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorFileSaver}/FileSaver.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorMoment}/min/moment.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsLocatorSelect2}/select2.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/jquery.tablesorter.combined.min.js"></script>
+        <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/widgets/widget-filter-formatter-select2.min.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-ui.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-validate.js"></script>

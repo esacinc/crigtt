@@ -111,6 +111,33 @@
         </xsl:choose>
     </xsl:template>
     
+    <xsl:template name="downloadButton">
+        <xsl:param name="iconName"/>
+        <xsl:param name="text"/>
+        <xsl:param name="type"/>
+        <xsl:call-template name="button">
+            <xsl:with-param name="classNames" select="'btn-download'"/>
+            <xsl:with-param name="iconName" select="$iconName"/>
+            <xsl:with-param name="text" select="$text"/>
+            <xsl:with-param name="type" select="$type"/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template name="button">
+        <xsl:param name="classNames"/>
+        <xsl:param name="iconName"/>
+        <xsl:param name="text" select="''"/>
+        <xsl:param name="type"/>
+        <button class="btn btn-default {$classNames}" data-type="{$type}">
+            <xsl:call-template name="icon">
+                <xsl:with-param name="name" select="$iconName"/>
+            </xsl:call-template>
+            <xsl:if test="not(validate:is-blank($text))">
+                <xsl:value-of select="$text"/>
+            </xsl:if>
+        </button>
+    </xsl:template>
+    
     <xsl:template name="icon">
         <xsl:param name="name"/>
         <i class="fa fa-fw fa-{$name}"/>
@@ -152,6 +179,9 @@
         <xsl:variable name="results" select="validate:results"/>
         <xsl:variable name="status" select="$results/validate:status/text()"/>
         <xsl:variable name="eventTotals" select="$results/validate:eventTotals"/>
+        <xsl:variable name="numEvents" select="$eventTotals/validate:all/text()"/>
+        <xsl:variable name="numInfoEvents" select="$eventTotals/validate:info/text()"/>
+        <xsl:variable name="numWarnEvents" select="$eventTotals/validate:warn/text()"/>
         <xsl:variable name="numErrorEvents" select="$eventTotals/validate:error/text()"/>
         <xsl:variable name="errorStatus" select="xsd:integer($numErrorEvents) gt 0"/>
         <xsl:variable name="statusClassName">
@@ -176,10 +206,10 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <div id="panel-validator-result-{$id}" class="panel panel-{$statusClassName}" data-normalize-whitespace="true">
-            <div id="panel-heading-validator-result-{$id}" class="panel-heading" role="tab">
+        <div id="panel-validator-results-{$id}" class="panel panel-{$statusClassName}" data-normalize-whitespace="true">
+            <div id="panel-heading-validator-results-{$id}" class="panel-heading" role="tab">
                 <div class="panel-title">
-                    <a href="#panel-collapse-validator-result-{$id}" aria-controls="panel-collapse-validator-result-{$id}" aria-expanded="true"
+                    <a href="#panel-collapse-validator-results-{$id}" aria-controls="panel-collapse-validator-results-{$id}" aria-expanded="true"
                         data-toggle="collapse" data-parent="#panel-group-validator-results">
                         <span>
                             <xsl:call-template name="icon">
@@ -187,11 +217,6 @@
                             </xsl:call-template>
                         </span>
                         <span>
-                            <xsl:call-template name="prop">
-                                <xsl:with-param name="containerTagName" select="'div'"/>
-                                <xsl:with-param name="name" select="'ID'"/>
-                                <xsl:with-param name="value" select="$id"/>
-                            </xsl:call-template>
                             <xsl:call-template name="prop">
                                 <xsl:with-param name="containerTagName" select="'div'"/>
                                 <xsl:with-param name="name" select="'Submitted'"/>
@@ -205,41 +230,42 @@
                         </span>
                     </a>
                     <span class="well well-sm">
+                        <xsl:call-template name="icon">
+                            <xsl:with-param name="name" select="'download'"/>
+                        </xsl:call-template>
                         <strong>Download</strong>:
-                        <button class="btn btn-default btn-validator-result-download" data-download-type="json">
-                            <xsl:call-template name="icon">
-                                <xsl:with-param name="name" select="'file-text-o'"/>
-                            </xsl:call-template>
-                            JSON
-                        </button>
-                        <button class="btn btn-default btn-validator-result-download" data-download-type="xml">
-                            <xsl:call-template name="icon">
-                                <xsl:with-param name="name" select="'file-code-o'"/>
-                            </xsl:call-template>
-                            XML
-                        </button>
+                        <xsl:call-template name="downloadButton">
+                            <xsl:with-param name="iconName" select="'file-text-o'"/>
+                            <xsl:with-param name="text" select="'JSON'"/>
+                            <xsl:with-param name="type" select="'json'"/>
+                        </xsl:call-template>
+                        <xsl:call-template name="downloadButton">
+                            <xsl:with-param name="iconName" select="'file-code-o'"/>
+                            <xsl:with-param name="text" select="'XML'"/>
+                            <xsl:with-param name="type" select="'xml'"/>
+                        </xsl:call-template>
                     </span>
                     <button type="button" class="close" aria-label="Close">
                         <span aria-hidden="true"><xsl:value-of select="$TIMES"/></span>
                     </button>
                 </div>
             </div>
-            <div id="panel-collapse-validator-result-{$id}" class="collapse in panel-collapse" aria-labelledby="panel-heading-validator-result-{$id}"
+            <div id="panel-collapse-validator-results-{$id}" class="collapse in panel-collapse" aria-labelledby="panel-heading-validator-results-{$id}"
                 role="tabpanel">
                 <div class="panel-body">
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation">
-                                <a href="#tab-pane-validator-result-info-{$id}" aria-controls="tab-pane-validator-result-info-{$id}" data-toggle="tab"
+                                <a href="#tab-pane-validator-results-details-{$id}" aria-controls="tab-pane-validator-results-details-{$id}" data-toggle="tab"
                                     role="tab">
                                     <xsl:call-template name="icon">
-                                        <xsl:with-param name="name" select="'info'"/>
+                                        <xsl:with-param name="name" select="'cubes'"/>
                                     </xsl:call-template>
-                                    <strong>Info</strong>
+                                    <strong>Details</strong>
                                 </a>
                             </li>
                             <li class="active" role="presentation">
-                                <a href="#tab-pane-validator-result-events-{$id}" aria-controls="tab-pane-validator-result-events-{$id}"
+                                <a href="#tab-pane-validator-results-events-{$id}" aria-controls="tab-pane-validator-results-events-{$id}"
                                     data-toggle="tab" role="tab">
                                     <xsl:call-template name="icon">
                                         <xsl:with-param name="name" select="'comments-o'"/>
@@ -249,7 +275,7 @@
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div id="tab-pane-validator-result-info-{$id}" class="tab-pane" role="tabpanel">
+                            <div id="tab-pane-validator-results-details-{$id}" class="tab-pane" role="tabpanel">
                                 <ul>
                                     <li>
                                         <xsl:call-template name="prop">
@@ -295,7 +321,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div id="tab-pane-validator-result-events-{$id}" class="active tab-pane" role="tabpanel">
+                            <div id="tab-pane-validator-results-events-{$id}" class="active tab-pane" role="tabpanel">
                                 <table class="table table-bordered table-condensed table-hover">
                                     <caption>
                                         <ul>
@@ -303,7 +329,7 @@
                                                 <xsl:call-template name="prop">
                                                     <xsl:with-param name="labelIconName" select="'asterisk'"/>
                                                     <xsl:with-param name="name" select="'All'"/>
-                                                    <xsl:with-param name="value" select="$eventTotals/validate:all/text()"/>
+                                                    <xsl:with-param name="value" select="concat($numEvents, ' of ', $numEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                             <li>
@@ -311,7 +337,7 @@
                                                     <xsl:with-param name="labelClassNames" select="'text-info'"/>
                                                     <xsl:with-param name="labelIconName" select="'info-circle'"/>
                                                     <xsl:with-param name="name" select="'Information'"/>
-                                                    <xsl:with-param name="value" select="$eventTotals/validate:info/text()"/>
+                                                    <xsl:with-param name="value" select="concat($numInfoEvents, ' of ', $numInfoEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                             <li>
@@ -319,7 +345,7 @@
                                                     <xsl:with-param name="labelClassNames" select="'text-warning'"/>
                                                     <xsl:with-param name="labelIconName" select="'exclamation-circle'"/>
                                                     <xsl:with-param name="name" select="'Warnings'"/>
-                                                    <xsl:with-param name="value" select="$eventTotals/validate:warn/text()"/>
+                                                    <xsl:with-param name="value" select="concat($numWarnEvents, ' of ', $numWarnEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                             <li>
@@ -327,27 +353,26 @@
                                                     <xsl:with-param name="labelClassNames" select="'text-danger'"/>
                                                     <xsl:with-param name="labelIconName" select="'times-circle'"/>
                                                     <xsl:with-param name="name" select="'Errors'"/>
-                                                    <xsl:with-param name="value" select="$numErrorEvents"/>
+                                                    <xsl:with-param name="value" select="concat($numErrorEvents, ' of ', $numErrorEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                         </ul>
                                     </caption>
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th class="filter-false">ID</th>
                                             <th>Status</th>
                                             <th>Level</th>
-                                            <th>Location</th>
-                                            <th>Expression</th>
-                                            <th>Schema</th>
-                                            <th>Phase</th>
-                                            <th>Pattern</th>
-                                            <th>Rule</th>
-                                            <th>Assertion</th>
-                                            <th>Value Set</th>
-                                            <th>Code System</th>
-                                            <th>Code</th>
-                                            <th>Description</th>
+                                            <th data-filter-label="Line #">Location</th>
+                                            <th class="filter-false">Expression</th>
+                                            <th data-filter-label="ID">Schema</th>
+                                            <th data-filter-label="ID">Pattern</th>
+                                            <th data-filter-label="ID">Rule</th>
+                                            <th data-filter-label="ID">Assertion</th>
+                                            <th data-filter-label="ID">Value Set</th>
+                                            <th data-filter-label="ID">Code System</th>
+                                            <th data-filter-label="ID">Code</th>
+                                            <th class="filter-false">Description</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -455,12 +480,6 @@
                                                 <td>
                                                     <xsl:call-template name="component">
                                                         <xsl:with-param name="elem" select="validate:schema"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="validate:phase"/>
                                                         <xsl:with-param name="propContainerTagName" select="'div'"/>
                                                     </xsl:call-template>
                                                 </td>

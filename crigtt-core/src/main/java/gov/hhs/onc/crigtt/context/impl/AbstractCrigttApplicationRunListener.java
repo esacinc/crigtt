@@ -42,23 +42,23 @@ public abstract class AbstractCrigttApplicationRunListener implements SpringAppl
     public void started() {
     }
 
-    protected static <T> T buildInitializer(Class<T> initClass, Supplier<T> defaultInitSupplier, Object ... args) {
-        List<String> initClassNames = SpringFactoriesLoader.loadFactoryNames(initClass, AbstractCrigttApplicationRunListener.class.getClassLoader());
+    protected static <T> T buildComponent(Class<T> componentClass, Supplier<T> defaultSupplier, Object ... args) {
+        List<String> componentClassNames = SpringFactoriesLoader.loadFactoryNames(componentClass, AbstractCrigttApplicationRunListener.class.getClassLoader());
 
-        if (initClassNames.isEmpty()) {
-            return defaultInitSupplier.get();
+        if (componentClassNames.isEmpty()) {
+            return defaultSupplier.get();
         }
 
-        List<Class<?>> initClasses = ClassUtils.convertClassNamesToClasses(initClassNames);
+        List<Class<?>> componentClasses = ClassUtils.convertClassNamesToClasses(componentClassNames);
 
-        initClasses.sort(AnnotationAwareOrderComparator.INSTANCE);
+        componentClasses.sort(AnnotationAwareOrderComparator.INSTANCE);
 
-        Class<?> primaryInitClass = initClasses.get(0);
+        Class<?> primaryComponentClass = componentClasses.get(0);
 
         try {
-            return initClass.cast(ConstructorUtils.invokeConstructor(primaryInitClass, args));
+            return componentClass.cast(ConstructorUtils.invokeConstructor(primaryComponentClass, args));
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-            throw new ApplicationContextException(String.format("Unable to instantiate initializer (class=%s).", primaryInitClass.getName()), e);
+            throw new ApplicationContextException(String.format("Unable to instantiate component (class=%s).", primaryComponentClass.getName()), e);
         }
     }
 }

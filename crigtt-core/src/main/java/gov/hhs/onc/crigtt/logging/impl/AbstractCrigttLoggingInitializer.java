@@ -18,6 +18,10 @@ public abstract class AbstractCrigttLoggingInitializer implements CrigttLoggingI
     }
 
     @Override
+    public void postProcessContext(LoggerContext loggerContext) {
+    }
+
+    @Override
     public String buildLogFileName() {
         String logFileName = System.getProperty(CrigttProperties.LOGGING_FILE_NAME_NAME, this.defaultLogFileName);
 

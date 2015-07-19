@@ -19,6 +19,14 @@
     <properties>
         <!-- Project properties -->
         <project.basedir.all>${project.basedir}/..</project.basedir.all>
+        <!-- Project build CLI properties -->
+        <project.build.cliDirectory>${project.build.directory}/${project.artifactId}</project.build.cliDirectory>
+        <project.build.cliBinDirectory>${project.build.cliDirectory}/bin</project.build.cliBinDirectory>
+        <project.build.cliConfDirectory>${project.build.cliDirectory}/conf</project.build.cliConfDirectory>
+        <project.build.cliLibDirectory>${project.build.cliDirectory}/lib</project.build.cliLibDirectory>
+        <!-- Project build CLI source properties -->
+        <project.build.cliSourceDirectory>${project.basedir}/src/main/cli</project.build.cliSourceDirectory>
+        <project.build.cliConfSourceDirectory>${project.build.cliSourceDirectory}/conf</project.build.cliConfSourceDirectory>
     </properties>
     
     <dependencies>
@@ -44,6 +52,10 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -112,6 +124,10 @@
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -213,6 +229,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-loader</artifactId>
+        </dependency>
         <!-- Test dependencies (project) -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -243,6 +263,54 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>assembly-cli</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/assembly/assembly-cli.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies-cli-runtime</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <includeTypes>jar</includeTypes>
+                            <outputDirectory>${project.build.cliLibDirectory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies-cli-provided</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>provided</includeScope>
+                            <includeTypes>jar</includeTypes>
+                            <outputDirectory>${project.build.cliLibDirectory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
@@ -256,6 +324,7 @@
                 <executions>
                     <execution>
                         <id>default-jar</id>
+                        <phase>process-classes</phase>
                     </execution>
                     <execution>
                         <id>test-jar</id>
@@ -268,6 +337,43 @@
                 <executions>
                     <execution>
                         <id>copy-resources-properties</id>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-cli-conf</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.cliConfDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.cliConfSourceDirectory}</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-cli-lib</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.cliLibDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.build.finalName}.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>copy-test-resources-properties</id>
@@ -295,6 +401,53 @@
                     </execution>
                     <execution>
                         <id>test-integration</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-programs-cli</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                        <configuration>
+                            <assembleDirectory>${project.build.cliDirectory}</assembleDirectory>
+                            <extraJvmArguments>
+                                -Xms256m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=4 -Dloader.main=gov.hhs.onc.crigtt.context.impl.CrigttApplicationConfiguration
+                            </extraJvmArguments>
+                            <platforms>
+                                <platform>unix</platform>
+                                <platform>windows</platform>
+                            </platforms>
+                            <programs>
+                                <program>
+                                    <id>${project.artifactId}</id>
+                                    <mainClass>org.springframework.boot.loader.PropertiesLauncher</mainClass>
+                                </program>
+                            </programs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-resources-cli</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <scripts>
+                                <script>file://${project.build.groovyScriptSourceDirectory}/crigtt-process-resources-cli.groovy</script>
+                            </scripts>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

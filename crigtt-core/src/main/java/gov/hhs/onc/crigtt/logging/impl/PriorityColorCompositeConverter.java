@@ -30,12 +30,12 @@ public class PriorityColorCompositeConverter extends ForegroundCompositeConverte
     }
 
     @Override
-    protected String transform(ILoggingEvent loggingEvent, String msgStr) {
-        return (this.enabled ? super.transform(loggingEvent, msgStr) : msgStr);
+    protected String transform(ILoggingEvent event, String msg) {
+        return (this.enabled ? super.transform(event, msg) : msg);
     }
 
     @Override
-    protected String getForegroundColorCode(ILoggingEvent loggingEvent) {
-        return LVL_COLOR_CODE_MAP.get(loggingEvent.getLevel());
+    protected String getForegroundColorCode(ILoggingEvent event) {
+        return LVL_COLOR_CODE_MAP.get(event.getLevel());
     }
 }

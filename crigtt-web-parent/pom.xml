@@ -96,7 +96,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>font-awesome</artifactId>
-                <version>4.3.0-2</version>
+                <version>4.3.0-3</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -144,25 +144,25 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>8.0.23</version>
+                <version>8.0.24</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-el</artifactId>
-                <version>8.0.23</version>
+                <version>8.0.24</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-logging-log4j</artifactId>
-                <version>8.0.23</version>
+                <version>8.0.24</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-tomcat</artifactId>
-                <version>1.2.4.RELEASE</version>
+                <version>1.2.5.RELEASE</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>

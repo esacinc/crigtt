@@ -26,7 +26,7 @@ public class MetadataApplicationRunListener extends AbstractCrigttApplicationRun
 
     @Override
     public void started() {
-        String appName = buildInitializer(CrigttMetadataInitializer.class, () -> DefaultMetadataInitializer.INSTANCE).buildApplicationName();
+        String appName = buildComponent(CrigttMetadataInitializer.class, () -> DefaultMetadataInitializer.INSTANCE).buildApplicationName();
 
         System.setProperty(CrigttProperties.APP_NAME_NAME, appName);
 

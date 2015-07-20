@@ -577,6 +577,27 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <additionalJOptions>
+                            <additionalJOption>-J-XX:MetaspaceSize=64m</additionalJOption>
+                            <additionalJOption>-J-XX:MaxMetaspaceSize=128m</additionalJOption>
+                            <additionalJOption>-J-XX:+UseG1GC</additionalJOption>
+                            <additionalJOption>-J-XX:MaxGCPauseMillis=50</additionalJOption>
+                            <additionalJOption>-J-XX:ParallelGCThreads=4</additionalJOption>
+                            <additionalJOption>-J-XX:ConcGCThreads=4</additionalJOption>
+                        </additionalJOptions>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <maxmemory>512m</maxmemory>
+                        <minmemory>256m</minmemory>
+                        <quiet>true</quiet>
+                        <show>private</show>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.7</version>
                     <inherited>true</inherited>
@@ -805,7 +826,7 @@
                     <inherited>true</inherited>
                     <extensions>true</extensions>
                     <configuration>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        <autoReleaseAfterClose>false</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
             </plugins>
@@ -840,6 +861,26 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>javadoc-jar</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <inherited>true</inherited>
+                            </execution>
+                            <execution>
+                                <id>test-javadoc-jar</id>
+                                <goals>
+                                    <goal>test-jar</goal>
+                                </goals>
+                                <inherited>true</inherited>
                             </execution>
                         </executions>
                     </plugin>

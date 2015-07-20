@@ -2,14 +2,23 @@ package gov.hhs.onc.crigtt.context.impl;
 
 import gov.hhs.onc.crigtt.context.CrigttMetadataInitializer;
 import gov.hhs.onc.crigtt.context.CrigttProperties;
+import java.io.File;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.context.ApplicationContextException;
 
-public abstract class AbstractCrigttMetadataInitializer implements CrigttMetadataInitializer {
+public abstract class AbstractCrigttMetadataInitializer extends AbstractCrigttContextComponent implements CrigttMetadataInitializer {
     protected String defaultAppName;
 
-    protected AbstractCrigttMetadataInitializer(String defaultAppName) {
+    protected AbstractCrigttMetadataInitializer(CrigttApplication app, String defaultAppName) {
+        super(app);
         this.defaultAppName = defaultAppName;
+    }
+
+    @Override
+    public File buildApplicationHome() {
+        return new File(ObjectUtils.defaultIfNull(System.getProperty(CrigttProperties.APP_HOME_NAME), SystemUtils.USER_DIR));
     }
 
     @Override

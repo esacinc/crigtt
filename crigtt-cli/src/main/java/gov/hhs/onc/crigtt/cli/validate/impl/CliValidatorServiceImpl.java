@@ -4,10 +4,11 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameterized;
 import com.github.sebhoss.warnings.CompilerWarnings;
-import gov.hhs.onc.crigtt.cli.validate.CliValidatorException;
 import gov.hhs.onc.crigtt.cli.context.CliExitStatus;
+import gov.hhs.onc.crigtt.cli.validate.CliValidatorException;
 import gov.hhs.onc.crigtt.cli.validate.CliValidatorOptions;
 import gov.hhs.onc.crigtt.cli.validate.CliValidatorService;
+import gov.hhs.onc.crigtt.context.impl.CrigttApplication;
 import gov.hhs.onc.crigtt.io.ResourceSourceResolver;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.io.impl.StandardInputResource;
@@ -35,16 +36,15 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-@Component("cliValidatorServiceImpl")
 public class CliValidatorServiceImpl implements CliValidatorService {
     @SuppressWarnings({ CompilerWarnings.RAWTYPES })
     private class CliCommander extends JCommander {
@@ -83,11 +83,9 @@ public class CliValidatorServiceImpl implements CliValidatorService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CliValidatorServiceImpl.class);
 
-    @Value("${crigtt.app.name}")
-    private String appName;
-
-    @javax.annotation.Resource(name = "cliValidatorOptsCrigtt")
-    private CliValidatorOptions opts;
+    @Autowired
+    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
+    private CrigttApplication app;
 
     @javax.annotation.Resource(name = "resourceSrcResolverImpl")
     private ResourceSourceResolver resourceSrcResolver;
@@ -98,12 +96,14 @@ public class CliValidatorServiceImpl implements CliValidatorService {
     @Autowired
     private List<ValidatorRenderer> renderers;
 
+    private BeanFactory beanFactory;
+    private String optsBeanName;
     private CliExitStatus exitStatus = CliExitStatus.SUCCESS;
 
     @Override
-    public void execute(String ... args) {
+    public void run(String ... args) {
         try {
-            this.executeInternal(args);
+            this.runInternal(args);
         } catch (CliValidatorException e) {
             LOGGER.error(e.getMessage(), e.getCause());
 
@@ -111,10 +111,12 @@ public class CliValidatorServiceImpl implements CliValidatorService {
         }
     }
 
-    private void executeInternal(String ... args) throws CliValidatorException {
+    private void runInternal(String ... args) throws CliValidatorException {
+        CliValidatorOptions opts = this.beanFactory.getBean(this.optsBeanName, CliValidatorOptions.class);
+
         CliCommander commander = new CliCommander();
-        commander.setProgramName(this.appName);
-        commander.addObject(this.opts);
+        commander.setProgramName(this.app.getName());
+        commander.addObject(opts);
 
         if (args.length == 0) {
             this.displayUsage(commander);
@@ -134,7 +136,7 @@ public class CliValidatorServiceImpl implements CliValidatorService {
             return;
         }
 
-        Resource inFile = this.opts.getInputFile();
+        Resource inFile = opts.getInputFile();
         String inFilePath = CrigttResourceUtils.extractPath(inFile), inFileName;
 
         if (!inFile.exists()) {
@@ -151,7 +153,8 @@ public class CliValidatorServiceImpl implements CliValidatorService {
 
                 inFileName = inFileObj.getName();
             } catch (IOException e) {
-                throw new CliValidatorException(String.format("Unable to get input file object: name=%s, desc=%s", inFile.getFilename(), inFile.getDescription()));
+                throw new CliValidatorException(String.format("Unable to get input file object: name=%s, desc=%s", inFile.getFilename(),
+                    inFile.getDescription()));
             }
         } else {
             inFileName = FilenameUtils.getName(inFilePath);
@@ -160,7 +163,7 @@ public class CliValidatorServiceImpl implements CliValidatorService {
         ValidatorSubmission submission = new ValidatorSubmissionImpl();
 
         ValidatorDocument doc = new ValidatorDocumentImpl();
-        doc.setFileName(ObjectUtils.defaultIfNull(this.opts.getInputFileName(), inFileName));
+        doc.setFileName(ObjectUtils.defaultIfNull(opts.getInputFileName(), inFileName));
         submission.setDocument(doc);
 
         ValidatorReport report;
@@ -177,9 +180,9 @@ public class CliValidatorServiceImpl implements CliValidatorService {
             throw new CliValidatorException(String.format("Unable to validate input file: path=%s", inFilePath), e);
         }
 
-        ValidatorRenderType type = this.opts.getType();
-        File outDir = this.opts.getOutputDirectory(), outFileObj;
-        WritableResource outFile = this.opts.getOutputFile();
+        ValidatorRenderType type = opts.getType();
+        File outDir = opts.getOutputDirectory(), outFileObj;
+        WritableResource outFile = opts.getOutputFile();
 
         if (outFile == null) {
             outFile = new FileSystemResource(new File(outDir, ValidatorUtils.buildResponseFileName(true, submission, type)));
@@ -189,7 +192,8 @@ public class CliValidatorServiceImpl implements CliValidatorService {
             try {
                 outFileObj = outFile.getFile();
             } catch (IOException e) {
-                throw new CliValidatorException(String.format("Unable to get input file object: name=%s, desc=%s", inFile.getFilename(), inFile.getDescription()));
+                throw new CliValidatorException(String.format("Unable to get input file object: name=%s, desc=%s", inFile.getFilename(),
+                    inFile.getDescription()));
             }
 
             if (!outFileObj.isAbsolute()) {
@@ -210,7 +214,7 @@ public class CliValidatorServiceImpl implements CliValidatorService {
         try (OutputStream outFileStream = outFile.getOutputStream()) {
             IOUtils.write(
                 this.renderers.stream().filter(renderer -> (renderer.getType() == type)).findFirst().get()
-                    .render(report, Collections.singletonMap(ValidatorRenderOptions.FORMAT_NAME, this.opts.getFormat())), outFileStream);
+                    .render(report, Collections.singletonMap(ValidatorRenderOptions.FORMAT_NAME, opts.getFormat())), outFileStream);
         } catch (Exception e) {
             throw new CliValidatorException(String.format("Unable to render (type=%s) report to output file: path=%s", type.name(), outFilePath), e);
         }
@@ -225,7 +229,22 @@ public class CliValidatorServiceImpl implements CliValidatorService {
     }
 
     @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+
+    @Override
     public int getExitCode() {
         return this.exitStatus.getCode();
+    }
+
+    @Override
+    public String getOptionsBeanName() {
+        return this.optsBeanName;
+    }
+
+    @Override
+    public void setOptionsBeanName(String optsBeanName) {
+        this.optsBeanName = optsBeanName;
     }
 }

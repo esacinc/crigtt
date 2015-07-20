@@ -18,14 +18,27 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = CLI VALIDATOR OPTIONS
+    = COMMAND LINE INTERFACE VALIDATOR OPTIONS
     =====================================================================================================-->
     <beans:bean id="cliValidatorOpts" class="gov.hhs.onc.crigtt.cli.validate.CliValidatorOptions" abstract="true"/>
     
     <beans:bean id="cliValidatorOptsImpl" class="gov.hhs.onc.crigtt.cli.validate.impl.CliValidatorOptionsImpl" parent="cliValidatorOpts" abstract="true"/>
     
     <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="cliValidatorOptsCrigtt" parent="cliValidatorOptsImpl"
+    <beans:bean id="cliValidatorOptsCrigtt" parent="cliValidatorOptsImpl" lazy-init="true" scope="prototype"
         p:format="true"
         p:outputDirectory="${crigtt.cli.out.dir}"/>
+    
+    <!--====================================================================================================
+    = COMMAND LINE INTERFACE VALIDATOR SERVICE
+    =====================================================================================================-->
+    <beans:bean id="cliValidatorService" class="gov.hhs.onc.crigtt.cli.validate.CliValidatorService" abstract="true"/>
+    
+    <beans:bean id="cliValidatorServiceImpl" class="gov.hhs.onc.crigtt.cli.validate.impl.CliValidatorServiceImpl" parent="cliValidatorService" abstract="true"/>
+    
+    <beans:bean id="cliValidatorServiceCrigtt" parent="cliValidatorServiceImpl">
+        <beans:property name="optionsBeanName">
+            <beans:idref bean="cliValidatorOptsCrigtt"/>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

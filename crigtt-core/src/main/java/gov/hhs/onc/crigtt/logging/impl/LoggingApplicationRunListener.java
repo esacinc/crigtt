@@ -24,9 +24,9 @@ import org.springframework.util.ResourceUtils;
 
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunListener {
-    private static class DefaultLoggingInitializer extends AbstractCrigttLoggingInitializer {
-        public DefaultLoggingInitializer(LoggerContext loggerContext, String defaultLogFileName) {
-            super(loggerContext, defaultLogFileName);
+    private class DefaultLoggingInitializer extends AbstractCrigttLoggingInitializer {
+        public DefaultLoggingInitializer() {
+            super(LoggingApplicationRunListener.this.app);
         }
     }
 
@@ -43,11 +43,10 @@ public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunL
         loggerContext.stop();
         loggerContext.reset();
 
-        String appName = System.getProperty(CrigttProperties.APP_NAME_NAME), consoleTty = System.getProperty(CrigttProperties.LOGGING_CONSOLE_TTY_NAME);
-        CrigttLoggingInitializer loggingInit =
-            buildComponent(CrigttLoggingInitializer.class, () -> new DefaultLoggingInitializer(loggerContext, appName), loggerContext, appName);
+        String appName = this.app.getName(), consoleTty = System.getProperty(CrigttProperties.LOGGING_CONSOLE_TTY_NAME);
+        CrigttLoggingInitializer loggingInit = buildComponent(CrigttLoggingInitializer.class, DefaultLoggingInitializer::new, this.app);
 
-        loggerContext.putProperty(CrigttProperties.APP_NAME_NAME, appName);
+        loggerContext.setName(appName);
         loggerContext
             .putProperty(CrigttProperties.LOGGING_CONSOLE_TTY_NAME, ((consoleTty != null) ? consoleTty : Boolean.toString((System.console() != null))));
         loggerContext.putProperty(CrigttProperties.LOGGING_FILE_DIR_NAME, loggingInit.buildLogDirectory().getPath());

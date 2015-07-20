@@ -17,33 +17,33 @@ public class CliValidatorServiceIntegrationTests extends AbstractCrigttCliIntegr
     @Value("classpath*:${crigtt.test.input.file.1.path}")
     private ResourceSource testSrc1;
 
-    @Resource(name = "cliValidatorServiceImpl")
+    @Resource(name = "cliValidatorServiceCrigtt")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private CliValidatorService service;
 
-    @Test(dependsOnMethods = { "testExecuteBadOption" })
-    public void testExecuteRender() throws Exception {
+    @Test(dependsOnMethods = { "testRunBadOption" })
+    public void testRunRender() throws Exception {
         String[] baseArgs = ArrayUtils.toArray("-i", CrigttResourceUtils.extractPath(this.testSrc1.getResource()), "-d", this.testOutDir.getPath(), "-t");
 
         for (ValidatorRenderType renderType : ValidatorRenderType.values()) {
-            this.service.execute(ArrayUtils.add(baseArgs, renderType.name()));
+            this.service.run(ArrayUtils.add(baseArgs, renderType.name()));
 
-            Assert.assertEquals(this.service.getExitCode(), 1, "Invalid CLI service exit code.");
+            Assert.assertEquals(this.service.getExitCode(), 1, "Invalid CLI validator service exit code.");
         }
     }
 
-    @Test(dependsOnMethods = { "testExecuteUsage" })
-    public void testExecuteBadOption() throws Exception {
-        this.service.execute("-q");
+    @Test(dependsOnMethods = { "testRunUsage" })
+    public void testRunBadOption() throws Exception {
+        this.service.run("-q");
 
-        Assert.assertEquals(this.service.getExitCode(), 1, "Invalid CLI service exit code.");
+        Assert.assertEquals(this.service.getExitCode(), 1, "Invalid CLI validator service exit code.");
     }
 
     @Test
-    public void testExecuteUsage() throws Exception {
-        this.service.execute(ArrayUtils.EMPTY_STRING_ARRAY);
+    public void testRunUsage() throws Exception {
+        this.service.run(ArrayUtils.EMPTY_STRING_ARRAY);
 
-        Assert.assertEquals(this.service.getExitCode(), 0, "Invalid CLI service exit code.");
+        Assert.assertEquals(this.service.getExitCode(), 0, "Invalid CLI validator service exit code.");
     }
 
     @BeforeClass(groups = { "crigtt.test.it.all" })

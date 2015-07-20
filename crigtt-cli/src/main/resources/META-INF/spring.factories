@@ -3,6 +3,3 @@ gov.hhs.onc.crigtt.context.CrigttMetadataInitializer=\
 
 gov.hhs.onc.crigtt.logging.CrigttLoggingInitializer=\
     gov.hhs.onc.crigtt.cli.logging.impl.CliLoggingInitializer
-
-org.springframework.boot.SpringApplicationRunListener=\
-    gov.hhs.onc.crigtt.cli.context.impl.CliApplicationRunListener

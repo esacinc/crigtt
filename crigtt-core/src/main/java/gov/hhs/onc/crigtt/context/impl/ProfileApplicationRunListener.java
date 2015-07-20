@@ -1,7 +1,6 @@
 package gov.hhs.onc.crigtt.context.impl;
 
 import gov.hhs.onc.crigtt.context.CrigttProfiles;
-import gov.hhs.onc.crigtt.context.CrigttProperties;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ public class ProfileApplicationRunListener extends AbstractCrigttApplicationRunL
     public void contextPrepared(ConfigurableApplicationContext appContext) {
         ConfigurableEnvironment env = appContext.getEnvironment();
 
-        activateProfile(env, (CrigttProfiles.APP_PREFIX + env.getProperty(CrigttProperties.APP_NAME_NAME)));
+        activateProfile(env, (CrigttProfiles.APP_PREFIX + this.app.getName()));
 
         try {
             Class<?> webContextClass = ClassUtils.getClass(WEB_CONTEXT_CLASS_NAME);

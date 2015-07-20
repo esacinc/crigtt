@@ -76,6 +76,16 @@
     <beans:bean id="objFactoryValidateImpl" class="gov.hhs.onc.crigtt.validate.impl.ObjectFactory"/>
     
     <!--====================================================================================================
+    = CHARACTER ESCAPE HANDLERS
+    =====================================================================================================-->
+    <beans:bean id="charEscapeHandler" class="com.sun.xml.bind.marshaller.CharacterEscapeHandler" abstract="true"/>
+    
+    <beans:bean id="charEscapeHandlerNio" class="com.sun.xml.bind.marshaller.NioEscapeHandler" parent="charEscapeHandler" abstract="true"/>
+    
+    <beans:bean id="charEscapeHandlerCrigtt" parent="charEscapeHandlerNio"
+        c:charsetName="#{ charsetUtf8.name() }"/>
+    
+    <!--====================================================================================================
     = JAXB MARSHALLERS
     =====================================================================================================-->
     <beans:bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" abstract="true"/>
@@ -84,6 +94,7 @@
         <beans:property name="marshallerProperties">
             <beans:map>
                 <beans:entry key="#{ T(javax.xml.bind.Marshaller).JAXB_ENCODING }" value="#{ charsetUtf8.name() }"/>
+                <beans:entry key="#{ T(com.sun.xml.bind.marshaller.CharacterEscapeHandler).name }" value-ref="charEscapeHandlerCrigtt"/>
             </beans:map>
         </beans:property>
     </beans:bean>

@@ -1,7 +1,7 @@
 package gov.hhs.onc.crigtt.web.logging.impl;
 
-import ch.qos.logback.classic.LoggerContext;
 import gov.hhs.onc.crigtt.context.CrigttProperties;
+import gov.hhs.onc.crigtt.context.impl.CrigttApplication;
 import gov.hhs.onc.crigtt.logging.impl.AbstractCrigttLoggingInitializer;
 import java.nio.file.Paths;
 import javax.annotation.Nullable;
@@ -14,8 +14,8 @@ import org.springframework.core.annotation.Order;
 public class WebLoggingInitializer extends AbstractCrigttLoggingInitializer {
     private final static String TOMCAT_LOG_DIR_PATH = "logs";
 
-    public WebLoggingInitializer(LoggerContext loggerContext, String defaultLogFileName) {
-        super(loggerContext, defaultLogFileName);
+    public WebLoggingInitializer(CrigttApplication app) {
+        super(app);
     }
 
     @Nullable

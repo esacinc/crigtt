@@ -2,19 +2,17 @@ package gov.hhs.onc.crigtt.logging.impl;
 
 import ch.qos.logback.classic.LoggerContext;
 import gov.hhs.onc.crigtt.context.CrigttProperties;
+import gov.hhs.onc.crigtt.context.impl.AbstractCrigttContextComponent;
+import gov.hhs.onc.crigtt.context.impl.CrigttApplication;
 import gov.hhs.onc.crigtt.logging.CrigttLoggingInitializer;
 import java.io.File;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContextException;
 
-public abstract class AbstractCrigttLoggingInitializer implements CrigttLoggingInitializer {
-    protected LoggerContext loggerContext;
-    protected String defaultLogFileName;
-
-    protected AbstractCrigttLoggingInitializer(LoggerContext loggerContext, String defaultLogFileName) {
-        this.loggerContext = loggerContext;
-        this.defaultLogFileName = defaultLogFileName;
+public abstract class AbstractCrigttLoggingInitializer extends AbstractCrigttContextComponent implements CrigttLoggingInitializer {
+    protected AbstractCrigttLoggingInitializer(CrigttApplication app) {
+        super(app);
     }
 
     @Override
@@ -23,7 +21,7 @@ public abstract class AbstractCrigttLoggingInitializer implements CrigttLoggingI
 
     @Override
     public String buildLogFileName() {
-        String logFileName = System.getProperty(CrigttProperties.LOGGING_FILE_NAME_NAME, this.defaultLogFileName);
+        String logFileName = System.getProperty(CrigttProperties.LOGGING_FILE_NAME_NAME, this.app.getName());
 
         if (StringUtils.isBlank(logFileName)) {
             throw new ApplicationContextException("Unable to determine log file name.");

@@ -3,11 +3,6 @@ import gov.hhs.onc.crigtt.io.CrigttFileExtensions
 import gov.hhs.onc.crigtt.logging.utils.CrigttLoggingUtils
 
 /*====================================================================================================
-= CONTEXT
-=====================================================================================================*/
-context.name = CrigttLoggingUtils.getProperty(context, CrigttProperties.APP_NAME_NAME)
-
-/*====================================================================================================
 = PROPERTIES: CONSOLE
 =====================================================================================================*/
 def consoleTty = CrigttLoggingUtils.getProperty(context, CrigttProperties.LOGGING_CONSOLE_TTY_NAME)

@@ -20,7 +20,7 @@ public final class CrigttProperties {
     public final static String LOGGING_CONSOLE_ENC_PATTERN_NAME = LOGGING_CONSOLE_PREFIX + ENC_PATTERN_SUFFIX;
     public final static String LOGGING_CONSOLE_TARGET_NAME = LOGGING_CONSOLE_PREFIX + "target";
     public final static String LOGGING_CONSOLE_TTY_NAME = LOGGING_CONSOLE_PREFIX + "tty";
-    
+
     public final static String LOGGING_FILE_DIR_NAME = LOGGING_FILE_PREFIX + "dir";
     public final static String LOGGING_FILE_ENC_PATTERN_NAME = LOGGING_FILE_PREFIX + ENC_PATTERN_SUFFIX;
     public final static String LOGGING_FILE_EXT_NAME = LOGGING_FILE_PREFIX + "ext";

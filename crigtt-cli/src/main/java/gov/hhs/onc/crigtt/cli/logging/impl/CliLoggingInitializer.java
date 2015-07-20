@@ -1,9 +1,8 @@
 package gov.hhs.onc.crigtt.cli.logging.impl;
 
-import ch.qos.logback.classic.LoggerContext;
-import gov.hhs.onc.crigtt.context.CrigttProperties;
+import gov.hhs.onc.crigtt.context.impl.CrigttApplication;
 import gov.hhs.onc.crigtt.logging.impl.AbstractCrigttLoggingInitializer;
-import java.nio.file.Paths;
+import java.io.File;
 import javax.annotation.Nullable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,8 +11,8 @@ import org.springframework.core.annotation.Order;
 public class CliLoggingInitializer extends AbstractCrigttLoggingInitializer {
     private final static String LOG_DIR_PATH = "logs";
 
-    public CliLoggingInitializer(LoggerContext loggerContext, String defaultLogFileName) {
-        super(loggerContext, defaultLogFileName);
+    public CliLoggingInitializer(CrigttApplication app) {
+        super(app);
     }
 
     @Nullable
@@ -21,6 +20,6 @@ public class CliLoggingInitializer extends AbstractCrigttLoggingInitializer {
     protected String buildLogDirectoryPath() {
         String logDirPath = super.buildLogDirectoryPath();
 
-        return ((logDirPath != null) ? logDirPath : Paths.get(System.getProperty(CrigttProperties.APP_HOME_NAME), LOG_DIR_PATH).toString());
+        return ((logDirPath != null) ? logDirPath : new File(this.app.getHome(), LOG_DIR_PATH).getPath());
     }
 }

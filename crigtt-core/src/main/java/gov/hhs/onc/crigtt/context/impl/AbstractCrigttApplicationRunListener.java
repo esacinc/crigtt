@@ -14,11 +14,11 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 
 public abstract class AbstractCrigttApplicationRunListener implements SpringApplicationRunListener {
-    protected SpringApplication app;
+    protected CrigttApplication app;
     protected String[] args;
 
     protected AbstractCrigttApplicationRunListener(SpringApplication app, String[] args) {
-        this.app = app;
+        this.app = ((CrigttApplication) app);
         this.args = args;
     }
 

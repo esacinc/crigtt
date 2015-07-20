@@ -1,5 +1,6 @@
 package gov.hhs.onc.crigtt.validate.render;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gov.hhs.onc.crigtt.io.CrigttFileExtensions;
 import org.springframework.http.MediaType;
 
@@ -15,10 +16,12 @@ public enum ValidatorRenderType {
         this.ext = ext;
     }
 
+    @JsonProperty
     public MediaType getContentType() {
         return this.contentType;
     }
 
+    @JsonProperty
     public String getExtension() {
         return this.ext;
     }

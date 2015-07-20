@@ -295,10 +295,6 @@
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>moment</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>filesaver.js</artifactId>
         </dependency>

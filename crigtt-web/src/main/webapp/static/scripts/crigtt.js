@@ -13,7 +13,15 @@
     //====================================================================================================
     $.extend(Date.prototype, {
         "getTimeZoneOffsetString": function () {
-            return moment(this).format("ZZ");
+            var timeZoneOffset = ((this.getTimezoneOffset() / 60).toPrecision(4) * -100);
+            var absoluteTimeZoneOffset = Math.abs(timeZoneOffset);
+            var timeZoneOffsetStr = (absoluteTimeZoneOffset).toFixed();
+            
+            while (timeZoneOffsetStr.length < 4) {
+                timeZoneOffsetStr = "0" + timeZoneOffsetStr;
+            }
+            
+            return (((timeZoneOffset >= 0) ? "+" : "-") + timeZoneOffsetStr);
         }
     });
     
@@ -67,7 +75,8 @@
         }, this));
         
         validatorDocFileInputElem.change($.proxy(function () {
-            var validatorDocFileName = validatorDocFileInputElem.val();
+            var validatorDocFile = validatorDocFileInputElem.get(0).files[0];
+            var validatorDocFileName = (validatorDocFile ? validatorDocFile.name : undefined);
             
             validatorDisplayDocFileInputElem.val(validatorDocFileName);
             
@@ -90,7 +99,7 @@
             var validateData = new FormData(this);
             
             validator.validate.apply(validator, [
-                $.crigtt.validate.ValidatorContentType.HTML,
+                ValidatorRenderType.HTML,
                 {
                     "beforeSend": function () {
                         $("div.panel div.panel-collapse", validatorResultsPanelGroupElem).collapse("hide");
@@ -109,7 +118,7 @@
                         validatorResultsPanelGroupElem.show();
                     },
                     "data": validateData,
-                    "process": function (status, resp, fileName) {
+                    "process": function (status, resp, respFileName) {
                         var respElem = $($.parseHTML(resp)[0]);
                         
                         validatorResultsPanelGroupElem.prepend((status ? validator.resultPanel.apply(validator, [ respElem ])

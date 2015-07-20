@@ -55,7 +55,7 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
             testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
                 HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
 
-            this.writeResponse(testResp.getHeaderString(ValidatorHeaders.FILE_NAME_NAME), testResp.readEntity(byte[].class));
+            this.writeResponse(testResp.getHeaderString(ValidatorHeaders.RESP_FILE_NAME_NAME), testResp.readEntity(byte[].class));
         }
 
         testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(

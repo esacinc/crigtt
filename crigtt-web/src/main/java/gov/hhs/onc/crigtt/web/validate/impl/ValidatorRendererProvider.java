@@ -48,7 +48,7 @@ public class ValidatorRendererProvider extends AbstractConfigurableProvider impl
         ValidatorRenderer renderer =
             this.rendererContentTypes.keySet().stream().filter(mediaType::isCompatible).map(this.rendererContentTypes::get).findFirst().get();
 
-        headers.putSingle(ValidatorHeaders.FILE_NAME_NAME,
+        headers.putSingle(ValidatorHeaders.RESP_FILE_NAME_NAME,
             ValidatorUtils.buildResponseFileName(true, exchange.get(ValidatorSubmission.class), renderer.getType()));
 
         MultivaluedMap<String, String> queryParams = new UriInfoImpl(exchange.getInMessage()).getQueryParameters();

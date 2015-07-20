@@ -15,9 +15,6 @@
 <c:set var="urlWebjarsLocatorFileSaver" value="${urlWebjarsLocator}/filesaver.js" scope="request"/>
 <c:set var="urlWebjarsLocatorFontAwesome" value="${urlWebjarsLocator}/font-awesome" scope="request"/>
 <c:set var="urlWebjarsLocatorJquery" value="${urlWebjarsLocator}/jquery" scope="request"/>
-<c:set var="urlWebjarsLocatorJqueryUi" value="${urlWebjarsLocator}/jquery-ui" scope="request"/>
-<c:set var="urlWebjarsLocatorJqueryUiThemes" value="${urlWebjarsLocator}/jquery-ui-themes" scope="request"/>
-<c:set var="urlWebjarsLocatorMoment" value="${urlWebjarsLocator}/moment" scope="request"/>
 <c:set var="urlWebjarsLocatorSelect2" value="${urlWebjarsLocator}/select2" scope="request"/>
 <c:set var="urlWebjarsLocatorTablesorter" value="${urlWebjarsLocator}/tablesorter" scope="request"/>
 <c:set var="urlService" value="${urlBase}service" scope="request"/>
@@ -35,11 +32,16 @@
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorSelect2}/select2-bootstrap.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorTablesorter}/dist/css/theme.bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlStaticStyles}/crigtt.css"/>
+        <script type="text/javascript">
+        var RESP_FILE_NAME_HEADER_NAME = "<spring:eval expression="T(gov.hhs.onc.crigtt.web.validate.ValidatorHeaders).RESP_FILE_NAME_NAME"/>";
+        
+        var ValidatorLevel = ${validatorLevelJson};
+        
+        var ValidatorRenderType = ${validatorRenderTypeJson};
+        </script>
         <script type="text/javascript" src="${urlWebjarsLocatorJquery}/jquery.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorBootstrap}/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://cdn.rawgit.com/adrai/enum/master/enum-2.1.0.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorFileSaver}/FileSaver.min.js"></script>
-        <script type="text/javascript" src="${urlWebjarsLocatorMoment}/min/moment.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorSelect2}/select2.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/jquery.tablesorter.combined.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/widgets/widget-filter-formatter-select2.min.js"></script>

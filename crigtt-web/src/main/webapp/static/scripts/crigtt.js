@@ -28,6 +28,16 @@
     //====================================================================================================
     // EXTENSIONS: JQUERY FUNCTIONS
     //====================================================================================================
+    $.extend($, {
+        "properties": function (obj, callback, args) {
+            return $.each(obj, function (propName, propValue) {
+                if (obj.hasOwnProperty(propName)) {
+                    callback.apply(this, arguments)
+                }
+            }, args);
+        }
+    });
+    
     $.extend($.fn, {
         "disable": function () {
             return this.attr("disabled", "disabled");
@@ -44,13 +54,6 @@
         "toggleDisabled": function () {
             return (this.isDisabled() ? this.enable() : this.disable());
         }
-    });
-    
-    //====================================================================================================
-    // NAMESPACE: MAIN
-    //====================================================================================================
-    $.extend($, {
-        "crigtt": {}
     });
     
     //====================================================================================================
@@ -99,21 +102,21 @@
             var validateData = new FormData(this);
             
             validator.validate.apply(validator, [
-                ValidatorRenderType.HTML,
+                $.crigtt.validate.ValidatorRenderType.HTML,
                 {
                     "beforeSend": function () {
-                        $("div.panel div.panel-collapse", validatorResultsPanelGroupElem).collapse("hide");
+                        validatorResultsPanelGroupElem.find("div.panel div.panel-collapse").collapse("hide");
                         
                         validatorUploadButtonElem.disable();
                         
-                        validatorResultsProcessingWellElem.show();
                         validatorResultsEmptyWellElem.hide();
+                        
+                        validatorResultsProcessingWellElem.show();
                     },
                     "complete": function () {
                         validatorUploadButtonElem.enable();
                         
                         validatorResultsProcessingWellElem.hide();
-                        validatorResultsEmptyWellElem.hide();
                         
                         validatorResultsPanelGroupElem.show();
                     },

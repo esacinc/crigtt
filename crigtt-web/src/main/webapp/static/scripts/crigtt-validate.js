@@ -1,12 +1,5 @@
 (function ($) {
     //====================================================================================================
-    // NAMESPACE: VALIDATION
-    //====================================================================================================
-    $.extend($.crigtt, {
-        "validate": {}
-    });
-    
-    //====================================================================================================
     // CLASS: VALIDATOR
     //====================================================================================================
     $.extend($.crigtt.validate, {
@@ -16,7 +9,7 @@
     });
     
     $.extend($.crigtt.validate.Validator, {
-        "VALIDATE_DATA_DATA_ENTRY_NAME": "crigtt.validate.data.validate.data"
+        "VALIDATE_DATA_DATA_ENTRY_NAME": "crigtt.validate.data"
     });
     
     $.extend($.crigtt.validate.Validator.prototype, {
@@ -24,12 +17,11 @@
         
         "resultPanel": function (respElem) {
             var resultsEmptyWellElem = $("div#well-validator-results-empty");
-            var panelGroupElem = this.formElem.find("div.panel-group");
+            var panelGroupElem = $("div#panel-group-validator-results");
             var panelHeadingElem = respElem.find("div.panel-heading");
             var panelCollapseElem = respElem.find("div.panel-collapse");
             var panelEventsTabPaneElem = respElem.find("div.panel-body div.tab-content div.tab-pane").eq(1);
             var panelEventsTableElem = panelEventsTabPaneElem.find("table.table");
-            var panelEventTotalsListElem = panelEventsTableElem.find("caption ul");
             
             panelHeadingElem.click($.proxy(function (event) {
                 var target = $(event.target);
@@ -42,7 +34,7 @@
             panelHeadingElem.find("div.panel-title button.close").click($.proxy(function () {
                 respElem.remove();
                 
-                if (!panelGroupElem.find("div.panel").length) {
+                if (panelGroupElem.find("div.alert, div.panel").length == 0) {
                     resultsEmptyWellElem.show();
                     
                     panelGroupElem.hide();
@@ -61,7 +53,7 @@
                 
                 this.downloadResults.apply(this, [
                     respElem,
-                    ValidatorRenderType[$(event.delegateTarget).attr("data-type").toUpperCase()],
+                    $.crigtt.validate.ValidatorRenderType[$(event.delegateTarget).attr("data-type").toUpperCase()],
                     middleMouseButton
                 ]);
             }, this));
@@ -98,40 +90,48 @@
                 }
             }).on("filterEnd", $.proxy(function () {
                 var numEvents = 0;
-                var numLevelEvents = {
-                    "INFO": 0,
-                    "WARN": 0,
-                    "ERROR": 0
-                };
+                var numLevelEvents = {};
                 var numFilteredEvents = 0;
-                var numFilteredLevelEvents = {
-                    "INFO": 0,
-                    "WARN": 0,
-                    "ERROR": 0
-                };
+                var numFilteredLevelEvents = {};
                 
-                panelEventsTableElem.find("tbody tr").each(function (panelEventsTableRowIndex, panelEventsTableRowElem) {
-                    var eventLevel = (panelEventsTableRowElem = $(panelEventsTableRowElem)).find("td span").eq(2).text();
+                $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
+                    numLevelEvents[levelName] = 0;
+                    numFilteredLevelEvents[levelName] = 0;
+                });
+                
+                var panelEventsTableElems = panelEventsTabPaneElem.find("table.table");
+                var panelEventTotalsListElems = panelEventsTableElems.find("caption ul");
+                
+                panelEventsTableElems.find("tbody tr").each(function (panelEventsTableRowIndex, panelEventsTableRowElem) {
+                    var eventStatus = (panelEventsTableRowElem = $(panelEventsTableRowElem)).hasClass("success");
+                    var eventLevel = panelEventsTableRowElem.find("td span").eq(2).text();
                     
                     numEvents++;
-                    numLevelEvents[eventLevel]++;
+                    
+                    if (!eventStatus) {
+                        numLevelEvents[eventLevel]++;
+                    }
                     
                     if (panelEventsTableRowElem.hasClass("filtered")) {
                         numFilteredEvents++;
-                        numFilteredLevelEvents[eventLevel]++;
+                        
+                        if (!eventStatus) {
+                            numFilteredLevelEvents[eventLevel]++;
+                        }
                     }
                 });
                 
-                var panelEventTotalSpanElems = panelEventTotalsListElem.find("li span span");
+                var eventTotals = [ [ numFilteredEvents, numEvents ] ];
                 
-                $.each([
-                    [ numFilteredEvents, numEvents ],
-                    [ numFilteredLevelEvents["INFO"], numLevelEvents["INFO"] ],
-                    [ numFilteredLevelEvents["WARN"], numLevelEvents["WARN"] ],
-                    [ numFilteredLevelEvents["ERROR"], numLevelEvents["ERROR"] ]
-                ], function (panelEventTotalSpanIndex, eventTotals) {
-                    panelEventTotalSpanElems.eq(panelEventTotalSpanIndex)
-                        .text(((eventTotals[1] - eventTotals[0]) + " of " + eventTotals[1] + " (" + eventTotals[0] + " Filtered)"));
+                $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
+                    eventTotals.push([ numFilteredLevelEvents[levelName], numLevelEvents[levelName] ]);
+                });
+                
+                $.each(eventTotals, function (panelEventTotalSpanIndex, eventTotals) {
+                    panelEventTotalsListElems.each(function (panelEventTotalsListIndex, panelEventTotalsListElem) {
+                        $(panelEventTotalsListElem).find("li span span").eq(panelEventTotalSpanIndex)
+                            .text(((eventTotals[1] - eventTotals[0]) + " of " + eventTotals[1] + " (" + eventTotals[0] + " Filtered)"));
+                    });
                 });
             }, this));
             
@@ -166,22 +166,32 @@
             });
         },
         
-        "validate": function (renderType, opts) {
+        "validate": function (renderType, opts, queryParams) {
+            var defaultQueryParams = {};
+            defaultQueryParams[$.crigtt.validate.ValidatorParameters.FORMAT_NAME] = true;
+            defaultQueryParams[$.crigtt.validate.ValidatorParameters.TIME_ZONE_NAME] = new Date().getTimeZoneOffsetString();
+            
+            var queryStr = String.EMPTY;
+            
+            $.properties($.extend(defaultQueryParams, (queryParams || {})), function (queryParamName, queryParamValue) {
+                queryStr += ((queryStr ? "&" : String.EMPTY) + encodeURIComponent(queryParamName) + "=" + encodeURIComponent(queryParamValue));
+            });
+            
             $.ajax((opts = $.extend({
                 "accepts": renderType.value.contentType,
                 "cache": false,
                 "contentType": false,
                 "dataType": "text",
                 "error": function (req) {
-                    opts.process(false, req.responseText, req.getResponseHeader(RESP_FILE_NAME_HEADER_NAME));
+                    opts.process(false, req.responseText, req.getResponseHeader($.crigtt.validate.ValidatorHeaders.RESP_FILE_NAME_NAME));
                 },
                 "mimeType": this.formElem.attr("enctype"),
                 "processData": false,
                 "success": function (resp, respHttpStatusText, req) {
-                    opts.process(true, req.responseText, req.getResponseHeader(RESP_FILE_NAME_HEADER_NAME));
+                    opts.process(true, req.responseText, req.getResponseHeader($.crigtt.validate.ValidatorHeaders.RESP_FILE_NAME_NAME));
                 },
                 "type": this.formElem.attr("method"),
-                "url": (this.formElem.attr("action") + "." + renderType.value.extension + "?format=true&timeZone=" + new Date().getTimeZoneOffsetString())
+                "url": (this.formElem.attr("action") + "." + renderType.value.extension + "?" + queryStr)
             }, opts)));
         }
     });

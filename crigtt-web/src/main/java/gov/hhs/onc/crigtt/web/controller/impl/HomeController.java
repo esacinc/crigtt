@@ -7,6 +7,8 @@ import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorLevel;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.web.controller.CrigttModelAttributes;
+import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
+import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
 import java.util.Collections;
 import java.util.TimeZone;
 import javax.annotation.Resource;
@@ -39,7 +41,9 @@ public class HomeController implements InitializingBean {
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private ObjectMapper objMapper;
 
+    private String validatorHeadersJson;
     private String validatorLevelJson;
+    private String validatorParamsJson;
     private String validatorRenderTypeJson;
 
     @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
@@ -53,7 +57,9 @@ public class HomeController implements InitializingBean {
     @Override
     @SuppressWarnings({ CompilerWarnings.RAWTYPES })
     public void afterPropertiesSet() throws Exception {
+        this.validatorHeadersJson = CrigttJsonUtils.serializeConstants(this.objMapper, ValidatorHeaders.class);
         this.validatorLevelJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorLevel.class);
+        this.validatorParamsJson = CrigttJsonUtils.serializeConstants(this.objMapper, ValidatorParameters.class);
         this.validatorRenderTypeJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorRenderType.class);
     }
 
@@ -62,9 +68,19 @@ public class HomeController implements InitializingBean {
         return this.buildVersion;
     }
 
+    @ModelAttribute(value = CrigttModelAttributes.VALIDATOR_HEADERS_JSON_NAME)
+    public String getValidatorHeadersJson() {
+        return this.validatorHeadersJson;
+    }
+
     @ModelAttribute(value = CrigttModelAttributes.VALIDATOR_LEVEL_JSON_NAME)
     public String getValidatorLevelJson() {
         return this.validatorLevelJson;
+    }
+
+    @ModelAttribute(value = CrigttModelAttributes.VALIDATOR_PARAMS_JSON_NAME)
+    public String getValidatorParametersJson() {
+        return this.validatorParamsJson;
     }
 
     @ModelAttribute(value = CrigttModelAttributes.VALIDATOR_RENDER_TYPE_JSON_NAME)

@@ -32,19 +32,22 @@
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorSelect2}/select2-bootstrap.css"/>
         <link type="text/css" rel="stylesheet" href="${urlWebjarsLocatorTablesorter}/dist/css/theme.bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="${urlStaticStyles}/crigtt.css"/>
-        <script type="text/javascript">
-        var RESP_FILE_NAME_HEADER_NAME = "<spring:eval expression="T(gov.hhs.onc.crigtt.web.validate.ValidatorHeaders).RESP_FILE_NAME_NAME"/>";
-        
-        var ValidatorLevel = ${validatorLevelJson};
-        
-        var ValidatorRenderType = ${validatorRenderTypeJson};
-        </script>
         <script type="text/javascript" src="${urlWebjarsLocatorJquery}/jquery.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorBootstrap}/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorFileSaver}/FileSaver.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorSelect2}/select2.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/jquery.tablesorter.combined.min.js"></script>
         <script type="text/javascript" src="${urlWebjarsLocatorTablesorter}/dist/js/widgets/widget-filter-formatter-select2.min.js"></script>
+        <script type="text/javascript">
+        $.crigtt = {
+            "validate": {
+                "ValidatorHeaders": ${validatorHeadersJson},
+                "ValidatorLevel": ${validatorLevelJson},
+                "ValidatorParameters": ${validatorParametersJson},
+                "ValidatorRenderType": ${validatorRenderTypeJson}
+            }
+        };
+        </script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-ui.js"></script>
         <script type="text/javascript" src="${urlStaticScripts}/crigtt-validate.js"></script>

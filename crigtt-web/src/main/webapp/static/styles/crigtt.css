@@ -1,5 +1,11 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
     padding-top: 72px;
+    margin-bottom: 24px;
     font-family: "Tahoma", sans-serif;
     font-size: 11px;
 }
@@ -54,6 +60,14 @@ ul.select2-results li.select2-result {
     font-size: 9px;
 }
 
+nav.navbar {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.176);
+}
+
+nav.navbar ul.nav-tabs {
+    border-bottom: none;
+}
+
 ul.nav-tabs li,
 ul.nav-tabs li a,
 ul.nav li.dropdown,
@@ -69,10 +83,6 @@ ul.nav-tabs li a:hover {
 ul.nav-tabs li a i.fa,
 ul.nav li.dropdown a i.fa {
     font-size: 18px;
-}
-
-nav.navbar {
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.176);
 }
 
 a.navbar-brand img {
@@ -103,6 +113,7 @@ span#btn-file-doc:hover {
 
 div#well-validator-results-processing {
     display: none;
+    margin-bottom: 5px;
 }
 
 div#panel-group-validator-results {

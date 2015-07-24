@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!--====================================================================================================
+    = DATABASE SERVER CONFIGURATIONS
+    =====================================================================================================-->
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="dbServerConfigValidateVocabDynamic" parent="dbServerConfig"
+        p:ipAddress="${crigtt.db.validate.vocab.dynamic.ip.addr}"
+        p:port="${crigtt.db.validate.vocab.dynamic.port}">
+        <beans:property name="globals">
+            <beans:map>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).TX_USE_LOG }" value="false"
+                    value-type="java.lang.Boolean"/>
+            </beans:map>
+        </beans:property>
+        <beans:property name="properties">
+            <beans:map>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="server.database.path" value="${crigtt.data.db.dir}"/>
+            </beans:map>
+        </beans:property>
+        <beans:property name="storages">
+            <beans:array>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerStorageConfig"
+                    c:name="${crigtt.db.validate.vocab.dynamic.storage.primary.name}"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.storage.primary.user.pass}"
+                    c:path="#{ T(gov.hhs.onc.crigtt.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.primary.dir}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.storage.primary.user.name}"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerStorageConfig"
+                    c:name="${crigtt.db.validate.vocab.dynamic.storage.secondary.name}"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.pass}"
+                    c:path="#{ T(gov.hhs.onc.crigtt.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.secondary.dir}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.name}"/>
+            </beans:array>
+        </beans:property>
+        <beans:property name="users">
+            <beans:array>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerUserConfig"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.user.root.pass}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.user.root.name}"/>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = DYNAMIC VOCABULARY VALIDATOR SERVICE
+    =====================================================================================================-->
+    <beans:bean id="validatorServiceVocabDynamic" class="gov.hhs.onc.crigtt.validate.vocab.DynamicVocabValidatorService" abstract="true"/>
+    
+    <beans:bean id="validatorServiceVocabDynamicImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabValidatorServiceImpl"
+        parent="validatorServiceVocabDynamic" abstract="true"/>
+    
+    <beans:bean id="validatorServiceVocabDynamicCrigtt" parent="validatorServiceVocabDynamicImpl">
+        <beans:property name="codeLoaderClassNames">
+            <beans:array>
+                <beans:value>org.sitenv.vocabularies.loader.code.icd9.Icd9CmDxLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.icd9.Icd9CmSgLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.icd10.Icd10CmLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.icd10.Icd10PcsLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.loinc.LoincLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.rxnorm.RxNormLoader</beans:value>
+                <beans:value>org.sitenv.vocabularies.loader.code.snomed.SnomedLoader</beans:value>
+            </beans:array>
+        </beans:property>
+        <beans:property name="valueSetLoaderClassNames">
+            <beans:array>
+                <beans:value>org.sitenv.vocabularies.loader.valueset.vsac.VsacLoader</beans:value>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = VALIDATOR DYNAMIC VOCABULARY TASKS
+    =====================================================================================================-->
+    <beans:bean id="validatorTaskVocabDynamic" class="gov.hhs.onc.crigtt.validate.vocab.DynamicVocabValidatorTask" parent="validatorTask" abstract="true"/>
+    
+    <beans:bean id="validatorTaskVocabDynamicImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabValidatorTaskImpl"
+        parent="validatorTaskVocabDynamic" abstract="true"/>
+    
+    <!--suppress SpringBeanConstructorArgInspection, SpringPlaceholdersInspection -->
+    <beans:bean id="validatorTaskVocabDynamicCrigtt" parent="validatorTaskVocabDynamicImpl" lazy-init="true" scope="prototype"/>
+</beans:beans>

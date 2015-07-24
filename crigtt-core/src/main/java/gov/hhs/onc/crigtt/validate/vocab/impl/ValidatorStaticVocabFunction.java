@@ -1,10 +1,10 @@
-package gov.hhs.onc.crigtt.validate.impl;
+package gov.hhs.onc.crigtt.validate.vocab.impl;
 
 import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.validate.ValidatorCode;
 import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.ValidatorStaticVocabXmlNames;
+import gov.hhs.onc.crigtt.validate.vocab.StaticVocabXmlNames;
 import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.springframework.stereotype.Component;
 
-@Component("extFuncValidatorStaticVocab")
+@Component("extFuncValidatorVocabStatic")
 public class ValidatorStaticVocabFunction extends AbstractCrigttExtensionFunction {
     public final static StructuredQName NAME = new QName(CrigttXmlNs.VALIDATE_PREFIX, CrigttXmlNs.VALIDATE_URI, "static-vocab").getStructuredQName();
 
@@ -63,7 +63,7 @@ public class ValidatorStaticVocabFunction extends AbstractCrigttExtensionFunctio
         XdmValue codeAttr = args[4], codeValue = args[5];
 
         if ((codeAttr != null) && (codeAttr.size() >= 1) && (codeValue != null) && (codeValue.size() >= 1)) {
-            boolean codeNameAttr = codeAttr.getUnderlyingValue().head().getStringValue().equals(ValidatorStaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME);
+            boolean codeNameAttr = codeAttr.getUnderlyingValue().head().getStringValue().equals(StaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME);
             String codeId = codeValue.getUnderlyingValue().head().getStringValue();
 
             if (codeNameAttr) {

@@ -6,7 +6,6 @@ import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
 import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.utils.CrigttFunctionUtils;
-import gov.hhs.onc.crigtt.validate.ValidatorCacheService;
 import gov.hhs.onc.crigtt.validate.ValidatorDocument;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorEventTotals;
@@ -36,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.util.concurrent.ListenableFutureTask;
@@ -84,10 +84,11 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Resource(name = "docBuilderCrigtt")
     private CrigttDocumentBuilder docBuilder;
 
-    @Resource(name = "validatorCacheServiceImpl")
-    private ValidatorCacheService cacheService;
+    @Resource(name = "cacheValidatorResults")
+    @SuppressWarnings({ "SpringJavaAutowiringInspection" })
+    private EhCacheCache cache;
 
-    @Resource(name = "taskExecutorValidator")
+    @Resource(name = "taskExecValidateService")
     private ThreadPoolTaskExecutor taskExecutor;
 
     private BeanFactory beanFactory;
@@ -110,7 +111,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         byte[] docContent = docObj.getContent(), docHash =
             CrigttFunctionUtils.consume(docObj::getHash, () -> this.digester.digest(docContent), docObj::setHash);
         String docHashStr = Base64.encodeBase64String(docHash);
-        ValidatorResults results = this.cacheService.getResults(docHashStr);
+        ValidatorResults results = this.cache.get(docHashStr, ValidatorResults.class);
         ValidatorEventTotals eventTotals;
         long processedTimestamp;
 
@@ -216,7 +217,7 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         results.setStatus(status);
 
-        this.cacheService.putResults(docHashStr, results);
+        this.cache.putIfAbsent(docHashStr, results);
 
         report.setProcessedTimestamp((processedTimestamp = Instant.now().getMillis()));
 

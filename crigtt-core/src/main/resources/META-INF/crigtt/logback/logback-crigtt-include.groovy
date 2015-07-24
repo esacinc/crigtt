@@ -19,9 +19,7 @@ import org.apache.commons.io.FilenameUtils
 /*====================================================================================================
 = PROPERTIES: CONSOLE
 =====================================================================================================*/
-def consoleTty = CrigttLoggingUtils.getProperty(context, CrigttProperties.LOGGING_CONSOLE_TTY_NAME)
-
-def consoleEncPattern = CrigttLoggingUtils.getProperty(context, CrigttProperties.LOGGING_CONSOLE_ENC_PATTERN_NAME, "%pColor(%p){${consoleTty}} - %m%n%exRoot}")
+def consoleEncPattern = CrigttLoggingUtils.getProperty(context, CrigttProperties.LOGGING_CONSOLE_ENC_PATTERN_NAME, "%pColor - %m%n%exRoot")
 
 def consoleTarget = CrigttLoggingUtils.getProperty(context, CrigttProperties.LOGGING_CONSOLE_TARGET_NAME, "System.out")
 
@@ -104,6 +102,11 @@ logger("org.apache", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FI
 = LOGGERS: APACHE CXF
 =====================================================================================================*/
 logger("org.apache.cxf", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+
+/*====================================================================================================
+= LOGGERS: SITENV
+=====================================================================================================*/
+logger("org.sitenv", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
 
 /*====================================================================================================
 = LOGGERS: SPRING FRAMEWORK

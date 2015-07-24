@@ -1,6 +1,6 @@
-package gov.hhs.onc.crigtt.validate;
+package gov.hhs.onc.crigtt.validate.vocab;
 
-public final class ValidatorStaticVocabXmlNames {
+public final class StaticVocabXmlNames {
     public final static String NAME_SUFFIX = "Name";
     public final static String SET_SUFFIX = "Set";
 
@@ -16,6 +16,6 @@ public final class ValidatorStaticVocabXmlNames {
     public final static String VALUE_SET_NAME_ATTR_NAME = VALUE_SET_ATTR_NAME + NAME_SUFFIX;
     public final static String VALUE_SET_OID_ATTR_NAME = VALUE_SET_ATTR_NAME + "Oid";
 
-    private ValidatorStaticVocabXmlNames() {
+    private StaticVocabXmlNames() {
     }
 }

@@ -60,7 +60,7 @@
         p:schemaVersion="ISO19757-3">
         <beans:property name="extensionFunctions">
             <beans:array>
-                <beans:ref bean="extFuncValidatorStaticVocab"/>
+                <beans:ref bean="extFuncValidatorVocabStatic"/>
             </beans:array>
         </beans:property>
         <beans:property name="parameters">
@@ -100,19 +100,19 @@
     <!--====================================================================================================
     = CACHES
     =====================================================================================================-->
-    <beans:bean id="cacheValidator" parent="cacheCrigtt">
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="cacheValidatorResults" parent="cacheCrigtt"
+        p:maxBytesLocalDisk="${crigtt.cache.validate.results.disk.max.bytes}"
+        p:maxBytesLocalHeap="${crigtt.cache.validate.results.heap.max.bytes}">
         <beans:property name="configuration">
-            <!--suppress SpringPlaceholdersInspection -->
-            <beans:bean parent="configCacheCrigtt"
-                p:maxElementsInMemory="${crigtt.cache.validator.mem.elems.max}"
-                p:name="cacheValidator"/>
+            <beans:bean parent="cacheConfig"/>
         </beans:property>
     </beans:bean>
     
     <!--====================================================================================================
     = THREAD GROUPS
     =====================================================================================================-->
-    <beans:bean id="threadGroupValidator" parent="threadGroup">
+    <beans:bean id="threadGroupValidate" parent="threadGroup">
         <beans:constructor-arg index="0" type="java.lang.ThreadGroup" ref="threadGroupCrigtt"/>
         <beans:constructor-arg index="1" type="java.lang.String" value="#{ threadGroupCrigtt.name }-validate"/>
     </beans:bean>
@@ -121,30 +121,15 @@
     = TASK EXECUTION
     =====================================================================================================-->
     <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="taskExecutorValidator" parent="taskExecutorCrigtt"
-        p:corePoolSize="${crigtt.task.executor.validator.pool.size.core}"
-        p:keepAliveSeconds="${crigtt.task.executor.validator.keep.alive.seconds}"
-        p:maxPoolSize="${crigtt.task.executor.validator.pool.size.max}"
-        p:threadGroup-ref="threadGroupValidator"
-        p:threadNamePrefix="#{ threadGroupValidator.name }-"/>
+    <beans:bean id="taskExecValidate" parent="taskExecCrigtt" abstract="true"
+        p:keepAliveSeconds="${crigtt.task.exec.validate.keep.alive.seconds}"
+        p:threadGroup-ref="threadGroupValidate"/>
     
-    <!--====================================================================================================
-    = REST TEMPLATES
-    =====================================================================================================-->
-    <beans:bean id="restTemplateValidatorDynamicVocabService" parent="restTemplate">
-        <beans:constructor-arg name="messageConverters">
-            <beans:list>
-                <beans:ref bean="httpMsgConvForm"/>
-                <beans:ref bean="httpMsgConvMappingJackson2"/>
-            </beans:list>
-        </beans:constructor-arg>
-        <beans:property name="requestFactory">
-            <!--suppress SpringPlaceholdersInspection -->
-            <beans:bean parent="clientHttpReqFactoryHttpComponents"
-                p:connectTimeout="${crigtt.validator.dynamic.vocab.service.conn.timeout}"
-                p:readTimeout="${crigtt.validator.dynamic.vocab.service.read.timeout}"/>
-        </beans:property>
-    </beans:bean>
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="taskExecValidateService" parent="taskExecValidate"
+        p:corePoolSize="${crigtt.task.exec.validate.service.pool.size.core}"
+        p:maxPoolSize="${crigtt.task.exec.validate.service.pool.size.max}"
+        p:threadNamePrefix="#{ threadGroupValidate.name }-service-"/>
     
     <!--====================================================================================================
     = VALIDATOR TASKS
@@ -154,9 +139,9 @@
     <!--====================================================================================================
     = VALIDATOR SCHEMATRON TASKS
     =====================================================================================================-->
-    <beans:bean id="validatorTaskSchematron" class="gov.hhs.onc.crigtt.validate.ValidatorSchematronTask" parent="validatorTask" abstract="true"/>
+    <beans:bean id="validatorTaskSchematron" class="gov.hhs.onc.crigtt.validate.SchematronValidatorTask" parent="validatorTask" abstract="true"/>
     
-    <beans:bean id="validatorTaskSchematronImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorSchematronTaskImpl" parent="validatorTaskSchematron"
+    <beans:bean id="validatorTaskSchematronImpl" class="gov.hhs.onc.crigtt.validate.impl.SchematronValidatorTaskImpl" parent="validatorTaskSchematron"
         abstract="true"/>
     
     <beans:bean id="validatorTaskSchematronCrigtt" parent="validatorTaskSchematronImpl" abstract="true">
@@ -174,26 +159,6 @@
         p:schematron-ref="validatorSchematronCcdaR2CancerReg"/>
     
     <!--====================================================================================================
-    = VALIDATOR DYNAMIC VOCABULARY TASKS
-    =====================================================================================================-->
-    <beans:bean id="validatorTaskDynamicVocab" class="gov.hhs.onc.crigtt.validate.ValidatorDynamicVocabTask" parent="validatorTask" abstract="true"/>
-    
-    <beans:bean id="validatorTaskDynamicVocabImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorDynamicVocabTaskImpl" parent="validatorTaskDynamicVocab"
-        abstract="true"/>
-    
-    <!--suppress SpringBeanConstructorArgInspection, SpringPlaceholdersInspection -->
-    <beans:bean id="validatorTaskDynamicVocabCrigtt" parent="validatorTaskDynamicVocabImpl" lazy-init="true" scope="prototype"
-        p:partContentType="#{ T(org.springframework.http.MediaType).TEXT_XML }"
-        p:partName="file"
-        p:serviceUri="${crigtt.validator.dynamic.vocab.service.uri}">
-        <beans:property name="requestHeaders">
-            <beans:bean parent="httpHeaders"
-                p:accept="#{ T(org.springframework.http.MediaType).APPLICATION_JSON }"
-                p:contentType="#{ T(org.springframework.http.MediaType).MULTIPART_FORM_DATA }"/>
-        </beans:property>
-    </beans:bean>
-    
-    <!--====================================================================================================
     = VALIDATOR SERVICES
     =====================================================================================================-->
     <beans:bean id="validatorService" class="gov.hhs.onc.crigtt.validate.ValidatorService" abstract="true"/>
@@ -203,51 +168,8 @@
         <beans:property name="taskBeanNames">
             <beans:array>
                 <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>
-                <beans:idref bean="validatorTaskDynamicVocabCrigtt"/>
+                <beans:idref bean="validatorTaskVocabDynamicCrigtt"/>
             </beans:array>
         </beans:property>
     </beans:bean>
-    
-    <!--====================================================================================================
-    = VALIDATOR RENDERERS
-    =====================================================================================================-->
-    <beans:bean id="validatorRenderer" class="gov.hhs.onc.crigtt.validate.render.ValidatorRenderer" abstract="true">
-        <beans:property name="defaultOptions">
-            <beans:map>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions).FORMAT_NAME }" value="false" value-type="java.lang.Boolean"/>
-                <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions).TIME_ZONE_NAME }" value-ref="timeZoneDefault"/>
-            </beans:map>
-        </beans:property>
-    </beans:bean>
-    
-    <!--====================================================================================================
-    = JSON VALIDATOR RENDERERS
-    =====================================================================================================-->
-    <beans:bean id="validatorRendererJson" class="gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer" parent="validatorRenderer"
-        abstract="true"/>
-    
-    <beans:bean id="validatorRendererJsonImpl" class="gov.hhs.onc.crigtt.validate.render.impl.JsonValidatorRendererImpl" parent="validatorRendererJson"/>
-    
-    <!--====================================================================================================
-    = XML VALIDATOR RENDERERS
-    =====================================================================================================-->
-    <beans:bean id="validatorRendererXml" class="gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer" parent="validatorRenderer"
-        abstract="true"/>
-    
-    <beans:bean id="validatorRendererXmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.XmlValidatorRendererImpl" parent="validatorRendererXml"/>
-    
-    <!--====================================================================================================
-    = XML TRANSFORM VALIDATOR RENDERERS
-    =====================================================================================================-->
-    <beans:bean id="validatorRendererXmlTransform" class="gov.hhs.onc.crigtt.validate.render.XmlTransformValidatorRenderer" parent="validatorRenderer"
-        abstract="true"/>
-    
-    <!--====================================================================================================
-    = HTML VALIDATOR RENDERERS
-    =====================================================================================================-->
-    <beans:bean id="validatorRendererHtml" class="gov.hhs.onc.crigtt.validate.render.HtmlValidatorRenderer" parent="validatorRendererXmlTransform"
-        abstract="true"
-        p:xsltExecutable-ref="xsltExecValidatorResponseHtml"/>
-    
-    <beans:bean id="validatorRendererHtmlImpl" class="gov.hhs.onc.crigtt.validate.render.impl.HtmlValidatorRendererImpl" parent="validatorRendererHtml"/>
 </beans:beans>

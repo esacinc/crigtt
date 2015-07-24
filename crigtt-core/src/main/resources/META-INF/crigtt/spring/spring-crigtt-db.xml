@@ -18,31 +18,17 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = HTTP HEADERS
+    = DATABASE SERVER STORAGE CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="httpHeaders" class="org.springframework.http.HttpHeaders" abstract="true"/>
+    <beans:bean id="dbServerStorageConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttDbServerStorageConfiguration" abstract="true"/>
     
     <!--====================================================================================================
-    = HTTP MESSAGE CONVERTERS
+    = DATABASE SERVER USER CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="httpMsgConv" class="org.springframework.http.converter.HttpMessageConverter" abstract="true"/>
-    
-    <beans:bean id="httpMsgConvForm" class="org.springframework.http.converter.FormHttpMessageConverter" parent="httpMsgConv"
-        p:charset-ref="charsetUtf8"/>
-    
-    <beans:bean id="httpMsgConvMappingJackson2" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" parent="httpMsgConv"
-        c:objectMapper-ref="objMapperCrigtt"/>
+    <beans:bean id="dbServerUserConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttServerDbUserConfiguration" abstract="true"/>
     
     <!--====================================================================================================
-    = CLIENT HTTP REQUEST FACTORIES
+    = DATABASE SERVER CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="clientHttpReqFactory" class="org.springframework.http.client.ClientHttpRequestFactory" abstract="true"/>
-    
-    <beans:bean id="clientHttpReqFactoryHttpComponents" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"
-        parent="clientHttpReqFactory" abstract="true"/>
-    
-    <!--====================================================================================================
-    = REST TEMPLATES
-    =====================================================================================================-->
-    <beans:bean id="restTemplate" class="org.springframework.web.client.RestTemplate" abstract="true"/>
+    <beans:bean id="dbServerConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttDbServerConfiguration" abstract="true"/>
 </beans:beans>

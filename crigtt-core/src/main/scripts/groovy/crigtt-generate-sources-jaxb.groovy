@@ -8,6 +8,7 @@ import com.sun.codemodel.ClassType
 import com.sun.codemodel.JAnnotationUse
 import com.sun.codemodel.JCodeModel
 import com.sun.codemodel.JDefinedClass
+import com.sun.codemodel.JExpr
 import com.sun.codemodel.JFieldVar
 import com.sun.codemodel.JMethod
 import com.sun.codemodel.JMod
@@ -112,7 +113,6 @@ def final IMPL_PKG_NAME_SUFFIX = ".impl"
 
 def final BASE_PKG_NAME = "gov.hhs.onc.crigtt"
 def final BEANS_PKG_NAME = BASE_PKG_NAME + ".beans"
-def final JSON_PKG_NAME = BASE_PKG_NAME + ".json"
 
 def final ABSTRACT_CLASS_NAME_PREFIX = "Abstract"
 
@@ -122,7 +122,7 @@ def final JAXB_CONTEXT_FACTORY_SIMPLE_CLASS_NAME = "JAXBContextFactory"
 
 def final IDENTIFIED_BEAN_CLASS_NAME = BEANS_PKG_NAME + ClassUtils.PACKAGE_SEPARATOR + "IdentifiedBean"
 def final NAMED_BEAN_CLASS_NAME = BEANS_PKG_NAME + ClassUtils.PACKAGE_SEPARATOR + "NamedBean"
-def final DTO_BEAN_CLASS_NAME = JSON_PKG_NAME + ClassUtils.PACKAGE_SEPARATOR + "DtoBean"
+def final DTO_BEAN_CLASS_NAME = BEANS_PKG_NAME + ClassUtils.PACKAGE_SEPARATOR + "DtoBean"
 
 def final VALUE_FIELD_NAME = "value"
 
@@ -132,6 +132,8 @@ def final SETTER_METHOD_NAME_PREFIX = "set"
 
 def final ID_PROP_PUBLIC_NAME = "Id"
 def final NAME_PROP_PUBLIC_NAME = "Name"
+
+def final SERIAL_VERSION_UID_FIELD_NAME = "serialVersionUID"
 
 ((LoggerContext) StaticLoggerBinder.singleton.loggerFactory).getLogger(Logger.ROOT_LOGGER_NAME).setLevel(Level.INFO)
 
@@ -277,6 +279,8 @@ outline.allPackageContexts.each{
         if (implClass.abstract) {
             abstractImplClassNames.add(implClass.name())
         }
+        
+        implClass.field((JMod.PRIVATE | JMod.FINAL | JMod.STATIC), codeModel.LONG, SERIAL_VERSION_UID_FIELD_NAME, JExpr.lit(0L))
         
         fields = implClass.fields()
         classMethods = classRef.methods().stream().collect(Collectors.toMap({ it.name() }, { it }))

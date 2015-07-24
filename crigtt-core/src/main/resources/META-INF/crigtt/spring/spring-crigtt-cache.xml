@@ -3,7 +3,6 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:c="http://www.springframework.org/schema/c"
-    xmlns:cache="http://www.springframework.org/schema/cache"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:lang="http://www.springframework.org/schema/lang"
     xmlns:p="http://www.springframework.org/schema/p"
@@ -13,32 +12,25 @@
     xsi:schemaLocation="
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = CONTEXT
+    = DISK STORE CONFIGURATIONS
     =====================================================================================================-->
-    <cache:annotation-driven cache-manager="cacheManagerCrigtt"/>
+    <beans:bean id="diskStoreConfig" class="net.sf.ehcache.config.DiskStoreConfiguration" abstract="true"/>
     
     <!--====================================================================================================
-    = EHCACHE CACHE CONFIGURATIONS
+    = SIZE OF POLICY CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="configCacheEhCache" class="net.sf.ehcache.config.CacheConfiguration" abstract="true"/>
-    
-    <beans:bean id="configCacheCrigtt" parent="configCacheEhCache" abstract="true"
-        p:diskPersistent="false"
-        p:logging="true"
-        p:overflowToDisk="false"
-        p:statistics="true"/>
+    <beans:bean id="sizeOfPolicyConfig" class="net.sf.ehcache.config.SizeOfPolicyConfiguration" abstract="true"/>
     
     <!--====================================================================================================
-    = EHCACHE CONFIGURATIONS
+    = CACHE MANAGER CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="configEhCache" class="net.sf.ehcache.config.Configuration" abstract="true"/>
+    <beans:bean id="cacheManagerConfig" class="net.sf.ehcache.config.Configuration" abstract="true"/>
     
     <!--====================================================================================================
     = CACHE MANAGERS
@@ -47,14 +39,34 @@
     
     <beans:bean id="cacheManagerEhCache" class="org.springframework.cache.ehcache.EhCacheCacheManager" parent="cacheManager" abstract="true"/>
     
-    <beans:bean id="cacheManagerBase" class="gov.hhs.onc.crigtt.cache.impl.CrigttEhCacheManagerFactoryBean" parent="cacheManagerEhCache" abstract="true"/>
-    
-    <beans:bean id="cacheManagerCrigtt" parent="cacheManagerBase">
+    <beans:bean id="cacheManagerCrigtt" class="gov.hhs.onc.crigtt.cache.impl.CrigttCacheManagerFactoryBean" parent="cacheManagerEhCache">
         <beans:property name="configuration">
-            <beans:bean parent="configEhCache"
-                p:name="cacheManagerCrigtt"/>
+            <beans:bean parent="cacheManagerConfig"/>
+        </beans:property>
+        <beans:property name="diskStoreConfiguration">
+            <!--suppress SpringPlaceholdersInspection -->
+            <beans:bean parent="diskStoreConfig"
+                p:path="${crigtt.data.cache.dir}"/>
+        </beans:property>
+        <beans:property name="sizeOfPolicyConfiguration">
+            <beans:bean parent="sizeOfPolicyConfig"
+                p:maxDepth="#{ T(java.lang.Integer).MAX_VALUE }"/>
         </beans:property>
     </beans:bean>
+    
+    <!--====================================================================================================
+    = PERSISTENCE CONFIGURATIONS
+    =====================================================================================================-->
+    <beans:bean id="persistenceConfig" class="net.sf.ehcache.config.PersistenceConfiguration" abstract="true"/>
+    
+    <!--====================================================================================================
+    = CACHE CONFIGURATIONS
+    =====================================================================================================-->
+    <beans:bean id="cacheConfig" class="net.sf.ehcache.config.CacheConfiguration" abstract="true"/>
+    
+    <beans:bean id="cacheConfigCrigtt" parent="cacheConfig" abstract="true"
+        p:logging="true"
+        p:statistics="true"/>
     
     <!--====================================================================================================
     = CACHES
@@ -63,8 +75,11 @@
     
     <beans:bean id="cacheEhCache" class="org.springframework.cache.ehcache.EhCacheCache" parent="cache" abstract="true"/>
     
-    <beans:bean id="cacheBase" class="gov.hhs.onc.crigtt.cache.impl.CrigttEhCacheFactoryBean" parent="cacheEhCache" abstract="true"/>
-    
-    <beans:bean id="cacheCrigtt" parent="cacheBase" abstract="true"
-        p:manager="#{ cacheManagerCrigtt.cacheManager }"/>
+    <beans:bean id="cacheCrigtt" class="gov.hhs.onc.crigtt.cache.impl.CrigttCacheFactoryBean" parent="cacheEhCache" abstract="true"
+        p:manager-ref="cacheManagerCrigtt">
+        <beans:property name="persistenceConfiguration">
+            <beans:bean parent="persistenceConfig"
+                p:strategy="#{ T(net.sf.ehcache.config.PersistenceConfiguration.Strategy).LOCALTEMPSWAP.name() }"/>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

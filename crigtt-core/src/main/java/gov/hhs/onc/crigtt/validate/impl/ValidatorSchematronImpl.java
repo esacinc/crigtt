@@ -30,8 +30,9 @@ import gov.hhs.onc.crigtt.validate.ValidatorPhase;
 import gov.hhs.onc.crigtt.validate.ValidatorRule;
 import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.ValidatorStaticVocabXmlNames;
+import gov.hhs.onc.crigtt.validate.vocab.StaticVocabXmlNames;
 import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
+import gov.hhs.onc.crigtt.validate.vocab.impl.ValidatorStaticVocabFunction;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
@@ -74,7 +75,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
         "^([^$]+)(@\\w+)(\\s*=\\s*)document\\('\\Q%1$s\\E'\\)/%2$s:systems/%2$s:system\\[@valueSetOid='([^']+)'\\]/%2$s:code/@(value|displayName)([^$]*)$";
 
     private final static String STATIC_VOCAB_REPLACE_EXPR_FORMAT = "%1$s" + ValidatorStaticVocabFunction.NAME.toString() + "('%2$s', '%3$s', '%4$s', @"
-        + ValidatorStaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME + ", '%5$s', %6$s)%7$s";
+        + StaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME + ", '%5$s', %6$s)%7$s";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ValidatorSchematronImpl.class);
 
@@ -323,25 +324,25 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
         ValidatorCode activeCode;
 
         for (Element valueSetElem : DOMUtils.findAllElementsByTagNameNS(this.staticVocabDoc.getDocument().getDocumentElement(), CrigttXmlNs.STATIC_VOCAB_URI,
-            ValidatorStaticVocabXmlNames.SYSTEM_ELEM_NAME)) {
-            this.activeValueSets.put((valueSetId = valueSetElem.getAttribute(ValidatorStaticVocabXmlNames.VALUE_SET_OID_ATTR_NAME)), (activeValueSet =
+            StaticVocabXmlNames.SYSTEM_ELEM_NAME)) {
+            this.activeValueSets.put((valueSetId = valueSetElem.getAttribute(StaticVocabXmlNames.VALUE_SET_OID_ATTR_NAME)), (activeValueSet =
                 new ValidatorValueSetImpl()));
             activeValueSet.setId(valueSetId);
-            activeValueSet.setName(valueSetElem.getAttribute(ValidatorStaticVocabXmlNames.VALUE_SET_NAME_ATTR_NAME));
+            activeValueSet.setName(valueSetElem.getAttribute(StaticVocabXmlNames.VALUE_SET_NAME_ATTR_NAME));
 
             this.valueSetCodes.put(valueSetId, (valueSetCodeItems = new ArrayList<>()));
             this.valueSetCodeNames.put(valueSetId, (valueSetCodeNameItems = new ArrayList<>()));
 
             for (Element codeElem : DOMUtils
-                .findAllElementsByTagNameNS(valueSetElem, CrigttXmlNs.STATIC_VOCAB_URI, ValidatorStaticVocabXmlNames.CODE_ELEM_NAME)) {
-                this.activeCodeSystems.put((codeSystemId = codeElem.getAttribute(ValidatorStaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME)), (activeCodeSystem =
+                .findAllElementsByTagNameNS(valueSetElem, CrigttXmlNs.STATIC_VOCAB_URI, StaticVocabXmlNames.CODE_ELEM_NAME)) {
+                this.activeCodeSystems.put((codeSystemId = codeElem.getAttribute(StaticVocabXmlNames.CODE_SYSTEM_ATTR_NAME)), (activeCodeSystem =
                     new ValidatorCodeSystemImpl()));
                 activeCodeSystem.setId(codeSystemId);
-                activeCodeSystem.setName(codeElem.getAttribute(ValidatorStaticVocabXmlNames.CODE_SYSTEM_NAME_ATTR_NAME));
+                activeCodeSystem.setName(codeElem.getAttribute(StaticVocabXmlNames.CODE_SYSTEM_NAME_ATTR_NAME));
 
-                this.activeCodes.put((codeId = codeElem.getAttribute(ValidatorStaticVocabXmlNames.VALUE_ATTR_NAME)), (activeCode = new ValidatorCodeImpl()));
+                this.activeCodes.put((codeId = codeElem.getAttribute(StaticVocabXmlNames.VALUE_ATTR_NAME)), (activeCode = new ValidatorCodeImpl()));
                 activeCode.setId(codeId);
-                activeCode.setName((codeName = codeElem.getAttribute(ValidatorStaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME)));
+                activeCode.setName((codeName = codeElem.getAttribute(StaticVocabXmlNames.DISPLAY_NAME_ATTR_NAME)));
 
                 valueSetCodeItems.add(codeId);
                 valueSetCodeNameItems.add(codeName);

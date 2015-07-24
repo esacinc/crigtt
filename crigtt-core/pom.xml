@@ -79,6 +79,26 @@
             <artifactId>annotations</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orient-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-object</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-server</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -193,6 +213,18 @@
         <dependency>
             <groupId>org.logback-extensions</groupId>
             <artifactId>logback-ext-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sitenv.vocabulary</groupId>
+            <artifactId>codevalidator-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sitenv.xml</groupId>
+            <artifactId>xpathvalidator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sitenv.xml.validators</groupId>
+            <artifactId>ccdaxpathvalidators</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

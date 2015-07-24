@@ -20,7 +20,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorPhase;
 import gov.hhs.onc.crigtt.validate.ValidatorRule;
 import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.ValidatorSchematronTask;
+import gov.hhs.onc.crigtt.validate.SchematronValidatorTask;
 import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
@@ -33,14 +33,14 @@ import javax.annotation.Resource;
 import net.sf.saxon.s9api.XdmNode;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 
-public class ValidatorSchematronTaskImpl extends AbstractValidatorTask implements ValidatorSchematronTask {
+public class SchematronValidatorTaskImpl extends AbstractValidatorTask implements SchematronValidatorTask {
     @Resource(name = "jaxbMarshallerSchematronSvrl")
     private CrigttJaxbMarshaller schematronSvrlJaxbMarshaller;
 
     private Map<String, ValidatorLevel> phaseLevels;
     private ValidatorSchematron schematron;
 
-    public ValidatorSchematronTaskImpl(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces) {
+    public SchematronValidatorTaskImpl(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces) {
         super(doc, docSrc, docFileName, docNamespaces);
     }
 

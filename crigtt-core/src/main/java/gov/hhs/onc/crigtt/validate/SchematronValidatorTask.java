@@ -2,7 +2,7 @@ package gov.hhs.onc.crigtt.validate;
 
 import java.util.Map;
 
-public interface ValidatorSchematronTask extends ValidatorTask {
+public interface SchematronValidatorTask extends ValidatorTask {
     public Map<String, ValidatorLevel> getPhaseLevels();
 
     public void setPhaseLevels(Map<String, ValidatorLevel> phaseLevels);

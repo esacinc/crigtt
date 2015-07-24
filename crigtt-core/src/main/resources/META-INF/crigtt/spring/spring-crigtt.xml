@@ -124,9 +124,9 @@
     <!--====================================================================================================
     = TASK EXECUTORS
     =====================================================================================================-->
-    <beans:bean id="taskExecutorThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" abstract="true"/>
+    <beans:bean id="taskExecThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" abstract="true"/>
     
-    <beans:bean id="taskExecutorCrigtt" parent="taskExecutorThreadPool" abstract="true"
+    <beans:bean id="taskExecCrigtt" parent="taskExecThreadPool" abstract="true"
         p:allowCoreThreadTimeOut="true"
         p:daemon="true"/>
     

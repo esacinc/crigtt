@@ -16,14 +16,19 @@ import java.io.IOException;
 import java.net.URL;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.SmartApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.ResourceUtils;
 
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
-public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunListener {
+public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunListener implements SmartApplicationListener {
     private class DefaultLoggingInitializer extends AbstractCrigttLoggingInitializer {
         public DefaultLoggingInitializer() {
             super(LoggingApplicationRunListener.this.app);
@@ -37,7 +42,27 @@ public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunL
     }
 
     @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+    }
+
+    @Override
+    public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
+        return ContextClosedEvent.class.isAssignableFrom(eventType);
+    }
+
+    @Override
+    public boolean supportsSourceType(Class<?> srcType) {
+        return ApplicationContext.class.isAssignableFrom(srcType);
+    }
+
+    @Override
     public void started() {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+
+        this.app.addListeners(this);
+
         LoggerContext loggerContext = ContextSelectorStaticBinder.getSingleton().getContextSelector().getLoggerContext();
 
         loggerContext.stop();
@@ -79,5 +104,10 @@ public class LoggingApplicationRunListener extends AbstractCrigttApplicationRunL
 
         loggerContext.getLogger(LoggingApplicationRunListener.class).info(
             String.format("Logging initialized (initializerClass=%s, configFileUrl=%s).", loggingInit.getClass().getName(), configFileUrl.toString()));
+    }
+
+    @Override
+    public int getOrder() {
+        return this.getClass().getAnnotation(Order.class).value();
     }
 }

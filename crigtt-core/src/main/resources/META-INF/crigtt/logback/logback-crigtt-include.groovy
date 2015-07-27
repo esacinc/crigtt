@@ -84,6 +84,11 @@ logger("gov.hhs.onc.crigtt", ALL, [ CrigttAppenderNames.CONSOLE, CrigttAppenderN
 logger(CrigttJaxbMarshaller.name, WARN, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
 
 /*====================================================================================================
+= LOGGERS: ORIENT TECHNOLOGIES
+=====================================================================================================*/
+logger("com.orientechnologies", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+
+/*====================================================================================================
 = LOGGERS: EHCACHE
 =====================================================================================================*/
 logger("net.sf.ehcache", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)

@@ -27,9 +27,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nullable;
 import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.XdmEmptySequence;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.sxpath.IndependentContext;
@@ -84,11 +87,7 @@ public class DynamicVocabValidatorServiceImpl implements DynamicVocabValidatorSe
 
         List<ValidatorEvent> events = new ArrayList<>(engineResults.size());
         ValidatorEvent event;
-        int xpathNodeIndex;
         String xpathExpr;
-        XdmValue locValue;
-        NodeInfo locNodeInfo;
-        CrigttLocation locObj;
         ValidatorLocation loc;
         CcdaValidatorResult ccdaEngineResult;
         ValidatorCodeSystem codeSystem;
@@ -109,19 +108,13 @@ public class DynamicVocabValidatorServiceImpl implements DynamicVocabValidatorSe
                 event.setDescription(engineResult.getInfoMessage());
             }
 
-            xpathNodeIndex = engineResult.getNodeIndex();
-            xpathExpr = engineResult.getXpathExpression();
-            event.setTestExpression(xpathExpr);
+            event.setTestExpression((xpathExpr = engineResult.getXpathExpression()));
 
-            locValue = this.xpathCompiler.evaluate(xpathExpr, xpathContext, doc);
-
-            if ((locValue != null) && (locValue.size() > xpathNodeIndex)) {
-                event.setLocation((loc = new ValidatorLocationImpl()));
-                loc.setColumnNumber((locObj = new CrigttLocation((locNodeInfo = ((XdmNode) locValue.itemAt(xpathNodeIndex)).getUnderlyingNode())))
-                    .getColumnNumber());
-                loc.setLineNumber(locObj.getLineNumber());
-                loc.setNodeExpression(CrigttXpathUtils.buildAbsoluteExpression(NodeOverNodeInfo.wrap(locNodeInfo)));
+            if ((loc = this.buildLocation(xpathContext, doc, xpathExpr, engineResult.getNodeIndex())) == null) {
+                loc = this.buildLocation(xpathContext, doc, engineResult.getBaseXpathExpression(), engineResult.getBaseNodeIndex());
             }
+
+            event.setLocation(loc);
 
             if (!(engineResult instanceof CcdaValidatorResult)) {
                 continue;
@@ -185,6 +178,30 @@ public class DynamicVocabValidatorServiceImpl implements DynamicVocabValidatorSe
         }
 
         (this.engine = new XPathValidationEngine()).initialize(this.engineConfigFile.asInputSource());
+    }
+
+    @Nullable
+    private ValidatorLocation buildLocation(IndependentContext xpathContext, XdmDocument doc, @Nullable String xpathExpr, @Nonnegative int xpathNodeIndex)
+        throws SaxonApiException {
+        if (xpathExpr == null) {
+            return null;
+        }
+
+        XdmValue locValue = this.xpathCompiler.evaluate(xpathExpr, xpathContext, doc);
+
+        if ((locValue == null) || (xpathNodeIndex >= locValue.size())) {
+            return null;
+        }
+
+        NodeInfo locNodeInfo = ((XdmNode) locValue.itemAt(xpathNodeIndex)).getUnderlyingNode();
+        CrigttLocation locObj = new CrigttLocation(locNodeInfo);
+
+        ValidatorLocation loc = new ValidatorLocationImpl();
+        loc.setColumnNumber(locObj.getColumnNumber());
+        loc.setLineNumber(locObj.getLineNumber());
+        loc.setNodeExpression(CrigttXpathUtils.buildAbsoluteExpression(NodeOverNodeInfo.wrap(locNodeInfo)));
+
+        return loc;
     }
 
     private VocabularyRepositoryConnectionInfo buildRepositoryConnectionInfo(OServerStorageConfiguration dbStorage) {

@@ -1009,10 +1009,14 @@ MAY contain zero or one [0..1] sequenceNumber (CONF:1098-17174). The sequenceNum
 Note: This id may be set equal to (a pointer to) an id on a participant elsewhere in the document (header or entries) or a new author participant can be described here. If the id is pointing to a participant already described elsewhere in the document, assignedAuthor/id is sufficient to identify this participant and none of the remaining details of assignedAuthor are required to be set. Application Software must be responsible for resolving the identifier back to its original object and then rendering the information in the correct place in the containing section's narrative text. This id must be a pointer to another author participant.</sch:assert>
 			<sch:assert id="a-1098-31477" test="empty(cda:assignedAuthor/cda:representedOrganization) or (count(cda:assignedAuthor/cda:representedOrganization)=1 and count(cda:assignedAuthor/cda:representedOrganization[@classCode='ORG'])=1)">The representedOrganization, if present, SHALL contain exactly one [1..1] @classCode="ORG" (CONF:1098-31477).</sch:assert>
 			<sch:assert id="a-1098-32017" test="count(cda:templateId[@root='2.16.840.1.113883.10.20.22.4.119'])=1">SHALL contain exactly one [1..1] templateId (CONF:1098-32017) such that it SHALL contain exactly one [1..1] @root="2.16.840.1.113883.10.20.22.4.119" (CONF:1098-32018).</sch:assert>
-			<sch:assert id="a-1098-32628-c" test="true()">If the ID isn't referencing an author described elsewhere in the document, then the author components required in US Realm Header are required here as well (CONF:1098-32628).</sch:assert>
 		</sch:rule>
 		<sch:rule id="r-urn-oid-2.16.840.1.113883.10.20.22.4.119-errors" context="cda:author[cda:templateId[@root='2.16.840.1.113883.10.20.22.4.119']]">
 			<sch:extends rule="r-urn-oid-2.16.840.1.113883.10.20.22.4.119-errors-abstract"/>
+		</sch:rule>
+		<sch:rule id="r-urn-oid-2.16.840.1.113883.10.20.22.4.119-branch-1098-31473-errors" context="cda:author[cda:templateId[@root='2.16.840.1.113883.10.20.22.4.119']]/cda:assignedAuthor/cda:id">
+			<sch:let name="containsRequiredAuthorComponents" value="../empty(cda:code) or (../count(cda:code)=1 and ../count(cda:code[@code])=1) and ../exists(cda:addr) and ../exists(cda:telecom) and (../empty(cda:assignedPerson) or (../count(cda:assignedPerson)=1 and ../count(cda:assignedPerson[exists(cda:name)])=1)) and ../count(cda:assignedPerson | cda:assignedAuthoringDevice)=1"/>
+			<sch:let name="matchingIds" value="//cda:id[@root=current()/@root and @extension=current()/@extension]"/>
+			<sch:assert id="a-1098-32628" test="exists($matchingIds[../empty(cda:code) or (../count(cda:code)=1 and ../count(cda:code[@code])=1) and ../exists(cda:addr) and ../exists(cda:telecom) and (../empty(cda:assignedPerson) or (../count(cda:assignedPerson)=1 and ../count(cda:assignedPerson[exists(cda:name)])=1)) and ../count(cda:assignedPerson | cda:assignedAuthoringDevice)=1]) or $containsRequiredAuthorComponents">If the ID isn't referencing an author described elsewhere in the document, then the author components required in US Realm Header are required here as well (CONF:1098-32628).</sch:assert>
 		</sch:rule>
 	</sch:pattern>
 	<sch:pattern id="p-urn-hl7ii-2.16.840.1.113883.10.20.22.4.46-2014-06-09-errors">
@@ -2177,7 +2181,7 @@ Note: This entryRelationship provides information on the TNM Pathologic Stage Gr
 	</sch:pattern>
 	<sch:pattern id="p-urn-hl7ii-2.16.840.1.113883.10.20.22.4.16-2014-06-09-warnings">
 		<sch:rule id="r-urn-hl7ii-2.16.840.1.113883.10.20.22.4.16-2014-06-09-warnings-abstract" abstract="true">
-			<sch:assert id="a-1098-7513-c" test="count(cda:effectiveTime)=1 and count(cda:effectiveTime[@operator='A'][@xsi:type='PIVL_TS' or @xsi:type='EIVL_TS'])=1">SHOULD contain zero or one [0..1] effectiveTime (CONF:1098-7513) such that it
+			<sch:assert id="a-1098-7513-c" test="count(cda:effectiveTime[@operator='A'][@xsi:type='PIVL_TS' or @xsi:type='EIVL_TS'])=1">SHOULD contain zero or one [0..1] effectiveTime (CONF:1098-7513) such that it
 Note: This effectiveTime represents the medication frequency (e.g., administration times per day). SHALL contain exactly one [1..1] @operator="A" (CONF:1098-9106). SHALL contain exactly one [1..1] @xsi:type="PIVL_TS" or "EIVL_TS" (CONF:1098-28499).</sch:assert>
 			<sch:assert id="a-1098-7514" test="count(cda:routeCode)=1">SHOULD contain zero or one [0..1] routeCode, which SHALL be selected from ValueSet Medication Route FDA urn:oid:2.16.840.1.113883.3.88.12.3221.8.7 DYNAMIC (CONF:1098-7514).</sch:assert>
 			<sch:assert id="a-1098-7526" test="count(cda:doseQuantity[@unit])=1">This doseQuantity SHOULD contain zero or one [0..1] @unit, which SHALL be selected from ValueSet UnitsOfMeasureCaseSensitive urn:oid:2.16.840.1.113883.1.11.12839 DYNAMIC (CONF:1098-7526).</sch:assert>

@@ -26,8 +26,10 @@
         p:port="${crigtt.db.validate.vocab.dynamic.port}">
         <beans:property name="globals">
             <beans:map>
-                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).TX_USE_LOG }" value="false"
-                    value-type="java.lang.Boolean"/>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).NETWORK_MAX_CONCURRENT_SESSIONS }" value="10000"
+                    value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).WAL_COMMIT_TIMEOUT }" value="5000"
+                    value-type="java.lang.Integer"/>
             </beans:map>
         </beans:property>
         <beans:property name="properties">

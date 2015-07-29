@@ -1,9 +1,7 @@
 package gov.hhs.onc.crigtt.cache.impl;
 
-import gov.hhs.onc.crigtt.context.impl.CrigttApplication;
 import java.io.File;
 import java.util.Optional;
-import javax.annotation.Resource;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
@@ -12,9 +10,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 
 public class CrigttCacheManagerFactoryBean extends AbstractCrigttCacheComponentFactoryBean<EhCacheCacheManager, Configuration> implements DisposableBean {
-    @Resource(name = "app")
-    private CrigttApplication app;
-
     private DiskStoreConfiguration diskStoreConfig;
 
     public CrigttCacheManagerFactoryBean() {
@@ -37,10 +32,6 @@ public class CrigttCacheManagerFactoryBean extends AbstractCrigttCacheComponentF
         if (this.diskStoreConfig != null) {
             File diskStoreDir = new File(this.diskStoreConfig.getPath());
 
-            if (!diskStoreDir.isAbsolute()) {
-                this.diskStoreConfig.setPath((diskStoreDir = new File(this.app.getHome(), diskStoreDir.getPath())).getPath());
-            }
-
             if (!diskStoreDir.exists()) {
                 if (!diskStoreDir.mkdirs()) {
                     throw new FatalBeanException(String.format("Unable to create cache manager (name=%s) disk store directory (path=%s).", name,
@@ -58,7 +49,7 @@ public class CrigttCacheManagerFactoryBean extends AbstractCrigttCacheComponentF
         Optional.ofNullable(this.maxBytesLocalHeap).ifPresent(this.config::setMaxBytesLocalHeap);
         Optional.ofNullable(this.maxBytesLocalOffHeap).ifPresent(this.config::setMaxBytesLocalOffHeap);
         Optional.ofNullable(this.sizeOfPolicyConfig).ifPresent(this.config::addSizeOfPolicy);
-        
+
         return (this.manager = new EhCacheCacheManager(new CacheManager(this.config)));
     }
 

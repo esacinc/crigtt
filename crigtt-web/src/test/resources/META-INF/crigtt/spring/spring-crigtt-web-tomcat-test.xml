@@ -33,7 +33,7 @@
     
     <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="embeddedServletContainerFactoryTomcatCrigtt" parent="embeddedServletContainerFactoryTomcat"
-        p:baseDirectory="#{ T(org.apache.commons.lang3.SystemUtils).userDir }"
+        p:baseDirectory="${crigtt.tomcat.dir}"
         p:contextPath="${crigtt.tomcat.context.path}"
         p:documentRoot="#{ T(org.apache.commons.lang3.SystemUtils).userDir }"
         p:port="${crigtt.tomcat.port.http}"

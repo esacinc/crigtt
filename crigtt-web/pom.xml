@@ -431,9 +431,6 @@
                     </execution>
                     <execution>
                         <id>test-integration</id>
-                        <configuration>
-                            <workingDirectory>${project.build.directory}/${project.artifactId}-test</workingDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

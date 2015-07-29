@@ -1,5 +1,7 @@
 package gov.hhs.onc.crigtt.validate.render.impl;
 
+import com.github.sebhoss.warnings.CompilerWarnings;
+import gov.hhs.onc.crigtt.transform.CrigttContextDataNames;
 import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
@@ -24,8 +26,10 @@ public class FormatTimestampFunction extends AbstractCrigttExtensionFunction {
     }
 
     @Override
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(DateFormatUtils.format(((XdmAtomicValue) args[0]).getLongValue(), CrigttDateUtils.DISPLAY_FORMAT_PATTERN,
-            ((TimeZone) contextData.get(ValidatorRenderOptions.TIME_ZONE_CONTEXT_DATA_KEY))));
+        // noinspection ConstantConditions
+        return new XdmAtomicValue(DateFormatUtils.format(getAtomicValue(args[0]).getLongValue(), CrigttDateUtils.DISPLAY_FORMAT_PATTERN,
+            ((TimeZone) ((Map<String, Object>) contextData.get(CrigttContextDataNames.VALIDATE_RENDER_OPTS_NAME)).get(ValidatorRenderOptions.TIME_ZONE_NAME))));
     }
 }

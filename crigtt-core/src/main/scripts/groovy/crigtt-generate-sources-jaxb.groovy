@@ -104,7 +104,8 @@ def final BASE_ARGS = [
     "-mark-generated",
     "-Xannotate",
     "-Xsetters",
-    "-Xsetters-mode=direct"
+    "-Xsetters-mode=direct",
+    "-Xvalue-constructor"
 ] as String[]
 
 def final JAVA_SRC_FILE_EXT = ".java"
@@ -330,7 +331,7 @@ ant.fileset(dir: outDir, includes: "**/*${JAVA_SRC_FILE_EXT}").each{
     srcFileContent = (srcFile = it.file).text
     
     abstractImplClassNames.each {
-        srcFileContent = srcFileContent.replaceAll(Pattern.compile("(\\s+)(${it})(\\s+|\\.)"), {
+        srcFileContent = srcFileContent.replaceAll(Pattern.compile("(\\s+)(${it})(\\s+|[\\.\\(])"), {
             it[1] + ABSTRACT_CLASS_NAME_PREFIX + StringUtils.removeEnd(it[2], IMPL_CLASS_NAME_SUFFIX) + it[3]
         })
     }

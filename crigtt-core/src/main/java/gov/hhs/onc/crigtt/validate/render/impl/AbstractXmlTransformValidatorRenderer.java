@@ -1,10 +1,10 @@
 package gov.hhs.onc.crigtt.validate.render.impl;
 
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
+import gov.hhs.onc.crigtt.transform.CrigttContextDataNames;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltTransformer;
 import gov.hhs.onc.crigtt.validate.ValidatorResponse;
-import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.validate.render.XmlTransformValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
@@ -26,13 +26,7 @@ public abstract class AbstractXmlTransformValidatorRenderer extends AbstractVali
         CrigttXsltTransformer xsltTransformer = this.xsltExec.load();
         xsltTransformer.setSource(new ByteArraySource(this.xmlRenderer.render(resp)));
 
-        xsltTransformer
-            .getUnderlyingController()
-            .getContextData()
-            .put(
-                ValidatorRenderOptions.TIME_ZONE_CONTEXT_DATA_KEY,
-                (opts.containsKey(ValidatorRenderOptions.TIME_ZONE_NAME) ? opts.get(ValidatorRenderOptions.TIME_ZONE_NAME) : this.defaultOpts
-                    .get(ValidatorRenderOptions.TIME_ZONE_NAME)));
+        xsltTransformer.getUnderlyingController().getContextData().put(CrigttContextDataNames.VALIDATE_RENDER_OPTS_NAME, opts);
 
         xsltTransformer.setDestination(dest);
 

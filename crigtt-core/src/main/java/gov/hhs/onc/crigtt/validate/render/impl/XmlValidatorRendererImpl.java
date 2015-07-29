@@ -18,7 +18,7 @@ public class XmlValidatorRendererImpl extends AbstractValidatorRenderer implemen
     @Resource(name = "objFactoryValidate")
     private ObjectFactory objFactory;
 
-    @Resource(name = "jaxbMarshallerValidator")
+    @Resource(name = "jaxbMarshallerValidate")
     private CrigttJaxbMarshaller jaxbMarshaller;
 
     @Resource(name = "serializerXml")

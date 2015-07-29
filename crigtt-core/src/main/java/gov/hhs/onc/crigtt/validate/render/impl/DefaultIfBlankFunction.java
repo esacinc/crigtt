@@ -17,11 +17,11 @@ public class DefaultIfBlankFunction extends AbstractCrigttExtensionFunction {
     public final static StructuredQName NAME = new QName(CrigttXmlNs.VALIDATE_PREFIX, CrigttXmlNs.VALIDATE_URI, "default-if-blank").getStructuredQName();
 
     public DefaultIfBlankFunction() {
-        super(NAME, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING);
+        super(NAME, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.OPTIONAL_STRING);
     }
 
     @Override
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(StringUtils.defaultIfBlank(((XdmAtomicValue) args[0]).getStringValue(), ((XdmAtomicValue) args[1]).getStringValue()));
+        return new XdmAtomicValue(StringUtils.defaultIfBlank(getStringValue(args[0]), getStringValue(args[1])));
     }
 }

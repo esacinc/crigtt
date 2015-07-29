@@ -6,7 +6,6 @@ import gov.hhs.onc.crigtt.db.CrigttDbPaths;
 import gov.hhs.onc.crigtt.db.impl.CrigttDbServerConfiguration;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
-import gov.hhs.onc.crigtt.transform.impl.CrigttXpathCompiler;
 import gov.hhs.onc.crigtt.validate.ValidatorCode;
 import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
@@ -16,14 +15,13 @@ import gov.hhs.onc.crigtt.validate.impl.ValidatorCodeImpl;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorCodeSystemImpl;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorEventImpl;
 import gov.hhs.onc.crigtt.validate.impl.ValidatorLocationImpl;
-import gov.hhs.onc.crigtt.validate.vocab.DynamicVocabValidatorService;
+import gov.hhs.onc.crigtt.validate.vocab.DynamicVocabService;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +30,6 @@ import javax.annotation.Nullable;
 import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XdmEmptySequence;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.sxpath.IndependentContext;
@@ -47,8 +44,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.xml.sax.SAXException;
 
-public class DynamicVocabValidatorServiceImpl implements DynamicVocabValidatorService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(DynamicVocabValidatorServiceImpl.class);
+public class DynamicVocabServiceImpl extends AbstractVocabService implements DynamicVocabService {
+    private final static Logger LOGGER = LoggerFactory.getLogger(DynamicVocabServiceImpl.class);
 
     @Value("${crigtt.validate.vocab.dynamic.load.force}")
     private boolean forceLoad;
@@ -65,11 +62,8 @@ public class DynamicVocabValidatorServiceImpl implements DynamicVocabValidatorSe
     @Value("${crigtt.validate.vocab.dynamic.repo.value.set.dir}")
     private File valueSetRepoDir;
 
-    @javax.annotation.Resource(name = "dbServerConfigValidateVocabDynamic")
+    @javax.annotation.Resource(name = "dbServerConfigVocabDynamic")
     private CrigttDbServerConfiguration dbServerConfig;
-
-    @javax.annotation.Resource(name = "xpathCompilerCrigtt")
-    private CrigttXpathCompiler xpathCompiler;
 
     private String[] codeLoaderClassNames;
     private String[] valueSetLoaderClassNames;

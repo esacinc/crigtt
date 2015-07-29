@@ -115,7 +115,7 @@
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="jaxbMarshallerValidator" parent="jaxbMarshallerCrigtt">
+    <beans:bean id="jaxbMarshallerValidate" parent="jaxbMarshallerCrigtt">
         <beans:property name="packagesToScan">
             <beans:array>
                 <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>

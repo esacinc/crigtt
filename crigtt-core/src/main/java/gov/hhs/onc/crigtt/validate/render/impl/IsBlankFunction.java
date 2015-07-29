@@ -22,6 +22,6 @@ public class IsBlankFunction extends AbstractCrigttExtensionFunction {
 
     @Override
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(StringUtils.isBlank(((XdmAtomicValue) args[0]).getStringValue()));
+        return new XdmAtomicValue(StringUtils.isBlank(getStringValue(args[0])));
     }
 }

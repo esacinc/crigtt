@@ -21,7 +21,7 @@
     = DATABASE SERVER CONFIGURATIONS
     =====================================================================================================-->
     <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="dbServerConfigValidateVocabDynamic" parent="dbServerConfig"
+    <beans:bean id="dbServerConfigVocabDynamic" parent="dbServerConfig"
         p:ipAddress="${crigtt.db.validate.vocab.dynamic.ip.addr}"
         p:port="${crigtt.db.validate.vocab.dynamic.port}">
         <beans:property name="globals">
@@ -63,14 +63,35 @@
     </beans:bean>
     
     <!--====================================================================================================
-    = DYNAMIC VOCABULARY VALIDATOR SERVICE
+    = VOCABULARY SERVICES
     =====================================================================================================-->
-    <beans:bean id="validatorServiceVocabDynamic" class="gov.hhs.onc.crigtt.validate.vocab.DynamicVocabValidatorService" abstract="true"/>
+    <beans:bean id="vocabService" class="gov.hhs.onc.crigtt.validate.vocab.VocabService" abstract="true"/>
     
-    <beans:bean id="validatorServiceVocabDynamicImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabValidatorServiceImpl"
-        parent="validatorServiceVocabDynamic" abstract="true"/>
+    <!--====================================================================================================
+    = STATIC VOCABULARY SERVICES
+    =====================================================================================================-->
+    <beans:bean id="vocabServiceStatic" class="gov.hhs.onc.crigtt.validate.vocab.StaticVocabService" parent="vocabService" abstract="true"/>
     
-    <beans:bean id="validatorServiceVocabDynamicCrigtt" parent="validatorServiceVocabDynamicImpl">
+    <beans:bean id="vocabServiceStaticImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.StaticVocabServiceImpl" parent="vocabServiceStatic"
+        abstract="true"/>
+    
+    <beans:bean id="vocabServiceStaticCcdaR2CancerReg" parent="vocabServiceStaticImpl">
+        <beans:property name="document">
+            <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
+                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
+                p:uri="voc.xml"/>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = DYNAMIC VOCABULARY SERVICES
+    =====================================================================================================-->
+    <beans:bean id="vocabServiceDynamic" class="gov.hhs.onc.crigtt.validate.vocab.DynamicVocabService" parent="vocabService" abstract="true"/>
+    
+    <beans:bean id="vocabServiceDynamicImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabServiceImpl" parent="vocabServiceDynamic"
+        abstract="true"/>
+    
+    <beans:bean id="vocabServiceDynamicCrigtt" parent="vocabServiceDynamicImpl">
         <beans:property name="codeLoaderClassNames">
             <beans:array>
                 <beans:value>org.sitenv.vocabularies.loader.code.icd9.Icd9CmDxLoader</beans:value>

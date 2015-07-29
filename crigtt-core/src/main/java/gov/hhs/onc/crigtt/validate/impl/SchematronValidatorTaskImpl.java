@@ -1,5 +1,6 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
+import com.github.sebhoss.warnings.CompilerWarnings;
 import gov.hhs.onc.crigtt.beans.IdentifiedBean;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.schematron.svrl.ActivePattern;
@@ -8,7 +9,9 @@ import gov.hhs.onc.crigtt.schematron.svrl.FailedAssertion;
 import gov.hhs.onc.crigtt.schematron.svrl.FiredRule;
 import gov.hhs.onc.crigtt.schematron.svrl.Output;
 import gov.hhs.onc.crigtt.schematron.svrl.SuccessfulReport;
+import gov.hhs.onc.crigtt.transform.CrigttContextDataNames;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
+import gov.hhs.onc.crigtt.validate.SchematronValidatorTask;
 import gov.hhs.onc.crigtt.validate.ValidatorAssertion;
 import gov.hhs.onc.crigtt.validate.ValidatorCode;
 import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
@@ -20,7 +23,6 @@ import gov.hhs.onc.crigtt.validate.ValidatorPhase;
 import gov.hhs.onc.crigtt.validate.ValidatorRule;
 import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.SchematronValidatorTask;
 import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
@@ -45,13 +47,14 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
     }
 
     @Override
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     public List<ValidatorEvent> call() throws Exception {
         Map<String, String> patternPhases = this.schematron.getPatternPhases();
         ValidatorSchema activeSchema = this.schematron.getActiveSchema();
         Map<String, ValidatorPhase> activePhases = this.schematron.getActivePhases();
         Map<String, ValidatorPattern> activePatterns = this.schematron.getActivePatterns();
         Map<String, ValidatorRule> activeRules = this.schematron.getActiveRules();
-        Map<String, String> initTestExprs = this.schematron.getInitialTestExpressions();
+        Map<String, String> initTestExprs = this.schematron.getStaticVocabService().getInitialTestExpressions();
         Map<String, ValidatorAssertion> activeAssertions = this.schematron.getActiveAssertions();
         List<ValidatorEvent> events = new ArrayList<>(activeAssertions.size());
         List<?> outputContent;
@@ -64,8 +67,8 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
         ValidatorRule activeRule = null;
         String contextExpr = null;
         boolean assertionStatus;
-        ValidatorAssertion activeAssertion;
         String assertionId;
+        ValidatorAssertion activeAssertion;
         ValidatorEvent event;
         ValidatorLocation loc;
         SuccessfulReport successfulReport;
@@ -75,7 +78,7 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
         CrigttLocation locObj;
 
         Map<Object, Object> contextData = new HashMap<>();
-        contextData.put(ValidatorSchematron.class.getName(), this.schematron);
+        contextData.put(CrigttContextDataNames.VALIDATE_SCHEMATRON_NAME, this.schematron);
 
         CrigttStreamUtils
             .instances(
@@ -108,9 +111,18 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
                 event.setPattern(activePattern);
                 event.setRule(activeRule);
                 event.setAssertion(activeAssertion);
-                event.setValueSet(((ValidatorValueSet) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorValueSet.class.getName()))));
-                event.setCodeSystem(((ValidatorCodeSystem) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCodeSystem.class.getName()))));
-                event.setCode(((ValidatorCode) contextData.get(new MultiKey<>(patternId, assertionId, ValidatorCode.class.getName()))));
+                event.setExpectedValueSets(((List<ValidatorValueSet>) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_VALUE_SET_EXPECTED_NAME))));
+                event.setValueSet(((ValidatorValueSet) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_VALUE_SET_NAME))));
+                event.setExpectedCodeSystems(((List<ValidatorCodeSystem>) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_SYSTEM_EXPECTED_NAME))));
+                event.setCodeSystem(((ValidatorCodeSystem) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_SYSTEM_NAME))));
+                event.setExpectedCodes(((List<ValidatorCode>) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_EXPECTED_NAME))));
+                event
+                    .setCode(((ValidatorCode) contextData.get(new MultiKey<>(patternId, assertionId, CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_NAME))));
 
                 if (assertionStatus) {
                     event.setDescription((successfulReport = ((SuccessfulReport) outputContentItem)).getText());

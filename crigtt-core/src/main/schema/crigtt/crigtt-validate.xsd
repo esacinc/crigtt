@@ -113,13 +113,13 @@
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="Code">
+    <xsd:complexType name="CodeSystem">
         <xsd:sequence>
             <xsd:group ref="validate:NameElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:complexType name="CodeSystem">
+    <xsd:complexType name="Code">
         <xsd:sequence>
             <xsd:group ref="validate:NameElements"/>
         </xsd:sequence>
@@ -139,8 +139,17 @@
             <xsd:element name="pattern" type="validate:Pattern" minOccurs="0"/>
             <xsd:element name="rule" type="validate:Rule" minOccurs="0"/>
             <xsd:element name="assertion" type="validate:Assertion" minOccurs="0"/>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="expectedValueSet" type="validate:ValueSet"/>
+            </xsd:sequence>
             <xsd:element name="valueSet" type="validate:ValueSet" minOccurs="0"/>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="expectedCodeSystem" type="validate:CodeSystem"/>
+            </xsd:sequence>
             <xsd:element name="codeSystem" type="validate:CodeSystem" minOccurs="0"/>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="expectedCode" type="validate:Code"/>
+            </xsd:sequence>
             <xsd:element name="code" type="validate:Code" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>

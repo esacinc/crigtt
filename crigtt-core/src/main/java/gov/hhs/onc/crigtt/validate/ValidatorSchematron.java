@@ -2,8 +2,8 @@ package gov.hhs.onc.crigtt.validate;
 
 import gov.hhs.onc.crigtt.beans.NamedBean;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
+import gov.hhs.onc.crigtt.validate.vocab.StaticVocabService;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.xml.transform.Source;
@@ -17,10 +17,6 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public Map<String, ValidatorAssertion> getActiveAssertions();
 
-    public Map<String, ValidatorCode> getActiveCodes();
-
-    public Map<String, ValidatorCodeSystem> getActiveCodeSystems();
-
     public Map<String, ValidatorPattern> getActivePatterns();
 
     public Map<String, ValidatorPhase> getActivePhases();
@@ -29,15 +25,9 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public ValidatorSchema getActiveSchema();
 
-    public Map<String, ValidatorValueSet> getActiveValueSets();
-
-    public Map<String, String> getCodeNames();
-
     public ExtensionFunctionDefinition[] getExtensionFunctions();
 
     public void setExtensionFunctions(ExtensionFunctionDefinition ... extFuncs);
-
-    public Map<String, String> getInitialTestExpressions();
 
     public Map<String, ?> getParameters();
 
@@ -61,13 +51,9 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public void setSource(Source src);
 
-    public XdmDocument getStaticVocabDocument();
+    public StaticVocabService getStaticVocabService();
 
-    public void setStaticVocabDocument(XdmDocument staticVocabDoc);
-
-    public Map<String, List<String>> getValueSetCodeNames();
-
-    public Map<String, List<String>> getValueSetCodes();
+    public void setStaticVocabService(StaticVocabService staticVocabService);
 
     public CrigttXsltExecutable[] getXsltExecutables();
 

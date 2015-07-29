@@ -8,10 +8,9 @@ import java.util.List;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.sxpath.IndependentContext;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.xml.sax.SAXException;
 
-public interface DynamicVocabValidatorService extends DisposableBean, InitializingBean {
+public interface DynamicVocabService extends DisposableBean, VocabService {
     public List<ValidatorEvent> validate(IndependentContext xpathContext, XdmDocument doc, ByteArraySource docSrc) throws IOException, SAXException,
         SaxonApiException;
 

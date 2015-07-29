@@ -22,6 +22,6 @@ public class EscapeHtmlFunction extends AbstractCrigttExtensionFunction {
 
     @Override
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(StringEscapeUtils.escapeHtml4(((XdmAtomicValue) args[0]).getStringValue()));
+        return new XdmAtomicValue(StringEscapeUtils.escapeHtml4(getStringValue(args[0])));
     }
 }

@@ -1,5 +1,6 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
+import gov.hhs.onc.crigtt.utils.CrigttIteratorUtils;
 import javax.annotation.Nullable;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathCompiler;
@@ -10,10 +11,29 @@ import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.sxpath.XPathEvaluator;
 import net.sf.saxon.trans.XPathException;
+import org.apache.commons.collections4.IteratorUtils;
 
 public class CrigttXpathCompiler extends XPathCompiler {
     public CrigttXpathCompiler(CrigttProcessor proc) {
         super(proc);
+    }
+
+    public XdmNode[] evaluateNodes(String expr) throws SaxonApiException {
+        return this.evaluateNodes(expr, ((XdmItem) null));
+    }
+
+    public XdmNode[] evaluateNodes(String expr, @Nullable XdmItem contextItem) throws SaxonApiException {
+        return this.evaluateNodes(expr, this.getUnderlyingStaticContext(), contextItem);
+    }
+
+    public XdmNode[] evaluateNodes(String expr, IndependentContext context) throws SaxonApiException {
+        return this.evaluateNodes(expr, context, null);
+    }
+
+    public XdmNode[] evaluateNodes(String expr, IndependentContext context, @Nullable XdmItem contextItem) throws SaxonApiException {
+        XdmValue value = this.evaluate(expr, context, contextItem);
+
+        return ((value != null) ? IteratorUtils.toArray(CrigttIteratorUtils.instances(value.iterator(), XdmNode.class), XdmNode.class) : new XdmNode[0]);
     }
 
     @Nullable

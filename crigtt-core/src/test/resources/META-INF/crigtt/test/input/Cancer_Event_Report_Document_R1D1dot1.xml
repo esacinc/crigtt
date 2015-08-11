@@ -93,11 +93,11 @@
 				</languageCommunication>
 			</patient>
 			<providerOrganization>
-				<id extension="88888888" root="2.16.840.1.113883.4.6"/>
+				<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 				<id extension="219BX" root="1.1.1.1.1.1.1.1.2"/>
 				<name>The DoctorsTogether Physician Group</name>
 				<telecom use="WP" value="tel: +(555)-555-5000"/>
-				<addr>
+				<addr use="WP">
 					<streetAddressLine>1007 Health Drive</streetAddressLine>
 					<city>Portland</city>
 					<state>OR</state>
@@ -112,12 +112,16 @@
 		<assignedAuthor>
 			<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 			<code code="207RX0202X" displayName="Medical Oncology" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
-			<addr>
+			<addr use="WP">
 				<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 				<city>Portland</city>
 				<state>OR</state>
 				<postalCode>99123</postalCode>
 				<country>US</country>
+				<useablePeriod xsi:type="IVL_TS">
+					<low nullFlavor="NA"/>
+					<high nullFlavor="NA"/>
+				</useablePeriod>
 			</addr>
 			<telecom use="WP" value="tel:+1(555)555-1004"/>
 			<assignedPerson>
@@ -134,7 +138,7 @@
 		<time value="201209151030-0800"/>
 		<assignedAuthor>
 			<id nullFlavor="NA"/>
-			<addr>
+			<addr use="WP">
 				<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 				<city>Portland</city>
 				<state>OR</state>
@@ -151,7 +155,7 @@
 	<custodian>
 		<assignedCustodian>
 			<representedCustodianOrganization>
-				<id extension="88888888" root="2.16.840.1.113883.4.6"/>
+				<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 				<id extension="321CX" root="1.1.1.1.1.1.1.1.3"/>
 				<name>Medical Oncology Associates</name>
 				<telecom use="WP" value="tel:+1(555)555-1009"/>
@@ -178,7 +182,7 @@
 					<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 					<id extension="1234" root="2.16.840.1.113883.19"/>
 					<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
-					<addr>
+					<addr use="WP">
 						<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 						<city>Portland</city>
 						<state>OR</state>
@@ -236,7 +240,7 @@
 				<assignedEntity>
 					<id extension="6666666666" root="2.16.840.1.113883.4.6"/>
 					<id extension="1111" root="2.16.840.1.113883.19"/>
-					<addr>
+					<addr use="WP">
 						<streetAddressLine>1004 Health Drive</streetAddressLine>
 						<city>Portland</city>
 						<state>OR</state>
@@ -256,7 +260,7 @@
 						<id extension="219BX" root="1.1.1.1.1.1.1.1.2"/>
 						<name>The DoctorsTogether Physician Group</name>
 						<telecom use="WP" value="tel: +(555)-555-5000"/>
-						<addr>
+						<addr use="WP">
 							<streetAddressLine>1004 Health Drive</streetAddressLine>
 							<city>Portland</city>
 							<state>OR</state>
@@ -272,7 +276,7 @@
 					<serviceProviderOrganization>
 						<name>The DoctorsTogether Physician Group</name>
 						<telecom use="WP" value="tel: +(555)-555-5000"/>
-						<addr>
+						<addr use="WP">
 							<streetAddressLine>1004 Health Drive</streetAddressLine>
 							<city>Portland</city>
 							<state>OR</state>
@@ -331,9 +335,8 @@
 							<!-- This is of ongoing concern to the provider -->
 							<statusCode code="active"/>
 							<effectiveTime>
-								<!-- The low value represents when the problem was first recorded 
-                 in the patient's chart -->
-								<!-- Concern was documented on July 6, 2013 -->
+								<!-- The low value represents when the problem was first recorded in the patient's chart -->
+								<!-- Concern was documented on July 30, 2014 -->
 								<low value="20140730132515"/>
 							</effectiveTime>
 							<entryRelationship typeCode="SUBJ">
@@ -343,6 +346,50 @@
 									<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
 									<text>
 										<reference value="#Diagnosis_1"/>
+										<table border="1" width="100%">
+											<thead>
+												<tr>
+													<th>Clinical Stage Group</th>
+													<th>Clinical Narrative</th>
+													<th>Clinical Primary Tumor</th>
+													<th>Clinical Node</th>
+													<th>Clinical Metastases</th>
+													<th>Clinical Staged By</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td ID="ClinicalStageGroup_1">IIB</td>
+													<td ID="ClinicalNarrative_1">0</td>
+													<td ID="ClinicalPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
+													<td ID="ClinicalNode_1">Metastases to movable ipsilateral level I, II axillary lymph node(s)</td>
+													<td ID="ClinicalMetastases_1">No clinical or radiographic evidence of distant metastases</td>
+													<td ID="ClinicalStagedBy_1">Pathologist and managing physician</td>
+												</tr>
+											</tbody>
+										</table>
+										<table border="1" width="100%">
+											<thead>
+												<tr>
+													<th>Pathologic Stage Group</th>
+													<th>Pathologic Narrative</th>
+													<th>Pathologic Primary Tumor</th>
+													<th>Pathologic Node</th>
+													<th>Pathologic Metastases</th>
+													<th>Pathologic Staged By</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td ID="PathologicStageGroup_1">IIB</td>
+													<td ID="PathologicNarrative_1">0</td>
+													<td ID="PathologicPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
+													<td ID="PathologicNode_1">Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected.</td>
+													<td ID="PathologicMetastases_1">MX</td>
+													<td ID="PathologicStagedBy_1">Pathologist and managing physician</td>
+												</tr>
+											</tbody>
+										</table>
 									</text>
 									<statusCode code="completed"/>
 									<effectiveTime>
@@ -446,7 +493,7 @@
 															<code code="21907-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Distant metastases.clinical [Class] Cancer"/>
 															<value xsi:type="CD" code="M0" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="No clinical or radiographic evidence of distant metastases" sdtc:valueSet="2.16.840.1.113883.3.520.4.8">
 																<originalText>
-																	<reference value="#ClinicalMetasases_1"/>
+																	<reference value="#ClinicalMetastases_1"/>
 																</originalText>
 															</value>
 														</observation>
@@ -454,8 +501,8 @@
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
 															<templateId root="2.16.840.1.113883.10.13.39" extension="2015-02-05"/>
-															<code code="21910-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stager.clinical Cancer "/>
-															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.4" codeSystemName="NAACCR TNM Clinical Staged By " displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.4">
+															<code code="21910-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stager.clinical Cancer"/>
+															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.4" codeSystemName="NAACCR TNM Clinical Staged By" displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.4">
 																<originalText>
 																	<reference value="#ClinicalStagedBy_1"/>
 																</originalText>
@@ -486,35 +533,55 @@
 														</originalText>
 														<qualifier>
 															<name code="21903-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Descriptor.pathology Cancer Narrative "/>
-															<value code="0" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.21"/>
+															<value code="0" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="None" sdtc:valueSet="2.16.840.1.113883.3.520.4.21">
+																<originalText>
+																	<reference value="#PathologicNarrative_1"/>
+																</originalText>
+															</value>
 														</qualifier>
 													</value>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
 															<templateId root="2.16.840.1.113883.10.13.41" extension="2015-02-05"/>
 															<code code="21899-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Primary tumor.pathology Cancer"/>
-															<value xsi:type="CD" code="T2" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension" sdtc:valueSet="2.16.840.1.113883.3.520.4.17"/>
+															<value xsi:type="CD" code="T2" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension" sdtc:valueSet="2.16.840.1.113883.3.520.4.17">
+																<originalText>
+																	<reference value="#PathologicPrimaryTumor_1"/>
+																</originalText>
+															</value>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
 															<templateId root="2.16.840.1.113883.10.13.42" extension="2015-02-05"/>
 															<code code="21900-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Regional lymph nodes.pathology [Class] Cancer"/>
-															<value xsi:type="CD" code="N1" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected." sdtc:valueSet="2.16.840.1.113883.3.520.4.18"/>
+															<value xsi:type="CD" code="N1" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" displayName="Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected." sdtc:valueSet="2.16.840.1.113883.3.520.4.18">
+																<originalText>
+																	<reference value="#PathologicNode_1"/>
+																</originalText>
+															</value>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
 															<templateId root="2.16.840.1.113883.10.13.43" extension="2015-02-05"/>
 															<code code="21901-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Distant metastases.pathology [Class] Cancer"/>
-															<value xsi:type="CD" code="MX" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.19"/>
+															<value xsi:type="CD" code="MX" codeSystem="2.16.840.1.113883.15.6" codeSystemName="TNM 7. Edition" sdtc:valueSet="2.16.840.1.113883.3.520.4.19">
+                                                                <originalText>
+                                                                    <reference value="#PathologicMetastases_1"/>
+                                                                </originalText>
+															</value>
 														</observation>
 													</entryRelationship>
 													<entryRelationship typeCode="COMP">
 														<observation classCode="OBS" moodCode="EVN">
 															<templateId root="2.16.840.1.113883.10.13.44" extension="2015-02-05"/>
 															<code code="21904-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Stager.pathology Cancer"/>
-															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.17" codeSystemName="NAACCR TNM Pathologic Staged By" displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.27"/>
+															<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.17" codeSystemName="NAACCR TNM Pathologic Staged By" displayName="Pathologist and managing physician" sdtc:valueSet="2.16.840.1.113883.3.520.4.27">
+																<originalText>
+																	<reference value="#PathologicStagedBy_1"/>
+																</originalText>
+															</value>
 														</observation>
 													</entryRelationship>
 												</observation>
@@ -696,6 +763,9 @@
 								<low value="20120318"/>
 								<high nullFlavor="UNK"/>
 							</effectiveTime>
+							<effectiveTime xsi:type="PIVL_TS" operator="A">
+								<period value="6" unit="h"/>
+							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
 							<doseQuantity>
@@ -729,6 +799,14 @@
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201203180915-0800"/>
+								<assignedAuthor>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<entryRelationship typeCode="RSON">
 								<observation classCode="OBS" moodCode="EVN">
 									<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
@@ -774,6 +852,9 @@
 								<low value="20120318"/>
 								<high nullFlavor="UNK"/>
 							</effectiveTime>
+							<effectiveTime xsi:type="PIVL_TS" operator="A">
+								<period value="6" unit="h"/>
+							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
 							<doseQuantity>
@@ -807,6 +888,14 @@
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201203180915-0800"/>
+								<assignedAuthor>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<entryRelationship typeCode="RSON">
 								<observation classCode="OBS" moodCode="EVN">
 									<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
@@ -909,6 +998,7 @@
 												<city>Beaverton</city>
 												<state>OR</state>
 												<postalCode>97867</postalCode>
+												<country>US</country>
 											</addr>
 											<telecom value="tel:+1(555)555-1000" use="HP"/>
 											<assignedPerson>
@@ -935,6 +1025,7 @@
 												<city>Beaverton</city>
 												<state>OR</state>
 												<postalCode>97867</postalCode>
+												<country>US</country>
 											</addr>
 											<playingEntity>
 												<name>
@@ -956,6 +1047,7 @@
 												<city>Beaverton</city>
 												<state>OR</state>
 												<postalCode>97867</postalCode>
+												<country>US</country>
 											</addr>
 										</participantRole>
 									</participant>
@@ -989,7 +1081,7 @@
 					<!--  **** Plan of Treatment section V2 template  **** -->
 					<templateId root="2.16.840.1.113883.10.13.9" extension="2014-08-08"/>
 					<!--  Plan of Treatment Section (V2) - Cancer IG Specific Constraints  -->
-					<code code="18776-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Treatment plan"/>
+					<code code="18776-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Plan of treatment"/>
 					<title>TREATMENT PLAN</title>
 					<text>
 						...
@@ -1008,7 +1100,7 @@
 									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 									<id extension="111111111" root="2.16.840.1.113883.19.5"/>
 									<code code="207QA0505X" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy" displayName="Adult Medicine"/>
-									<addr>
+									<addr use="WP">
 										<streetAddressLine>4444 Healthcare Drive</streetAddressLine>
 										<city>Ann Arbor</city>
 										<state>MI</state>
@@ -1035,6 +1127,14 @@
 								<assignedAuthor>
 									<id root="20cf14fb-b65c-4c8c-a54d-b0cca834c18c"/>
 									<code code="163W00000X" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy" displayName="Registered nurse"/>
+									<addr>
+										<streetAddressLine>1000 Hospital Lane</streetAddressLine>
+										<city>Ann Arbor</city>
+										<state>MI</state>
+										<postalCode>99999</postalCode>
+										<country>US</country>
+									</addr>
+									<telecom use="WP" value="tel:+1(555)555-5000"/>
 									<assignedPerson>
 										<name>
 											<given>Nurse</given>
@@ -1074,7 +1174,7 @@
 							<id root="cdbd33f0-6cde-11db-9fe1-0800200c9a66"/>
 							<text>Heparin 0.25 ml Pre-filled Syringe</text>
 							<statusCode code="active"/>
-							<!-- The effectiveTime in a planned medication activity 
+							<!-- The effectiveTime in a planned medication activity
 								  represents the time that the medication activity should occur. -->
 							<effectiveTime value="20130905"/>
 							<consumable>
@@ -1090,6 +1190,14 @@
 									</manufacturerOrganization>
 								</manufacturedProduct>
 							</consumable>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201309050915-0800"/>
+								<assignedAuthor>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<entryRelationship typeCode="REFR">
 								<observation classCode="OBS" moodCode="EVN">
 									<!-- Patient Priority Preference-->
@@ -1105,7 +1213,7 @@
 										<time value="20130730"/>
 										<assignedAuthor>
 											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
-											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC"/>
+											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 											<addr>
 												<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 												<city>Portland</city>
@@ -1139,7 +1247,7 @@
 										<time value="20130730"/>
 										<assignedAuthor>
 											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
-											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC"/>
+											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 											<addr>
 												<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 												<city>Portland</city>
@@ -1183,6 +1291,7 @@
 								<assignedAuthor>
 									<!-- This id points back to a participant in the header -->
 									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 							<entryRelationship typeCode="COMP">
@@ -1235,10 +1344,12 @@
 								<low value="201307061145-0800"/>
 							</effectiveTime>
 							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 								<!-- Same as Concern effectiveTime/low -->
 								<time value="201307061145-0800"/>
 								<assignedAuthor>
-									<id extension="555555555" root="2.16.840.1.113883.19"/>
+									<id extension="5555555555" root="2.16.840.1.113883.19"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 							<entryRelationship typeCode="SUBJ">
@@ -1259,9 +1370,11 @@
 									</effectiveTime>
 									<value xsi:type="CD" code="408643008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Infiltrating duct carcinoma of breast" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
 									<author typeCode="AUT">
+										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201307061145-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.19"/>
+											<id extension="5555555555" root="2.16.840.1.113883.19"/>
+											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 								</observation>
@@ -1278,10 +1391,27 @@
 					<!-- Procedures section template -->
 					<templateId root="2.16.840.1.113883.10.13.10" extension="2014-08-08"/>
 					<!-- Procedures Section (entries required) (V2) - Cancer IG Specific Constraints template -->
-					<code code="47519-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="PROCEDURES"/>
+					<code code="47519-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of procedures"/>
 					<title>Procedures</title>
 					<text>
-						...
+						<table border="1" width="100%">
+							<thead>
+								<tr>
+									<th>Procedure</th>
+									<th>Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td ID="Proc1">Lumpectomy of breast</td>
+									<td>2013</td>
+								</tr>
+								<tr>
+									<td ID="a1">Radiation treatment delivery, single treatment area, single port or parallel opposed ports, simple blocks or no blocks; 11-19 MeV</td>
+									<td>2014</td>
+								</tr>
+							</tbody>
+						</table>
 					</text>
 					<entry typeCode="DRIV">
 						<procedure classCode="PROC" moodCode="EVN">
@@ -1312,7 +1442,7 @@
 								<assignedEntity>
 									<id root="2.16.840.1.113883.4.6" extension="1111111111"/>
 									<id root="2.16.840.1.113883.19.5.9999.456" extension="2981823"/>
-									<addr>
+									<addr use="WP">
 										<streetAddressLine>1001 Village Avenue</streetAddressLine>
 										<city>Portland</city>
 										<state>OR</state>
@@ -1324,7 +1454,7 @@
 										<id root="2.16.840.1.113883.19.5.9999.1393"/>
 										<name>Community Health and Hospitals</name>
 										<telecom use="WP" value="+1(555)555-5000"/>
-										<addr>
+										<addr use="WP">
 											<streetAddressLine>1001 Village
 												Avenue</streetAddressLine>
 											<city>Portland</city>
@@ -1335,6 +1465,31 @@
 									</representedOrganization>
 								</assignedEntity>
 							</performer>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201305120915-0800"/>
+								<assignedAuthor>
+									<id root="2.16.840.1.113883.4.6" extension="1111111111"/>
+									<id root="2.16.840.1.113883.19.5.9999.456" extension="2981823"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+         							<addr use="WP">
+										<streetAddressLine>1001 Village Avenue</streetAddressLine>
+										<city>Portland</city>
+										<state>OR</state>
+										<postalCode>99123</postalCode>
+										<country>US</country>
+									</addr>
+                                    <telecom use="WP" value="tel:+1(555)555-5000"/>
+                                    <assignedPerson>
+                                        <name>
+                                            <given>Patricia</given>
+                                            <given qualifier="CL">Patty</given>
+                                            <family>Primary</family>
+                                            <suffix qualifier="AC">M.D.</suffix>
+                                        </name>
+                                    </assignedPerson>
+								</assignedAuthor>
+							</author>
 							<participant typeCode="LOC">
 								<participantRole classCode="SDLOC">
 									<templateId root="2.16.840.1.113883.10.20.22.4.32"/>
@@ -1372,7 +1527,7 @@
 							<code code="34832-6" codeSystem="2.16.840.1.113883.6.1" displayName="Radiation Oncology Evaluation And Management Note"/>
 							<title>RADIATION ONCOLOGY</title>
 							<text>
-								...
+								<reference value="#a1"/>
 							</text>
 							<entry>
 								<organizer classCode="CLUSTER" moodCode="EVN">
@@ -1567,7 +1722,7 @@
 					<!-- Results Section (entries required) (V2) -->
 					<templateId root="2.16.840.1.113883.10.20.22.2.3" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2014-06-09"/>
-					<code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="RESULTS"/>
+					<code code="30954-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Relevant diagnostic tests &amp;or laboratory data"/>
 					<title>RESULTS</title>
 					<text>
 						<table>
@@ -1631,12 +1786,20 @@
 							<!-- ** Result organizer ** -->
 							<templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2014-06-09"/>
 							<id root="7d5a02b0-67a4-11db-bd13-0800200c9a66"/>
-							<code code="57021-8" displayName="CBC W Auto Differential panel in Blood" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+							<code code="57021-8" displayName="CBC W Auto Differential panel" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
 							<statusCode code="completed"/>
 							<effectiveTime>
 								<low value="200803190830-0800"/>
 								<high value="200803190830-0800"/>
 							</effectiveTime>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="200803190830-0800"/>
+								<assignedAuthor>
+									<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
+									<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<component>
 								<observation classCode="OBS" moodCode="EVN">
 									<!-- ** Result observation ** -->
@@ -1651,7 +1814,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
-											<id extension="333444444" root="2.16.840.1.113883.4.6"/>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1683,7 +1846,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
-											<id extension="333444444" root="2.16.840.1.113883.4.6"/>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1714,7 +1877,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
-											<id extension="333444444" root="2.16.840.1.113883.4.6"/>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1745,7 +1908,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
-											<id extension="333444444" root="2.16.840.1.113883.4.6"/>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1773,7 +1936,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
-											<id extension="333444444" root="2.16.840.1.113883.4.6"/>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
 											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1800,15 +1963,31 @@
 								<low value="200803200930-0800"/>
 								<high value="200803200930-0800"/>
 							</effectiveTime>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="200803200930-0800"/>
+								<assignedAuthor>
+									<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
+									<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<component>
 								<observation classCode="OBS" moodCode="EVN">
 									<!-- ** Result observation ** -->
 									<templateId root="2.16.840.1.113883.10.20.22.4.2" extension="2014-06-09"/>
 									<id root="aed821af-3330-4138-97f0-e84dfe5f3c35"/>
-									<code code="3094-0" displayName="Urea nitrogen, Serum" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+									<code code="3094-0" displayName="Urea nitrogen" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
 									<statusCode code="active"/>
 									<effectiveTime value="200803200930-0800"/>
 									<value xsi:type="PQ" nullFlavor="NI"/>
+									<author typeCode="AUT">
+										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+										<time value="200803200930-0800"/>
+										<assignedAuthor>
+											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
+											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+										</assignedAuthor>
+									</author>
 								</observation>
 							</component>
 						</organizer>
@@ -1825,23 +2004,54 @@
 					<code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History"/>
 					<title>SOCIAL HISTORY</title>
 					<text>
-						. . .
-						
+						<table border="1" width="100%">
+							<thead>
+								<tr>
+									<th>Social History Observation</th>
+									<th>Description</th>
+									<th>Dates Observed</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Current Smoking Status</td>
+									<td>Former smoker</td>
+									<td>September 10, 2012</td>
+								</tr>
+								<tr>
+									<td ID="Industry_1">Usual Industry History</td>
+									<td>Accounting, tax preparation, bookkeeping, and payroll services</td>
+									<td>January 2001 - present</td>
+								</tr>
+								<tr>
+									<td ID="Occupation_1">Usual Occupation History</td>
+									<td>Accountants and auditors</td>
+									<td>January 2001 - present</td>
+								</tr>
+								<tr>
+									<td>Tobacco Use</td>
+									<td>Moderate cigarette smoker, 10-19/day</td>
+									<td>February, 2009 - February, 2011</td>
+								</tr>
+							</tbody>
+						</table>
 					</text>
 					<entry typeCode="DRIV">
 						<observation classCode="OBS" moodCode="EVN">
 							<templateId root="2.16.840.1.113883.10.20.22.4.78" extension="2014-06-09"/>
 							<id extension="123456789" root="2.16.840.1.113883.19"/>
-							<code code="72166-2" codeSystem="2.16.840.1.113883.6.1" displayName="Tobacco smoking status NHIS"/>
+							<code code="72166-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Tobacco smoking status"/>
 							<statusCode code="completed"/>
 							<!-- The effectiveTime reflects when the current smoking status was observed. -->
 							<effectiveTime value="20120910"/>
 							<!-- The value represents the patient's smoking status currently observed. -->
 							<value xsi:type="CD" code="8517006" displayName="Former smoker" codeSystem="2.16.840.1.113883.6.96"/>
 							<author typeCode="AUT">
-								<time value="199803161030-0800"/>
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201209101145-0800"/>
 								<assignedAuthor>
-									<id extension="555555555" root="1.1.1.1.1.1.1.2"/>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 						</observation>
@@ -1899,8 +2109,8 @@
 								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 								<time value="201209101145-0800"/>
 								<assignedAuthor>
-									<id extension="555555555" root="2.16.840.1.113883.4.6"/>
-									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC"/>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 						</observation>
@@ -1954,6 +2164,14 @@
 								<low value="20120910"/>
 								<high value="20120910"/>
 							</effectiveTime>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201209101145-0800"/>
+								<assignedAuthor>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<component>
 								<observation classCode="OBS" moodCode="EVN">
 									<!-- ** Vital sign observation ** -->
@@ -1968,7 +2186,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201209101145-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -1988,7 +2206,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201209101145-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2008,7 +2226,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201209101145-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2028,7 +2246,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201109010915-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2047,6 +2265,14 @@
 								<low value="20110901"/>
 								<high value="20110901"/>
 							</effectiveTime>
+							<author typeCode="AUT">
+								<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+								<time value="201109011145-0800"/>
+								<assignedAuthor>
+									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
+									<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+								</assignedAuthor>
+							</author>
 							<component>
 								<observation classCode="OBS" moodCode="EVN">
 									<!-- ** Vital sign observation ** -->
@@ -2061,7 +2287,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201109010915-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2081,7 +2307,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201109010915-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2101,7 +2327,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201109010915-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
@@ -2121,7 +2347,7 @@
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201109010915-0800"/>
 										<assignedAuthor>
-											<id extension="555555555" root="2.16.840.1.113883.4.6"/>
+											<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 											<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>

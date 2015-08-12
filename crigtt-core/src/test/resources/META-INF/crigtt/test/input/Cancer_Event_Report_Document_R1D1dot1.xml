@@ -324,6 +324,50 @@
 								</tr>
 							</tbody>
 						</table>
+						<table>
+							<thead>
+								<tr>
+									<th>Clinical Stage Group</th>
+									<th>Clinical Narrative</th>
+									<th>Clinical Primary Tumor</th>
+									<th>Clinical Node</th>
+									<th>Clinical Metastases</th>
+									<th>Clinical Staged By</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td ID="ClinicalStageGroup_1">IIB</td>
+									<td ID="ClinicalNarrative_1">0</td>
+									<td ID="ClinicalPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
+									<td ID="ClinicalNode_1">Metastases to movable ipsilateral level I, II axillary lymph node(s)</td>
+									<td ID="ClinicalMetastases_1">No clinical or radiographic evidence of distant metastases</td>
+									<td ID="ClinicalStagedBy_1">Pathologist and managing physician</td>
+								</tr>
+							</tbody>
+						</table>
+						<table>
+							<thead>
+								<tr>
+									<th>Pathologic Stage Group</th>
+									<th>Pathologic Narrative</th>
+									<th>Pathologic Primary Tumor</th>
+									<th>Pathologic Node</th>
+									<th>Pathologic Metastases</th>
+									<th>Pathologic Staged By</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td ID="PathologicStageGroup_1">IIB</td>
+									<td ID="PathologicNarrative_1">0</td>
+									<td ID="PathologicPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
+									<td ID="PathologicNode_1">Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected.</td>
+									<td ID="PathologicMetastases_1">MX</td>
+									<td ID="PathologicStagedBy_1">Pathologist and managing physician</td>
+								</tr>
+							</tbody>
+						</table>
 					</text>
 					<entry typeCode="DRIV">
 						<act classCode="ACT" moodCode="EVN">
@@ -346,50 +390,6 @@
 									<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
 									<text>
 										<reference value="#Diagnosis_1"/>
-										<table border="1" width="100%">
-											<thead>
-												<tr>
-													<th>Clinical Stage Group</th>
-													<th>Clinical Narrative</th>
-													<th>Clinical Primary Tumor</th>
-													<th>Clinical Node</th>
-													<th>Clinical Metastases</th>
-													<th>Clinical Staged By</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td ID="ClinicalStageGroup_1">IIB</td>
-													<td ID="ClinicalNarrative_1">0</td>
-													<td ID="ClinicalPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
-													<td ID="ClinicalNode_1">Metastases to movable ipsilateral level I, II axillary lymph node(s)</td>
-													<td ID="ClinicalMetastases_1">No clinical or radiographic evidence of distant metastases</td>
-													<td ID="ClinicalStagedBy_1">Pathologist and managing physician</td>
-												</tr>
-											</tbody>
-										</table>
-										<table border="1" width="100%">
-											<thead>
-												<tr>
-													<th>Pathologic Stage Group</th>
-													<th>Pathologic Narrative</th>
-													<th>Pathologic Primary Tumor</th>
-													<th>Pathologic Node</th>
-													<th>Pathologic Metastases</th>
-													<th>Pathologic Staged By</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td ID="PathologicStageGroup_1">IIB</td>
-													<td ID="PathologicNarrative_1">0</td>
-													<td ID="PathologicPrimaryTumor_1">Tumor &gt; 20 mm but &lt;= to 50 mm in greatest dimension</td>
-													<td ID="PathologicNode_1">Micrometastases; or metastases in 1 to 3 axillary lymph nodes; and/or in internal mammary nodes with metastases detected by sentinel lymph node biopsy but not clinically detected.</td>
-													<td ID="PathologicMetastases_1">MX</td>
-													<td ID="PathologicStagedBy_1">Pathologist and managing physician</td>
-												</tr>
-											</tbody>
-										</table>
 									</text>
 									<statusCode code="completed"/>
 									<effectiveTime>
@@ -1526,9 +1526,7 @@
 							<!-- Radiation Oncology Section -->
 							<code code="34832-6" codeSystem="2.16.840.1.113883.6.1" displayName="Radiation Oncology Evaluation And Management Note"/>
 							<title>RADIATION ONCOLOGY</title>
-							<text>
-								<reference value="#a1"/>
-							</text>
+							<text/>
 							<entry>
 								<organizer classCode="CLUSTER" moodCode="EVN">
 									<templateId root="2.16.840.1.113883.10.13.29" extension="2014-08-08"/>

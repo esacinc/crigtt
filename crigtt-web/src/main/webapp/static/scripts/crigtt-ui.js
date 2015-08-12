@@ -6,6 +6,7 @@
         "headerTemplate": "{content}{icon}",
         "theme": "bootstrap",
         "widgetOptions": {
+            "filter_searchDelay": 1000,
             "uitheme": "bootstrap"
         },
         "widgets": [

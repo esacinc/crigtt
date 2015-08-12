@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import net.sf.saxon.dom.NodeOverNodeInfo;
@@ -36,6 +38,7 @@ import net.sf.saxon.sxpath.IndependentContext;
 import org.sitenv.vocabularies.engine.ValidationEngine;
 import org.sitenv.vocabularies.repository.VocabularyRepository;
 import org.sitenv.vocabularies.repository.VocabularyRepositoryConnectionInfo;
+import org.sitenv.xml.validators.ccda.CcdaValidatorExpectedValuesType;
 import org.sitenv.xml.validators.ccda.CcdaValidatorResult;
 import org.sitenv.xml.xpathvalidator.engine.XPathValidationEngine;
 import org.sitenv.xml.xpathvalidator.engine.data.XPathValidatorResult;
@@ -84,6 +87,8 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
         String xpathExpr;
         ValidatorLocation loc;
         CcdaValidatorResult ccdaEngineResult;
+        Set<String> expectedValues;
+        CcdaValidatorExpectedValuesType expectedValuesType;
         ValidatorCodeSystem codeSystem;
         ValidatorCode code;
 
@@ -114,13 +119,46 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
                 continue;
             }
 
+            expectedValues = (ccdaEngineResult = ((CcdaValidatorResult) engineResult)).getExpectedValues();
+
+            if (!expectedValues.isEmpty()) {
+                expectedValuesType = ccdaEngineResult.getExpectedValuesType();
+
+                switch (expectedValuesType) {
+                    case CODE_SYSTEM_NAMES_FOR_CODE_SYSTEM:
+                    case CODE_SYSTEMS_FOR_CODE:
+                    case CODE_SYSTEMS_FOR_CODE_SYSTEM_NAME:
+                    case CODE_SYSTEMS_FOR_INVALID_CODE_SYSTEM:
+                    case CODE_SYSTEMS_FOR_VALUE_SET:
+                        final boolean expectedCodeSystemNames = (expectedValuesType == CcdaValidatorExpectedValuesType.CODE_SYSTEM_NAMES_FOR_CODE_SYSTEM);
+
+                        event.setExpectedCodeSystems(expectedValues
+                            .stream()
+                            .map(
+                                expectedValue -> new ValidatorCodeSystemImpl((!expectedCodeSystemNames ? expectedValue : null), (expectedCodeSystemNames
+                                    ? expectedValue : null))).collect(Collectors.toList()));
+                        break;
+
+                    default:
+                        final boolean expectedCodeNames = (expectedValuesType == CcdaValidatorExpectedValuesType.DISPLAY_NAMES_FOR_CODE);
+
+                        event
+                            .setExpectedCodes(expectedValues
+                                .stream()
+                                .map(
+                                    expectedValue -> new ValidatorCodeImpl((!expectedCodeNames ? expectedValue : null), (expectedCodeNames
+                                        ? expectedValue : null))).collect(Collectors.toList()));
+                        break;
+                }
+            }
+
             event.setCodeSystem((codeSystem = new ValidatorCodeSystemImpl()));
-            codeSystem.setId((ccdaEngineResult = ((CcdaValidatorResult) engineResult)).getCodeSystem());
-            codeSystem.setName(ccdaEngineResult.getCodeSystemName());
+            codeSystem.setId(ccdaEngineResult.getRequestedCodeSystem());
+            codeSystem.setName(ccdaEngineResult.getRequestedCodeSystemName());
 
             event.setCode((code = new ValidatorCodeImpl()));
-            code.setId(ccdaEngineResult.getCode());
-            code.setName(ccdaEngineResult.getDisplayName());
+            code.setId(ccdaEngineResult.getRequestedCode());
+            code.setName(ccdaEngineResult.getRequestedDisplayName());
         }
 
         return events;

@@ -228,6 +228,12 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
     vertical-align: middle;
 }
 
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td ul {
+    margin-left: 20px;
+    padding-left: 0;
+    text-align: left;
+}
+
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(1),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(1) {
     min-width: 90px;

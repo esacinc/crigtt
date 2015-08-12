@@ -67,6 +67,7 @@
                     panelEventsTableFilterFormatters[panelEventsTableHeaderIndex] = function (cell, index) {
                         return $.tablesorter.filterFormatter.select2(cell, index, {
                             "cellText": panelEventsTableFilterLabel,
+                            "match": false,
                             "placeholder": "Select Filters",
                             "width": ((panelEventsTableFilterLabel ? 80 : 100) + "%")
                         });

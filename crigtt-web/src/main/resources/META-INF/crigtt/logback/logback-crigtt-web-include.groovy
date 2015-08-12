@@ -4,4 +4,4 @@ import gov.hhs.onc.crigtt.web.context.impl.CrigttWebApplicationContext
 /*====================================================================================================
 = LOGGERS: PROJECT
 =====================================================================================================*/
-logger(CrigttWebApplicationContext.name, ALL, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+logger(CrigttWebApplicationContext.name, INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)

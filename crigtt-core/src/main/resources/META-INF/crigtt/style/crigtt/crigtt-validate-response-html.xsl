@@ -84,28 +84,60 @@
     
     <xsl:template name="component">
         <xsl:param name="elem"/>
-        <xsl:param name="propContainerTagName" select="'span'"/>
+        <xsl:param name="idSortKey" select="true()"/>
         <xsl:choose>
             <xsl:when test="exists($elem)">
-                <xsl:call-template name="prop">
-                    <xsl:with-param name="containerTagName" select="$propContainerTagName"/>
-                    <xsl:with-param name="name" select="'ID'"/>
-                    <xsl:with-param name="value">
-                        <xsl:if test="exists($elem/validate:id)">
-                            <xsl:value-of select="validate:default-if-blank(string-join($elem/validate:id/text(), $EMPTY), $EMPTY)"/>
-                        </xsl:if>
-                    </xsl:with-param>
-                </xsl:call-template>
-                <xsl:call-template name="prop">
-                    <xsl:with-param name="containerTagName" select="$propContainerTagName"/>
-                    <xsl:with-param name="name" select="'Name'"/>
-                    <xsl:with-param name="value">
-                        <xsl:if test="exists($elem/validate:name)">
-                            <xsl:value-of select="validate:default-if-blank(string-join($elem/validate:name/text(), $EMPTY), $EMPTY)"/>
-                        </xsl:if>
-                    </xsl:with-param>
-                    <xsl:with-param name="valueSortKey" select="false()"/>
-                </xsl:call-template>
+                <ul>
+                    <li>
+                        <xsl:call-template name="prop">
+                            <xsl:with-param name="name" select="'ID'"/>
+                            <xsl:with-param name="value">
+                                <xsl:if test="exists($elem/validate:id)">
+                                    <xsl:value-of select="validate:default-if-blank(string-join($elem/validate:id/text(), $EMPTY), $EMPTY)"/>
+                                </xsl:if>
+                            </xsl:with-param>
+                            <xsl:with-param name="valueSortKey" select="$idSortKey"/>
+                        </xsl:call-template>
+                    </li>
+                    <li>
+                        <xsl:call-template name="prop">
+                            <xsl:with-param name="name" select="'Name'"/>
+                            <xsl:with-param name="value">
+                                <xsl:if test="exists($elem/validate:name)">
+                                    <xsl:value-of select="validate:default-if-blank(string-join($elem/validate:name/text(), $EMPTY), $EMPTY)"/>
+                                </xsl:if>
+                            </xsl:with-param>
+                            <xsl:with-param name="valueSortKey" select="false()"/>
+                        </xsl:call-template>
+                    </li>
+                </ul>
+            </xsl:when>
+            <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template name="matchedComponent">
+        <xsl:param name="expectedElems"/>
+        <xsl:param name="actualElem"/>
+        <xsl:choose>
+            <xsl:when test="exists($actualElem)">
+                <ul>
+                    <li>
+                        <strong>Actual</strong>
+                        <xsl:call-template name="component">
+                            <xsl:with-param name="elem" select="$actualElem"/>
+                        </xsl:call-template>
+                    </li>
+                    <xsl:for-each select="$expectedElems">
+                        <li>
+                            <strong>Expected #<xsl:value-of select="position()"/></strong>
+                            <xsl:call-template name="component">
+                                <xsl:with-param name="elem" select="current()"/>
+                                <xsl:with-param name="idSortKey" select="false()"/>
+                            </xsl:call-template>
+                        </li>
+                    </xsl:for-each>
+                </ul>
             </xsl:when>
             <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
         </xsl:choose>
@@ -417,106 +449,111 @@
                                                 <td>
                                                     <xsl:choose>
                                                         <xsl:when test="exists(validate:location)">
+                                                            <ul>
+                                                                <li>
+                                                                    <xsl:call-template name="prop">
+                                                                        <xsl:with-param name="name" select="'Node Expression'"/>
+                                                                        <xsl:with-param name="value">
+                                                                            <xsl:if test="exists(validate:location/validate:nodeExpression)">
+                                                                                <xsl:value-of select="validate:location/validate:nodeExpression/text()"/>
+                                                                            </xsl:if>
+                                                                        </xsl:with-param>
+                                                                        <xsl:with-param name="valueContainerTagName" select="'pre'"/>
+                                                                        <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
+                                                                        <xsl:with-param name="valueSortKey" select="false()"/>
+                                                                    </xsl:call-template>
+                                                                </li>
+                                                                <li>
+                                                                    <xsl:call-template name="prop">
+                                                                        <xsl:with-param name="name" select="'Line #'"/>
+                                                                        <xsl:with-param name="value">
+                                                                            <xsl:if test="exists(validate:location/validate:lineNumber)">
+                                                                                <xsl:value-of select="validate:location/validate:lineNumber/text()"/>
+                                                                            </xsl:if>
+                                                                        </xsl:with-param>
+                                                                    </xsl:call-template>
+                                                                </li>
+                                                                <li>
+                                                                    <xsl:call-template name="prop">
+                                                                        <xsl:with-param name="name" select="'Column #'"/>
+                                                                        <xsl:with-param name="value">
+                                                                            <xsl:if test="exists(validate:location/validate:columnNumber)">
+                                                                                <xsl:value-of select="validate:location/validate:columnNumber/text()"/>
+                                                                            </xsl:if>
+                                                                        </xsl:with-param>
+                                                                        <xsl:with-param name="valueSortKey" select="false()"/>
+                                                                    </xsl:call-template>
+                                                                </li>
+                                                            </ul>
+                                                        </xsl:when>
+                                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
+                                                    </xsl:choose>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
                                                             <xsl:call-template name="prop">
-                                                                <xsl:with-param name="containerTagName" select="'div'"/>
-                                                                <xsl:with-param name="name" select="'Node Expression'"/>
+                                                                <xsl:with-param name="name" select="'Context Expression'"/>
                                                                 <xsl:with-param name="value">
-                                                                    <xsl:if test="exists(validate:location/validate:nodeExpression)">
-                                                                        <xsl:value-of select="validate:location/validate:nodeExpression/text()"/>
+                                                                    <xsl:if test="exists(validate:contextExpression)">
+                                                                        <xsl:value-of select="validate:contextExpression/text()"/>
                                                                     </xsl:if>
                                                                 </xsl:with-param>
                                                                 <xsl:with-param name="valueContainerTagName" select="'pre'"/>
                                                                 <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
                                                                 <xsl:with-param name="valueSortKey" select="false()"/>
                                                             </xsl:call-template>
+                                                        </li>
+                                                        <li>
                                                             <xsl:call-template name="prop">
-                                                                <xsl:with-param name="containerTagName" select="'div'"/>
-                                                                <xsl:with-param name="name" select="'Line #'"/>
+                                                                <xsl:with-param name="name" select="'Test Expression'"/>
                                                                 <xsl:with-param name="value">
-                                                                    <xsl:if test="exists(validate:location/validate:lineNumber)">
-                                                                        <xsl:value-of select="validate:location/validate:lineNumber/text()"/>
+                                                                    <xsl:if test="exists(validate:testExpression)">
+                                                                        <xsl:value-of select="validate:testExpression/text()"/>
                                                                     </xsl:if>
                                                                 </xsl:with-param>
+                                                                <xsl:with-param name="valueContainerTagName" select="'pre'"/>
+                                                                <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
                                                             </xsl:call-template>
-                                                            <xsl:call-template name="prop">
-                                                                <xsl:with-param name="containerTagName" select="'div'"/>
-                                                                <xsl:with-param name="name" select="'Column #'"/>
-                                                                <xsl:with-param name="value">
-                                                                    <xsl:if test="exists(validate:location/validate:columnNumber)">
-                                                                        <xsl:value-of select="validate:location/validate:columnNumber/text()"/>
-                                                                    </xsl:if>
-                                                                </xsl:with-param>
-                                                                <xsl:with-param name="valueSortKey" select="false()"/>
-                                                            </xsl:call-template>
-                                                        </xsl:when>
-                                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                                    </xsl:choose>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="prop">
-                                                        <xsl:with-param name="containerTagName" select="'div'"/>
-                                                        <xsl:with-param name="name" select="'Context Expression'"/>
-                                                        <xsl:with-param name="value">
-                                                            <xsl:if test="exists(validate:contextExpression)">
-                                                                <xsl:value-of select="validate:contextExpression/text()"/>
-                                                            </xsl:if>
-                                                        </xsl:with-param>
-                                                        <xsl:with-param name="valueContainerTagName" select="'pre'"/>
-                                                        <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
-                                                        <xsl:with-param name="valueSortKey" select="false()"/>
-                                                    </xsl:call-template>
-                                                    <xsl:call-template name="prop">
-                                                        <xsl:with-param name="containerTagName" select="'div'"/>
-                                                        <xsl:with-param name="name" select="'Test Expression'"/>
-                                                        <xsl:with-param name="value">
-                                                            <xsl:if test="exists(validate:testExpression)">
-                                                                <xsl:value-of select="validate:testExpression/text()"/>
-                                                            </xsl:if>
-                                                        </xsl:with-param>
-                                                        <xsl:with-param name="valueContainerTagName" select="'pre'"/>
-                                                        <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
-                                                    </xsl:call-template>
+                                                        </li>
+                                                    </ul>
                                                 </td>
                                                 <td>
                                                     <xsl:call-template name="component">
                                                         <xsl:with-param name="elem" select="validate:schema"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
                                                     <xsl:call-template name="component">
                                                         <xsl:with-param name="elem" select="validate:pattern"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
                                                     <xsl:call-template name="component">
                                                         <xsl:with-param name="elem" select="validate:rule"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
                                                     <xsl:call-template name="component">
                                                         <xsl:with-param name="elem" select="validate:assertion"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="validate:valueSet"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
+                                                    <xsl:call-template name="matchedComponent">
+                                                        <xsl:with-param name="actualElem" select="validate:valueSet"/>
+                                                        <xsl:with-param name="expectedElems" select="validate:expectedValueSets/validate:expectedValueSet"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="validate:codeSystem"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
+                                                    <xsl:call-template name="matchedComponent">
+                                                        <xsl:with-param name="actualElem" select="validate:codeSystem"/>
+                                                        <xsl:with-param name="expectedElems" select="validate:expectedCodeSystems/validate:expectedCodeSystem"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="validate:code"/>
-                                                        <xsl:with-param name="propContainerTagName" select="'div'"/>
+                                                    <xsl:call-template name="matchedComponent">
+                                                        <xsl:with-param name="actualElem" select="validate:code"/>
+                                                        <xsl:with-param name="expectedElems" select="validate:expectedCodes/validate:expectedCode"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>

@@ -61,7 +61,6 @@
     //====================================================================================================
     $(window).load(function () {
         var contentTabsElem = $("div#content-tabs");
-        var homeContentTabElem = contentTabsElem.find("div#content-tab-home");
         var validatorContentTabElem = contentTabsElem.find("div#content-tab-validator");
         var validatorFormElem = validatorContentTabElem.find("form#form-validator");
         var validatorDocFileInputElem = validatorFormElem.find("input#input-file-doc");

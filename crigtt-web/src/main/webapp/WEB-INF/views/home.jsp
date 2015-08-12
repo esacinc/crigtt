@@ -63,13 +63,13 @@
                     </a>
                 </div>
                 <ul class="nav navbar-nav nav-tabs" role="tablist">
-                    <li role="presentation">
+                    <li class="active" role="presentation">
                         <a href="#content-tab-home" aria-controls="content-tab-home" role="tab" data-toggle="tab">
                             <i class="fa fa-home"></i>
                             <strong>Home</strong>
                         </a>
                     </li>
-                    <li class="active" role="presentation">
+                    <li role="presentation">
                         <a href="#content-tab-validator" aria-controls="content-tab-validator" role="tab" data-toggle="tab">
                             <i class="fa fa-check"></i>
                             <strong>Validator</strong>
@@ -97,10 +97,37 @@
         </nav>
         <div id="content" class="container-fluid">
             <div id="content-tabs" class="tab-content">
-                <div id="content-tab-home" class="tab-pane" role="tabpanel">
-                    <!-- TODO: implement -->
+                <div id="content-tab-home" class="active tab-pane" role="tabpanel">
+                    <h1>
+                        <i class="fa fa-fw fa-info-circle"></i>
+                        <strong>Introduction</strong>
+                    </h1>
+                    <h2><strong>Purpose</strong></h2>
+                    <p>
+                        The Cancer Registry Implementation Guide Test Tool (CRIGTT) project is an interactive tool for validating the content of electronic
+                        submissions of cancer-related medical information prior to a system&apos;s communication with a cancer registry.
+                    </p>
+                    <h2><strong>Background</strong></h2>
+                    <p>
+                        The <a href="http://www.cdc.gov/cancer/npcr/">National Program of Cancer Registries (NPCR)</a> is a program run by the
+                        <a href="http://www.cdc.gov/chronicdisease/">National Center for Chronic Disease Prevention and Health Promotion (NCCDPHP)</a> of the
+                        <a href="http://www.cdc.gov/">Centers for Disease Control and Prevention (CDC)</a>. NPCR&apos;s mission is to collect data to monitor
+                        the burden of cancer, evaluate the success of programs, and identify additional needs for cancer prevention and control efforts at
+                        national, state, and more local levels.
+                    </p>
+                    <p>
+                        In order to facilitate this goal, central cancer registries have been established to collect data from sources such as hospitals,
+                        doctors&apos; offices, and laboratories on cancer occurrence and type of initial treatment. CRIGTT serves as a means of verifying that
+                        the software used by doctors&apos; offices is capable of correctly preparing Clinical Document Architecture (CDA) documents for
+                        submission. This tool only applies to the format required by Meaningful Use for physicians and it is not intended to be used for
+                        hospital or laboratory reporting.
+                    </p>
+                    <p>
+                        This initiative has been sponsored by the CDC and is being managed by the
+                        <a href="http://www.healthit.gov/">Office of the National Coordinator for Healthcare IT</a>.
+                    </p>
                 </div>
-                <div id="content-tab-validator" class="tab-pane active" role="tabpanel">
+                <div id="content-tab-validator" class="tab-pane" role="tabpanel">
                     <h1>
                         <i class="fa fa-fw fa-paper-plane"></i>
                         <strong>Submit</strong>

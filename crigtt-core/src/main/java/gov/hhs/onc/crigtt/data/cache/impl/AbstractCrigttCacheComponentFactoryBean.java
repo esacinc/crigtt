@@ -1,6 +1,5 @@
-package gov.hhs.onc.crigtt.cache.impl;
+package gov.hhs.onc.crigtt.data.cache.impl;
 
-import net.sf.ehcache.config.SizeOfPolicyConfiguration;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.SmartFactoryBean;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -12,7 +11,6 @@ public abstract class AbstractCrigttCacheComponentFactoryBean<T, U> implements B
     protected String maxBytesLocalDisk;
     protected String maxBytesLocalHeap;
     protected String maxBytesLocalOffHeap;
-    protected SizeOfPolicyConfiguration sizeOfPolicyConfig;
     protected EhCacheCacheManager manager;
 
     protected AbstractCrigttCacheComponentFactoryBean(Class<T> componentClass) {
@@ -74,13 +72,5 @@ public abstract class AbstractCrigttCacheComponentFactoryBean<T, U> implements B
     @Override
     public boolean isSingleton() {
         return true;
-    }
-
-    public SizeOfPolicyConfiguration getSizeOfPolicyConfiguration() {
-        return this.sizeOfPolicyConfig;
-    }
-
-    public void setSizeOfPolicyConfiguration(SizeOfPolicyConfiguration sizeOfPolicyConfig) {
-        this.sizeOfPolicyConfig = sizeOfPolicyConfig;
     }
 }

@@ -1,53 +1,41 @@
 package gov.hhs.onc.crigtt.validate.vocab.impl;
 
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.orientechnologies.orient.server.OServer;
 import com.orientechnologies.orient.server.config.OServerStorageConfiguration;
-import gov.hhs.onc.crigtt.db.CrigttDbPaths;
-import gov.hhs.onc.crigtt.db.impl.CrigttDbServerConfiguration;
-import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
+import gov.hhs.onc.crigtt.data.db.CrigttDbPaths;
+import gov.hhs.onc.crigtt.data.db.impl.CrigttDbServerConfiguration;
+import gov.hhs.onc.crigtt.data.impl.MapKey;
+import gov.hhs.onc.crigtt.data.impl.MapKey.MapKeyEntry;
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
-import gov.hhs.onc.crigtt.validate.ValidatorCode;
-import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
-import gov.hhs.onc.crigtt.validate.ValidatorEvent;
-import gov.hhs.onc.crigtt.validate.ValidatorLevel;
-import gov.hhs.onc.crigtt.validate.ValidatorLocation;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorCodeImpl;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorCodeSystemImpl;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorEventImpl;
-import gov.hhs.onc.crigtt.validate.impl.ValidatorLocationImpl;
+import gov.hhs.onc.crigtt.validate.vocab.Code;
 import gov.hhs.onc.crigtt.validate.vocab.DynamicVocabService;
-import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
-import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import gov.hhs.onc.crigtt.validate.vocab.VocabAttributes;
+import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
-import net.sf.saxon.dom.NodeOverNodeInfo;
-import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.XdmNode;
-import net.sf.saxon.s9api.XdmValue;
-import net.sf.saxon.sxpath.IndependentContext;
+import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.objectquery.SelectQuery;
+import org.objectquery.generic.GenericSelectQuery;
+import org.objectquery.orientdb.OrientDBObjectQuery;
+import org.objectquery.orientdb.OrientDBQueryGenerator;
 import org.sitenv.vocabularies.engine.ValidationEngine;
+import org.sitenv.vocabularies.model.CodeModel;
+import org.sitenv.vocabularies.model.ValueSetCodeModel;
 import org.sitenv.vocabularies.repository.VocabularyRepository;
 import org.sitenv.vocabularies.repository.VocabularyRepositoryConnectionInfo;
-import org.sitenv.xml.validators.ccda.CcdaValidatorExpectedValuesType;
-import org.sitenv.xml.validators.ccda.CcdaValidatorResult;
-import org.sitenv.xml.xpathvalidator.engine.XPathValidationEngine;
-import org.sitenv.xml.xpathvalidator.engine.data.XPathValidatorResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.xml.sax.SAXException;
 
 public class DynamicVocabServiceImpl extends AbstractVocabService implements DynamicVocabService {
+    private final static String TEST_EXPR_SUFFIX_FORMAT = CrigttXpathUtils.CALL_SUFFIX + " %1$s " + DynamicVocabFunction.NAME.toString()
+        + CrigttXpathUtils.CALL_PREFIX + "'%2$s', '%3$s'" + CrigttXpathUtils.CALL_SUFFIX;
+
     private final static Logger LOGGER = LoggerFactory.getLogger(DynamicVocabServiceImpl.class);
 
     @Value("${crigtt.validate.vocab.dynamic.load.force}")
@@ -65,103 +53,125 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
     @Value("${crigtt.validate.vocab.dynamic.repo.value.set.dir}")
     private File valueSetRepoDir;
 
-    @javax.annotation.Resource(name = "dbServerConfigVocabDynamic")
+    @javax.annotation.Resource(name = "dbServerConfigValidateVocabDynamic")
     private CrigttDbServerConfiguration dbServerConfig;
 
-    private String[] codeLoaderClassNames;
-    private String[] valueSetLoaderClassNames;
     private OServer dbServer;
-    private XPathValidationEngine engine;
+    private VocabularyRepository vocabRepo;
 
     @Override
-    public List<ValidatorEvent> validate(IndependentContext xpathContext, XdmDocument doc, ByteArraySource docSrc) throws IOException, SAXException,
-        SaxonApiException {
-        List<XPathValidatorResult> engineResults;
-
-        try (InputStream docInStream = docSrc.getInputStream()) {
-            engineResults = this.engine.validate(docInStream);
+    public String processTestExpression(String patternId, String assertionId, String testExpr) {
+        if (!this.assertions.containsKey(assertionId)) {
+            return testExpr;
         }
 
-        List<ValidatorEvent> events = new ArrayList<>(engineResults.size());
-        ValidatorEvent event;
-        String xpathExpr;
-        ValidatorLocation loc;
-        CcdaValidatorResult ccdaEngineResult;
-        Set<String> expectedValues;
-        CcdaValidatorExpectedValuesType expectedValuesType;
-        ValidatorCodeSystem codeSystem;
-        ValidatorCode code;
+        this.initialTestExprs.put(assertionId, testExpr);
 
-        for (XPathValidatorResult engineResult : engineResults) {
-            events.add((event = new ValidatorEventImpl()));
-            event.setStatus(false);
+        String runtimeTestExpr =
+            (CrigttXpathUtils.CALL_PREFIX + testExpr + String.format(TEST_EXPR_SUFFIX_FORMAT, (this.assertions.get(assertionId).getOptional()
+                ? CrigttXpathUtils.OR_OP : CrigttXpathUtils.AND_OP), patternId, assertionId));
 
-            if (engineResult.hasError()) {
-                event.setLevel(ValidatorLevel.ERROR);
-                event.setDescription(engineResult.getErrorMessage());
-            } else if (engineResult.hasWarning()) {
-                event.setLevel(ValidatorLevel.WARN);
-                event.setDescription(engineResult.getWarningMessage());
-            } else {
-                event.setLevel(ValidatorLevel.INFO);
-                event.setDescription(engineResult.getInfoMessage());
+        this.runtimeTestExprs.put(new MultiKey<>(patternId, assertionId), runtimeTestExpr);
+
+        LOGGER.trace(String.format("Processed dynamic vocabulary validation assertion (patternId=%s, id=%s, initialTestExpr=%s, runtimeTestExpr=%s).",
+            patternId, assertionId, testExpr, runtimeTestExpr));
+
+        return runtimeTestExpr;
+    }
+
+    @Override
+    public List<Code> findCodes(@Nullable String groupingValueSetId, @Nullable String valueSetId, String codeSystemId, String codeId) {
+        List<Code> codes = super.findCodes(groupingValueSetId, valueSetId, codeSystemId, codeId);
+
+        if (!codes.isEmpty()) {
+            return codes;
+        }
+
+        OrientDBQueryGenerator queryGen;
+
+        try (OObjectDatabaseTx dbConn = this.vocabRepo.getActiveDbConnection()) {
+            if (valueSetId != null) {
+                SelectQuery<ValueSetCodeModel> query = new GenericSelectQuery<>(ValueSetCodeModel.class);
+                ValueSetCodeModel target = query.target();
+
+                query.eq(target.getValueSetId(), valueSetId);
+                query.eq(target.getCodeSystemId(), codeSystemId);
+                query.eq(target.getCode(), codeId);
+
+                codes =
+                    dbConn.command(new OSQLSynchQuery<>((queryGen = OrientDBObjectQuery.orientdbGenerator(query)).getQuery()))
+                        .execute(queryGen.getParameters());
+            } else if (codeSystemId != null) {
+                SelectQuery<CodeModel> query = new GenericSelectQuery<>(CodeModel.class);
+                CodeModel target = query.target();
+
+                query.eq(target.getCodeSystemId(), codeSystemId);
+                query.eq(target.getCode(), codeId);
+
+                codes =
+                    dbConn.command(new OSQLSynchQuery<>((queryGen = OrientDBObjectQuery.orientdbGenerator(query)).getQuery()))
+                        .execute(queryGen.getParameters());
             }
+        }
 
-            event.setTestExpression((xpathExpr = engineResult.getXpathExpression()));
+        if (!codes.isEmpty()) {
+            MapKey codeKey =
+                new MapKey(new MapKeyEntry(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, groupingValueSetId, true), new MapKeyEntry(
+                    VocabAttributes.VALUE_SET_ID_NAME, valueSetId, true), new MapKeyEntry(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId, true));
 
-            if ((loc = this.buildLocation(xpathContext, doc, xpathExpr, engineResult.getNodeIndex())) == null) {
-                loc = this.buildLocation(xpathContext, doc, engineResult.getBaseXpathExpression(), engineResult.getBaseNodeIndex());
-            }
+            codes.stream().forEach(code -> this.codeCache.put(codeKey, code));
+        }
 
-            event.setLocation(loc);
+        return codes;
+    }
 
-            if (!(engineResult instanceof CcdaValidatorResult)) {
-                continue;
-            }
+    @Nullable
+    @Override
+    public VocabSet findVocabSet(@Nullable String groupingValueSetId, @Nullable String valueSetId, @Nullable String codeSystemId) {
+        VocabSet vocabSet = super.findVocabSet(groupingValueSetId, valueSetId, codeSystemId);
 
-            expectedValues = (ccdaEngineResult = ((CcdaValidatorResult) engineResult)).getExpectedValues();
+        if (vocabSet != null) {
+            return vocabSet;
+        }
 
-            if (!expectedValues.isEmpty()) {
-                expectedValuesType = ccdaEngineResult.getExpectedValuesType();
+        OrientDBQueryGenerator queryGen;
+        List<VocabSet> vocabSets = null;
 
-                switch (expectedValuesType) {
-                    case CODE_SYSTEM_NAMES_FOR_CODE_SYSTEM:
-                    case CODE_SYSTEMS_FOR_CODE:
-                    case CODE_SYSTEMS_FOR_CODE_SYSTEM_NAME:
-                    case CODE_SYSTEMS_FOR_INVALID_CODE_SYSTEM:
-                    case CODE_SYSTEMS_FOR_VALUE_SET:
-                        final boolean expectedCodeSystemNames = (expectedValuesType == CcdaValidatorExpectedValuesType.CODE_SYSTEM_NAMES_FOR_CODE_SYSTEM);
+        try (OObjectDatabaseTx dbConn = this.vocabRepo.getActiveDbConnection()) {
+            if (valueSetId != null) {
+                SelectQuery<ValueSetCodeModel> query = new GenericSelectQuery<>(ValueSetCodeModel.class);
+                ValueSetCodeModel target = query.target();
 
-                        event.setExpectedCodeSystems(expectedValues
-                            .stream()
-                            .map(
-                                expectedValue -> new ValidatorCodeSystemImpl((!expectedCodeSystemNames ? expectedValue : null), (expectedCodeSystemNames
-                                    ? expectedValue : null))).collect(Collectors.toList()));
-                        break;
+                query.eq(target.getValueSetId(), valueSetId);
 
-                    default:
-                        final boolean expectedCodeNames = (expectedValuesType == CcdaValidatorExpectedValuesType.DISPLAY_NAMES_FOR_CODE);
-
-                        event
-                            .setExpectedCodes(expectedValues
-                                .stream()
-                                .map(
-                                    expectedValue -> new ValidatorCodeImpl((!expectedCodeNames ? expectedValue : null), (expectedCodeNames
-                                        ? expectedValue : null))).collect(Collectors.toList()));
-                        break;
+                if (codeSystemId != null) {
+                    query.eq(target.getCodeSystemId(), codeSystemId);
                 }
+
+                vocabSets =
+                    dbConn.command(new OSQLSynchQuery<>((queryGen = OrientDBObjectQuery.orientdbGenerator(query)).getQuery()))
+                        .execute(queryGen.getParameters());
+            } else if (codeSystemId != null) {
+                SelectQuery<CodeModel> query = new GenericSelectQuery<>(CodeModel.class);
+                query.eq(query.target().getCodeSystemId(), codeSystemId);
+
+                vocabSets =
+                    dbConn.command(new OSQLSynchQuery<>((queryGen = OrientDBObjectQuery.orientdbGenerator(query)).getQuery()))
+                        .execute(queryGen.getParameters());
+            } else {
+                return null;
             }
-
-            event.setCodeSystem((codeSystem = new ValidatorCodeSystemImpl()));
-            codeSystem.setId(ccdaEngineResult.getRequestedCodeSystem());
-            codeSystem.setName(ccdaEngineResult.getRequestedCodeSystemName());
-
-            event.setCode((code = new ValidatorCodeImpl()));
-            code.setId(ccdaEngineResult.getRequestedCode());
-            code.setName(ccdaEngineResult.getRequestedDisplayName());
         }
 
-        return events;
+        if (vocabSets.isEmpty()) {
+            return null;
+        }
+
+        this.vocabSetCache.put(new MapKey(new MapKeyEntry(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, groupingValueSetId, true), new MapKeyEntry(
+            VocabAttributes.VALUE_SET_ID_NAME, valueSetId, true), new MapKeyEntry(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId, true)), (vocabSet =
+            vocabSets.get(0)));
+
+        return vocabSet;
     }
 
     @Override
@@ -176,18 +186,11 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
         (this.dbServer = new OServer()).startup(this.dbServerConfig);
         this.dbServer.activate();
 
-        VocabularyRepository vocabRepo = VocabularyRepository.getInstance();
-        vocabRepo.setOrientDbServer(this.dbServer);
+        (this.vocabRepo = VocabularyRepository.getInstance()).setOrientDbServer(this.dbServer);
         vocabRepo.setPrimaryNodeCredentials(this.buildRepositoryConnectionInfo(this.dbServerConfig.storages[0]));
         vocabRepo.setSecondaryNodeCredentials(this.buildRepositoryConnectionInfo(this.dbServerConfig.storages[1]));
 
-        for (String codeLoaderClassName : this.codeLoaderClassNames) {
-            Class.forName(codeLoaderClassName);
-        }
-
-        for (String valueSetLoaderClassName : this.valueSetLoaderClassNames) {
-            Class.forName(valueSetLoaderClassName);
-        }
+        vocabRepo.initializeDbs();
 
         if (!dbPrimaryStorageExists || this.forceLoad) {
             String codeRepoDirPath = this.codeRepoDir.getPath(), valueSetRepoPath = this.valueSetRepoDir.getPath();
@@ -196,7 +199,7 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
                 "Loading (force=%s) contents of dynamic vocabulary repositories (codeRepoPath=%s, valueSetRepoPath=%s) into primary database (path=%s).",
                 this.forceLoad, codeRepoDirPath, valueSetRepoPath, this.dbPrimaryStorageDir.getPath()));
 
-            VocabularyRepository.getInstance().toggleActiveDatabase();
+            vocabRepo.toggleActiveDatabase();
 
             if (this.codeRepoDir.isDirectory()) {
                 ValidationEngine.loadCodeDirectory(codeRepoDirPath);
@@ -206,34 +209,10 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
                 ValidationEngine.loadValueSetDirectory(valueSetRepoPath);
             }
 
-            VocabularyRepository.getInstance().toggleActiveDatabase();
+            vocabRepo.toggleActiveDatabase();
         }
 
-        (this.engine = new XPathValidationEngine()).initialize(this.engineConfigFile.asInputSource());
-    }
-
-    @Nullable
-    private ValidatorLocation buildLocation(IndependentContext xpathContext, XdmDocument doc, @Nullable String xpathExpr, @Nonnegative int xpathNodeIndex)
-        throws SaxonApiException {
-        if (xpathExpr == null) {
-            return null;
-        }
-
-        XdmValue locValue = this.xpathCompiler.evaluate(xpathExpr, xpathContext, doc);
-
-        if ((locValue == null) || (xpathNodeIndex >= locValue.size())) {
-            return null;
-        }
-
-        NodeInfo locNodeInfo = ((XdmNode) locValue.itemAt(xpathNodeIndex)).getUnderlyingNode();
-        CrigttLocation locObj = new CrigttLocation(locNodeInfo);
-
-        ValidatorLocation loc = new ValidatorLocationImpl();
-        loc.setColumnNumber(locObj.getColumnNumber());
-        loc.setLineNumber(locObj.getLineNumber());
-        loc.setNodeExpression(CrigttXpathUtils.buildAbsoluteExpression(NodeOverNodeInfo.wrap(locNodeInfo)));
-
-        return loc;
+        super.afterPropertiesSet();
     }
 
     private VocabularyRepositoryConnectionInfo buildRepositoryConnectionInfo(OServerStorageConfiguration dbStorage) {
@@ -244,25 +223,5 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
         repoConnInfo.setUsername(dbStorage.userName);
 
         return repoConnInfo;
-    }
-
-    @Override
-    public String[] getCodeLoaderClassNames() {
-        return this.codeLoaderClassNames;
-    }
-
-    @Override
-    public void setCodeLoaderClassNames(String ... codeLoaderClassNames) {
-        this.codeLoaderClassNames = codeLoaderClassNames;
-    }
-
-    @Override
-    public String[] getValueSetLoaderClassNames() {
-        return this.valueSetLoaderClassNames;
-    }
-
-    @Override
-    public void setValueSetLoaderClassNames(String ... valueSetLoaderClassNames) {
-        this.valueSetLoaderClassNames = valueSetLoaderClassNames;
     }
 }

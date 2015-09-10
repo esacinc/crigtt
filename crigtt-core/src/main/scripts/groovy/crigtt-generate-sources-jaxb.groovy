@@ -103,6 +103,7 @@ def String[] tokenize(@Nullable String str, @Nullable String defaultStr) {
 def final BASE_ARGS = [
     "-mark-generated",
     "-Xannotate",
+    "-Xdefault-value",
     "-Xsetters",
     "-Xsetters-mode=direct",
     "-Xvalue-constructor"
@@ -217,9 +218,14 @@ def pkgNames = this.tokenizeMap(bindingVars["pkgNames"])
 def implPkgNames = pkgNames.collectEntries{ [ it.key, (it.value + IMPL_PKG_NAME_SUFFIX) ] }
 
 implPkgNames.each{
-    codeModel._package(it.value).annotations().find{ it.annotationClass.fullName() == XmlSchema.class.name }
-        .param("namespace", xmlNsUriStaticRefs[it.key])
-        .paramArray("xmlns").annotate(XmlNs.class).param("prefix", xmlNsPrefixStaticRefs[it.key]).param("namespaceURI", xmlNsUriStaticRefs[it.key])
+    def xmlSchemaAnno = codeModel._package(it.value).annotations().find{ it.annotationClass.fullName() == XmlSchema.class.name }
+    
+    if (xmlSchemaAnno == null) {
+        return
+    }
+    
+    def xmlSchemaAnnoNsParam = xmlSchemaAnno.param("namespace", xmlNsUriStaticRefs[it.key]).paramArray("xmlns").annotate(XmlNs.class)
+        .param("prefix", xmlNsPrefixStaticRefs[it.key]).param("namespaceURI", xmlNsUriStaticRefs[it.key])
 }
 
 def compilerWarningsClassName = CompilerWarnings.class.name

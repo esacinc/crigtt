@@ -2,7 +2,7 @@ package gov.hhs.onc.crigtt.validate;
 
 import gov.hhs.onc.crigtt.beans.NamedBean;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
-import gov.hhs.onc.crigtt.validate.vocab.StaticVocabService;
+import gov.hhs.onc.crigtt.validate.vocab.VocabService;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -24,6 +24,8 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
     public Map<String, ValidatorRule> getActiveRules();
 
     public ValidatorSchema getActiveSchema();
+
+    public Map<String, VocabService> getActiveVocabServices();
 
     public ExtensionFunctionDefinition[] getExtensionFunctions();
 
@@ -51,9 +53,9 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public void setSource(Source src);
 
-    public StaticVocabService getStaticVocabService();
+    public VocabService[] getVocabServices();
 
-    public void setStaticVocabService(StaticVocabService staticVocabService);
+    public void setVocabServices(VocabService ... vocabServices);
 
     public CrigttXsltExecutable[] getXsltExecutables();
 

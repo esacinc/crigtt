@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crigtt-validate-vocab:vocabAssertions
+    xmlns:crigtt="urn:gov.hhs.onc.crigtt"
+    xmlns:crigtt-validate-vocab="urn:gov.hhs.onc.crigtt:validate-vocab">
+    
+    <!--====================================================================================================
+    = VOCABULARY ASSERTIONS
+    =====================================================================================================-->
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32360</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.159331</crigtt:id>
+                <crigtt:name>ActStatus</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+            <crigtt-validate-vocab:codeSystem>
+                <crigtt:id>2.16.840.1.113883.5.14</crigtt:id>
+                <crigtt:name>ActStatus</crigtt:name>
+            </crigtt-validate-vocab:codeSystem>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:statusCode</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:valueSetFallback>true</crigtt-validate-vocab:valueSetFallback>
+        <crigtt-validate-vocab:codeSystemFallback>true</crigtt-validate-vocab:codeSystemFallback>
+        <crigtt-validate-vocab:codeIdExpression>@statusCode</crigtt-validate-vocab:codeIdExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7525</crigtt:id>
+        <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:rateQuantity</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:codeIdExpression>@unit</crigtt-validate-vocab:codeIdExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5372</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.11526</crigtt:id>
+                <crigtt:name>Language</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:languageCode</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-6394</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.1</crigtt:id>
+                <crigtt:name>Administrative Gender (HL7 V3)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:administrativeGenderCode</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5322</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.2074.1.1.3</crigtt:id>
+                <crigtt:name>Race Category Excluding Nulls</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:raceCode</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5323</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.837</crigtt:id>
+                <crigtt:name>Ethnicity</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:ethnicGroupCode</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5407</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.64</crigtt:id>
+                <crigtt:name>PatientLanguage</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:languageCode</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-16788</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-16082</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-9058-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.7.4</crigtt:id>
+                <crigtt:name>Problem</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-9075</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.20.12</crigtt:id>
+                <crigtt:name>HealthStatus</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7301</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.62</crigtt:id>
+                <crigtt:name>Vital Sign Result</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31579</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:codeIdExpression>@unit</crigtt-validate-vocab:codeIdExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31484-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7412</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113762.1.4.1010.4</crigtt:id>
+                <crigtt:name>Medication Clinical Drug</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7365</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.68</crigtt:id>
+                <crigtt:name>Problem Status</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-16563</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.41</crigtt:id>
+                <crigtt:name>Tobacco Use</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-8903</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.3591</crigtt:id>
+                <crigtt:name>Payer</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-15992-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.10416</crigtt:id>
+                <crigtt:name>HL7FinanciallyResponsiblePartyType</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-8591</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.7.4</crigtt:id>
+                <crigtt:name>Problem</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-15247</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.19579</crigtt:id>
+                <crigtt:name>Family Member Value Set</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-15975</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.1</crigtt:id>
+                <crigtt:name>Administrative Gender (HL7 V3)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1126-33347</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1126-33380</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-34375</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.10.20.5.9.2</crigtt:id>
+                <crigtt:name>NullValues_UNK_NA</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-34055</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.9</crigtt:id>
+                <crigtt:name>TNM Clinical Stage Group</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-34137</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.4</crigtt:id>
+                <crigtt:name>NAACCR TNM Clinical Staged By</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-34154</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.20</crigtt:id>
+                <crigtt:name>TNM Pathologic Stage Group</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-34243</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.27</crigtt:id>
+                <crigtt:name>NAACCR TNM Pathologic Staged By</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-81-7294</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.2</crigtt:id>
+                <crigtt:name>PostalCode</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-81-7295</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.63</crigtt:id>
+                <crigtt:name>Country</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7514</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.7</crigtt:id>
+                <crigtt:name>Medication Route FDA</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7526</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5375</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7994</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7999</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-8000</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5303</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12212</crigtt:id>
+                <crigtt:name>Marital Status</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-9965</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12199</crigtt:id>
+                <crigtt:name>LanguageAbilityProficiency</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5404</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.63</crigtt:id>
+                <crigtt:name>Country</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5402-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.1</crigtt:id>
+                <crigtt:name>StateValueSet</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5326</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.12.1</crigtt:id>
+                <crigtt:name>Personal And Legal Relationship Role Type</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7993</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-16788-v</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7995</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7996</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7998</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.11.20.9.20</crigtt:id>
+                <crigtt:name>Telecom Use (US Realm Header)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-14842</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32133</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32134</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12839</crigtt:id>
+                <crigtt:name>UnitsOfMeasureCaseSensitive</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7301-v</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.62</crigtt:id>
+                <crigtt:name>Vital Sign Result</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-8903-v</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.3591</crigtt:id>
+                <crigtt:name>Payer</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-16078-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.18877</crigtt:id>
+                <crigtt:name>Coverage Role Type</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31671</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-15247-v</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.19579</crigtt:id>
+                <crigtt:name>Family Member Value Set</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-32476</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.14</crigtt:id>
+                <crigtt:name>NAACCR Behavior Code</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-32615</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.14</crigtt:id>
+                <crigtt:name>NAACCR Behavior Code</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-32483</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.3</crigtt:id>
+                <crigtt:name>NAACCR Diagnostic Confirmation</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-32620</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.520.4.3</crigtt:id>
+                <crigtt:name>NAACCR Diagnostic Confirmation</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7515</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7519</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.14570</crigtt:id>
+                <crigtt:name>AdministrableDrugForm</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5317</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.19185</crigtt:id>
+                <crigtt:name>Religious Affiliation</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5403</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.80.2</crigtt:id>
+                <crigtt:name>PostalCode</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-5409</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.12249</crigtt:id>
+                <crigtt:name>LanguageAbilityMode</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32173</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32174</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-17000</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
+                <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7668</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.16866</crigtt:id>
+                <crigtt:name>Act Priority</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31981</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32067</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.7</crigtt:id>
+                <crigtt:name>Medication Route FDA</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32078</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
+                <crigtt:name>Body Site</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-32081</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113883.1.11.14570</crigtt:id>
+                <crigtt:name>AdministrableDrugForm</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31884</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSet>
+            <crigtt-validate-vocab:valueSet>
+                <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
+                <crigtt:name>Clinical Substance</crigtt:name>
+            </crigtt-validate-vocab:valueSet>
+        </crigtt-validate-vocab:expectedVocabSet>
+    </crigtt-validate-vocab:vocabAssertion>
+</crigtt-validate-vocab:vocabAssertions>

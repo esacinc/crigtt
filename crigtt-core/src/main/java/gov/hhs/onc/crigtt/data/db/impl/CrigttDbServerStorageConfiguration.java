@@ -1,4 +1,4 @@
-package gov.hhs.onc.crigtt.db.impl;
+package gov.hhs.onc.crigtt.data.db.impl;
 
 import com.orientechnologies.orient.server.config.OServerStorageConfiguration;
 

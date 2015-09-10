@@ -75,6 +75,10 @@
     
     <beans:bean id="objFactoryValidateImpl" class="gov.hhs.onc.crigtt.validate.impl.ObjectFactory"/>
     
+    <beans:bean id="objFactoryValidateVocab" class="gov.hhs.onc.crigtt.validate.vocab.ObjectFactory"/>
+    
+    <beans:bean id="objFactoryValidateVocabImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.ObjectFactory"/>
+    
     <!--====================================================================================================
     = CHARACTER ESCAPE HANDLERS
     =====================================================================================================-->
@@ -119,6 +123,7 @@
         <beans:property name="packagesToScan">
             <beans:array>
                 <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>
+                <beans:value>#{ objFactoryValidateVocabImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
     </beans:bean>

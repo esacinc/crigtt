@@ -114,33 +114,6 @@
         </annox:annotate>
     </jaxb:bindings>
     
-    <jaxb:bindings node="xsd:complexType[@name='ValueSet']">
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.impl.ValidatorValueSetImpl.class) })
-        </annox:annotate>
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonTypeName("validatorValueSet")
-        </annox:annotate>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:complexType[@name='CodeSystem']">
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.impl.ValidatorCodeSystemImpl.class) })
-        </annox:annotate>
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonTypeName("validatorCodeSystem")
-        </annox:annotate>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="xsd:complexType[@name='Code']">
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.impl.ValidatorCodeImpl.class) })
-        </annox:annotate>
-        <annox:annotate target="class">
-            @com.fasterxml.jackson.annotation.JsonTypeName("validatorCode")
-        </annox:annotate>
-    </jaxb:bindings>
-    
     <jaxb:bindings node="xsd:complexType[@name='Event']">
         <annox:annotate target="class">
             @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.impl.ValidatorEventImpl.class) })
@@ -161,7 +134,7 @@
             <jaxb:bindings node="xsd:element[@name='testExpression']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:element[@name='description']">
+            <jaxb:bindings node="xsd:element[@name='runtimeTestExpression']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='schema']">
@@ -179,28 +152,23 @@
             <jaxb:bindings node="xsd:element[@name='assertion']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='expectedValueSet']) = 1]">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "expectedValueSets")</annox:annotate>
-                <jaxb:property name="expectedValueSets"/>
+            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='expectedVocabSet']) = 1]">
+                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "expectedVocabSets")</annox:annotate>
+                <jaxb:property name="expectedVocabSets"/>
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:element[@name='valueSet']">
-                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
-            </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='expectedCodeSystem']) = 1]">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "expectedCodeSystems")</annox:annotate>
-                <jaxb:property name="expectedCodeSystems"/>
-                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
-            </jaxb:bindings>
-            <jaxb:bindings node="xsd:element[@name='codeSystem']">
-                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
-            </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='expectedCode']) = 1]">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "expectedCodes")</annox:annotate>
-                <jaxb:property name="expectedCodes"/>
+            <jaxb:bindings node="xsd:element[@name='vocabSet']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='code']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='description']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='message']) = 1]">
+                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "messages")</annox:annotate>
+                <jaxb:property name="messages"/>
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
         </jaxb:bindings>

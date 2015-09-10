@@ -6,6 +6,7 @@ import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
+import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.Map;
 import java.util.TimeZone;
 import net.sf.saxon.expr.XPathContext;
@@ -29,7 +30,7 @@ public class FormatTimestampFunction extends AbstractCrigttExtensionFunction {
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
         // noinspection ConstantConditions
-        return new XdmAtomicValue(DateFormatUtils.format(getAtomicValue(args[0]).getLongValue(), CrigttDateUtils.DISPLAY_FORMAT_PATTERN,
+        return new XdmAtomicValue(DateFormatUtils.format(CrigttXpathUtils.getAtomicValue(args[0]).getLongValue(), CrigttDateUtils.DISPLAY_FORMAT_PATTERN,
             ((TimeZone) ((Map<String, Object>) contextData.get(CrigttContextDataNames.VALIDATE_RENDER_OPTS_NAME)).get(ValidatorRenderOptions.TIME_ZONE_NAME))));
     }
 }

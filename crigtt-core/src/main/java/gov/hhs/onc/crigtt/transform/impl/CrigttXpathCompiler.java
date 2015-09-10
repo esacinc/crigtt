@@ -1,6 +1,7 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
 import gov.hhs.onc.crigtt.utils.CrigttIteratorUtils;
+import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import javax.annotation.Nullable;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XPathCompiler;
@@ -56,6 +57,26 @@ public class CrigttXpathCompiler extends XPathCompiler {
         XdmItem item = this.evaluateSingle(expr, context, contextItem);
 
         return ((item instanceof XdmNode) ? ((XdmNode) item) : null);
+    }
+    
+    @Nullable
+    public String evaluateString(String expr) throws SaxonApiException {
+        return this.evaluateString(expr, ((XdmItem) null));
+    }
+
+    @Nullable
+    public String evaluateString(String expr, @Nullable XdmItem contextItem) throws SaxonApiException {
+        return this.evaluateString(expr, this.getUnderlyingStaticContext(), contextItem);
+    }
+
+    @Nullable
+    public String evaluateString(String expr, IndependentContext context) throws SaxonApiException {
+        return this.evaluateString(expr, context, null);
+    }
+
+    @Nullable
+    public String evaluateString(String expr, IndependentContext context, @Nullable XdmItem contextItem) throws SaxonApiException {
+        return CrigttXpathUtils.getStringValue(this.evaluateSingle(expr, context, contextItem));
     }
 
     @Nullable

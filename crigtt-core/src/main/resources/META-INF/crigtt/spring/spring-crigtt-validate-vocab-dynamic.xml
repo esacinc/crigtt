@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!--====================================================================================================
+    = CACHE MANAGERS
+    =====================================================================================================-->
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="cacheManagerValidateVocabDynamic" parent="cacheManagerCrigtt"
+        p:maxBytesLocalHeap="${crigtt.cache.validate.vocab.dynamic.heap.max.bytes}">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheManagerConfig"/>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = CACHES
+    =====================================================================================================-->
+    <beans:bean id="cacheValidateVocabVocabSetDynamic" parent="cacheValidateVocabVocabSet"
+        p:manager-ref="cacheManagerValidateVocabDynamic">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheConfigCrigtt"/>
+        </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="cacheValidateVocabCodeDynamic" parent="cacheValidateVocabCode"
+        p:manager-ref="cacheManagerValidateVocabDynamic">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheConfigCrigtt"/>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = DATABASE SERVER CONFIGURATIONS
+    =====================================================================================================-->
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="dbServerConfigValidateVocabDynamic" parent="dbServerConfig"
+        p:ipAddress="${crigtt.db.validate.vocab.dynamic.ip.addr}"
+        p:port="${crigtt.db.validate.vocab.dynamic.port}">
+        <beans:property name="globals">
+            <beans:map>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).NETWORK_MAX_CONCURRENT_SESSIONS }" value="10000"
+                    value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).USE_WAL }" value="false" value-type="java.lang.Boolean"/>
+            </beans:map>
+        </beans:property>
+        <beans:property name="properties">
+            <beans:map>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:entry key="server.database.path" value="${crigtt.data.db.dir}"/>
+            </beans:map>
+        </beans:property>
+        <beans:property name="storages">
+            <beans:array>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerStorageConfig"
+                    c:name="${crigtt.db.validate.vocab.dynamic.storage.primary.name}"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.storage.primary.user.pass}"
+                    c:path="#{ T(gov.hhs.onc.crigtt.data.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.primary.dir}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.storage.primary.user.name}"/>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerStorageConfig"
+                    c:name="${crigtt.db.validate.vocab.dynamic.storage.secondary.name}"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.pass}"
+                    c:path="#{ T(gov.hhs.onc.crigtt.data.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.secondary.dir}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.name}"/>
+            </beans:array>
+        </beans:property>
+        <beans:property name="users">
+            <beans:array>
+                <!--suppress SpringPlaceholdersInspection -->
+                <beans:bean parent="dbServerUserConfig"
+                    c:pass="${crigtt.db.validate.vocab.dynamic.user.root.pass}"
+                    c:user="${crigtt.db.validate.vocab.dynamic.user.root.name}"/>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = DYNAMIC VOCABULARY SERVICES
+    =====================================================================================================-->
+    <beans:bean id="vocabServiceDynamic" class="gov.hhs.onc.crigtt.validate.vocab.DynamicVocabService" parent="vocabService" abstract="true"/>
+    
+    <beans:bean id="vocabServiceDynamicImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabServiceImpl" parent="vocabServiceDynamic"
+        abstract="true"/>
+    
+    <beans:bean id="vocabServiceDynamicCrigtt" parent="vocabServiceDynamicImpl"
+        p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-dynamic.xml"
+        p:codeCache-ref="cacheValidateVocabCodeDynamic"
+        p:vocabSetCache-ref="cacheValidateVocabVocabSetDynamic"/>
+</beans:beans>

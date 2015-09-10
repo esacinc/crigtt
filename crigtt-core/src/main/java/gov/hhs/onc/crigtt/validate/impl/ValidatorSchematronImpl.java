@@ -7,7 +7,6 @@ import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.schematron.Active;
 import gov.hhs.onc.crigtt.schematron.Assertion;
 import gov.hhs.onc.crigtt.schematron.Name;
-import gov.hhs.onc.crigtt.schematron.Namespace;
 import gov.hhs.onc.crigtt.schematron.Pattern;
 import gov.hhs.onc.crigtt.schematron.Phase;
 import gov.hhs.onc.crigtt.schematron.Report;
@@ -28,7 +27,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorPhase;
 import gov.hhs.onc.crigtt.validate.ValidatorRule;
 import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.vocab.StaticVocabService;
+import gov.hhs.onc.crigtt.validate.vocab.VocabService;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttXmlOutputFactory;
@@ -79,7 +78,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private XdmDocument[] referencedDocs;
     private String schemaVersion;
     private Source src;
-    private StaticVocabService staticVocabService;
+    private VocabService[] vocabServices;
     private CrigttXsltExecutable[] xsltExecs;
     private Map<DocumentURI, DocumentInfo> pooledReferencedDocs;
     private Map<String, String> patternPhases;
@@ -88,6 +87,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private Map<String, ValidatorPattern> activePatterns;
     private Map<String, ValidatorRule> activeRules;
     private Map<String, ValidatorAssertion> activeAssertions;
+    private Map<String, VocabService> activeVocabServices;
     private CrigttXsltExecutable schemaXsltExec;
 
     @Override
@@ -102,7 +102,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
         boolean xferContextData = (contextData != null);
         Map<Object, Object> docContextData = docTransformer.getUnderlyingController().getContextData();
-        
+
         if (xferContextData) {
             docContextData.putAll(contextData);
         }
@@ -159,10 +159,8 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
             this.activeSchema.setId(this.id);
         }
 
-        Namespace validateNs = new NamespaceImpl();
-        validateNs.setPrefix(CrigttXmlNs.VALIDATE_PREFIX);
-        validateNs.setUri(CrigttXmlNs.VALIDATE_URI);
-        schemaContent.add(0, validateNs);
+        schemaContent.add(0, new NamespaceImpl(CrigttXmlNs.VALIDATE_URI, CrigttXmlNs.VALIDATE_PREFIX, null));
+        schemaContent.add(1, new NamespaceImpl(CrigttXmlNs.VALIDATE_VOCAB_URI, CrigttXmlNs.VALIDATE_VOCAB_PREFIX, null));
 
         if (this.isSetName()) {
             Title title = new TitleImpl();
@@ -194,6 +192,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
         this.activeRules = new LinkedHashMap<>();
         this.activeAssertions = new LinkedHashMap<>();
+        this.activeVocabServices = new LinkedHashMap<>();
 
         patterns.forEach((patternId, pattern) -> {
             for (String phaseId : phases.keySet()) {
@@ -207,36 +206,44 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
         List<Object> patternContent = filterContent(pattern.getContent());
 
-        CrigttStreamUtils.instances(patternContent.stream(), Rule.class).forEach(
-            rule -> {
-                ListIterator<Object> ruleContentIterator = filterContent(rule.getContent()).listIterator();
-                String ruleId = rule.getId();
+        CrigttStreamUtils.instances(patternContent.stream(), Rule.class).forEach(rule -> {
+            ListIterator<Object> ruleContentIterator = filterContent(rule.getContent()).listIterator();
+            String ruleId = rule.getId();
 
-                rules.put(ruleId, rule);
+            rules.put(ruleId, rule);
 
-                ValidatorRule activeRule = new ValidatorRuleImpl();
-                activeRule.setId(ruleId);
-                this.activeRules.put(ruleId, activeRule);
+            ValidatorRule activeRule = new ValidatorRuleImpl();
+            activeRule.setId(ruleId);
+            this.activeRules.put(ruleId, activeRule);
 
-                CrigttIteratorUtils.stream(CrigttIteratorUtils.instances(ruleContentIterator, Assertion.class)).forEach(
-                    assertion -> {
-                        List<Serializable> assertionContent = filterContent(assertion.getContent());
-                        String assertionId = assertion.getId(), assertionTest =
-                            this.staticVocabService.processTestExpression(patternId, assertionId, assertion.getTest());
-                        assertions.put(assertionId, assertion);
+            CrigttIteratorUtils.stream(CrigttIteratorUtils.instances(ruleContentIterator, Assertion.class)).forEach(assertion -> {
+                List<Serializable> assertionContent = filterContent(assertion.getContent());
+                String assertionId = assertion.getId(), assertionTestExpr = assertion.getTest(), runtimeAssertionTestExpr;
 
-                        Report report = new ReportImpl();
-                        report.setId(assertionId);
-                        report.setContent(assertionContent);
-                        report.setTest(assertionTest);
-                        ruleContentIterator.add(report);
+                for (VocabService vocabService : this.vocabServices) {
+                    if (!(runtimeAssertionTestExpr = vocabService.processTestExpression(patternId, assertionId, assertionTestExpr)).equals(assertionTestExpr)) {
+                        assertion.setTest((assertionTestExpr = runtimeAssertionTestExpr));
 
-                        ValidatorAssertion activeAssertion = new ValidatorAssertionImpl();
-                        activeAssertion.setId(assertionId);
-                        activeAssertion.setName(CrigttStreamUtils.firstInstance(assertionContent.stream(), Name.class).map(Name::getPath).orElse(null));
-                        this.activeAssertions.put(assertionId, activeAssertion);
-                    });
+                        this.activeVocabServices.put(assertionId, vocabService);
+
+                        break;
+                    }
+                }
+
+                assertions.put(assertionId, assertion);
+
+                Report report = new ReportImpl();
+                report.setId(assertionId);
+                report.setContent(assertionContent);
+                report.setTest(assertionTestExpr);
+                ruleContentIterator.add(report);
+
+                ValidatorAssertion activeAssertion = new ValidatorAssertionImpl();
+                activeAssertion.setId(assertionId);
+                activeAssertion.setName(CrigttStreamUtils.firstInstance(assertionContent.stream(), Name.class).map(Name::getPath).orElse(null));
+                this.activeAssertions.put(assertionId, activeAssertion);
             });
+        });
 
         ValidatorPattern activePattern = new ValidatorPatternImpl();
         activePattern.setId(patternId);
@@ -300,6 +307,11 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     @Override
     public ValidatorSchema getActiveSchema() {
         return this.activeSchema;
+    }
+
+    @Override
+    public Map<String, VocabService> getActiveVocabServices() {
+        return this.activeVocabServices;
     }
 
     @Override
@@ -368,13 +380,13 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     }
 
     @Override
-    public StaticVocabService getStaticVocabService() {
-        return this.staticVocabService;
+    public VocabService[] getVocabServices() {
+        return this.vocabServices;
     }
 
     @Override
-    public void setStaticVocabService(StaticVocabService staticVocabService) {
-        this.staticVocabService = staticVocabService;
+    public void setVocabServices(VocabService ... vocabServices) {
+        this.vocabServices = vocabServices;
     }
 
     @Override

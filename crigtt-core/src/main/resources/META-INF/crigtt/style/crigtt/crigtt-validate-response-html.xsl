@@ -410,22 +410,25 @@
                                     <tbody>
                                         <xsl:for-each select="validate:results/validate:events/validate:event">
                                             <xsl:variable name="eventLevel" select="validate:level/text()"/>
+                                            <xsl:variable name="infoEventLevel" select="$eventLevel = 'INFO'"/>
                                             <xsl:variable name="eventLevelClassName">
                                                 <xsl:choose>
-                                                    <xsl:when test="$eventLevel = 'info'">info</xsl:when>
-                                                    <xsl:when test="$eventLevel = 'warn'">warning</xsl:when>
-                                                    <xsl:when test="$eventLevel = 'error'">danger</xsl:when>
+                                                    <xsl:when test="$infoEventLevel">info</xsl:when>
+                                                    <xsl:when test="$eventLevel = 'WARN'">warning</xsl:when>
+                                                    <xsl:when test="$eventLevel = 'ERROR'">danger</xsl:when>
                                                     <xsl:otherwise>default</xsl:otherwise>
                                                 </xsl:choose>
                                             </xsl:variable>
-                                            <xsl:variable name="eventStatus" select="validate:status/text()"/>
+                                            <xsl:variable name="eventStatus" select="xsd:boolean(validate:status/text())"/>
                                             <xsl:variable name="eventClassName">
                                                 <xsl:choose>
-                                                    <xsl:when test="xsd:boolean($eventStatus)">success</xsl:when>
-                                                    <xsl:otherwise><xsl:value-of select="$eventLevelClassName"/></xsl:otherwise>
+                                                    <xsl:when test="$eventStatus and not($infoEventLevel)">success</xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:value-of select="$eventLevelClassName"/>
+                                                    </xsl:otherwise>
                                                 </xsl:choose>
                                             </xsl:variable>
-                                            <tr class="{$eventClassName}">
+                                            <tr class="{$eventClassName}" data-status="{$eventStatus}">
                                                 <td>
                                                     <xsl:call-template name="propValue">
                                                         <xsl:with-param name="value" select="validate:id/text()"/>
@@ -435,7 +438,7 @@
                                                     <xsl:call-template name="propValue">
                                                         <xsl:with-param name="value">
                                                             <xsl:choose>
-                                                                <xsl:when test="xsd:boolean($eventStatus)">Pass</xsl:when>
+                                                                <xsl:when test="$eventStatus">Pass</xsl:when>
                                                                 <xsl:otherwise>Fail</xsl:otherwise>
                                                             </xsl:choose>
                                                         </xsl:with-param>
@@ -443,7 +446,7 @@
                                                 </td>
                                                 <td class="text-{$eventLevelClassName}">
                                                     <xsl:call-template name="propValue">
-                                                        <xsl:with-param name="value" select="upper-case(validate:level/text())"/>
+                                                        <xsl:with-param name="value" select="validate:level/text()"/>
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>

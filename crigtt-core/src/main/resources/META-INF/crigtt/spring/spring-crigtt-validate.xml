@@ -61,6 +61,7 @@
         <beans:property name="extensionFunctions">
             <beans:array>
                 <beans:ref bean="extFuncValidateVocabStatic"/>
+                <beans:ref bean="extFuncValidateVocabDynamic"/>
             </beans:array>
         </beans:property>
         <beans:property name="parameters">
@@ -89,16 +90,31 @@
     <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
         p:id="ccda-r2-cancer-reg"
         p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
-        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch"
-        p:staticVocabService-ref="vocabServiceStaticCcdaR2CancerReg"/>
+        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
+        <beans:property name="vocabServices">
+            <beans:array>
+                <beans:ref bean="vocabServiceStaticCrigtt"/>
+                <beans:ref bean="vocabServiceDynamicCrigtt"/>
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+    
+    <!--====================================================================================================
+    = CACHE MANAGERS
+    =====================================================================================================-->
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="cacheManagerValidateResults" parent="cacheManagerCrigtt"
+        p:maxBytesLocalHeap="${crigtt.cache.validate.results.heap.max.bytes}">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheManagerConfig"/>
+        </beans:property>
+    </beans:bean>
     
     <!--====================================================================================================
     = CACHES
     =====================================================================================================-->
-    <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="cacheValidatorResults" parent="cacheCrigtt"
-        p:maxBytesLocalDisk="${crigtt.cache.validate.results.disk.max.bytes}"
-        p:maxBytesLocalHeap="${crigtt.cache.validate.results.heap.max.bytes}">
+    <beans:bean id="cacheValidateResults" parent="cacheCrigtt"
+        p:manager-ref="cacheManagerValidateResults">
         <beans:property name="configuration">
             <beans:bean parent="cacheConfig"/>
         </beans:property>
@@ -163,7 +179,6 @@
         <beans:property name="taskBeanNames">
             <beans:array>
                 <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>
-                <beans:idref bean="validatorTaskVocabDynamicCrigtt"/>
             </beans:array>
         </beans:property>
     </beans:bean>

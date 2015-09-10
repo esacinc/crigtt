@@ -1,14 +1,13 @@
 package gov.hhs.onc.crigtt.transform.impl;
 
 import java.util.Map;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnegative;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.s9api.SaxonApiUncheckedException;
-import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceExtent;
@@ -55,46 +54,6 @@ public abstract class AbstractCrigttExtensionFunction extends ExtensionFunctionD
         return this.resultType;
     }
 
-    @Nullable
-    protected static String getStringValue(XdmValue rootValue) {
-        return getStringValue(rootValue, 0);
-    }
-
-    @Nullable
-    protected static String getStringValue(XdmValue rootValue, int valueIndex) {
-        XdmAtomicValue value = getAtomicValue(rootValue, valueIndex);
-
-        return ((value != null) ? value.getStringValue() : null);
-    }
-
-    @Nullable
-    protected static XdmAtomicValue getAtomicValue(XdmValue rootValue) {
-        return getAtomicValue(rootValue, 0);
-    }
-
-    @Nullable
-    protected static XdmAtomicValue getAtomicValue(XdmValue rootValue, int valueIndex) {
-        return getValue(rootValue, valueIndex, XdmAtomicValue.class);
-    }
-
-    @Nullable
-    protected static <T extends XdmValue> T getValue(XdmValue rootValue, Class<T> valueClass) {
-        return getValue(rootValue, 0, valueClass);
-    }
-
-    @Nullable
-    protected static <T extends XdmValue> T getValue(XdmValue rootValue, int valueIndex, Class<T> valueClass) {
-        return (hasValues(rootValue, (valueIndex + 1)) ? valueClass.cast(rootValue.itemAt(valueIndex)) : null);
-    }
-
-    protected static boolean hasValue(XdmValue rootValue) {
-        return hasValues(rootValue, 1);
-    }
-
-    protected static boolean hasValues(XdmValue rootValue, int numValues) {
-        return (rootValue.size() >= numValues);
-    }
-
     @Override
     public SequenceType[] getArgumentTypes() {
         return this.argTypes;
@@ -103,5 +62,17 @@ public abstract class AbstractCrigttExtensionFunction extends ExtensionFunctionD
     @Override
     public StructuredQName getFunctionQName() {
         return this.name;
+    }
+
+    @Nonnegative
+    @Override
+    public int getMaximumNumberOfArguments() {
+        return this.argTypes.length;
+    }
+
+    @Nonnegative
+    @Override
+    public int getMinimumNumberOfArguments() {
+        return this.argTypes.length;
     }
 }

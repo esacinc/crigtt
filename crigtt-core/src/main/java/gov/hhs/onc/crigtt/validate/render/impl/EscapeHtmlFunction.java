@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.validate.render.impl;
 
 import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
+import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.Map;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.om.StructuredQName;
@@ -22,6 +23,6 @@ public class EscapeHtmlFunction extends AbstractCrigttExtensionFunction {
 
     @Override
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(StringEscapeUtils.escapeHtml4(getStringValue(args[0])));
+        return new XdmAtomicValue(StringEscapeUtils.escapeHtml4(CrigttXpathUtils.getStringValue(args[0])));
     }
 }

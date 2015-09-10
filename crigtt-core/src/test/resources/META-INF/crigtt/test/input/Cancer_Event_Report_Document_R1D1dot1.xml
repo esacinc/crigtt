@@ -657,7 +657,7 @@
 							<subject>
 								<relatedSubject classCode="PRS">
 									<code code="FTH" displayName="Father" codeSystemName="FamilyRelationshipRoleType" codeSystem="2.16.840.1.113883.5.111">
-										<translation code="9947008" displayName="Biological father" codeSystemName="SNOMED" codeSystem="2.16.840.1.113883.6.96"/>
+										<translation code="9947008" displayName="Natural father (person)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96"/>
 									</code>
 									<subject>
 										<sdtc:id root="2.16.840.1.113883.19.5.99999.2" extension="99999999"/>
@@ -727,8 +727,8 @@
 				<section>
 					<templateId root="2.16.840.1.113883.10.20.22.2.38" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.13.12" extension="2014-08-08"/>
-					<code code="29549-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="MEDICATIONS ADMINISTERED"/>
-					<title>MEDICATIONS ADMINISTERED</title>
+					<code code="29549-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Medication administered"/>
+					<title>MEDICATION ADMINISTERED</title>
 					<text>
 						<table border="1" width="100%">
 							<thead>
@@ -741,7 +741,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td ID="MedicationAdminName_1">"Doxorubicin </td>
+									<td ID="MedicationAdminName_1">Doxorubicin Hydrochloride</td>
 									<td>7/29/2012</td>
 									<td>None</td>
 									<td ID="MedicationAdminDose_1">2mg/mL</td>
@@ -768,7 +768,7 @@
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity>
+							<doseQuantity unit="mg/ml">
 								<low value="2" unit="mg/ml">
 									<translation>
 										<originalText>
@@ -790,7 +790,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="310024" displayName="Doxorubicin 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -831,7 +831,7 @@
 					<templateId root="2.16.840.1.113883.10.20.22.2.1" extension="2014-06-09"/>
 					<!-- Medications Section (entries required) (V2) - Cancer IG Specific Constraints -->
 					<templateId root="2.16.840.1.113883.10.13.13" extension="2014-08-08"/>
-					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="HISTORY OF MEDICATION USE"/>
+					<code code="10160-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of medication use"/>
 					<title>MEDICATIONS</title>
 					<text>
 						Narrative Text    
@@ -857,7 +857,7 @@
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity>
+							<doseQuantity unit="mg/ml">
 								<low value="2" unit="mg/ml">
 									<translation>
 										<originalText>
@@ -879,7 +879,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="310024" displayName="Doxorubicin 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -1151,7 +1151,7 @@
 							<participant typeCode="LOC">
 								<participantRole classCode="SDLOC">
 									<templateId root="2.16.840.1.113883.10.20.22.4.32"/>
-									<code code="1200-5" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HealthcareServiceLocation" displayName="Hematology/oncology clinic"/>
+									<code code="1200-5" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HL7 HealthcareServiceLocation" displayName="Hematology/oncology clinic"/>
 									<addr>
 										<streetAddressLine>1000 Hospital Lane</streetAddressLine>
 										<city>Ann Arbor</city>
@@ -1322,7 +1322,7 @@
 					<templateId root="2.16.840.1.113883.10.20.22.2.5" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.5.1" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.13.21" extension="2014-08-08"/>
-					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="PROBLEM LIST"/>
+					<code code="11450-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Problem list"/>
 					<title>PROBLEMS</title>
 					<text>
 						...
@@ -1359,7 +1359,7 @@
 									<!-- ** Problem observation - Cancer IG Specific Constraints ** -->
 									<templateId root="2.16.840.1.113883.10.13.23" extension="2014-08-08"/>
 									<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-									<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" displayName="Condition"/>
+									<code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Condition"/>
 									<!-- The statusCode reflects the status of the observation itself -->
 									<statusCode code="completed"/>
 									<effectiveTime>
@@ -1420,7 +1420,7 @@
 							<!-- Procedure Activity Procedure (V2) - Cancer IG Specific Constraints-->
 							<templateId root="2.16.840.1.113883.10.13.15" extension="2014-08-08"/>
 							<id root="d5b614bd-01ce-410d-8726-e1fd01dcc72a"/>
-							<code code="392021009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Lumpectomy of breast">
+							<code code="392021009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Lumpectomy of breast (procedure)">
 								<originalText>
 									<reference value="#Proc1"/>
 								</originalText>
@@ -1493,7 +1493,7 @@
 							<participant typeCode="LOC">
 								<participantRole classCode="SDLOC">
 									<templateId root="2.16.840.1.113883.10.20.22.4.32"/>
-									<code code="1200-5" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HealthcareServiceLocation" displayName="Hematology/oncology clinic"/>
+									<code code="1200-5" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HL7 HealthcareServiceLocation" displayName="Hematology/oncology clinic"/>
 									<addr>
 										<streetAddressLine>1000 Hospital Lane</streetAddressLine>
 										<city>Ann Arbor</city>
@@ -1582,7 +1582,7 @@
 											<participant typeCode="LOC">
 												<participantRole classCode="SDLOC">
 													<templateId root="2.16.840.1.113883.10.20.22.4.32"/>
-													<code code="1008-2" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HealthcareServiceLocation" displayName="Radiology diagnostics or therapeutics unit"/>
+													<code code="1008-2" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HL7 HealthcareServiceLocation" displayName="Radiology diagnostics or therapeutics unit"/>
 													<addr>
 														<streetAddressLine>1000 Hospital Lane</streetAddressLine>
 														<city>Ann Arbor</city>
@@ -1673,7 +1673,7 @@
 											<participant typeCode="LOC">
 												<participantRole classCode="SDLOC">
 													<templateId root="2.16.840.1.113883.10.20.22.4.32"/>
-													<code code="1008-2" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HealthcareServiceLocation" displayName="Radiology diagnostics or therapeutics unit"/>
+													<code code="1008-2" codeSystem="2.16.840.1.113883.6.259" codeSystemName="HL7 HealthcareServiceLocation" displayName="Radiology diagnostics or therapeutics unit"/>
 													<addr>
 														<streetAddressLine>1000 Hospital Lane</streetAddressLine>
 														<city>Ann Arbor</city>
@@ -1955,7 +1955,7 @@
 							<!-- ** Result organizer ** -->
 							<templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2014-06-09"/>
 							<id root="122ed3ae-6d9e-43d0-bfa2-434ea34b1426"/>
-							<code code="166312007" displayName="Blood chemistry test" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"/>
+							<code code="166312007" displayName="Blood chemistry (procedure)" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"/>
 							<statusCode code="active"/>
 							<effectiveTime>
 								<low value="200803200930-0800"/>
@@ -1999,7 +1999,7 @@
 					<!-- Social History Section -->
 					<templateId root="2.16.840.1.113883.10.13.11" extension="2015-01-29"/>
 					<!-- Social History Section (V2) - Cancer IG Specific Constraints -->
-					<code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History"/>
+					<code code="29762-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Social history"/>
 					<title>SOCIAL HISTORY</title>
 					<text>
 						<table border="1" width="100%">
@@ -2094,7 +2094,7 @@
 							<!-- ** Tobacco use ** -->
 							<templateId root="2.16.840.1.113883.10.20.22.4.85" extension="2014-06-09"/>
 							<id root="45efb604-7049-4a2e-ad33-d38556c9636c"/>
-							<code code="11367-0" codeSystem="2.16.840.1.113883.6.1" displayName="History of tobacco use"/>
+							<code code="11367-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of tobacco use"/>
 							<statusCode code="completed"/>
 							<effectiveTime>
 								<!-- The low value reflects the start date of the observation/value (moderate smoker) -->
@@ -2121,7 +2121,7 @@
 					<!-- ** Vital Signs Section (entries required) (V2) ** -->
 					<templateId root="2.16.840.1.113883.10.20.22.2.4" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.4.1" extension="2014-06-09"/>
-					<code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="VITAL SIGNS"/>
+					<code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Vital signs"/>
 					<title>VITAL SIGNS</title>
 					<text>
 						<table border="1" width="100%">

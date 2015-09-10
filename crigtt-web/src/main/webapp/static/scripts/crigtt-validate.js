@@ -104,7 +104,7 @@
                 var panelEventTotalsListElems = panelEventsTableElems.find("caption ul");
                 
                 panelEventsTableElems.find("tbody tr").each(function (panelEventsTableRowIndex, panelEventsTableRowElem) {
-                    var eventStatus = (panelEventsTableRowElem = $(panelEventsTableRowElem)).hasClass("success");
+                    var eventStatus = ((panelEventsTableRowElem = $(panelEventsTableRowElem)).attr("data-status") == String(true));
                     var eventLevel = panelEventsTableRowElem.find("td span").eq(2).text();
                     
                     numEvents++;

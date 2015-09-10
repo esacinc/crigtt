@@ -20,15 +20,15 @@
     <!--====================================================================================================
     = DATABASE SERVER STORAGE CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="dbServerStorageConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttDbServerStorageConfiguration" abstract="true"/>
+    <beans:bean id="dbServerStorageConfig" class="gov.hhs.onc.crigtt.data.db.impl.CrigttDbServerStorageConfiguration" abstract="true"/>
     
     <!--====================================================================================================
     = DATABASE SERVER USER CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="dbServerUserConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttServerDbUserConfiguration" abstract="true"/>
+    <beans:bean id="dbServerUserConfig" class="gov.hhs.onc.crigtt.data.db.impl.CrigttServerDbUserConfiguration" abstract="true"/>
     
     <!--====================================================================================================
     = DATABASE SERVER CONFIGURATIONS
     =====================================================================================================-->
-    <beans:bean id="dbServerConfig" class="gov.hhs.onc.crigtt.db.impl.CrigttDbServerConfiguration" abstract="true"/>
+    <beans:bean id="dbServerConfig" class="gov.hhs.onc.crigtt.data.db.impl.CrigttDbServerConfiguration" abstract="true"/>
 </beans:beans>

@@ -1,4 +1,4 @@
-package gov.hhs.onc.crigtt.db;
+package gov.hhs.onc.crigtt.data.db;
 
 import com.orientechnologies.orient.client.remote.OEngineRemote;
 import com.orientechnologies.orient.core.engine.local.OEngineLocalPaginated;

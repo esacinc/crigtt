@@ -13,8 +13,6 @@ import gov.hhs.onc.crigtt.transform.CrigttContextDataNames;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.SchematronValidatorTask;
 import gov.hhs.onc.crigtt.validate.ValidatorAssertion;
-import gov.hhs.onc.crigtt.validate.ValidatorCode;
-import gov.hhs.onc.crigtt.validate.ValidatorCodeSystem;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
 import gov.hhs.onc.crigtt.validate.ValidatorLevel;
 import gov.hhs.onc.crigtt.validate.ValidatorLocation;
@@ -23,7 +21,9 @@ import gov.hhs.onc.crigtt.validate.ValidatorPhase;
 import gov.hhs.onc.crigtt.validate.ValidatorRule;
 import gov.hhs.onc.crigtt.validate.ValidatorSchema;
 import gov.hhs.onc.crigtt.validate.ValidatorSchematron;
-import gov.hhs.onc.crigtt.validate.ValidatorValueSet;
+import gov.hhs.onc.crigtt.validate.vocab.Code;
+import gov.hhs.onc.crigtt.validate.vocab.VocabService;
+import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
@@ -54,21 +54,19 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
         Map<String, ValidatorPhase> activePhases = this.schematron.getActivePhases();
         Map<String, ValidatorPattern> activePatterns = this.schematron.getActivePatterns();
         Map<String, ValidatorRule> activeRules = this.schematron.getActiveRules();
-        Map<String, String> initTestExprs = this.schematron.getStaticVocabService().getInitialTestExpressions();
         Map<String, ValidatorAssertion> activeAssertions = this.schematron.getActiveAssertions();
+        Map<String, VocabService> activeVocabServices = this.schematron.getActiveVocabServices();
         List<ValidatorEvent> events = new ArrayList<>(activeAssertions.size());
         List<?> outputContent;
-        String patternId = null;
+        String phaseId, patternId = null, assertionId, contextExpr = null, testExpr;
         ValidatorPattern activePattern = null;
-        String phaseId;
         ValidatorPhase activePhase = null;
         ValidatorLevel level = null;
         FiredRule firedRule;
         ValidatorRule activeRule = null;
-        String contextExpr = null;
         boolean assertionStatus;
-        String assertionId;
         ValidatorAssertion activeAssertion;
+        VocabService activeVocabService;
         ValidatorEvent event;
         ValidatorLocation loc;
         SuccessfulReport successfulReport;
@@ -111,29 +109,33 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
                 event.setPattern(activePattern);
                 event.setRule(activeRule);
                 event.setAssertion(activeAssertion);
-                event.setExpectedValueSets(((List<ValidatorValueSet>) contextData.get(new MultiKey<>(patternId, assertionId,
-                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_VALUE_SET_EXPECTED_NAME))));
-                event.setValueSet(((ValidatorValueSet) contextData.get(new MultiKey<>(patternId, assertionId,
-                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_VALUE_SET_NAME))));
-                event.setExpectedCodeSystems(((List<ValidatorCodeSystem>) contextData.get(new MultiKey<>(patternId, assertionId,
-                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_SYSTEM_EXPECTED_NAME))));
-                event.setCodeSystem(((ValidatorCodeSystem) contextData.get(new MultiKey<>(patternId, assertionId,
-                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_SYSTEM_NAME))));
-                event.setExpectedCodes(((List<ValidatorCode>) contextData.get(new MultiKey<>(patternId, assertionId,
-                    CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_EXPECTED_NAME))));
+                event.setExpectedVocabSets(((List<VocabSet>) contextData.get(new MultiKey<>(patternId, assertionId,
+                    CrigttContextDataNames.VALIDATE_VOCAB_VOCAB_SETS_EXPECTED_NAME))));
+                event.setVocabSet(((VocabSet) contextData.get(new MultiKey<>(patternId, assertionId, CrigttContextDataNames.VALIDATE_VOCAB_VOCAB_SET_NAME))));
+                event.setCode(((Code) contextData.get(new MultiKey<>(patternId, assertionId, CrigttContextDataNames.VALIDATE_VOCAB_CODE_NAME))));
                 event
-                    .setCode(((ValidatorCode) contextData.get(new MultiKey<>(patternId, assertionId, CrigttContextDataNames.VALIDATE_VOCAB_STATIC_CODE_NAME))));
+                    .setMessages(((List<String>) contextData.get(new MultiKey<>(patternId, assertionId, CrigttContextDataNames.VALIDATE_VOCAB_MESSAGES_NAME))));
+
+                activeVocabService = activeVocabServices.get(assertionId);
 
                 if (assertionStatus) {
                     event.setDescription((successfulReport = ((SuccessfulReport) outputContentItem)).getText());
-                    event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : successfulReport.getTest()));
+                    event.setTestExpression((testExpr =
+                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : successfulReport.getTest())));
 
                     loc.setNodeExpression((locExpr = successfulReport.getLocation()));
                 } else {
                     event.setDescription((failedAssertion = ((FailedAssertion) outputContentItem)).getText());
-                    event.setTestExpression((initTestExprs.containsKey(assertionId) ? initTestExprs.get(assertionId) : failedAssertion.getTest()));
+                    event.setTestExpression((testExpr =
+                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : failedAssertion.getTest())));
 
                     loc.setNodeExpression((locExpr = failedAssertion.getLocation()));
+                }
+
+                if (activeVocabService != null) {
+                    event.setRuntimeTestExpression(activeVocabService.getRuntimeTestExpressions().get(new MultiKey<>(patternId, assertionId)));
+                } else {
+                    event.setRuntimeTestExpression(testExpr);
                 }
 
                 if ((locNode = this.xpathCompiler.evaluateNode(locExpr, this.xpathContext, this.doc)) != null) {

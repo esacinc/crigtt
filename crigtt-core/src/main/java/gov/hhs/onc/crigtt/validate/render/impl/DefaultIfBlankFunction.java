@@ -2,7 +2,9 @@ package gov.hhs.onc.crigtt.validate.render.impl;
 
 import gov.hhs.onc.crigtt.transform.impl.AbstractCrigttExtensionFunction;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
+import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.Map;
+import javax.annotation.Nonnegative;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.s9api.QName;
@@ -22,6 +24,12 @@ public class DefaultIfBlankFunction extends AbstractCrigttExtensionFunction {
 
     @Override
     protected XdmValue call(XPathContext context, Map<Object, Object> contextData, XdmValue[] args) throws Exception {
-        return new XdmAtomicValue(StringUtils.defaultIfBlank(getStringValue(args[0]), getStringValue(args[1])));
+        return new XdmAtomicValue(StringUtils.defaultIfBlank(CrigttXpathUtils.getStringValue(args[0]), CrigttXpathUtils.getStringValue(args[1])));
+    }
+
+    @Nonnegative
+    @Override
+    public int getMinimumNumberOfArguments() {
+        return 1;
     }
 }

@@ -2,6 +2,7 @@ package gov.hhs.onc.crigtt.utils;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 
 public final class CrigttFileUtils {
@@ -24,7 +25,7 @@ public final class CrigttFileUtils {
                 }
 
                 if (!fileNameBuilder.isEmpty() && ((a + 2) < fileNameChars.length)) {
-                    fileNameBuilder.append(CrigttStringUtils.SPACE);
+                    fileNameBuilder.append(StringUtils.SPACE);
                 }
             } else if (Character.isLetterOrDigit(fileNameChar) || (fileNameChar == CrigttStringUtils.HYPHEN_CHAR)
                 || (fileNameChar == CrigttStringUtils.PERIOD_CHAR) || (fileNameChar == CrigttStringUtils.UNDERSCORE_CHAR)) {

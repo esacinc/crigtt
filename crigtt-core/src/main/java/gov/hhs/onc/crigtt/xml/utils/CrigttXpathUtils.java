@@ -1,17 +1,28 @@
 package gov.hhs.onc.crigtt.xml.utils;
 
-import gov.hhs.onc.crigtt.xml.utils.CrigttXmlUtils.NamedNodeMapList;
+import javax.annotation.Nullable;
+import net.sf.saxon.om.Item;
+import net.sf.saxon.s9api.XdmAtomicValue;
+import net.sf.saxon.s9api.XdmItem;
+import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public final class CrigttXpathUtils {
+    public final static String CALL_DELIM = ",";
     public final static String EXPR_DELIM = "/";
 
-    public final static String ATTR_EXPR_PREFIX = "@";
-    public final static String SUB_EXPR_PREFIX = "[";
+    public final static String ATTR_PREFIX = "@";
+    public final static String CALL_PREFIX = "(";
+    public final static String PREDICATE_PREFIX = "[";
 
-    public final static String SUB_EXPR_SUFFIX = "]";
+    public final static String CALL_SUFFIX = ")";
+    public final static String PREDICATE_SUFFIX = "]";
+    
+    public final static String AND_OP = "and";
+    public final static String OR_OP = "or";
 
     private CrigttXpathUtils() {
     }
@@ -21,11 +32,11 @@ public final class CrigttXpathUtils {
     }
 
     public static String buildAbsoluteExpression(boolean includeNs, Node node) {
-        boolean attrNode = (node.getNodeType() == Node.ATTRIBUTE_NODE);
         String nodeName = (includeNs ? node.getNodeName() : node.getLocalName()), nodeExpr = nodeName;
+        boolean attrNode = (node.getNodeType() == Node.ATTRIBUTE_NODE);
 
         if (attrNode) {
-            nodeExpr = ATTR_EXPR_PREFIX + nodeExpr;
+            nodeExpr = ATTR_PREFIX + nodeExpr;
         }
 
         nodeExpr = EXPR_DELIM + nodeExpr;
@@ -33,32 +44,83 @@ public final class CrigttXpathUtils {
         Node parentNode = node.getParentNode();
 
         if ((parentNode != null) && !(parentNode instanceof Document)) {
-            boolean matchedNode = false, matchedSiblingNode = false;
-            NodeList siblingNodes = (attrNode ? new NamedNodeMapList(parentNode.getAttributes()) : parentNode.getChildNodes());
-            Node siblingNode;
-            int nodeIndex = -1;
+            if (!attrNode) {
+                boolean matchedNode = false, matchedSiblingNode = false;
+                int nodeIndex = 0;
+                NodeList siblingNodes = parentNode.getChildNodes();
+                Node siblingNode;
 
-            for (int a = 0; a < siblingNodes.getLength(); a++) {
-                if ((siblingNode = siblingNodes.item(a)).isSameNode(node)) {
-                    matchedNode = true;
+                for (int a = 0; a < siblingNodes.getLength(); a++) {
+                    if ((siblingNode = siblingNodes.item(a)).isSameNode(node)) {
+                        matchedNode = true;
 
-                    nodeIndex++;
-                } else if ((includeNs ? siblingNode.getNodeName() : siblingNode.getLocalName()).equals(nodeName)) {
-                    matchedSiblingNode = true;
-
-                    if (!matchedNode) {
                         nodeIndex++;
+                    } else if ((includeNs ? siblingNode.getNodeName() : siblingNode.getLocalName()).equals(nodeName)) {
+                        matchedSiblingNode = true;
+
+                        if (!matchedNode) {
+                            nodeIndex++;
+                        }
                     }
                 }
-            }
 
-            if (matchedSiblingNode) {
-                nodeExpr += SUB_EXPR_PREFIX + nodeIndex + SUB_EXPR_SUFFIX;
+                if (matchedSiblingNode) {
+                    nodeExpr += PREDICATE_PREFIX + nodeIndex + PREDICATE_SUFFIX;
+                }
             }
 
             nodeExpr = buildAbsoluteExpression(includeNs, parentNode) + nodeExpr;
         }
 
         return nodeExpr;
+    }
+
+    @Nullable
+    public static String getStringValue(@Nullable XdmValue rootValue) {
+        return getStringValue(rootValue, 0);
+    }
+
+    @Nullable
+    public static String getStringValue(@Nullable XdmValue rootValue, int valueIndex) {
+        if (rootValue instanceof XdmNode) {
+            return ((XdmNode) rootValue).getStringValue();
+        }
+
+        XdmAtomicValue value = getAtomicValue(rootValue, valueIndex);
+
+        return ((value != null) ? value.getStringValue() : null);
+    }
+
+    @Nullable
+    public static XdmAtomicValue getAtomicValue(@Nullable XdmValue rootValue) {
+        return getAtomicValue(rootValue, 0);
+    }
+
+    @Nullable
+    public static XdmAtomicValue getAtomicValue(@Nullable XdmValue rootValue, int valueIndex) {
+        return getValue(rootValue, valueIndex, XdmAtomicValue.class);
+    }
+
+    @Nullable
+    public static <T extends XdmValue> T getValue(@Nullable XdmValue rootValue, Class<T> valueClass) {
+        return getValue(rootValue, 0, valueClass);
+    }
+
+    @Nullable
+    public static <T extends XdmValue> T getValue(@Nullable XdmValue rootValue, int valueIndex, Class<T> valueClass) {
+        return (hasValues(rootValue, (valueIndex + 1)) ? valueClass.cast(rootValue.itemAt(valueIndex)) : null);
+    }
+
+    public static boolean hasValue(@Nullable XdmValue rootValue) {
+        return hasValues(rootValue, 1);
+    }
+
+    public static boolean hasValues(@Nullable XdmValue rootValue, int numValues) {
+        return ((rootValue != null) && (rootValue.size() >= numValues));
+    }
+
+    @Nullable
+    public static XdmItem wrapItem(Item item) {
+        return ((item != null) ? ((XdmItem) XdmValue.wrap(item)) : null);
     }
 }

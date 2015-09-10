@@ -84,7 +84,7 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Resource(name = "docBuilderCrigtt")
     private CrigttDocumentBuilder docBuilder;
 
-    @Resource(name = "cacheValidatorResults")
+    @Resource(name = "cacheValidateResults")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
     private EhCacheCache cache;
 
@@ -203,10 +203,10 @@ public class ValidatorServiceImpl implements ValidatorService {
 
                     case ERROR:
                         numErrorEvents++;
+
+                        status = false;
                         break;
                 }
-
-                status = false;
             }
         }
 
@@ -224,8 +224,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         LOGGER
             .info(String
                 .format(
-                    "Submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) validated (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
-                    id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
+                    "Submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) validated (processed=%s, status=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
+                    id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)), status,
                     (eventId - 1), numInfoEvents, numWarnEvents, numErrorEvents));
 
         return report;

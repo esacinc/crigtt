@@ -211,16 +211,16 @@
             <artifactId>logback-ext-spring</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.objectquery</groupId>
+            <artifactId>objectquery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.objectquery</groupId>
+            <artifactId>objectquery-orientdb</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.sitenv.vocabulary</groupId>
             <artifactId>codevalidator-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.sitenv.xml</groupId>
-            <artifactId>xpathvalidator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.sitenv.xml.validators</groupId>
-            <artifactId>ccdaxpathvalidators</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -431,6 +431,11 @@
                     </dependency>
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-default-value</artifactId>
+                        <version>1.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-value-constructor</artifactId>
                         <version>3.0</version>
                     </dependency>
@@ -449,7 +454,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>generate-sources-jaxb-crigtt-validate</id>
+                        <id>generate-sources-jaxb</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>execute</goal>
@@ -460,7 +465,9 @@
                                     <name>bindingIncludes</name>
                                     <value>
                                         crigtt.xjb
+                                        crigtt/crigtt-core.xjb
                                         crigtt/crigtt-validate.xjb
+                                        crigtt/crigtt-validate-vocab.xjb
                                     </value>
                                 </property>
                                 <property>
@@ -470,25 +477,33 @@
                                 <property>
                                     <name>pkgNames</name>
                                     <value>
+                                        core=gov.hhs.onc.crigtt.beans
                                         validate=gov.hhs.onc.crigtt.validate
+                                        validate-vocab=gov.hhs.onc.crigtt.validate.vocab
                                     </value>
                                 </property>
                                 <property>
                                     <name>schemaIncludes</name>
                                     <value>
+                                        crigtt/crigtt-core.xsd
                                         crigtt/crigtt-validate.xsd
+                                        crigtt/crigtt-validate-vocab.xsd
                                     </value>
                                 </property>
                                 <property>
                                     <name>xmlNsPrefixes</name>
                                     <value>
+                                        core=gov.hhs.onc.crigtt.xml.CrigttXmlNs.CORE_PREFIX
                                         validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_PREFIX
+                                        validate-vocab=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_VOCAB_PREFIX
                                     </value>
                                 </property>
                                 <property>
                                     <name>xmlNsUris</name>
                                     <value>
+                                        core=gov.hhs.onc.crigtt.xml.CrigttXmlNs.CORE_URI
                                         validate=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_URI
+                                        validate-vocab=gov.hhs.onc.crigtt.xml.CrigttXmlNs.VALIDATE_VOCAB_URI
                                     </value>
                                 </property>
                             </properties>

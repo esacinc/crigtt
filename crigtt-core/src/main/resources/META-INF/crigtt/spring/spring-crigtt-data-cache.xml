@@ -18,16 +18,6 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = DISK STORE CONFIGURATIONS
-    =====================================================================================================-->
-    <beans:bean id="diskStoreConfig" class="net.sf.ehcache.config.DiskStoreConfiguration" abstract="true"/>
-    
-    <!--====================================================================================================
-    = SIZE OF POLICY CONFIGURATIONS
-    =====================================================================================================-->
-    <beans:bean id="sizeOfPolicyConfig" class="net.sf.ehcache.config.SizeOfPolicyConfiguration" abstract="true"/>
-    
-    <!--====================================================================================================
     = CACHE MANAGER CONFIGURATIONS
     =====================================================================================================-->
     <beans:bean id="cacheManagerConfig" class="net.sf.ehcache.config.Configuration" abstract="true"/>
@@ -39,25 +29,18 @@
     
     <beans:bean id="cacheManagerEhCache" class="org.springframework.cache.ehcache.EhCacheCacheManager" parent="cacheManager" abstract="true"/>
     
-    <beans:bean id="cacheManagerCrigtt" class="gov.hhs.onc.crigtt.cache.impl.CrigttCacheManagerFactoryBean" parent="cacheManagerEhCache">
-        <beans:property name="configuration">
-            <beans:bean parent="cacheManagerConfig"/>
-        </beans:property>
-        <beans:property name="diskStoreConfiguration">
-            <!--suppress SpringPlaceholdersInspection -->
-            <beans:bean parent="diskStoreConfig"
-                p:path="${crigtt.data.cache.dir}"/>
-        </beans:property>
-        <beans:property name="sizeOfPolicyConfiguration">
-            <beans:bean parent="sizeOfPolicyConfig"
-                p:maxDepth="#{ T(java.lang.Integer).MAX_VALUE }"/>
-        </beans:property>
-    </beans:bean>
+    <beans:bean id="cacheManagerCrigtt" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttCacheManagerFactoryBean" parent="cacheManagerEhCache" abstract="true"/>
     
     <!--====================================================================================================
-    = PERSISTENCE CONFIGURATIONS
+    = SEARCH ATTRIBUTES
     =====================================================================================================-->
-    <beans:bean id="persistenceConfig" class="net.sf.ehcache.config.PersistenceConfiguration" abstract="true"/>
+    <beans:bean id="searchAttr" class="net.sf.ehcache.config.SearchAttribute" abstract="true"/>
+    
+    <beans:bean id="searchAttrCrigtt" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttSearchAttribute" parent="searchAttr" abstract="true"
+        p:extractor-ref="attrExtractorMapKey"/>
+    
+    <beans:bean id="searchAttrStr" parent="searchAttrCrigtt" abstract="true"
+        p:typeClass="java.lang.String"/>
     
     <!--====================================================================================================
     = CACHE CONFIGURATIONS
@@ -65,21 +48,19 @@
     <beans:bean id="cacheConfig" class="net.sf.ehcache.config.CacheConfiguration" abstract="true"/>
     
     <beans:bean id="cacheConfigCrigtt" parent="cacheConfig" abstract="true"
-        p:logging="true"
-        p:statistics="true"/>
+        p:eternal="true"/>
     
     <!--====================================================================================================
     = CACHES
     =====================================================================================================-->
-    <beans:bean id="cache" class="org.springframework.cache.Cache" abstract="true"/>
+    <beans:bean id="cache" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttCache" abstract="true"/>
     
-    <beans:bean id="cacheEhCache" class="org.springframework.cache.ehcache.EhCacheCache" parent="cache" abstract="true"/>
-    
-    <beans:bean id="cacheCrigtt" class="gov.hhs.onc.crigtt.cache.impl.CrigttCacheFactoryBean" parent="cacheEhCache" abstract="true"
-        p:manager-ref="cacheManagerCrigtt">
-        <beans:property name="persistenceConfiguration">
-            <beans:bean parent="persistenceConfig"
-                p:strategy="#{ T(net.sf.ehcache.config.PersistenceConfiguration.Strategy).LOCALTEMPSWAP.name() }"/>
+    <beans:bean id="cacheCrigtt" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttCacheFactoryBean" parent="cache" abstract="true"
+        p:persistenceStrategy="NONE">
+        <beans:property name="listeners">
+            <beans:array>
+                <beans:ref bean="cacheListener"/>
+            </beans:array>
         </beans:property>
     </beans:bean>
 </beans:beans>

@@ -45,6 +45,8 @@
         </beans:property>
     </beans:bean>
     
+    <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="objMapperDisplay" parent="objMapperCrigtt"
-        p:indentOutput="true"/>
+        p:indentOutput="true"
+        p:indentSpaces="${crigtt.transform.serialize.indent.spaces}"/>
 </beans:beans>

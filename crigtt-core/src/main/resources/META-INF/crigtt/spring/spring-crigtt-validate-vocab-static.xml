@@ -18,41 +18,49 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = SEARCH ATTRIBUTES
+    = CACHE MANAGERS
     =====================================================================================================-->
-    <beans:bean id="searchAttrGroupingValueSetId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).GROUPING_VALUE_SET_ID_NAME }"/>
-    
-    <beans:bean id="searchAttrValueSetId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).VALUE_SET_ID_NAME }"/>
-    
-    <beans:bean id="searchAttrCodeSystemId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).CODE_SYSTEM_ID_NAME }"/>
+    <!--suppress SpringPlaceholdersInspection -->
+    <beans:bean id="cacheManagerValidateVocabStatic" parent="cacheManagerCrigtt"
+        p:maxBytesLocalHeap="${crigtt.cache.validate.vocab.static.heap.max.bytes}">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheManagerConfig"/>
+        </beans:property>
+    </beans:bean>
     
     <!--====================================================================================================
     = CACHES
     =====================================================================================================-->
-    <beans:bean id="cacheValidateVocabVocabSet" parent="cacheCrigtt" abstract="true">
-        <beans:property name="searchAttributes">
-            <beans:array>
-                <beans:ref bean="searchAttrGroupingValueSetId"/>
-                <beans:ref bean="searchAttrValueSetId"/>
-                <beans:ref bean="searchAttrCodeSystemId"/>
-            </beans:array>
+    <beans:bean id="cacheValidateVocabVocabSetStatic" parent="cacheValidateVocabVocabSet"
+        p:manager-ref="cacheManagerValidateVocabStatic">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheConfigCrigtt"/>
         </beans:property>
     </beans:bean>
     
-    <beans:bean id="cacheValidateVocabCode" parent="cacheValidateVocabVocabSet" abstract="true">
-        <beans:property name="searchAttributes">
-            <beans:array merge="true">
-                <beans:bean parent="searchAttrStr"
-                    p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).CODE_ID_NAME }"/>
-            </beans:array>
+    <beans:bean id="cacheValidateVocabCodeStatic" parent="cacheValidateVocabCode"
+        p:manager-ref="cacheManagerValidateVocabStatic">
+        <beans:property name="configuration">
+            <beans:bean parent="cacheConfigCrigtt"/>
         </beans:property>
     </beans:bean>
     
     <!--====================================================================================================
-    = VOCABULARY SERVICES
+    = STATIC VOCABULARY SERVICES
     =====================================================================================================-->
-    <beans:bean id="vocabService" class="gov.hhs.onc.crigtt.validate.vocab.VocabService" abstract="true"/>
+    <beans:bean id="vocabServiceStatic" class="gov.hhs.onc.crigtt.validate.vocab.StaticVocabService" parent="vocabService" abstract="true"/>
+    
+    <beans:bean id="vocabServiceStaticImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.StaticVocabServiceImpl" parent="vocabServiceStatic"
+        abstract="true"/>
+    
+    <beans:bean id="vocabServiceStaticCrigtt" parent="vocabServiceStaticImpl"
+        p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-static.xml"
+        p:codeCache-ref="cacheValidateVocabCodeStatic"
+        p:vocabSetCache-ref="cacheValidateVocabVocabSetStatic">
+        <beans:property name="document">
+            <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
+                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
+                p:uri="voc.xml"/>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

@@ -2,35 +2,31 @@
 <xsd:schema
     elementFormDefault="qualified"
     targetNamespace="urn:gov.hhs.onc.crigtt:validate"
-    xmlns:validate="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:crigtt="urn:gov.hhs.onc.crigtt"
+    xmlns:crigtt-validate="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:crigtt-validate-vocab="urn:gov.hhs.onc.crigtt:validate-vocab"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <!--====================================================================================================
+    = IMPORTS
+    =====================================================================================================-->
+    <xsd:import namespace="urn:gov.hhs.onc.crigtt" schemaLocation="crigtt-core.xsd"/>
+    
+    <xsd:import namespace="urn:gov.hhs.onc.crigtt:validate-vocab" schemaLocation="crigtt-validate-vocab.xsd"/>
     
     <!--====================================================================================================
     = GROUPS
     =====================================================================================================-->
     <xsd:group name="DocumentElements">
         <xsd:sequence>
-            <xsd:element name="document" type="validate:Document"/>
+            <xsd:element name="document" type="crigtt-validate:Document"/>
         </xsd:sequence>
     </xsd:group>
     
     <xsd:group name="DtoElements">
         <xsd:sequence>
-            <xsd:group ref="validate:IdElements"/>
-            <xsd:element name="submittedTimestamp" type="validate:Timestamp"/>
-        </xsd:sequence>
-    </xsd:group>
-    
-    <xsd:group name="IdElements">
-        <xsd:sequence>
-            <xsd:element name="id" type="xsd:string"/>
-        </xsd:sequence>
-    </xsd:group>
-    
-    <xsd:group name="NameElements">
-        <xsd:sequence>
-            <xsd:group ref="validate:IdElements"/>
-            <xsd:element name="name" type="xsd:string"/>
+            <xsd:group ref="crigtt:IdElements"/>
+            <xsd:element name="submittedTimestamp" type="crigtt-validate:Timestamp"/>
         </xsd:sequence>
     </xsd:group>
     
@@ -60,9 +56,9 @@
     =====================================================================================================-->
     <xsd:simpleType name="Level">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="info"/>
-            <xsd:enumeration value="warn"/>
-            <xsd:enumeration value="error"/>
+            <xsd:enumeration value="INFO"/>
+            <xsd:enumeration value="WARN"/>
+            <xsd:enumeration value="ERROR"/>
         </xsd:restriction>
     </xsd:simpleType>
     
@@ -79,78 +75,57 @@
     
     <xsd:complexType name="Schema">
         <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
+            <xsd:group ref="crigtt:NameElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
     <xsd:complexType name="Phase">
         <xsd:sequence>
-            <xsd:group ref="validate:IdElements"/>
+            <xsd:group ref="crigtt:IdElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
     <xsd:complexType name="Pattern">
         <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
+            <xsd:group ref="crigtt:NameElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
     <xsd:complexType name="Rule">
         <xsd:sequence>
-            <xsd:group ref="validate:IdElements"/>
+            <xsd:group ref="crigtt:IdElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
     <xsd:complexType name="Assertion">
         <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="ValueSet">
-        <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="CodeSystem">
-        <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="Code">
-        <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
+            <xsd:group ref="crigtt:NameElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
     <xsd:complexType name="Event">
         <xsd:sequence>
-            <xsd:group ref="validate:NameElements"/>
-            <xsd:group ref="validate:StatusElements"/>
-            <xsd:element name="level" type="validate:Level"/>
-            <xsd:element name="location" type="validate:Location"/>
+            <xsd:group ref="crigtt:NameElements"/>
+            <xsd:group ref="crigtt-validate:StatusElements"/>
+            <xsd:element name="level" type="crigtt-validate:Level"/>
+            <xsd:element name="location" type="crigtt-validate:Location"/>
             <xsd:element name="contextExpression" type="xsd:string"/>
-            <xsd:element name="testExpression" type="xsd:string"/>
+            <xsd:element name="testExpression" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="runtimeTestExpression" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="schema" type="crigtt-validate:Schema" minOccurs="0"/>
+            <xsd:element name="phase" type="crigtt-validate:Phase" minOccurs="0"/>
+            <xsd:element name="pattern" type="crigtt-validate:Pattern" minOccurs="0"/>
+            <xsd:element name="rule" type="crigtt-validate:Rule" minOccurs="0"/>
+            <xsd:element name="assertion" type="crigtt-validate:Assertion" minOccurs="0"/>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="expectedVocabSet" type="crigtt-validate-vocab:VocabSet"/>
+            </xsd:sequence>
+            <xsd:element name="vocabSet" type="crigtt-validate-vocab:VocabSet" minOccurs="0"/>
+            <xsd:element name="code" type="crigtt-validate-vocab:Code" minOccurs="0"/>
             <xsd:element name="description" type="xsd:string"/>
-            <xsd:element name="schema" type="validate:Schema" minOccurs="0"/>
-            <xsd:element name="phase" type="validate:Phase" minOccurs="0"/>
-            <xsd:element name="pattern" type="validate:Pattern" minOccurs="0"/>
-            <xsd:element name="rule" type="validate:Rule" minOccurs="0"/>
-            <xsd:element name="assertion" type="validate:Assertion" minOccurs="0"/>
             <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="expectedValueSet" type="validate:ValueSet"/>
+                <xsd:element name="message" type="xsd:string"/>
             </xsd:sequence>
-            <xsd:element name="valueSet" type="validate:ValueSet" minOccurs="0"/>
-            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="expectedCodeSystem" type="validate:CodeSystem"/>
-            </xsd:sequence>
-            <xsd:element name="codeSystem" type="validate:CodeSystem" minOccurs="0"/>
-            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="expectedCode" type="validate:Code"/>
-            </xsd:sequence>
-            <xsd:element name="code" type="validate:Code" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
     
@@ -165,10 +140,10 @@
     
     <xsd:complexType name="Results">
         <xsd:sequence>
-            <xsd:group ref="validate:StatusElements"/>
-            <xsd:element name="eventTotals" type="validate:EventTotals"/>
+            <xsd:group ref="crigtt-validate:StatusElements"/>
+            <xsd:element name="eventTotals" type="crigtt-validate:EventTotals"/>
             <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="event" type="validate:Event"/>
+                <xsd:element name="event" type="crigtt-validate:Event"/>
             </xsd:sequence>
         </xsd:sequence>
     </xsd:complexType>
@@ -183,8 +158,8 @@
     
     <xsd:complexType name="Submission">
          <xsd:sequence>
-            <xsd:group ref="validate:DtoElements"/>
-            <xsd:group ref="validate:DocumentElements"/>
+            <xsd:group ref="crigtt-validate:DtoElements"/>
+            <xsd:group ref="crigtt-validate:DocumentElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
@@ -192,12 +167,12 @@
     
     <xsd:complexType name="Report">
         <xsd:complexContent>
-            <xsd:extension base="validate:Response">
+            <xsd:extension base="crigtt-validate:Response">
                 <xsd:sequence>
-                    <xsd:group ref="validate:DtoElements"/>
-                    <xsd:element name="processedTimestamp" type="validate:Timestamp"/>
-                    <xsd:element name="results" type="validate:Results"/>
-                    <xsd:group ref="validate:DocumentElements"/>
+                    <xsd:group ref="crigtt-validate:DtoElements"/>
+                    <xsd:element name="processedTimestamp" type="crigtt-validate:Timestamp"/>
+                    <xsd:element name="results" type="crigtt-validate:Results"/>
+                    <xsd:group ref="crigtt-validate:DocumentElements"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -205,7 +180,7 @@
     
     <xsd:complexType name="Error">
         <xsd:complexContent>
-            <xsd:extension base="validate:Response">
+            <xsd:extension base="crigtt-validate:Response">
                 <xsd:sequence>
                     <xsd:element name="message" type="xsd:string"/>
                     <xsd:element name="stackTrace" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
@@ -217,9 +192,9 @@
     <!--====================================================================================================
     = ELEMENTS
     =====================================================================================================-->
-    <xsd:element name="submission" type="validate:Submission"/>
+    <xsd:element name="submission" type="crigtt-validate:Submission"/>
     
-    <xsd:element name="report" type="validate:Report"/>
+    <xsd:element name="report" type="crigtt-validate:Report"/>
     
-    <xsd:element name="error" type="validate:Error"/>
+    <xsd:element name="error" type="crigtt-validate:Error"/>
 </xsd:schema>

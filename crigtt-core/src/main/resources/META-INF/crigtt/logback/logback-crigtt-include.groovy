@@ -7,12 +7,15 @@ import ch.qos.logback.core.rolling.RollingFileAppender
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy
 import ch.qos.logback.core.status.NopStatusListener
+import gov.hhs.onc.crigtt.data.cache.impl.CrigttCacheListener
 import gov.hhs.onc.crigtt.context.CrigttProperties
 import gov.hhs.onc.crigtt.io.CrigttFileExtensions
 import gov.hhs.onc.crigtt.logging.CrigttAppenderNames
 import gov.hhs.onc.crigtt.logging.impl.PriorityColorCompositeConverter
 import gov.hhs.onc.crigtt.logging.impl.RootCauseThrowableProxyConverter
 import gov.hhs.onc.crigtt.logging.utils.CrigttLoggingUtils
+import gov.hhs.onc.crigtt.validate.vocab.impl.DynamicVocabServiceImpl
+import gov.hhs.onc.crigtt.validate.vocab.impl.StaticVocabServiceImpl
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller
 import org.apache.commons.io.FilenameUtils
 
@@ -81,6 +84,12 @@ appender(CrigttAppenderNames.FILE, RollingFileAppender) {
 =====================================================================================================*/
 logger("gov.hhs.onc.crigtt", ALL, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
 
+logger(CrigttCacheListener.name, DEBUG, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+
+logger(DynamicVocabServiceImpl.name, DEBUG, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+
+logger(StaticVocabServiceImpl.name, DEBUG, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+
 logger(CrigttJaxbMarshaller.name, WARN, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
 
 /*====================================================================================================
@@ -111,7 +120,7 @@ logger("org.apache.cxf", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderName
 /*====================================================================================================
 = LOGGERS: SITENV
 =====================================================================================================*/
-logger("org.sitenv", INFO, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
+logger("org.sitenv", ALL, [ CrigttAppenderNames.CONSOLE, CrigttAppenderNames.FILE ], false)
 
 /*====================================================================================================
 = LOGGERS: SPRING FRAMEWORK

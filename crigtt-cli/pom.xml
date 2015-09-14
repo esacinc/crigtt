@@ -38,14 +38,6 @@
         </dependency>
         <!-- Compile dependencies (inherited) -->
         <dependency>
-            <groupId>br.net.woodstock.rockframework</groupId>
-            <artifactId>rockframework-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>br.net.woodstock.rockframework</groupId>
-            <artifactId>rockframework-security</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
@@ -108,14 +100,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.msv</groupId>
-            <artifactId>msv-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.msv</groupId>
-            <artifactId>xsdlib</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>

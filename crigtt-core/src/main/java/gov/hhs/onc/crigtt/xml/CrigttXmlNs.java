@@ -8,6 +8,7 @@ public final class CrigttXmlNs {
     public final static String SCHEMATRON_SVRL_PREFIX = "svrl";
     public final static String VALIDATE_PREFIX = "crigtt-validate";
     public final static String VALIDATE_VOCAB_PREFIX = VALIDATE_PREFIX + "-vocab";
+    public final static String W3C_XML_SCHEMA_INSTANCE_PREFIX = "xsi";
 
     public final static String CORE_URI = "urn:gov.hhs.onc.crigtt";
     public final static String HL7_CDA_URI = "urn:hl7-org:v3";

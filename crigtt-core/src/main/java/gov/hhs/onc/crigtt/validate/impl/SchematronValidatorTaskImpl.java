@@ -58,7 +58,7 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
         Map<String, VocabService> activeVocabServices = this.schematron.getActiveVocabServices();
         List<ValidatorEvent> events = new ArrayList<>(activeAssertions.size());
         List<?> outputContent;
-        String phaseId, patternId = null, assertionId, contextExpr = null, testExpr;
+        String phaseId, patternId = null, assertionId, contextExpr = null, runtimeTestExpr;
         ValidatorPattern activePattern = null;
         ValidatorPhase activePhase = null;
         ValidatorLevel level = null;
@@ -120,22 +120,18 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
 
                 if (assertionStatus) {
                     event.setDescription((successfulReport = ((SuccessfulReport) outputContentItem)).getText());
-                    event.setTestExpression((testExpr =
-                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : successfulReport.getTest())));
+                    event.setRuntimeTestExpression((runtimeTestExpr = successfulReport.getTest()));
+                    event.setTestExpression(
+                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : runtimeTestExpr));
 
                     loc.setNodeExpression((locExpr = successfulReport.getLocation()));
                 } else {
                     event.setDescription((failedAssertion = ((FailedAssertion) outputContentItem)).getText());
-                    event.setTestExpression((testExpr =
-                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : failedAssertion.getTest())));
+                    event.setRuntimeTestExpression((runtimeTestExpr = failedAssertion.getTest()));
+                    event.setTestExpression(
+                        ((activeVocabService != null) ? activeVocabService.getInitialTestExpressions().get(assertionId) : runtimeTestExpr));
 
                     loc.setNodeExpression((locExpr = failedAssertion.getLocation()));
-                }
-
-                if (activeVocabService != null) {
-                    event.setRuntimeTestExpression(activeVocabService.getRuntimeTestExpressions().get(new MultiKey<>(patternId, assertionId)));
-                } else {
-                    event.setRuntimeTestExpression(testExpr);
                 }
 
                 if ((locNode = this.xpathCompiler.evaluateNode(locExpr, this.xpathContext, this.doc)) != null) {

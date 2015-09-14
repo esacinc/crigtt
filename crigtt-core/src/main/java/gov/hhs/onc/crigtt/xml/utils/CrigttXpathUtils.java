@@ -14,15 +14,20 @@ public final class CrigttXpathUtils {
     public final static String CALL_DELIM = ",";
     public final static String EXPR_DELIM = "/";
 
+    public final static String QUOTE = "'";
+    
     public final static String ATTR_PREFIX = "@";
     public final static String CALL_PREFIX = "(";
     public final static String PREDICATE_PREFIX = "[";
+    public final static String VAR_PREFIX = "$";
 
     public final static String CALL_SUFFIX = ")";
     public final static String PREDICATE_SUFFIX = "]";
-    
+
     public final static String AND_OP = "and";
     public final static String OR_OP = "or";
+
+    public final static String CURRENT_NODE = ".";
 
     private CrigttXpathUtils() {
     }
@@ -120,7 +125,7 @@ public final class CrigttXpathUtils {
     }
 
     @Nullable
-    public static XdmItem wrapItem(Item item) {
-        return ((item != null) ? ((XdmItem) XdmValue.wrap(item)) : null);
+    public static <T extends XdmItem> T wrapItem(Item item, Class<T> itemClass) {
+        return ((item != null) ? itemClass.cast(XdmValue.wrap(item)) : null);
     }
 }

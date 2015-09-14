@@ -2,7 +2,9 @@ package gov.hhs.onc.crigtt.validate.vocab.impl;
 
 import gov.hhs.onc.crigtt.data.impl.MapKey;
 import gov.hhs.onc.crigtt.data.impl.MapKey.MapKeyEntry;
+import gov.hhs.onc.crigtt.validate.SchematronVars;
 import gov.hhs.onc.crigtt.validate.vocab.StaticVocabService;
+import gov.hhs.onc.crigtt.validate.vocab.VocabAssertion;
 import gov.hhs.onc.crigtt.validate.vocab.VocabAttributes;
 import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.validate.vocab.VocabXmlNames;
@@ -18,7 +20,6 @@ import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.sxpath.IndependentContext;
-import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,8 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
         + "/@\\w+([^$]*)$";
 
     private final static String DEFAULT_TEST_EXPR_REPLACE_FORMAT = "%1$strue()%2$s";
-    private final static String TEST_EXPR_REPLACE_FORMAT = "%1$s" + StaticVocabFunction.NAME.toString() + CrigttXpathUtils.CALL_PREFIX + "'%2$s', '%3$s'"
-        + CrigttXpathUtils.CALL_SUFFIX + "%4$s";
+    private final static String TEST_EXPR_REPLACE_FORMAT = "%1$s" + StaticVocabFunction.NAME.toString() + CrigttXpathUtils.CALL_PREFIX
+        + CrigttXpathUtils.VAR_PREFIX + SchematronVars.PATTERN_ID_NAME + ", '%2$s', %3$s" + CrigttXpathUtils.CALL_SUFFIX + "%4$s";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StaticVocabServiceImpl.class);
 
@@ -41,7 +42,7 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
     private Pattern testExprPattern;
 
     @Override
-    public String processTestExpression(String patternId, String assertionId, String testExpr) {
+    public String processTestExpression(String assertionId, String testExpr) {
         Matcher testExprMatcher = this.testExprPattern.matcher(testExpr);
 
         if (!testExprMatcher.matches()) {
@@ -53,27 +54,29 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
         String runtimeTestExpr;
 
         if (this.assertions.containsKey(assertionId)) {
-            runtimeTestExpr = String.format(TEST_EXPR_REPLACE_FORMAT, testExprMatcher.group(1), patternId, assertionId, testExprMatcher.group(4));
+            VocabAssertion assertion = this.assertions.get(assertionId);
 
-            List<VocabSet> expectedVocabSets = this.assertions.get(assertionId).getExpectedVocabSets();
+            runtimeTestExpr =
+                String.format(TEST_EXPR_REPLACE_FORMAT, testExprMatcher.group(1), assertionId, assertion.getVocabContextExpression(), testExprMatcher.group(4));
+
+            List<VocabSet> expectedVocabSets = assertion.getExpectedVocabSets();
 
             if (expectedVocabSets.isEmpty()) {
                 String expectedValueSetId = testExprMatcher.group(3);
 
-                expectedVocabSets.add(Optional.ofNullable(this.findVocabSet(null, expectedValueSetId, null)).orElse(
-                    new VocabSetImpl(null, new ValueSetImpl(expectedValueSetId, null, null), null)));
+                expectedVocabSets.add(new VocabSetImpl(null,
+                    Optional.ofNullable(this.findVocabSet(null, expectedValueSetId, null))
+                        .map(expectedVocabSet -> ((ValueSetImpl) expectedVocabSet.getValueSet()))
+                        .orElseGet(() -> new ValueSetImpl(expectedValueSetId, null, null)), null));
             }
 
-            LOGGER.trace(String.format("Processed static vocabulary validation assertion (patternId=%s, id=%s, initialTestExpr=%s, runtimeTestExpr=%s).",
-                patternId, assertionId, testExpr, runtimeTestExpr));
+            LOGGER.trace(String.format("Processed static vocabulary validation assertion (id=%s, initialTestExpr=%s, runtimeTestExpr=%s).", assertionId,
+                testExpr, runtimeTestExpr));
         } else {
             runtimeTestExpr = String.format(DEFAULT_TEST_EXPR_REPLACE_FORMAT, testExprMatcher.group(1), testExprMatcher.group(4));
 
-            LOGGER.warn(String.format("Static vocabulary validation assertion (patternId=%s, id=%s, testExpr=%s) is not configured.", patternId, assertionId,
-                testExpr));
+            LOGGER.warn(String.format("Static vocabulary validation assertion (id=%s, testExpr=%s) is not configured.", assertionId, testExpr));
         }
-
-        this.runtimeTestExprs.put(new MultiKey<>(patternId, assertionId), runtimeTestExpr);
 
         return runtimeTestExpr;
     }
@@ -123,7 +126,7 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
 
         LOGGER.info(String.format("Loaded static vocabulary components (numVocabSets=%d, numCodes=%d) from document (uri=%s).", this.vocabSetCache.getSize(),
             this.codeCache.getSize(), this.doc.getUri().toString()));
-        
+
         super.afterPropertiesSet();
     }
 

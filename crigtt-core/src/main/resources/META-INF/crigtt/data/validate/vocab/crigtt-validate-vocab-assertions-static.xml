@@ -33,13 +33,10 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-81-16850</crigtt:id>
-        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-7497</crigtt:id>
-        <crigtt-validate-vocab:valueSetIdExpression>'2.16.840.1.113883.11.20.9.18'</crigtt-validate-vocab:valueSetIdExpression>
-        <crigtt-validate-vocab:codeSystemIdExpression>'2.16.840.1.113883.5.1001'</crigtt-validate-vocab:codeSystemIdExpression>
         <crigtt-validate-vocab:codeIdExpression>@moodCode</crigtt-validate-vocab:codeIdExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
@@ -54,7 +51,6 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-31525</crigtt:id>
-        <crigtt-validate-vocab:vocabContextExpression>cda:statusCode</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -74,7 +70,6 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-14817</crigtt:id>
-        <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -99,7 +94,6 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-34016-c</crigtt:id>
-        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>

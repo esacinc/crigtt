@@ -1,14 +1,19 @@
 package gov.hhs.onc.crigtt.validate;
 
-import br.net.woodstock.rockframework.security.digest.Digester;
+import java.security.Provider;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 
-public interface ValidatorService extends BeanFactoryAware {
+public interface ValidatorService extends BeanFactoryAware, InitializingBean {
     public ValidatorReport validate(ValidatorSubmission submission) throws Exception;
 
-    public Digester getDigester();
+    public String getDigestAlgorithm();
 
-    public void setDigester(Digester digester);
+    public void setDigestAlgorithm(String digestAlg);
+
+    public Provider getDigestProvider();
+
+    public void setDigestProvider(Provider digestProv);
 
     public String[] getTaskBeanNames();
 

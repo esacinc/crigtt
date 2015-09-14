@@ -1,6 +1,5 @@
 package gov.hhs.onc.crigtt.validate.impl;
 
-import br.net.woodstock.rockframework.security.digest.Digester;
 import com.github.sebhoss.warnings.CompilerWarnings;
 import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.transform.impl.CrigttDocumentBuilder;
@@ -15,6 +14,8 @@ import gov.hhs.onc.crigtt.validate.ValidatorService;
 import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.ValidatorTask;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import java.security.MessageDigest;
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,8 +94,10 @@ public class ValidatorServiceImpl implements ValidatorService {
     private ThreadPoolTaskExecutor taskExecutor;
 
     private BeanFactory beanFactory;
-    private Digester digester;
+    private Provider digestProv;
+    private String digestAlg;
     private String[] taskBeanNames;
+    private MessageDigest digest;
 
     @Override
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
@@ -109,7 +113,7 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         String docFileName = docObj.getFileName();
         byte[] docContent = docObj.getContent(), docHash =
-            CrigttFunctionUtils.consume(docObj::getHash, () -> this.digester.digest(docContent), docObj::setHash);
+            CrigttFunctionUtils.consume(docObj::getHash, () -> ObjectUtils.clone(this.digest).digest(docContent), docObj::setHash);
         String docHashStr = Base64.encodeBase64String(docHash);
         ValidatorResults results = this.cache.get(docHashStr, ValidatorResults.class);
         ValidatorEventTotals eventTotals;
@@ -232,18 +236,33 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
+    public void afterPropertiesSet() throws Exception {
+        this.digest = MessageDigest.getInstance(this.digestAlg, this.digestProv);
+    }
+
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
 
     @Override
-    public Digester getDigester() {
-        return this.digester;
+    public String getDigestAlgorithm() {
+        return this.digestAlg;
     }
 
     @Override
-    public void setDigester(Digester digester) {
-        this.digester = digester;
+    public void setDigestAlgorithm(String digestAlg) {
+        this.digestAlg = digestAlg;
+    }
+
+    @Override
+    public Provider getDigestProvider() {
+        return this.digestProv;
+    }
+
+    @Override
+    public void setDigestProvider(Provider digestProv) {
+        this.digestProv = digestProv;
     }
 
     @Override

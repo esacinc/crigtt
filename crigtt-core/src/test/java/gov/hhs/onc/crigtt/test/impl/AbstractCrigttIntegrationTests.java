@@ -1,5 +1,7 @@
 package gov.hhs.onc.crigtt.test.impl;
 
+import com.github.sebhoss.warnings.CompilerWarnings;
+import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.validate.utils.ValidatorUtils;
@@ -12,9 +14,12 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "crigtt.test.it.all" })
 public abstract class AbstractCrigttIntegrationTests extends AbstractCrigttTests {
+    protected final static String TEST_INPUT_DOC_SRCS_BEAN_NAME = "listTestInputDocSrcs";
+
     @Value("${crigtt.test.output.dir.path}")
     protected FileSystemResource testOutDirResource;
 
+    protected ResourceSource[] testInputDocSrcs;
     protected File testOutDir;
 
     protected void writeResponse(boolean testStatus, ValidatorSubmission testSubmission, ValidatorRenderType testRenderType, byte[] testRespContent)
@@ -30,5 +35,10 @@ public abstract class AbstractCrigttIntegrationTests extends AbstractCrigttTests
         if (!(this.testOutDir = testOutDirResource.getFile()).exists()) {
             Assert.assertTrue(this.testOutDir.mkdir(), String.format("Unable to create test output directory (path=%s).", this.testOutDir.getPath()));
         }
+    }
+
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    protected void initializeDocuments() throws Exception {
+        this.testInputDocSrcs = this.applicationContext.getBean(TEST_INPUT_DOC_SRCS_BEAN_NAME, ResourceSource[].class);
     }
 }

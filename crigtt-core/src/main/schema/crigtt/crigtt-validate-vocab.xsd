@@ -46,6 +46,12 @@
         </xsd:sequence>
     </xsd:complexType>
     
+    <xsd:complexType name="VocabSets">
+        <xsd:sequence>
+            <xsd:element name="vocabSet" type="crigtt-validate-vocab:VocabSet" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
     <xsd:complexType name="Code">
         <xsd:sequence>
             <xsd:group ref="crigtt:NameElements"/>
@@ -56,16 +62,15 @@
         <xsd:sequence>
             <xsd:group ref="crigtt:IdElements"/>
             <xsd:element name="target" type="crigtt-validate-vocab:VocabTarget" minOccurs="0" default="CODE_ID"/>
+            <xsd:element name="active" type="xsd:boolean" minOccurs="0" default="true"/>
             <xsd:element name="optional" type="xsd:boolean" minOccurs="0" default="false"/>
-            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="expectedVocabSet" type="crigtt-validate-vocab:VocabSet"/>
-            </xsd:sequence>
-            <xsd:element name="vocabContextExpression" type="xsd:string" minOccurs="0"/>
-            <xsd:element name="groupingValueSetFallback" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="expectedVocabSets" type="crigtt-validate-vocab:VocabSets" minOccurs="0"/>
+            <xsd:element name="vocabContextExpression" type="xsd:string" minOccurs="0" default="."/>
+            <xsd:element name="groupingValueSetFallback" type="xsd:boolean" minOccurs="0" default="true"/>
             <xsd:element name="groupingValueSetIdExpression" type="xsd:string" minOccurs="0"/>
             <xsd:element name="groupingValueSetNameExpression" type="xsd:string" minOccurs="0"/>
             <xsd:element name="groupingValueSetVersionExpression" type="xsd:string" minOccurs="0"/>
-            <xsd:element name="valueSetFallback" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="valueSetFallback" type="xsd:boolean" minOccurs="0" default="true"/>
             <xsd:element name="valueSetIdExpression" type="xsd:string" minOccurs="0" default="@sdtc:valueSet"/>
             <xsd:element name="valueSetNameExpression" type="xsd:string" minOccurs="0" default="@sdtc:valueSetName"/>
             <xsd:element name="valueSetVersionExpression" type="xsd:string" minOccurs="0" default="@sdtc:valueSetVersion"/>
@@ -80,9 +85,7 @@
     
     <xsd:complexType name="VocabAssertions">
         <xsd:sequence>
-            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element name="vocabAssertion" type="crigtt-validate-vocab:VocabAssertion"/>
-            </xsd:sequence>
+            <xsd:element name="vocabAssertion" type="crigtt-validate-vocab:VocabAssertion" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
     

@@ -1,6 +1,9 @@
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.filter.Filter
+import ch.qos.logback.core.spi.FilterReply
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonTypeName
 import com.github.sebhoss.warnings.CompilerWarnings
@@ -17,6 +20,7 @@ import com.sun.tools.xjc.ErrorReceiver
 import com.sun.tools.xjc.Language
 import com.sun.tools.xjc.ModelLoader
 import com.sun.tools.xjc.Options
+import com.sun.tools.xjc.addon.xew.XmlElementWrapperPlugin
 import com.sun.tools.xjc.generator.bean.DualObjectFactoryGenerator
 import com.sun.tools.xjc.model.CClassInfo
 import com.sun.tools.xjc.model.CPropertyInfo
@@ -33,6 +37,7 @@ import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.ClassUtils
 import org.apache.commons.lang3.ObjectUtils
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.logging.LogFactory
 import org.apache.maven.plugin.MojoExecutionException
 import org.apache.maven.plugin.logging.Log
 import org.slf4j.impl.StaticLoggerBinder
@@ -102,10 +107,12 @@ def String[] tokenize(@Nullable String str, @Nullable String defaultStr) {
 
 def final BASE_ARGS = [
     "-mark-generated",
-    "-Xannotate",
     "-Xdefault-value",
     "-Xsetters",
     "-Xsetters-mode=direct",
+    "-Xxew",
+    "-Xxew:instantiate lazy",
+    "-Xannotate",
     "-Xvalue-constructor"
 ] as String[]
 
@@ -137,7 +144,17 @@ def final NAME_PROP_PUBLIC_NAME = "Name"
 
 def final SERIAL_VERSION_UID_FIELD_NAME = "serialVersionUID"
 
-((LoggerContext) StaticLoggerBinder.singleton.loggerFactory).getLogger(Logger.ROOT_LOGGER_NAME).setLevel(Level.INFO)
+def rootLogger = ((LoggerContext) StaticLoggerBinder.singleton.loggerFactory).getLogger(Logger.ROOT_LOGGER_NAME)
+rootLogger.level = Level.INFO
+
+rootLogger.iteratorForAppenders().each {
+    it.addFilter(new Filter<ILoggingEvent>() {
+        @Override
+        def FilterReply decide(ILoggingEvent event) {
+            return (event.level.isGreaterOrEqual(Level.WARN) ? FilterReply.NEUTRAL : FilterReply.DENY)
+        }
+    })
+}
 
 System.setProperty("javax.xml.accessExternalSchema", "all")
 
@@ -180,6 +197,20 @@ opts.verbose = BooleanUtils.toBoolean(((String) bindingVars["verbose"]))
     }
 }).each{
     opts.addGrammar(it.file)
+}
+
+def allPlugins = opts.getAllPlugins()
+
+for (def a = 0; a < allPlugins.size(); a++) {
+    if (allPlugins[a].getOptionName() == "Xxew") {
+        allPlugins.set(a, new XmlElementWrapperPlugin() {
+            {
+                this.logger = LogFactory.getLog(this.getClass())
+            }
+        })
+        
+        break
+    }
 }
 
 def args = ((String[]) ArrayUtils.addAll(BASE_ARGS, this.tokenize(bindingVars["args"])))

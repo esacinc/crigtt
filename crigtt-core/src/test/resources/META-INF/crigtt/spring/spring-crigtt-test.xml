@@ -17,5 +17,19 @@
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
-    
+    <!--====================================================================================================
+    = TEST INPUT DOCUMENT SOURCES
+    =====================================================================================================-->
+    <util:list id="listTestInputDocSrcs">
+        <!--suppress SpringPlaceholdersInspection -->
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/Cancer_Event_Report_Document_R1D1dot1.xml</beans:value>
+        <!--suppress SpringPlaceholdersInspection -->
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-1.xml</beans:value>
+        <!--suppress SpringPlaceholdersInspection -->
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-2.xml</beans:value>
+        <!--suppress SpringPlaceholdersInspection -->
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-3.xml</beans:value>
+        <!--suppress SpringPlaceholdersInspection -->
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-4.xml</beans:value>
+    </util:list>
 </beans:beans>

@@ -14,16 +14,12 @@ import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test(groups = { "crigtt.test.it.validate.all", "crigtt.test.it.validate.validator.all", "crigtt.test.it.validate.validator.service" })
 public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationTests {
     private final static Map<String, Object> RENDER_OPTS = Collections.singletonMap(ValidatorRenderOptions.FORMAT_NAME, true);
-
-    @Value("classpath*:${crigtt.test.input.file.1.path}")
-    private ResourceSource testSrc1;
 
     @Resource(name = "validatorRendererJsonImpl")
     @SuppressWarnings({ "SpringJavaAutowiringInspection" })
@@ -43,23 +39,31 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
 
     @Test
     public void testValidate() throws Exception {
-        ValidatorSubmission testSubmission = new ValidatorSubmissionImpl();
+        for (ResourceSource testInputDocSrc : this.testInputDocSrcs) {
+            ValidatorSubmission testSubmission = new ValidatorSubmissionImpl();
 
-        ValidatorDocument testDoc = new ValidatorDocumentImpl();
-        testDoc.setContent(this.testSrc1.getBytes());
-        testDoc.setFileName(this.testSrc1.getResource().getFilename());
-        testSubmission.setDocument(testDoc);
+            ValidatorDocument testDoc = new ValidatorDocumentImpl();
+            testDoc.setContent(testInputDocSrc.getBytes());
+            testDoc.setFileName(testInputDocSrc.getResource().getFilename());
+            testSubmission.setDocument(testDoc);
 
-        ValidatorReport testReport = this.service.validate(testSubmission);
+            ValidatorReport testReport = this.service.validate(testSubmission);
 
-        this.writeResponse(true, testSubmission, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
-        this.writeResponse(true, testSubmission, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
-        this.writeResponse(true, testSubmission, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+            this.writeResponse(true, testSubmission, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
+            this.writeResponse(true, testSubmission, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
+            this.writeResponse(true, testSubmission, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+        }
     }
 
-    @BeforeClass(groups = { "crigtt.test.it.all" })
+    @BeforeClass(groups = { "crigtt.test.it.validate.all" }, dependsOnMethods = "initializeDocuments")
     @Override
-    protected void initializeFileSystem() throws Exception {
+    public void initializeFileSystem() throws Exception {
         super.initializeFileSystem();
+    }
+
+    @BeforeClass(groups = { "crigtt.test.it.validate.all" })
+    @Override
+    public void initializeDocuments() throws Exception {
+        super.initializeDocuments();
     }
 }

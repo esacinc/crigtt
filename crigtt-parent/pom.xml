@@ -119,16 +119,6 @@
         <dependencies>
             <!-- Compile dependencies -->
             <dependency>
-                <groupId>br.net.woodstock.rockframework</groupId>
-                <artifactId>rockframework-core</artifactId>
-                <version>3.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>br.net.woodstock.rockframework</groupId>
-                <artifactId>rockframework-security</artifactId>
-                <version>3.0.1</version>
-            </dependency>
-            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>1.1.3</version>
@@ -186,17 +176,17 @@
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-client</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.2</version>
             </dependency>
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-core</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.2</version>
             </dependency>
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-object</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>
@@ -207,7 +197,7 @@
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-server</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.mail</groupId>
@@ -245,28 +235,6 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>2.8</version>
-            </dependency>
-            <dependency>
-                <groupId>net.java.dev.msv</groupId>
-                <artifactId>msv-core</artifactId>
-                <version>2013.6.1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.sun.xml.bind.jaxb</groupId>
-                        <artifactId>isorelax</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>net.java.dev.msv</groupId>
-                <artifactId>xsdlib</artifactId>
-                <version>2013.6.1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>relaxngDatatype</groupId>
-                        <artifactId>relaxngDatatype</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.stax-utils</groupId>
@@ -413,7 +381,7 @@
             <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
                 <artifactId>jaxb2-basics-annotate</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -424,22 +392,12 @@
             <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
                 <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>0.9.4</version>
+                <version>0.9.5</version>
             </dependency>
             <dependency>
                 <groupId>org.logback-extensions</groupId>
                 <artifactId>logback-ext-spring</artifactId>
-                <version>0.1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.objectquery</groupId>
-                <artifactId>objectquery</artifactId>
-                <version>2.5.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.objectquery</groupId>
-                <artifactId>objectquery-orientdb</artifactId>
-                <version>2.5.0</version>
+                <version>0.1.4</version>
             </dependency>
             <dependency>
                 <groupId>org.sitenv.vocabulary</groupId>
@@ -483,7 +441,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>4.2.0.RELEASE</version>
+                <version>4.2.1.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -498,7 +456,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>4.2.0.RELEASE</version>
+                <version>4.2.1.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -559,8 +517,6 @@
                             <arg>-J-XX:MaxMetaspaceSize=128m</arg>
                             <arg>-J-XX:+UseG1GC</arg>
                             <arg>-J-XX:MaxGCPauseMillis=50</arg>
-                            <arg>-J-XX:ParallelGCThreads=4</arg>
-                            <arg>-J-XX:ConcGCThreads=4</arg>
                             <arg>-parameters</arg>
                             <arg>-proc:none</arg>
                             <arg>-Werror</arg>
@@ -589,7 +545,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4</version>
+                    <version>1.4.1</version>
                     <inherited>true</inherited>
                     <executions>
                         <execution>
@@ -647,8 +603,6 @@
                             <additionalJOption>-J-XX:MaxMetaspaceSize=128m</additionalJOption>
                             <additionalJOption>-J-XX:+UseG1GC</additionalJOption>
                             <additionalJOption>-J-XX:MaxGCPauseMillis=50</additionalJOption>
-                            <additionalJOption>-J-XX:ParallelGCThreads=4</additionalJOption>
-                            <additionalJOption>-J-XX:ConcGCThreads=4</additionalJOption>
                         </additionalJOptions>
                         <additionalparam>-Xdoclint:none</additionalparam>
                         <maxmemory>512m</maxmemory>
@@ -760,9 +714,7 @@
                     <version>2.18.1</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <argLine>
-                            -Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:ParallelGCThreads=4 -XX:ConcGCThreads=4
-                        </argLine>
+                        <argLine>-Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=50</argLine>
                         <reportFormat>plain</reportFormat>
                         <systemPropertyVariables combine.children="append">
                             <crigtt.data.dir>${project.build.directory}/surefire-data</crigtt.data.dir>
@@ -890,7 +842,7 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.5</version>
+                    <version>1.6.6</version>
                     <inherited>true</inherited>
                     <extensions>true</extensions>
                     <configuration>

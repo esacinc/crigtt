@@ -54,11 +54,9 @@ public class CrigttXpathCompiler extends XPathCompiler {
 
     @Nullable
     public XdmNode evaluateNode(String expr, IndependentContext context, @Nullable XdmItem contextItem) throws SaxonApiException {
-        XdmItem item = this.evaluateSingle(expr, context, contextItem);
-
-        return ((item instanceof XdmNode) ? ((XdmNode) item) : null);
+        return ((XdmNode) this.evaluateSingle(expr, context, contextItem));
     }
-    
+
     @Nullable
     public String evaluateString(String expr) throws SaxonApiException {
         return this.evaluateString(expr, ((XdmItem) null));

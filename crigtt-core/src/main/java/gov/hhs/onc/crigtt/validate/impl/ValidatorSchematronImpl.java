@@ -9,12 +9,10 @@ import gov.hhs.onc.crigtt.schematron.Assertion;
 import gov.hhs.onc.crigtt.schematron.Name;
 import gov.hhs.onc.crigtt.schematron.Pattern;
 import gov.hhs.onc.crigtt.schematron.Phase;
-import gov.hhs.onc.crigtt.schematron.Report;
 import gov.hhs.onc.crigtt.schematron.Rule;
 import gov.hhs.onc.crigtt.schematron.Schema;
 import gov.hhs.onc.crigtt.schematron.Title;
 import gov.hhs.onc.crigtt.schematron.impl.NamespaceImpl;
-import gov.hhs.onc.crigtt.schematron.impl.ReportImpl;
 import gov.hhs.onc.crigtt.schematron.impl.TitleImpl;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltCompiler;
 import gov.hhs.onc.crigtt.transform.impl.CrigttXsltExecutable;
@@ -221,7 +219,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
                 String assertionId = assertion.getId(), assertionTestExpr = assertion.getTest(), runtimeAssertionTestExpr;
 
                 for (VocabService vocabService : this.vocabServices) {
-                    if (!(runtimeAssertionTestExpr = vocabService.processTestExpression(patternId, assertionId, assertionTestExpr)).equals(assertionTestExpr)) {
+                    if (!(runtimeAssertionTestExpr = vocabService.processTestExpression(assertionId, assertionTestExpr)).equals(assertionTestExpr)) {
                         assertion.setTest((assertionTestExpr = runtimeAssertionTestExpr));
 
                         this.activeVocabServices.put(assertionId, vocabService);
@@ -231,12 +229,6 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
                 }
 
                 assertions.put(assertionId, assertion);
-
-                Report report = new ReportImpl();
-                report.setId(assertionId);
-                report.setContent(assertionContent);
-                report.setTest(assertionTestExpr);
-                ruleContentIterator.add(report);
 
                 ValidatorAssertion activeAssertion = new ValidatorAssertionImpl();
                 activeAssertion.setId(assertionId);

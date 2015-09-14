@@ -50,22 +50,22 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-client</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-service-description</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-transports-http</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.web</groupId>
@@ -96,7 +96,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>font-awesome</artifactId>
-                <version>4.3.0-3</version>
+                <version>4.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator-core</artifactId>
-                <version>0.27</version>
+                <version>0.28</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars.npm</groupId>
@@ -139,19 +139,19 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>8.0.24</version>
+                <version>8.0.26</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-el</artifactId>
-                <version>8.0.24</version>
+                <version>8.0.26</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-logging-log4j</artifactId>
-                <version>8.0.24</version>
+                <version>8.0.26</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

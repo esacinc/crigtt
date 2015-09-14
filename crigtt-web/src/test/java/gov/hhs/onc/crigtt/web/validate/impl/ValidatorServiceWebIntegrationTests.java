@@ -26,9 +26,6 @@ import org.testng.annotations.Test;
 
 @Test(groups = { "crigtt.test.it.web.ws.all", "crigtt.test.it.web.ws.validator" })
 public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegrationTests {
-    @Value("classpath*:${crigtt.test.input.file.1.path}")
-    private ResourceSource testSrc1;
-
     @Value("${crigtt.tomcat.ws.service.validator.op.validate.url}")
     private String testUrl;
 
@@ -38,34 +35,42 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
 
     @Test
     public void testValidate() throws Exception {
-        HttpHeaders testReqHeaders = new HttpHeaders();
-        testReqHeaders.setContentDispositionFormData(ValidatorParameters.FILE_NAME, this.testSrc1.getResource().getFilename());
+        for (ResourceSource testInputDocSrc : this.testInputDocSrcs) {
+            HttpHeaders testReqHeaders = new HttpHeaders();
+            testReqHeaders.setContentDispositionFormData(ValidatorParameters.FILE_NAME, testInputDocSrc.getResource().getFilename());
 
-        MultipartBody testReqBody =
-            new MultipartBody(new Attachment(ValidatorParameters.FILE_NAME, new ByteDataSource(this.testSrc1.getBytes(), MediaType.TEXT_XML_VALUE),
-                new MultivaluedHashMap<>(testReqHeaders.toSingleValueMap())));
+            MultipartBody testReqBody =
+                new MultipartBody(new Attachment(ValidatorParameters.FILE_NAME, new ByteDataSource(testInputDocSrc.getBytes(), MediaType.TEXT_XML_VALUE),
+                    new MultivaluedHashMap<>(testReqHeaders.toSingleValueMap())));
 
-        WebClient testWebClient = WebClient.fromClient(this.testClient).type(MediaType.MULTIPART_FORM_DATA_VALUE);
-        ValidatorRenderType[] testRenderTypes = ValidatorRenderType.values();
-        Map<String, HttpStatus> testRespStatusMap = new LinkedHashMap<>(testRenderTypes.length);
-        String testReqUri;
-        Response testResp;
+            WebClient testWebClient = WebClient.fromClient(this.testClient).type(MediaType.MULTIPART_FORM_DATA_VALUE);
+            ValidatorRenderType[] testRenderTypes = ValidatorRenderType.values();
+            Map<String, HttpStatus> testRespStatusMap = new LinkedHashMap<>(testRenderTypes.length);
+            String testReqUri;
+            Response testResp;
 
-        for (ValidatorRenderType testRenderType : testRenderTypes) {
-            testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
-                HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
+            for (ValidatorRenderType testRenderType : testRenderTypes) {
+                testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
+                    HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
 
-            this.writeResponse(testResp.getHeaderString(ValidatorHeaders.RESP_FILE_NAME_NAME), testResp.readEntity(byte[].class));
+                this.writeResponse(testResp.getHeaderString(ValidatorHeaders.RESP_FILE_NAME_NAME), testResp.readEntity(byte[].class));
+            }
+
+            testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(
+                "Invalid test query (uri=%s) response status (code=%d text=%s).", testAssertReqUri, testAssertRespStatus.value(),
+                testAssertRespStatus.getReasonPhrase())));
         }
-
-        testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(
-            "Invalid test query (uri=%s) response status (code=%d text=%s).", testAssertReqUri, testAssertRespStatus.value(),
-            testAssertRespStatus.getReasonPhrase())));
     }
 
-    @BeforeClass(groups = { "crigtt.test.it.all" })
+    @BeforeClass(groups = { "crigtt.test.it.web.ws.all" }, dependsOnMethods = "initializeDocuments")
     @Override
-    protected void initializeFileSystem() throws Exception {
+    public void initializeFileSystem() throws Exception {
         super.initializeFileSystem();
+    }
+
+    @BeforeClass(groups = { "crigtt.test.it.web.ws.all" })
+    @Override
+    public void initializeDocuments() throws Exception {
+        super.initializeDocuments();
     }
 }

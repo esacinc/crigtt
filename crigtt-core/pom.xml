@@ -31,14 +31,6 @@
     <dependencies>
         <!-- Compile dependencies (inherited) -->
         <dependency>
-            <groupId>br.net.woodstock.rockframework</groupId>
-            <artifactId>rockframework-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>br.net.woodstock.rockframework</groupId>
-            <artifactId>rockframework-security</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
@@ -113,14 +105,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.msv</groupId>
-            <artifactId>msv-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.msv</groupId>
-            <artifactId>xsdlib</artifactId>
         </dependency>
         <dependency>
             <groupId>net.java.dev.stax-utils</groupId>
@@ -209,14 +193,6 @@
         <dependency>
             <groupId>org.logback-extensions</groupId>
             <artifactId>logback-ext-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.objectquery</groupId>
-            <artifactId>objectquery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.objectquery</groupId>
-            <artifactId>objectquery-orientdb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.sitenv.vocabulary</groupId>
@@ -400,6 +376,22 @@
                 <artifactId>gmavenplus-plugin</artifactId>
                 <dependencies>
                     <dependency>
+                        <groupId>com.github.jaxb-xew-plugin</groupId>
+                        <artifactId>jaxb-xew-plugin</artifactId>
+                        <version>1.5</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>commons-logging</groupId>
+                                <artifactId>commons-logging</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-xjc</artifactId>
+                        <version>2.2.11</version>
+                    </dependency>
+                    <dependency>
                         <groupId>org.glassfish.jaxb</groupId>
                         <artifactId>jaxb-xjc</artifactId>
                         <version>2.2.11</version>
@@ -422,12 +414,17 @@
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
-                        <version>0.9.4</version>
+                        <version>0.9.5</version>
                     </dependency>
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics-annotate</artifactId>
-                        <version>1.0.1</version>
+                        <version>1.0.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-basics-tools</artifactId>
+                        <version>0.9.5</version>
                     </dependency>
                     <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>

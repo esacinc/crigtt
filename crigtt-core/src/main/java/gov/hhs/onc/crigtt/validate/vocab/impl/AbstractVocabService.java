@@ -25,7 +25,6 @@ import javax.xml.transform.Source;
 import net.sf.ehcache.search.expression.AlwaysMatch;
 import net.sf.ehcache.search.expression.Criteria;
 import net.sf.ehcache.search.expression.EqualTo;
-import org.apache.commons.collections4.keyvalue.MultiKey;
 
 public abstract class AbstractVocabService implements VocabService {
     protected final static MapKeyEntry GROUPING_VALUE_SET_ID_WILDCARD_ENTRY = new MapKeyEntry(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, true);
@@ -40,14 +39,13 @@ public abstract class AbstractVocabService implements VocabService {
     protected CrigttCache codeCache;
     protected Map<String, VocabAssertion> assertions;
     protected Map<String, String> initialTestExprs;
-    protected Map<MultiKey<String>, String> runtimeTestExprs;
     protected CrigttCache vocabSetCache;
 
     @Override
-    public List<Code> findCodes(@Nullable String groupingValueSetId, @Nullable String valueSetId, String codeSystemId, String codeId) {
+    public List<Code> findCodes(@Nullable String groupingValueSetId, @Nullable String valueSetId, @Nullable String codeSystemId, String codeId) {
         return this.codeCache.getValues(Code.class, buildOptionalCriteria(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, groupingValueSetId),
-            buildOptionalCriteria(VocabAttributes.VALUE_SET_ID_NAME, valueSetId), new EqualTo(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId), new EqualTo(
-                VocabAttributes.CODE_ID_NAME, codeId));
+            buildOptionalCriteria(VocabAttributes.VALUE_SET_ID_NAME, valueSetId), buildOptionalCriteria(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId),
+            new EqualTo(VocabAttributes.CODE_ID_NAME, codeId));
     }
 
     @Nullable
@@ -62,13 +60,12 @@ public abstract class AbstractVocabService implements VocabService {
     public void afterPropertiesSet() throws Exception {
         this.assertions =
             CrigttStreamUtils.toMap(IdentifiedBean::getId, Function.<VocabAssertion> identity(), LinkedHashMap::new,
-                ((JAXBElement<VocabAssertions>) this.validateJaxbMarshaller.unmarshal(this.assertionSrc, JAXBElement.class)).getValue().getVocabAssertion()
+                ((JAXBElement<VocabAssertions>) this.validateJaxbMarshaller.unmarshal(this.assertionSrc, JAXBElement.class)).getValue().getAssertions()
                     .stream());
 
         int numAssertions = this.assertions.size();
 
         this.initialTestExprs = new HashMap<>(numAssertions);
-        this.runtimeTestExprs = new HashMap<>(numAssertions);
     }
 
     protected static Criteria buildOptionalCriteria(String attrName, @Nullable String attrValue) {
@@ -103,11 +100,6 @@ public abstract class AbstractVocabService implements VocabService {
     @Override
     public Map<String, String> getInitialTestExpressions() {
         return this.initialTestExprs;
-    }
-
-    @Override
-    public Map<MultiKey<String>, String> getRuntimeTestExpressions() {
-        return this.runtimeTestExprs;
     }
 
     @Override

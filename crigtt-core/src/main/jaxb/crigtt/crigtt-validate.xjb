@@ -152,9 +152,7 @@
             <jaxb:bindings node="xsd:element[@name='assertion']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='expectedVocabSet']) = 1]">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "expectedVocabSets")</annox:annotate>
-                <jaxb:property name="expectedVocabSets"/>
+            <jaxb:bindings node="xsd:element[@name='expectedVocabSets']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='vocabSet']">
@@ -166,9 +164,7 @@
             <jaxb:bindings node="xsd:element[@name='description']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence[count(xsd:element[@name='message']) = 1]">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "messages")</annox:annotate>
-                <jaxb:property name="messages"/>
+            <jaxb:bindings node="xsd:element[@name='messages']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
         </jaxb:bindings>
@@ -242,9 +238,7 @@
             <jaxb:bindings node="xsd:element[@name='eventTotals']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
-            <jaxb:bindings node="xsd:sequence">
-                <annox:annotate target="field">@javax.xml.bind.annotation.XmlElementWrapper(name = "events")</annox:annotate>
-                <jaxb:property name="events"/>
+            <jaxb:bindings node="xsd:element[@name='events']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
         </jaxb:bindings>

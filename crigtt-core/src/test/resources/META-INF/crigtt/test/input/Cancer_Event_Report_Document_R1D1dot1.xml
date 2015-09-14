@@ -13,7 +13,7 @@
 	<title>Cancer Event Report</title>
 	<effectiveTime value="201209151030-0800"/>
 	<confidentialityCode code="N" displayName="normal" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality"/>
-	<languageCode code="en-US"/>
+	<languageCode code="en"/>
 	<setId extension="sTT988" root="2.16.840.1.113883.19.5.99999.19"/>
 	<!-- Version of the document -->
 	<versionNumber value="1"/>
@@ -111,7 +111,7 @@
 		<time value="201209151030-0800"/>
 		<assignedAuthor>
 			<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
-			<code code="207RX0202X" displayName="Medical Oncology" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
+			<code code="207RX0202X" displayName="Medical Oncology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 			<addr use="WP">
 				<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 				<city>Portland</city>
@@ -656,12 +656,12 @@
 							<statusCode code="completed"/>
 							<subject>
 								<relatedSubject classCode="PRS">
-									<code code="FTH" displayName="Father" codeSystemName="FamilyRelationshipRoleType" codeSystem="2.16.840.1.113883.5.111">
+									<code code="FTH" displayName="Father" codeSystemName="FamilyRelationshipRoleType" codeSystem="2.16.840.1.113883.5.111" sdtc:valueSet="2.16.840.1.113883.1.11.19579">
 										<translation code="9947008" displayName="Natural father (person)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96"/>
 									</code>
 									<subject>
 										<sdtc:id root="2.16.840.1.113883.19.5.99999.2" extension="99999999"/>
-										<administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.1.11.1" displayName="Male"/>
+										<administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" displayName="Male"/>
 										<birthTime value="1910"/>
 										<!-- Example use of sdtc extensions included below in comments -->
 										<!-- <sdtc:deceasedInd value="true"/> <sdtc:deceasedTime value="1967"/> -->
@@ -768,15 +768,15 @@
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity unit="mg/ml">
-								<low value="2" unit="mg/ml">
+							<doseQuantity unit="mg/mL">
+								<low value="2" unit="mg/mL">
 									<translation>
 										<originalText>
 											<reference value="#MedicationAdminDose_1"/>
 										</originalText>
 									</translation>
 								</low>
-								<high value="2" unit="mg/ml">
+								<high value="2" unit="mg/mL">
 									<translation>
 										<originalText>
 											<reference value="#MedicationAdminDose_1"/>
@@ -790,7 +790,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -857,15 +857,15 @@
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity unit="mg/ml">
-								<low value="2" unit="mg/ml">
+							<doseQuantity unit="mg/mL">
+								<low value="2" unit="mg/mL">
 									<translation>
 										<originalText>
 											<reference value="#MedicationAdminDose_1"/>
 										</originalText>
 									</translation>
 								</low>
-								<high value="2" unit="mg/ml">
+								<high value="2" unit="mg/mL">
 									<translation>
 										<originalText>
 											<reference value="#MedicationAdminDose_1"/>
@@ -879,7 +879,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -1172,7 +1172,7 @@
 							<templateId root="2.16.840.1.113883.10.20.22.4.42" extension="2014-06-09"/>
 							<!-- Planned Medicaton Activity (V2)-->
 							<id root="cdbd33f0-6cde-11db-9fe1-0800200c9a66"/>
-							<text>Heparin 0.25 ml Pre-filled Syringe</text>
+							<text>Heparin 0.5 ml Pre-filled Syringe</text>
 							<statusCode code="active"/>
 							<!-- The effectiveTime in a planned medication activity
 								  represents the time that the medication activity should occur. -->
@@ -1183,7 +1183,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="829888" codeSystem="2.16.840.1.113883.3.88.12.80.17" displayName="0.25 ML Heparin sodium 10000 UNT/ML Prefilled Syringe"/>
+										<code code="1361853" displayName="0.5 ML heparin sodium, porcine 10000 UNT/ML Prefilled Syringe" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17"/>
 									</manufacturedMaterial>
 									<manufacturerOrganization>
 										<name>Medication Factory Inc.</name>

@@ -36,6 +36,9 @@
     <beans:bean id="xsltExecSchematronValidationReport" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
         c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl"/>
     
+    <beans:bean id="xsltExecSchematronPostProcess" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile"
+        c:src="classpath*:META-INF/crigtt/style/crigtt/crigtt-schematron-post-process.xsl"/>
+    
     <beans:bean id="xsltExecValidatorResponse" parent="xsltExecCrigtt" factory-bean="xsltCompilerCrigtt" factory-method="compile" abstract="true">
         <beans:constructor-arg name="extFuncs">
             <beans:array>
@@ -83,6 +86,7 @@
                 <beans:ref bean="xsltExecSchematronInclude"/>
                 <beans:ref bean="xsltExecSchematronExpand"/>
                 <beans:ref bean="xsltExecSchematronValidationReport"/>
+                <beans:ref bean="xsltExecSchematronPostProcess"/>
             </beans:array>
         </beans:property>
     </beans:bean>
@@ -175,7 +179,8 @@
     <beans:bean id="validatorService" class="gov.hhs.onc.crigtt.validate.ValidatorService" abstract="true"/>
     
     <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
-        p:digester="#{ T(br.net.woodstock.rockframework.security.digest.util.Digesters).SHA512 }">
+        p:digestAlgorithm="SHA512"
+        p:digestProvider="#{ new org.bouncycastle.jce.provider.BouncyCastleProvider() }">
         <beans:property name="taskBeanNames">
             <beans:array>
                 <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>

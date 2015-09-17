@@ -241,14 +241,6 @@
     <code value="GUAR" displayName="guarantor" codeSystemName="RoleClass" codeSystem="2.16.840.1.113883.5.110" />
     <code value="ECON" displayName="emergency contact" codeSystemName="RoleClass" codeSystem="2.16.840.1.113883.5.110" />
   </system>
-  <system valueSetOid="2.16.840.1.113883.3.520.4.22" valueSetName="Laterality">
-    <code value="24028007" displayName="Right (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="7771000" displayName="Left (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="66459002" displayName="Unilateral (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="51440002" displayName="Right and left (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="399488007" displayName="Midline (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="261665006" displayName="Unknown (qualifier value)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-  </system>
   <system valueSetOid="2.16.840.1.113883.1.11.12212" valueSetName="Marital Status">
     <code value="A" displayName="Annulled" codeSystemName="MaritalStatus" codeSystem="2.16.840.1.113883.5.2" />
     <code value="D" displayName="Divorced" codeSystemName="MaritalStatus" codeSystem="2.16.840.1.113883.5.2" />

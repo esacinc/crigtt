@@ -25,6 +25,9 @@
         <xsl:variable name="failedAssertionElem" select="xsl:otherwise/svrl:failed-assert"/>
         <xsl:variable name="assertionTest" select="replace($failedAssertionElem/@test, '(crigtt\-validate\-vocab:)(static|dynamic)(\-vocab\()\$patternId',
                 concat('$1$2$3', $SINGLE_QUOTE, $patternId, $SINGLE_QUOTE))"/>
+        <axsl:variable name="contextLoc" select="crigtt-validate:location(.)"/>
+        <axsl:variable name="contextLineNum" select="$contextLoc[1]"/>
+        <axsl:variable name="contextColumnNum" select="$contextLoc[2]"/>
         <axsl:choose>
             <axsl:when test="{$assertionTest}">
                 <svrl:successful-report test="{$assertionTest}">

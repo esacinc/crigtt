@@ -74,13 +74,13 @@
             @com.fasterxml.jackson.annotation.JsonTypeName("vocabAssertion")
         </annox:annotate>
         <jaxb:bindings node="xsd:sequence">
-            <jaxb:bindings node="xsd:element[@name='target']">
-                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
-            </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='active']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='optional']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='target']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='expectedVocabSets']">
@@ -129,6 +129,9 @@
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='codeNameExpression']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='testExpressionOverride']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
         </jaxb:bindings>

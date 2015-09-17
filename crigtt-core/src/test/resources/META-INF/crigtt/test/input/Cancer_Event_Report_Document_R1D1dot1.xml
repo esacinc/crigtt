@@ -181,7 +181,7 @@
 				<assignedEntity>
 					<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 					<id extension="1234" root="2.16.840.1.113883.19"/>
-					<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
+					<code code="207QA0505X" displayName="Adult Medicine" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 					<addr use="WP">
 						<streetAddressLine>1004 Healthcare Drive </streetAddressLine>
 						<city>Portland</city>
@@ -1099,7 +1099,7 @@
 								<assignedEntity classCode="ASSIGNED">
 									<id extension="5555555555" root="2.16.840.1.113883.4.6"/>
 									<id extension="111111111" root="2.16.840.1.113883.19.5"/>
-									<code code="207QA0505X" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy" displayName="Adult Medicine"/>
+									<code code="207QA0505X" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)" displayName="Adult Medicine"/>
 									<addr use="WP">
 										<streetAddressLine>4444 Healthcare Drive</streetAddressLine>
 										<city>Ann Arbor</city>
@@ -1126,7 +1126,7 @@
 								<time value="201308011235-0800"/>
 								<assignedAuthor>
 									<id root="20cf14fb-b65c-4c8c-a54d-b0cca834c18c"/>
-									<code code="163W00000X" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy" displayName="Registered nurse"/>
+									<code code="163W00000X" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)" displayName="Registered nurse"/>
 									<addr>
 										<streetAddressLine>1000 Hospital Lane</streetAddressLine>
 										<city>Ann Arbor</city>
@@ -1795,7 +1795,7 @@
 								<time value="200803190830-0800"/>
 								<assignedAuthor>
 									<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-									<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+									<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 							<component>
@@ -1813,7 +1813,7 @@
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 									<referenceRange>
@@ -1845,7 +1845,7 @@
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 									<referenceRange>
@@ -1876,7 +1876,7 @@
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 									<referenceRange>
@@ -1907,7 +1907,7 @@
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 									<referenceRange>
@@ -1935,7 +1935,7 @@
 										<time value="200803190830-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 									<referenceRange>
@@ -1966,7 +1966,7 @@
 								<time value="200803200930-0800"/>
 								<assignedAuthor>
 									<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-									<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+									<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 								</assignedAuthor>
 							</author>
 							<component>
@@ -1983,7 +1983,7 @@
 										<time value="200803200930-0800"/>
 										<assignedAuthor>
 											<id extension="3334444444" root="2.16.840.1.113883.4.6"/>
-											<code code="246Q00000X" displayName="Technician, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
+											<code code="246Q00000X" displayName="Spec/Tech, Pathology" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 										</assignedAuthor>
 									</author>
 								</observation>

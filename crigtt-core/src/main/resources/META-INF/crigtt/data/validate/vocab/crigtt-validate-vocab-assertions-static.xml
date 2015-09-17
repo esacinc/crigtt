@@ -114,15 +114,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-33012-c</crigtt:id>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-33185-c</crigtt:id>
-        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-34083</crigtt:id>
     </crigtt-validate-vocab:vocabAssertion>
     

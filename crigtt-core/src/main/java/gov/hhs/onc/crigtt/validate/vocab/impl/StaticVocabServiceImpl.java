@@ -1,18 +1,20 @@
 package gov.hhs.onc.crigtt.validate.vocab.impl;
 
-import gov.hhs.onc.crigtt.data.impl.MapKey;
-import gov.hhs.onc.crigtt.data.impl.MapKey.MapKeyEntry;
 import gov.hhs.onc.crigtt.validate.SchematronVars;
+import gov.hhs.onc.crigtt.validate.vocab.Code;
 import gov.hhs.onc.crigtt.validate.vocab.StaticVocabService;
+import gov.hhs.onc.crigtt.validate.vocab.ValueSet;
 import gov.hhs.onc.crigtt.validate.vocab.VocabAssertion;
-import gov.hhs.onc.crigtt.validate.vocab.VocabAttributes;
 import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.validate.vocab.VocabXmlNames;
 import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -20,6 +22,8 @@ import net.sf.saxon.dom.ElementOverNodeInfo;
 import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.sxpath.IndependentContext;
+import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.apache.commons.collections4.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +38,17 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
 
     private final static String DEFAULT_TEST_EXPR_REPLACE_FORMAT = "%1$strue()%2$s";
     private final static String TEST_EXPR_REPLACE_FORMAT = "%1$s" + StaticVocabFunction.NAME.toString() + CrigttXpathUtils.CALL_PREFIX
-        + CrigttXpathUtils.VAR_PREFIX + SchematronVars.PATTERN_ID_NAME + ", '%2$s', %3$s" + CrigttXpathUtils.CALL_SUFFIX + "%4$s";
+        + CrigttXpathUtils.VAR_PREFIX + SchematronVars.PATTERN_ID_NAME + ", '%2$s', " + CrigttXpathUtils.VAR_PREFIX + SchematronVars.CONTEXT_LINE_NUM_NAME
+        + ", " + CrigttXpathUtils.VAR_PREFIX + SchematronVars.CONTEXT_COLUMN_NUM_NAME + ", %3$s" + CrigttXpathUtils.CALL_SUFFIX + "%4$s";
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StaticVocabServiceImpl.class);
 
     private XdmDocument doc;
     private Pattern testExprPattern;
+    private Map<String, ValueSet> valueSets;
+    private MultiValueMap<MultiKey<String>, Code> codes;
+    private MultiValueMap<MultiKey<String>, Code> codeSystemCodes;
+    private MultiValueMap<MultiKey<String>, Code> valueSetCodes;
 
     @Override
     public String processTestExpression(String assertionId, String testExpr) {
@@ -62,12 +71,7 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
             List<VocabSet> expectedVocabSets = assertion.getExpectedVocabSets();
 
             if (expectedVocabSets.isEmpty()) {
-                String expectedValueSetId = testExprMatcher.group(3);
-
-                expectedVocabSets.add(new VocabSetImpl(null,
-                    Optional.ofNullable(this.findVocabSet(null, expectedValueSetId, null))
-                        .map(expectedVocabSet -> ((ValueSetImpl) expectedVocabSet.getValueSet()))
-                        .orElseGet(() -> new ValueSetImpl(expectedValueSetId, null, null)), null));
+                expectedVocabSets.add(new VocabSetImpl(null, ((ValueSetImpl) this.valueSets.get(testExprMatcher.group(3))), null));
             }
 
             LOGGER.trace(String.format("Processed static vocabulary validation assertion (id=%s, initialTestExpr=%s, runtimeTestExpr=%s).", assertionId,
@@ -82,6 +86,31 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
     }
 
     @Override
+    public List<Code> findCodesByCodeSystem(boolean forValueSet, String codeSystemId, String codeId) {
+        if (!forValueSet) {
+            return Collections.emptyList();
+        }
+
+        MultiKey<String> codeKey = new MultiKey<>(codeSystemId, codeId);
+
+        return (this.codeSystemCodes.containsKey(codeKey) ? new ArrayList<>(this.codeSystemCodes.getCollection(codeKey)) : Collections.emptyList());
+    }
+
+    @Override
+    public List<Code> findCodesByValueSet(String valueSetId, String codeId) {
+        MultiKey<String> codeKey = new MultiKey<>(valueSetId, codeId);
+
+        return (this.valueSetCodes.containsKey(codeKey) ? new ArrayList<>(this.valueSetCodes.getCollection(codeKey)) : Collections.emptyList());
+    }
+
+    @Override
+    public List<Code> findCodesByValueSet(String valueSetId, String codeSystemId, String codeId) {
+        MultiKey<String> codeKey = new MultiKey<>(valueSetId, codeSystemId, codeId);
+
+        return (this.codes.containsKey(codeKey) ? new ArrayList<>(this.codes.getCollection(codeKey)) : Collections.emptyList());
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         this.testExprPattern = Pattern.compile(String.format(TEST_EXPR_PATTERN_FORMAT, this.doc.getUri().toString()));
 
@@ -92,40 +121,35 @@ public class StaticVocabServiceImpl extends AbstractVocabService implements Stat
 
         xpathContext.declareNamespace(StringUtils.EMPTY, CrigttXmlNs.VALIDATE_VOCAB_STATIC_DOC_URI);
 
+        this.valueSets = new LinkedHashMap<>();
+        this.codes = MultiValueMap.multiValueMap(new LinkedHashMap<>());
+        this.codeSystemCodes = MultiValueMap.multiValueMap(new LinkedHashMap<>());
+        this.valueSetCodes = MultiValueMap.multiValueMap(new LinkedHashMap<>());
+
         ElementOverNodeInfo systemElem;
         String valueSetId, codeSystemId, codeId;
-        MapKeyEntry valueSetIdEntry, codeSystemIdEntry;
-        ValueSetImpl valueSet;
-        MapKey vocabSetKey;
+        Code code;
 
         for (XdmNode systemNode : this.xpathCompiler.evaluateNodes(SYS_NODE_XPATH_EXPR, xpathContext, this.doc)) {
-            valueSet =
-                new ValueSetImpl(
-                    (valueSetId =
-                        (systemElem = ((ElementOverNodeInfo) NodeOverNodeInfo.wrap(systemNode.getUnderlyingNode())))
-                            .getAttribute(VocabXmlNames.VALUE_SET_OID_ATTR_NAME)),
-                    systemElem.getAttribute(VocabXmlNames.VALUE_SET_NAME_ATTR_NAME), systemElem.getAttribute(VocabXmlNames.VALUE_SET_VERSION_ATTR_NAME));
-
-            valueSetIdEntry = new MapKeyEntry(VocabAttributes.VALUE_SET_ID_NAME, valueSetId);
+            this.valueSets.put(
+                (valueSetId =
+                    (systemElem = ((ElementOverNodeInfo) NodeOverNodeInfo.wrap(systemNode.getUnderlyingNode())))
+                        .getAttribute(VocabXmlNames.VALUE_SET_OID_ATTR_NAME)),
+                new ValueSetImpl(valueSetId, systemElem.getAttribute(VocabXmlNames.VALUE_SET_NAME_ATTR_NAME), systemElem
+                    .getAttribute(VocabXmlNames.VALUE_SET_VERSION_ATTR_NAME)));
 
             for (ElementOverNodeInfo codeElem : Stream.of(this.xpathCompiler.evaluateNodes(VocabXmlNames.CODE_NODE_NAME, xpathContext, systemNode))
                 .map(codeNode -> ((ElementOverNodeInfo) NodeOverNodeInfo.wrap(codeNode.getUnderlyingNode()))).toArray(ElementOverNodeInfo[]::new)) {
-                if (!this.vocabSetCache.containsKey((vocabSetKey =
-                    new MapKey(GROUPING_VALUE_SET_ID_WILDCARD_ENTRY, valueSetIdEntry, (codeSystemIdEntry =
-                        new MapKeyEntry(VocabAttributes.CODE_SYSTEM_ID_NAME, (codeSystemId = codeElem.getAttribute(VocabXmlNames.CODE_SYSTEM_ATTR_NAME)))))))) {
-                    this.vocabSetCache.put(vocabSetKey,
-                        new VocabSetImpl(null, valueSet, new CodeSystemImpl(codeSystemId, codeElem.getAttribute(VocabXmlNames.CODE_SYSTEM_NAME_ATTR_NAME),
-                            codeElem.getAttribute(VocabXmlNames.CODE_SYSTEM_VERSION_ATTR_NAME))));
-                }
+                codeSystemId = codeElem.getAttribute(VocabXmlNames.CODE_SYSTEM_ATTR_NAME);
 
-                this.codeCache.put(new MapKey(GROUPING_VALUE_SET_ID_WILDCARD_ENTRY, valueSetIdEntry, codeSystemIdEntry, new MapKeyEntry(
-                    VocabAttributes.CODE_ID_NAME, (codeId = codeElem.getAttribute(VocabXmlNames.VALUE_ATTR_NAME)))),
-                    new CodeImpl(codeId, codeElem.getAttribute(VocabXmlNames.DISPLAY_NAME_ATTR_NAME)));
+                this.codes.put(new MultiKey<>(valueSetId, codeSystemId, (codeId = codeElem.getAttribute(VocabXmlNames.VALUE_ATTR_NAME))), (code =
+                    new CodeImpl(codeId, codeElem.getAttribute(VocabXmlNames.DISPLAY_NAME_ATTR_NAME))));
+
+                this.codeSystemCodes.put(new MultiKey<>(codeSystemId, codeId), code);
+
+                this.valueSetCodes.put(new MultiKey<>(valueSetId, codeId), code);
             }
         }
-
-        LOGGER.info(String.format("Loaded static vocabulary components (numVocabSets=%d, numCodes=%d) from document (uri=%s).", this.vocabSetCache.getSize(),
-            this.codeCache.getSize(), this.doc.getUri().toString()));
 
         super.afterPropertiesSet();
     }

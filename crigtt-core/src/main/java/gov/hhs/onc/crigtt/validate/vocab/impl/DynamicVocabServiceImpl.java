@@ -1,5 +1,6 @@
 package gov.hhs.onc.crigtt.validate.vocab.impl;
 
+import com.github.sebhoss.warnings.CompilerWarnings;
 import com.orientechnologies.orient.core.entity.OEntityManager;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.orientechnologies.orient.server.OServer;
@@ -7,33 +8,35 @@ import com.orientechnologies.orient.server.config.OServerStorageConfiguration;
 import gov.hhs.onc.crigtt.data.db.CrigttDbPaths;
 import gov.hhs.onc.crigtt.data.db.impl.CrigttDbServerConfiguration;
 import gov.hhs.onc.crigtt.data.db.utils.CrigttSqlUtils;
-import gov.hhs.onc.crigtt.data.impl.MapKey;
-import gov.hhs.onc.crigtt.data.impl.MapKey.MapKeyEntry;
-import gov.hhs.onc.crigtt.io.impl.ResourceSource;
+import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.SchematronVars;
 import gov.hhs.onc.crigtt.validate.vocab.Code;
 import gov.hhs.onc.crigtt.validate.vocab.DynamicVocabService;
 import gov.hhs.onc.crigtt.validate.vocab.VocabAssertion;
-import gov.hhs.onc.crigtt.validate.vocab.VocabAttributes;
 import gov.hhs.onc.crigtt.validate.vocab.VocabFields;
-import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.sitenv.vocabularies.constants.VocabularyConstants;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.sitenv.vocabularies.engine.ValidationEngine;
+import org.sitenv.vocabularies.loader.VocabularyLoader;
 import org.sitenv.vocabularies.model.CodeModel;
 import org.sitenv.vocabularies.model.CodeModelDefinition;
 import org.sitenv.vocabularies.model.ValueSetCodeModel;
 import org.sitenv.vocabularies.model.ValueSetModelDefinition;
+import org.sitenv.vocabularies.model.VocabularyModelDefinition;
 import org.sitenv.vocabularies.repository.VocabularyRepository;
 import org.sitenv.vocabularies.repository.VocabularyRepositoryConnectionInfo;
 import org.slf4j.Logger;
@@ -42,11 +45,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class DynamicVocabServiceImpl extends AbstractVocabService implements DynamicVocabService {
     private final static String TEST_EXPR_SUFFIX_FORMAT = DynamicVocabFunction.NAME.toString() + CrigttXpathUtils.CALL_PREFIX + CrigttXpathUtils.VAR_PREFIX
-        + SchematronVars.PATTERN_ID_NAME + ", '%1$s', %2$s" + CrigttXpathUtils.CALL_SUFFIX;
-
-    private final static List<String> VOCAB_SET_PROJECTIONS = Arrays.asList(VocabFields.VALUE_SET_ID_NAME, VocabFields.VALUE_SET_NAME_NAME,
-        VocabFields.VALUE_SET_VERSION_NAME, CrigttSqlUtils.buildFunctionCall(CrigttSqlUtils.DISTINCT_FUNC_NAME), VocabFields.CODE_SYSTEM_NAME_NAME,
-        VocabFields.CODE_SYSTEM_VERSION_NAME);
+        + SchematronVars.PATTERN_ID_NAME + ", '%1$s', " + CrigttXpathUtils.VAR_PREFIX + SchematronVars.CONTEXT_LINE_NUM_NAME + ", "
+        + CrigttXpathUtils.VAR_PREFIX + SchematronVars.CONTEXT_COLUMN_NUM_NAME + ", %2$s" + CrigttXpathUtils.CALL_SUFFIX;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DynamicVocabServiceImpl.class);
 
@@ -55,9 +55,6 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
 
     @Value("${crigtt.db.validate.vocab.dynamic.storage.primary.dir}")
     private File dbPrimaryStorageDir;
-
-    @Value("classpath*:${crigtt.validate.vocab.dynamic.engine.config.file.path}")
-    private ResourceSource engineConfigFile;
 
     @Value("${crigtt.validate.vocab.dynamic.repo.code.dir}")
     private File codeRepoDir;
@@ -68,6 +65,10 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
     @javax.annotation.Resource(name = "dbServerConfigValidateVocabDynamic")
     private CrigttDbServerConfiguration dbServerConfig;
 
+    private Map<String, VocabularyLoader<?>> codeLoaders = new LinkedHashMap<>();
+    private Set<CodeModelDefinition<?>> codeModelDefs = new LinkedHashSet<>();
+    private Map<String, VocabularyLoader<? extends ValueSetCodeModel>> valueSetCodeLoaders = new LinkedHashMap<>();
+    private Set<ValueSetModelDefinition<?>> valueSetModelDefs = new LinkedHashSet<>();
     private OServer dbServer;
     private VocabularyRepository vocabRepo;
 
@@ -81,9 +82,9 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
 
         VocabAssertion assertion = this.assertions.get(assertionId);
         String runtimeTestExpr =
-            (CrigttXpathUtils.CALL_PREFIX + testExpr + CrigttXpathUtils.CALL_SUFFIX + StringUtils.SPACE
-                + (assertion.getOptional() ? CrigttXpathUtils.OR_OP : CrigttXpathUtils.AND_OP) + StringUtils.SPACE + String.format(TEST_EXPR_SUFFIX_FORMAT,
-                assertionId, assertion.getVocabContextExpression()));
+            (CrigttXpathUtils.CALL_PREFIX + (assertion.isSetTestExpressionOverride() ? assertion.getTestExpressionOverride() : testExpr)
+                + CrigttXpathUtils.CALL_SUFFIX + StringUtils.SPACE + (assertion.getOptional() ? CrigttXpathUtils.OR_OP : CrigttXpathUtils.AND_OP)
+                + StringUtils.SPACE + String.format(TEST_EXPR_SUFFIX_FORMAT, assertionId, assertion.getVocabContextExpression()));
 
         LOGGER.trace(String.format("Processed dynamic vocabulary validation assertion (id=%s, initialTestExpr=%s, runtimeTestExpr=%s).", assertionId, testExpr,
             runtimeTestExpr));
@@ -92,111 +93,49 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
     }
 
     @Override
-    public List<Code> findCodes(@Nullable String groupingValueSetId, @Nullable String valueSetId, @Nullable String codeSystemId, String codeId) {
-        List<Code> codes = super.findCodes(groupingValueSetId, valueSetId, codeSystemId, codeId);
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    public List<Code> findCodesByCodeSystem(boolean forValueSet, String codeSystemId, String codeId) {
+        Map<String, String> params =
+            buildParameters(new ImmutablePair<>(VocabFields.CODE_NAME, codeId), new ImmutablePair<>(VocabFields.CODE_SYSTEM_ID_NAME, codeSystemId));
 
-        if (!codes.isEmpty()) {
-            return codes;
+        if (forValueSet) {
+            params.put(VocabFields.VALUE_SET_ID_NAME, null);
         }
 
-        List<CodeModel> codeModels;
-
-        try (OObjectDatabaseTx dbConn = this.vocabRepo.getActiveDbConnection()) {
-            Map<String, String> params = new LinkedHashMap<>(3);
-
-            params.put(VocabFields.CODE_NAME, codeId);
-
-            // noinspection StringEquality
-            if ((codeSystemId != null) && (codeSystemId != CrigttSqlUtils.WILDCARD_VALUE)) {
-                params.put(VocabFields.CODE_SYSTEM_ID_NAME, codeSystemId);
-            }
-
-            if (valueSetId != null) {
-                // noinspection StringEquality
-                if (valueSetId != CrigttSqlUtils.WILDCARD_VALUE) {
-                    params.put(VocabFields.VALUE_SET_ID_NAME, valueSetId);
-                }
-
-                codeModels = dbConn.command(CrigttSqlUtils.buildSelectQuery(ValueSetCodeModel.class, null, null, params, null)).execute(params);
-            } else {
-                params.put(VocabFields.VALUE_SET_ID_NAME, null);
-
-                codeModels = dbConn.command(CrigttSqlUtils.buildSelectQuery(CodeModel.class, null, null, params, null)).execute(params);
-            }
-
-            if (CollectionUtils.isEmpty(codeModels)) {
-                return codes;
-            }
-
-            MapKey codeKey =
-                new MapKey(new MapKeyEntry(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, groupingValueSetId, true), new MapKeyEntry(
-                    VocabAttributes.VALUE_SET_ID_NAME, valueSetId, true), new MapKeyEntry(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId, true));
-            Code code;
-
-            for (CodeModel codeModel : codeModels) {
-                codes.add((code = new CodeImpl((codeModel = dbConn.detach(codeModel, true)).getCode(), codeModel.getDisplayName())));
-
-                this.codeCache.put(codeKey, code);
-            }
-        }
-
-        return codes;
+        return this.findCodes(forValueSet, params);
     }
 
-    @Nullable
     @Override
-    public VocabSet findVocabSet(@Nullable String groupingValueSetId, @Nullable String valueSetId, @Nullable String codeSystemId) {
-        VocabSet vocabSet = super.findVocabSet(groupingValueSetId, valueSetId, codeSystemId);
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    public List<Code> findCodesByValueSet(String valueSetId, String codeId) {
+        return this.findCodes(true,
+            buildParameters(new ImmutablePair<>(VocabFields.CODE_NAME, codeId), new ImmutablePair<>(VocabFields.VALUE_SET_ID_NAME, valueSetId)));
+    }
 
-        if (vocabSet != null) {
-            return vocabSet;
-        }
+    @Override
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    public List<Code> findCodesByValueSet(String valueSetId, String codeSystemId, String codeId) {
+        return this.findCodes(
+            true,
+            buildParameters(new ImmutablePair<>(VocabFields.CODE_NAME, codeId), new ImmutablePair<>(VocabFields.CODE_SYSTEM_ID_NAME, codeSystemId),
+                new ImmutablePair<>(VocabFields.VALUE_SET_ID_NAME, valueSetId)));
+    }
 
-        List<? extends CodeModel> codeModels;
+    @SuppressWarnings({ CompilerWarnings.UNCHECKED })
+    private static Map<String, String> buildParameters(Entry<String, String> ... entries) {
+        return CrigttStreamUtils.toMap(() -> new LinkedHashMap<>(entries.length), Stream.of(entries));
+    }
 
+    private List<Code> findCodes(boolean forValueSet, Map<String, String> params) {
         try (OObjectDatabaseTx dbConn = this.vocabRepo.getActiveDbConnection()) {
-            Map<String, String> params = new HashMap<>(2);
+            List<CodeModel> codeModels =
+                (forValueSet ? dbConn.command(CrigttSqlUtils.buildSelectQuery(ValueSetCodeModel.class, null, null, params, null)).execute(params) : dbConn
+                    .command(CrigttSqlUtils.buildSelectQuery(CodeModel.class, null, null, params, null)).execute(params));
 
-            // noinspection StringEquality
-            if ((codeSystemId != null) && (codeSystemId != CrigttSqlUtils.WILDCARD_VALUE)) {
-                params.put(VocabFields.CODE_SYSTEM_ID_NAME, codeSystemId);
-            }
-
-            if (valueSetId != null) {
-                // noinspection StringEquality
-                if (valueSetId != CrigttSqlUtils.WILDCARD_VALUE) {
-                    params.put(VocabFields.VALUE_SET_ID_NAME, valueSetId);
-                }
-
-                codeModels =
-                    dbConn
-                        .command(CrigttSqlUtils.buildSelectQuery(ValueSetCodeModel.class, null, VOCAB_SET_PROJECTIONS, params, VocabFields.VALUE_SET_ID_NAME))
-                        .execute(params);
-            } else {
-                params.put(VocabFields.VALUE_SET_ID_NAME, null);
-
-                codeModels =
-                    dbConn.command(
-                        CrigttSqlUtils.buildSelectQuery(ValueSetCodeModel.class, CodeModel.class.getSimpleName(), VOCAB_SET_PROJECTIONS, params, null))
-                        .execute(params);
-            }
+            return (!CollectionUtils.isEmpty(codeModels) ? codeModels.stream()
+                .map(codeModel -> new CodeImpl((codeModel = dbConn.detach(codeModel, true)).getCode(), codeModel.getDisplayName()))
+                .collect(Collectors.toList()) : Collections.emptyList());
         }
-
-        if (CollectionUtils.isEmpty(codeModels)) {
-            return null;
-        }
-
-        CodeModel codeModel = codeModels.get(0);
-        ValueSetCodeModel valueSetCodeModel;
-
-        this.vocabSetCache.put(new MapKey(new MapKeyEntry(VocabAttributes.GROUPING_VALUE_SET_ID_NAME, groupingValueSetId, true), new MapKeyEntry(
-            VocabAttributes.VALUE_SET_ID_NAME, valueSetId, true), new MapKeyEntry(VocabAttributes.CODE_SYSTEM_ID_NAME, codeSystemId, true)), (vocabSet =
-            new VocabSetImpl(((groupingValueSetId != null) ? new ValueSetImpl(groupingValueSetId, null, null) : null),
-                ((codeModel instanceof ValueSetCodeModel) ? new ValueSetImpl((valueSetCodeModel = ((ValueSetCodeModel) codeModel)).getValueSetId(),
-                    valueSetCodeModel.getValueSetName(), valueSetCodeModel.getValueSetVersion()) : null), new CodeSystemImpl(codeModel.getCodeSystemId(),
-                    codeModel.getCodeSystemName(), codeModel.getCodeSystemVersion()))));
-
-        return vocabSet;
     }
 
     @Override
@@ -205,6 +144,7 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
     }
 
     @Override
+    @SuppressWarnings({ CompilerWarnings.RAWTYPES, CompilerWarnings.UNCHECKED })
     public void afterPropertiesSet() throws Exception {
         boolean dbPrimaryStorageExists = (this.dbPrimaryStorageDir.isDirectory() && (this.dbPrimaryStorageDir.list().length > 0));
 
@@ -215,10 +155,19 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
         this.vocabRepo.setPrimaryNodeCredentials(this.buildRepositoryConnectionInfo(this.dbServerConfig.storages[0]));
         this.vocabRepo.setSecondaryNodeCredentials(this.buildRepositoryConnectionInfo(this.dbServerConfig.storages[1]));
 
-        this.vocabRepo.getValueSetModelDefinitions().put(CrigttValueSetCodeModel.TYPE,
-            new ValueSetModelDefinition<>(CrigttValueSetCodeModel.class, CrigttValueSetCodeModel.TYPE));
+        // noinspection RedundantCast
+        this.vocabRepo.getCodeModelDefinitions().putAll(
+            ((Map<String, CodeModelDefinition<?>>) CrigttStreamUtils.toMap(VocabularyModelDefinition::getType, Function.identity(), LinkedHashMap::new,
+                this.codeModelDefs.stream())));
 
-        this.vocabRepo.getCodeLoaders().put(VocabularyConstants.RXNORM_CODE_SYSTEM_TYPE, new CrigttRxNormLoader());
+        // noinspection RedundantCast
+        this.vocabRepo.getValueSetModelDefinitions().putAll(
+            ((Map<String, ValueSetModelDefinition<?>>) CrigttStreamUtils.toMap(VocabularyModelDefinition::getType, Function.identity(), LinkedHashMap::new,
+                this.valueSetModelDefs.stream())));
+
+        this.vocabRepo.getCodeLoaders().putAll(this.codeLoaders);
+
+        this.vocabRepo.getValueSetCodeLoaders().putAll(this.valueSetCodeLoaders);
 
         this.vocabRepo.initializeDbConnectionPools();
 
@@ -234,9 +183,12 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
             this.vocabRepo.initializeDb(false);
 
             try (OObjectDatabaseTx dbConn = this.vocabRepo.getInactiveDbConnection()) {
-                VocabularyRepository.truncateModel(dbConn, CrigttValueSetCodeModel.class);
+                Stream.concat(this.codeModelDefs.stream(), this.valueSetModelDefs.stream()).map(VocabularyModelDefinition::getModelClass)
+                    .forEach(modelClass -> {
+                        VocabularyRepository.truncateModel(dbConn, modelClass);
 
-                this.vocabRepo.initializeModel(dbConn, CrigttValueSetCodeModel.class);
+                        this.vocabRepo.initializeModel(dbConn, modelClass);
+                    });
             }
 
             if (this.codeRepoDir.isDirectory()) {
@@ -269,5 +221,49 @@ public class DynamicVocabServiceImpl extends AbstractVocabService implements Dyn
         repoConnInfo.setUsername(dbStorage.userName);
 
         return repoConnInfo;
+    }
+
+    @Override
+    public Map<String, VocabularyLoader<?>> getCodeLoaders() {
+        return this.codeLoaders;
+    }
+
+    @Override
+    public void setCodeLoaders(Map<String, VocabularyLoader<?>> codeLoaders) {
+        this.codeLoaders.clear();
+        this.codeLoaders.putAll(codeLoaders);
+    }
+
+    @Override
+    public Set<CodeModelDefinition<?>> getCodeModelDefinitions() {
+        return this.codeModelDefs;
+    }
+
+    @Override
+    public void setCodeModelDefinitions(Set<CodeModelDefinition<?>> codeModelDefs) {
+        this.codeModelDefs.clear();
+        this.codeModelDefs.addAll(codeModelDefs);
+    }
+
+    @Override
+    public Map<String, VocabularyLoader<? extends ValueSetCodeModel>> getValueSetCodeLoaders() {
+        return this.valueSetCodeLoaders;
+    }
+
+    @Override
+    public void setValueSetCodeLoaders(Map<String, VocabularyLoader<? extends ValueSetCodeModel>> valueSetCodeLoaders) {
+        this.valueSetCodeLoaders.clear();
+        this.valueSetCodeLoaders.putAll(valueSetCodeLoaders);
+    }
+
+    @Override
+    public Set<ValueSetModelDefinition<?>> getValueSetModelDefinitions() {
+        return this.valueSetModelDefs;
+    }
+
+    @Override
+    public void setValueSetModelDefinitions(Set<ValueSetModelDefinition<?>> valueSetModelDefs) {
+        this.valueSetModelDefs.clear();
+        this.valueSetModelDefs.addAll(valueSetModelDefs);
     }
 }

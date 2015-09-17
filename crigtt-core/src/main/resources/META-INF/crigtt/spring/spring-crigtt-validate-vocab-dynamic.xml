@@ -18,34 +18,6 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = CACHE MANAGERS
-    =====================================================================================================-->
-    <!--suppress SpringPlaceholdersInspection -->
-    <beans:bean id="cacheManagerValidateVocabDynamic" parent="cacheManagerCrigtt"
-        p:maxBytesLocalHeap="${crigtt.cache.validate.vocab.dynamic.heap.max.bytes}">
-        <beans:property name="configuration">
-            <beans:bean parent="cacheManagerConfig"/>
-        </beans:property>
-    </beans:bean>
-    
-    <!--====================================================================================================
-    = CACHES
-    =====================================================================================================-->
-    <beans:bean id="cacheValidateVocabVocabSetDynamic" parent="cacheValidateVocabVocabSet"
-        p:manager-ref="cacheManagerValidateVocabDynamic">
-        <beans:property name="configuration">
-            <beans:bean parent="cacheConfigCrigtt"/>
-        </beans:property>
-    </beans:bean>
-    
-    <beans:bean id="cacheValidateVocabCodeDynamic" parent="cacheValidateVocabCode"
-        p:manager-ref="cacheManagerValidateVocabDynamic">
-        <beans:property name="configuration">
-            <beans:bean parent="cacheConfigCrigtt"/>
-        </beans:property>
-    </beans:bean>
-    
-    <!--====================================================================================================
     = DATABASE SERVER CONFIGURATIONS
     =====================================================================================================-->
     <!--suppress SpringPlaceholdersInspection -->
@@ -54,8 +26,15 @@
         p:port="${crigtt.db.validate.vocab.dynamic.port}">
         <beans:property name="globals">
             <beans:map>
+                <!-- TODO: impl -->
+                <!--
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).LOG_CONSOLE_LEVEL }"
+                    value="#{ T(java.util.logging.Level).ALL.name }"/>
+                -->
                 <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).NETWORK_MAX_CONCURRENT_SESSIONS }" value="10000"
                     value-type="java.lang.Integer"/>
+                <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).TX_USE_LOG }" value="false"
+                    value-type="java.lang.Boolean"/>
                 <beans:entry key="#{ T(com.orientechnologies.orient.core.config.OGlobalConfiguration).USE_WAL }" value="false" value-type="java.lang.Boolean"/>
             </beans:map>
         </beans:property>
@@ -71,13 +50,13 @@
                 <beans:bean parent="dbServerStorageConfig"
                     c:name="${crigtt.db.validate.vocab.dynamic.storage.primary.name}"
                     c:pass="${crigtt.db.validate.vocab.dynamic.storage.primary.user.pass}"
-                    c:path="#{ T(gov.hhs.onc.crigtt.data.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.primary.dir}"
+                    c:path="${crigtt.db.validate.vocab.dynamic.storage.primary.path}"
                     c:user="${crigtt.db.validate.vocab.dynamic.storage.primary.user.name}"/>
                 <!--suppress SpringPlaceholdersInspection -->
                 <beans:bean parent="dbServerStorageConfig"
                     c:name="${crigtt.db.validate.vocab.dynamic.storage.secondary.name}"
                     c:pass="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.pass}"
-                    c:path="#{ T(gov.hhs.onc.crigtt.data.db.CrigttDbPaths).LOCAL_PAGINATED_PROTOCOL_PREFIX }${crigtt.db.validate.vocab.dynamic.storage.secondary.dir}"
+                    c:path="${crigtt.db.validate.vocab.dynamic.storage.secondary.path}"
                     c:user="${crigtt.db.validate.vocab.dynamic.storage.secondary.user.name}"/>
             </beans:array>
         </beans:property>
@@ -100,7 +79,26 @@
         abstract="true"/>
     
     <beans:bean id="vocabServiceDynamicCrigtt" parent="vocabServiceDynamicImpl"
-        p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-dynamic.xml"
-        p:codeCache-ref="cacheValidateVocabCodeDynamic"
-        p:vocabSetCache-ref="cacheValidateVocabVocabSetDynamic"/>
+        p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-dynamic.xml">
+        <beans:property name="codeLoaders">
+            <beans:map>
+                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD9CM_DIAGNOSIS_CODE_SYSTEM_TYPE }"
+                    value-ref="codeLoaderIcd9CmDx"/>
+                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD10CM_CODE_SYSTEM_TYPE }" value-ref="codeLoaderIcd10Cm"/>
+                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD10PCS_CODE_SYSTEM_TYPE }" value-ref="codeLoaderIcd10Pcs"/>
+                <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.IcdO3Model).TYPE }" value-ref="codeLoaderIcdO3"/>
+                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).RXNORM_CODE_SYSTEM_TYPE }" value-ref="codeLoaderRxNorm"/>
+            </beans:map>
+        </beans:property>
+        <beans:property name="codeModelDefinitions">
+            <beans:set>
+                <beans:value>#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.IcdO3Model).DEF }</beans:value>
+            </beans:set>
+        </beans:property>
+        <beans:property name="valueSetModelDefinitions">
+            <beans:set>
+                <beans:value>#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.CrigttValueSetCodeModel).DEF }</beans:value>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
 </beans:beans>

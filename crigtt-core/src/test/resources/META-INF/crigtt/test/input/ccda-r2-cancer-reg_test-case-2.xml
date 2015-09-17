@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 file://cdc.gov/private/L307/wfb6/Meaningful%20Use/Stage%203%20IG/CDAR2_IG_RPT2CANCERREG_R1_DSTU1.1_2015APR/schema/infrastructure/cda/CDA_SDTC.xsd">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<realmCode code="US"/>
 	<typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
 	<!-- US Realm Header template -->
@@ -71,7 +71,7 @@
 		<time value="201209151030-0800"/>
 		<assignedAuthor>
 			<id extension="9988776655" root="2.16.840.1.113883.4.6"/>
-			<code code="208D00000X" displayName="General Practice" codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
+			<code code="208D00000X" displayName="General Practice" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 			<addr use="WP">
 				<streetAddressLine>123 Green Street</streetAddressLine>
 				<city>Seattle</city>
@@ -253,7 +253,7 @@
 										</originalText>
 										<qualifier>
 											<name code="20228-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Anatomic part Laterality "/>
-											<value code="385432009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" sdtc:valueSet="2.16.840.1.113883.3.520.4.22" displayName="Not applicable">
+											<value code="385432009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" sdtc:valueSet="2.16.840.1.113883.3.520.4.22" displayName="Not applicable (qualifier value)">
 												<originalText>
 													<reference value="#Laterality_1"/>
 												</originalText>

@@ -18,40 +18,6 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!--====================================================================================================
-    = SEARCH ATTRIBUTES
-    =====================================================================================================-->
-    <beans:bean id="searchAttrGroupingValueSetId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).GROUPING_VALUE_SET_ID_NAME }"/>
-    
-    <beans:bean id="searchAttrValueSetId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).VALUE_SET_ID_NAME }"/>
-    
-    <beans:bean id="searchAttrCodeSystemId" parent="searchAttrStr"
-        p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).CODE_SYSTEM_ID_NAME }"/>
-    
-    <!--====================================================================================================
-    = CACHES
-    =====================================================================================================-->
-    <beans:bean id="cacheValidateVocabVocabSet" parent="cacheCrigtt" abstract="true">
-        <beans:property name="searchAttributes">
-            <beans:array>
-                <beans:ref bean="searchAttrGroupingValueSetId"/>
-                <beans:ref bean="searchAttrValueSetId"/>
-                <beans:ref bean="searchAttrCodeSystemId"/>
-            </beans:array>
-        </beans:property>
-    </beans:bean>
-    
-    <beans:bean id="cacheValidateVocabCode" parent="cacheValidateVocabVocabSet" abstract="true">
-        <beans:property name="searchAttributes">
-            <beans:array merge="true">
-                <beans:bean parent="searchAttrStr"
-                    p:name="#{ T(gov.hhs.onc.crigtt.validate.vocab.VocabAttributes).CODE_ID_NAME }"/>
-            </beans:array>
-        </beans:property>
-    </beans:bean>
-    
-    <!--====================================================================================================
     = VOCABULARY SERVICES
     =====================================================================================================-->
     <beans:bean id="vocabService" class="gov.hhs.onc.crigtt.validate.vocab.VocabService" abstract="true"/>

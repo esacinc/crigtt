@@ -127,12 +127,27 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-9058-c</crigtt:id>
+        <!--
+        Expected vocabulary sets overridden due to a-1126-33268-c (CONF:1126-33268).
+        -->
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
                     <crigtt:id>2.16.840.1.113883.3.88.12.3221.7.4</crigtt:id>
                     <crigtt:name>Problem</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.90</crigtt:id>
+                    <crigtt:name>ICD-10-CM</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.103</crigtt:id>
+                    <crigtt:name>ICD-9-CM</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
@@ -190,6 +205,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
         <crigtt-validate-vocab:codeIdExpression>@unit</crigtt-validate-vocab:codeIdExpression>
+        <crigtt-validate-vocab:testExpressionOverride>empty(cda:value[@xsi:type='PQ'])</crigtt-validate-vocab:testExpressionOverride>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -233,7 +249,6 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-16563</crigtt:id>
-        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
@@ -299,6 +314,7 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-15975</crigtt:id>
+        <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
@@ -317,6 +333,81 @@
                 <crigtt-validate-vocab:valueSet>
                     <crigtt:id>2.16.840.1.113883.3.88.12.3221.8.9</crigtt:id>
                     <crigtt:name>Body Site</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1126-33594-c</crigtt:id>
+        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.24</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation HCPCS codes</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.26</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation SNOMED CT codes</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.25</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation ICD10-PCS codes</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1126-33662-c</crigtt:id>
+        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
+        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.24</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation HCPCS codes</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.26</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation SNOMED CT codes</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.23</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation Grouping</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.25</crigtt:id>
+                    <crigtt:name>Radiation Regional Treatment and Boost Radiation ICD10-PCS codes</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
@@ -344,6 +435,8 @@
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:assignedEntity</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:codeIdExpression>@nullFlavor</crigtt-validate-vocab:codeIdExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -923,6 +1016,31 @@
                 <crigtt-validate-vocab:valueSet>
                     <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
                     <crigtt:name>Clinical Substance</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-33012-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.22</crigtt:id>
+                    <crigtt:name>Laterality</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1169-33185-c</crigtt:id>
+        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.520.4.22</crigtt:id>
+                    <crigtt:name>Laterality</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>

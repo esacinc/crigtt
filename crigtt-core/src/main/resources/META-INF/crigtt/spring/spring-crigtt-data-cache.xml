@@ -32,23 +32,13 @@
     <beans:bean id="cacheManagerCrigtt" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttCacheManagerFactoryBean" parent="cacheManagerEhCache" abstract="true"/>
     
     <!--====================================================================================================
-    = SEARCH ATTRIBUTES
-    =====================================================================================================-->
-    <beans:bean id="searchAttr" class="net.sf.ehcache.config.SearchAttribute" abstract="true"/>
-    
-    <beans:bean id="searchAttrCrigtt" class="gov.hhs.onc.crigtt.data.cache.impl.CrigttSearchAttribute" parent="searchAttr" abstract="true"
-        p:extractor-ref="attrExtractorMapKey"/>
-    
-    <beans:bean id="searchAttrStr" parent="searchAttrCrigtt" abstract="true"
-        p:typeClass="java.lang.String"/>
-    
-    <!--====================================================================================================
     = CACHE CONFIGURATIONS
     =====================================================================================================-->
     <beans:bean id="cacheConfig" class="net.sf.ehcache.config.CacheConfiguration" abstract="true"/>
     
     <beans:bean id="cacheConfigCrigtt" parent="cacheConfig" abstract="true"
-        p:eternal="true"/>
+        p:eternal="true"
+        p:memoryStoreEvictionPolicyFromObject="FIFO"/>
     
     <!--====================================================================================================
     = CACHES

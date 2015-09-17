@@ -1,17 +1,18 @@
-package gov.hhs.onc.crigtt.validate.vocab.impl;
+package gov.hhs.onc.crigtt.validate.vocab.loader.impl;
 
 import com.github.sebhoss.warnings.CompilerWarnings;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import gov.hhs.onc.crigtt.validate.vocab.VocabFields;
-import java.util.ArrayList;
+import gov.hhs.onc.crigtt.validate.vocab.model.impl.CrigttValueSetCodeModel;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.sitenv.vocabularies.loader.code.rxnorm.RxNormLoader;
+import org.springframework.stereotype.Component;
 
+@Component("codeLoaderRxNorm")
 public class CrigttRxNormLoader extends RxNormLoader {
     private final static String LINE_DELIM = "|";
 
@@ -43,18 +44,6 @@ public class CrigttRxNormLoader extends RxNormLoader {
         }
     };
 
-    @SuppressWarnings({ CompilerWarnings.SERIAL })
-    private final static List<String> DRUG_DOC_COPY_FIELD_NAMES = new ArrayList<String>() {
-        {
-            this.add(VocabFields.CODE_SYSTEM_ID_NAME);
-            this.add(VocabFields.CODE_SYSTEM_NAME_NAME);
-            this.add(VocabFields.CODE_SYSTEM_VERSION_NAME);
-            this.add(VocabFields.CODE_NAME);
-            this.add(VocabFields.DISPLAY_NAME_NAME);
-            this.add(VocabFields.TTY_NAME);
-        }
-    };
-
     private ODocument drugDoc = new ODocument();
 
     @Override
@@ -63,13 +52,13 @@ public class CrigttRxNormLoader extends RxNormLoader {
             return false;
         }
 
-        String[] lineParts = StringUtils.splitPreserveAllTokens(line, LINE_DELIM, 13);
+        String[] lineParts = StringUtils.splitPreserveAllTokens(line, LINE_DELIM, 16);
 
         if (!lineParts[11].equals(RX_NORM_SRC_ABBR)) {
             return true;
         }
 
-        String tty = doc.field(VocabFields.TTY_NAME);
+        String tty = lineParts[12];
         boolean brandDrug;
 
         if (!(brandDrug = MEDICATION_CLINICAL_BRAND_DRUG_TTYS.contains(tty)) && !MEDICATION_CLINICAL_GENERAL_DRUG_TTYS.contains(tty)) {
@@ -79,12 +68,16 @@ public class CrigttRxNormLoader extends RxNormLoader {
         drugDoc.reset();
         drugDoc.setClassName(CrigttValueSetCodeModel.NAME);
 
+        drugDoc.field(VocabFields.CODE_NAME, lineParts[13]);
+        drugDoc.field(VocabFields.DISPLAY_NAME_NAME, lineParts[14]);
+        drugDoc.field(VocabFields.TTY_NAME, tty);
+
+        baseFields.forEach(drugDoc::field);
+
         drugDoc
             .field(VocabFields.VALUE_SET_ID_NAME, (!brandDrug ? MEDICATION_CLINICAL_GENERAL_DRUG_VALUE_SET_ID : MEDICATION_CLINICAL_BRAND_DRUG_VALUE_SET_ID));
         drugDoc.field(VocabFields.VALUE_SET_NAME_NAME, (!brandDrug
             ? MEDICATION_CLINICAL_GENERAL_DRUG_VALUE_SET_NAME : MEDICATION_CLINICAL_BRAND_DRUG_VALUE_SET_NAME));
-
-        DRUG_DOC_COPY_FIELD_NAMES.stream().forEach(drugDocCopyFieldName -> drugDoc.field(drugDocCopyFieldName, ((String) doc.field(drugDocCopyFieldName))));
 
         drugDoc.save();
 

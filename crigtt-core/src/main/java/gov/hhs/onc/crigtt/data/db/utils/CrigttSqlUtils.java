@@ -30,7 +30,6 @@ public final class CrigttSqlUtils {
     public final static String WHERE_OP = "where";
 
     public final static String NULL_VALUE = "null";
-    public final static String WILDCARD_VALUE = "*";
 
     private CrigttSqlUtils() {
     }

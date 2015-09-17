@@ -91,8 +91,8 @@
 		<assignedAuthor>
 			<id extension="4829010403" root="2.16.840.1.113883.4.6"/>
 			<code code="207N00000X"
-				displayName="Dermatology [Allopathic and Osteopathic Physicians]"
-				codeSystem="2.16.840.1.113883.5.53" codeSystemName="Health Care Provider Taxonomy"/>
+				displayName="Dermatology"
+				codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 			<addr use="WP">
 				<streetAddressLine>555 Walnut Drive</streetAddressLine>
 				<city>Seattle</city>

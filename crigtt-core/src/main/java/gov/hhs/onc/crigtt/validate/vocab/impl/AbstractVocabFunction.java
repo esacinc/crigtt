@@ -173,6 +173,8 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
                 }
             } else if (codeNameAvailable && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
                 messages.add(String.format("Code display name did not match any of %d possible values.", allFoundCodes.size()));
+
+                status = false;
             }
 
             if (valueSetIdRequired && !valueSetIdAvailable && !valueSetFallback) {

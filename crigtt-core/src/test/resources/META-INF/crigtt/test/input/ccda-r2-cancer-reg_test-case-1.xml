@@ -358,7 +358,7 @@
 										<low value="20140126"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="8500/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Infiltrating duct carcinoma">
+									<value xsi:type="CD" code="8500/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Infiltrating duct carcinoma, NOS">
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
@@ -1616,7 +1616,7 @@
 									<effectiveTime>
 										<low value="198504"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="6570" codeSystem="2.16.840.1.114222.4.5.315" codeSystemName="Industry CDC Census 2010" displayName="Motion Pictures and Video Industries" sdtc:valueSet="2.16.840.1.114222.4.11.7187">
+									<value xsi:type="CD" code="6570" codeSystem="2.16.840.1.114222.4.5.315" codeSystemName="Industry CDC Census 2010" displayName="Motion pictures and video industries" sdtc:valueSet="2.16.840.1.114222.4.11.7187">
 										<originalText>
 											<reference value="#Industry_1"/>
 										</originalText>

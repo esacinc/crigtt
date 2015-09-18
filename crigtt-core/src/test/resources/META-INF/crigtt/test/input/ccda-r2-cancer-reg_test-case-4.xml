@@ -239,10 +239,9 @@
 								</tr>
 								<tr>
 									<td>August 4, 2015</td>
-									<td ID="PrimarySite_2">Malignant melanoma of skin of scalp and
-										neck</td>
+									<td ID="PrimarySite_2">Malignant melanoma of scalp and neck</td>
 									<td ID="Laterality_2">Not applicable</td>
-									<td ID="Histology_2">Nodular Melanoma</td>
+									<td ID="Histology_2">Nodular melanoma</td>
 									<td ID="Behavior_2">Malignant, Primary</td>
 									<td ID="Confirmation_2">Positive Histology</td>
 									<td ID="Grade_2">Not applicable</td>
@@ -675,7 +674,7 @@
 									</effectiveTime>
 									<value xsi:type="CD" code="M8721/3"
 										codeSystem="2.16.840.1.113883.6.103"
-										codeSystemName="ICD-9-CM" displayName="Nodular Melanoma">
+										codeSystemName="ICD-9-CM" displayName="Nodular melanoma">
 										<originalText>
 											<reference value="#Histology_2"/>
 										</originalText>
@@ -719,7 +718,7 @@
 									</value>
 									<targetSiteCode code="C43.4" codeSystem="2.16.840.1.113883.6.90"
 										codeSystemName="ICD-10-CM"
-										displayName="Malignant melanoma of skin of scalp and neck">
+										displayName="Malignant melanoma of scalp and neck">
 										<originalText>
 											<reference value="#PrimarySite_2"/>
 										</originalText>
@@ -1242,7 +1241,7 @@
 									<value xsi:type="CD" code="C43.4"
 										codeSystem="2.16.840.1.113883.6.90"
 										codeSystemName="ICD-10-CM"
-										displayName="Malignant melanoma of skin of scalp and neck"/>
+										displayName="Malignant melanoma of scalp and neck"/>
 								</observation>
 							</entryRelationship>
 						</act>

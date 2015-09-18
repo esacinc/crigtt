@@ -425,7 +425,7 @@
 											</value>
 										</qualifier>
 									</value>
-									<targetSiteCode code="181131000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Entire breast" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+									<targetSiteCode code="181131000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Entire breast (body structure)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
 										<originalText>
 											<reference value="#PrimarySite_1"/>
 										</originalText>
@@ -1350,7 +1350,7 @@
 										<!-- The high value reflects when the problem was known to be resolved -->
 										<high value="20130703"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="408643008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Infiltrating duct carcinoma of breast" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+									<value xsi:type="CD" code="408643008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Infiltrating duct carcinoma of breast (disorder)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
 									<author typeCode="AUT">
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="201307061145-0800"/>

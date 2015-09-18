@@ -396,7 +396,7 @@
 										<low value="20120702"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="8140" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Adenocarcinoma, NOS">
+									<value xsi:type="CD" code="8140/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Adenocarcinoma, NOS">
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
@@ -656,7 +656,7 @@
 							<statusCode code="completed"/>
 							<subject>
 								<relatedSubject classCode="PRS">
-									<code code="FTH" displayName="Father" codeSystemName="FamilyRelationshipRoleType" codeSystem="2.16.840.1.113883.5.111" sdtc:valueSet="2.16.840.1.113883.1.11.19579">
+									<code code="FTH" displayName="Father" codeSystemName="FamilyRelationshipRoleType" codeSystem="2.16.840.1.113883.5.111">
 										<translation code="9947008" displayName="Natural father (person)" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96"/>
 									</code>
 									<subject>
@@ -767,22 +767,13 @@
 								<period value="6" unit="h"/>
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
-							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity unit="mg/mL">
-								<low value="2" unit="mg/mL">
-									<translation>
-										<originalText>
-											<reference value="#MedicationAdminDose_1"/>
-										</originalText>
-									</translation>
-								</low>
-								<high value="2" unit="mg/mL">
-									<translation>
-										<originalText>
-											<reference value="#MedicationAdminDose_1"/>
-										</originalText>
-									</translation>
-								</high>
+							<approachSiteCode code="72098002" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Entire left upper arm (body structure)"/>
+							<doseQuantity value="2" unit="mg/mL">
+                                <translation>
+                                    <originalText>
+                                        <reference value="#MedicationAdminDose_1"/>
+                                    </originalText>
+                                </translation>
 							</doseQuantity>
 							<consumable>
 								<manufacturedProduct classCode="MANU">
@@ -790,7 +781,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -857,21 +848,12 @@
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
 							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
-							<doseQuantity unit="mg/mL">
-								<low value="2" unit="mg/mL">
-									<translation>
-										<originalText>
-											<reference value="#MedicationAdminDose_1"/>
-										</originalText>
-									</translation>
-								</low>
-								<high value="2" unit="mg/mL">
-									<translation>
-										<originalText>
-											<reference value="#MedicationAdminDose_1"/>
-										</originalText>
-									</translation>
-								</high>
+							<doseQuantity value="2" unit="mg/mL">
+                                <translation>
+                                    <originalText>
+                                        <reference value="#MedicationAdminDose_1"/>
+                                    </originalText>
+                                </translation>
 							</doseQuantity>
 							<consumable>
 								<manufacturedProduct classCode="MANU">
@@ -879,7 +861,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17">
+										<code code="1191138" displayName="Doxorubicin Hydrochloride 2 MG/ML Injectable Solution" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm">
 											<originalText>
 												<reference value="#MedicationAdminName_1"/>
 											</originalText>
@@ -1183,7 +1165,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="1361853" displayName="0.5 ML heparin sodium, porcine 10000 UNT/ML Prefilled Syringe" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17"/>
+										<code code="1361853" displayName="0.5 ML heparin sodium, porcine 10000 UNT/ML Prefilled Syringe" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm"/>
 									</manufacturedMaterial>
 									<manufacturerOrganization>
 										<name>Medication Factory Inc.</name>
@@ -1546,7 +1528,7 @@
 											<effectiveTime>
 												<low value="20140725161343"/>
 											</effectiveTime>
-											<targetSiteCode code="49668003" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Bone structure of L5" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9"/>
+											<targetSiteCode code="49668003" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Bone structure of L5 (body structure)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9"/>
 											<performer>
 												<assignedEntity>
 													<id extension="5555555555" root="2.16.840.1.113883.19"/>
@@ -1637,7 +1619,7 @@
 											<effectiveTime>
 												<low value="20140725161343"/>
 											</effectiveTime>
-											<targetSiteCode code="49668003" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Bone structure of L5" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9"/>
+											<targetSiteCode code="49668003" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Bone structure of L5 (body structure)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9"/>
 											<performer>
 												<assignedEntity>
 													<id extension="5555555555" root="2.16.840.1.113883.19"/>
@@ -1977,7 +1959,7 @@
 									<code code="3094-0" displayName="Urea nitrogen" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
 									<statusCode code="active"/>
 									<effectiveTime value="200803200930-0800"/>
-									<value xsi:type="PQ" nullFlavor="NI"/>
+									<value nullFlavor="NI"/>
 									<author typeCode="AUT">
 										<templateId root="2.16.840.1.113883.10.20.22.4.119"/>
 										<time value="200803200930-0800"/>

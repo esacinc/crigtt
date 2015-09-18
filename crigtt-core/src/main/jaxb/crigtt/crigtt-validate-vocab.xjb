@@ -125,6 +125,9 @@
             <jaxb:bindings node="xsd:element[@name='codeSystemVersionExpression']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='searchByCodeName']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='codeIdExpression']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>

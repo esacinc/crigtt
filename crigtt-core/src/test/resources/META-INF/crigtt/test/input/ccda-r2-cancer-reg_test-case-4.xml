@@ -327,8 +327,8 @@
 										<high nullFlavor="NA"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="M8742/2"
-										codeSystem="2.16.840.1.113883.6.90"
-										codeSystemName="ICD-10-CM"
+										codeSystem="2.16.840.1.113883.6.103"
+										codeSystemName="ICD-9-CM"
 										displayName="Hutchinson's melanotic freckle">
 										<originalText>
 											<reference value="#Histology_1"/>
@@ -674,8 +674,8 @@
 										<high nullFlavor="NA"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="M8721/3"
-										codeSystem="2.16.840.1.113883.6.90"
-										codeSystemName="ICD-10-CM" displayName="Nodular Melanoma">
+										codeSystem="2.16.840.1.113883.6.103"
+										codeSystemName="ICD-9-CM" displayName="Nodular Melanoma">
 										<originalText>
 											<reference value="#Histology_2"/>
 										</originalText>
@@ -686,7 +686,7 @@
 											<value xsi:type="CD" code="3"
 												codeSystem="2.16.840.1.113883.3.520.3.14"
 												codeSystemName="NAACCR Behavior Code"
-												displayName="Malignant, Primary"
+												displayName="Malignant, primary site"
 												sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 												<reference value="#Behavior_2"/>
@@ -731,7 +731,7 @@
 												codeSystem="2.16.840.1.113883.6.96"
 												codeSystemName="SNOMED CT"
 												sdtc:valueSet="2.16.840.1.113883.3.520.4.22"
-												displayName="Not applicable">
+												displayName="Not applicable (qualifier value)">
 												<originalText>
 												<reference value="#Laterality_2"/>
 												</originalText>

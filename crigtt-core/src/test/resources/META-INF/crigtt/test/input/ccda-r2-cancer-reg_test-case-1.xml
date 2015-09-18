@@ -393,7 +393,7 @@
 										</originalText>
 										<qualifier>
 											<name code="20228-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Anatomic part Laterality "/>
-											<value code="24028007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Right (qualifier value)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+											<value code="24028007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Right (qualifier value)" sdtc:valueSet="2.16.840.1.113883.3.520.4.22">
 												<originalText>
 													<reference value="#Laterality_1"/>
 												</originalText>
@@ -1216,7 +1216,7 @@
 									<templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
 									<id root="2a620155-9d11-439e-92b3-5d9815ff4ee8"/>
 									<manufacturedMaterial>
-										<code code="577348" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" displayName="ramelteon 8 MG Oral Tablet" sdtc:valueSet="2.16.840.1.113883.3.88.12.80.17"/>
+										<code code="577348" codeSystem="2.16.840.1.113883.6.88" codeSystemName="RxNorm" displayName="ramelteon 8 MG Oral Tablet"/>
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>
@@ -1510,7 +1510,7 @@
 						</table>
 					</text>
 					<entry typeCode="DRIV">
-						<organizer classCode="CLUSTER" moodCode="EVN">
+						<organizer classCode="BATTERY" moodCode="EVN">
 							<!-- ** Result organizer ** -->
 							<templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2014-06-09"/>
 							<id root="7d5a02b0-67a4-11db-bd13-0800200c9a66"/>

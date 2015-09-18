@@ -278,7 +278,7 @@
 										<low value="20150804"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="M8742/2" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Hutchinson's melanotic freckle">
+									<value xsi:type="CD" code="M8742/2" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Hutchinson's melanotic freckle">
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
@@ -505,7 +505,7 @@
 										<low value="20150804"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="M8721/3" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Nodular Melanoma">
+									<value xsi:type="CD" code="M8721/3" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Nodular Melanoma">
 										<originalText>
 											<reference value="#Histology_2"/>
 										</originalText>

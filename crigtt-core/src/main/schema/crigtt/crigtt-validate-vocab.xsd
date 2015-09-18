@@ -78,6 +78,7 @@
             <xsd:element name="codeSystemIdExpression" type="xsd:string" minOccurs="0" default="@codeSystem"/>
             <xsd:element name="codeSystemNameExpression" type="xsd:string" minOccurs="0" default="@codeSystemName"/>
             <xsd:element name="codeSystemVersionExpression" type="xsd:string" minOccurs="0" default="@codeSystemVersion"/>
+            <xsd:element name="searchByCodeName" type="xsd:boolean" minOccurs="0" default="false"/>
             <xsd:element name="codeIdExpression" type="xsd:string" minOccurs="0" default="@code"/>
             <xsd:element name="codeNameExpression" type="xsd:string" minOccurs="0" default="@displayName"/>
             <xsd:element name="testExpressionOverride" type="xsd:string" minOccurs="0"/>

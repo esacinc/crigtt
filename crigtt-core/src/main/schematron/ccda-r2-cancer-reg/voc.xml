@@ -256,29 +256,6 @@
     <code value="EVN" displayName="Event" codeSystemName="ActMood" codeSystem="2.16.840.1.113883.5.1001" />
     <code value="INT" displayName="Intent" codeSystemName="ActMood" codeSystem="2.16.840.1.113883.5.1001" />
   </system>
-  <system valueSetOid="2.16.840.1.113883.3.520.4.14" valueSetName="NAACCR Behavior Code">
-    <code value="0" displayName="Benign" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-    <code value="1" displayName="Uncertain whether benign or malignant" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-    <code value="2" displayName="In situ; non-invasive" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-    <code value="3" displayName="Malignant, primary" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-    <code value="6" displayName="Malignant, metastatic" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-    <code value="9" displayName="Malignant, uncertain whether primary or metastatic" codeSystemName="NAACCR Behavior Code" codeSystem="2.16.840.1.113883.3.520.3.14" />
-  </system>
-  <system valueSetOid="2.16.840.1.113883.3.520.4.3" valueSetName="NAACCR Diagnostic Confirmation">
-    <code value="1" displayName="Positive Histology" codeSystemName="NAACCR Diagnostic Confirmation" codeSystem="2.16.840.1.113883.3.520.3.3" />
-    <code value="2" displayName="Positive cytology, no positive histology" codeSystemName="NAACCR Diagnostic Confirmation" codeSystem="2.16.840.1.113883.3.520.3.3" />
-    <code value="3" displayName="Positive histology Plus positive immunophenotyping and/or positive genetic studies" codeSystemName="NAACCR Diagnostic Confirmation" codeSystem="2.16.840.1.113883.3.520.3.3" />
-  </system>
-  <system valueSetOid="2.16.840.1.113883.3.520.4.15" valueSetName="NAACCR Grade">
-    <code value="1" displayName="Grade I" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="2" displayName="Grade II" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="3" displayName="Grade III" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="4" displayName="Grade IV" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="5" displayName="T-cell" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="6" displayName="B-cell" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="7" displayName="Null cell" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-    <code value="8" displayName="NK (natural killer) cell" codeSystemName="NAACCR Grade" codeSystem="2.16.840.1.113883.3.520.3.15" />
-  </system>
   <system valueSetOid="2.16.840.1.113883.1.11.78" valueSetName="Observation Interpretation (HL7)">
     <code value="A" displayName="abnormal" codeSystemName="HITSP-CS-83" codeSystem="2.16.840.1.113883.5.83" />
     <code value="B" displayName="better" codeSystemName="HITSP-CS-83" codeSystem="2.16.840.1.113883.5.83" />
@@ -322,17 +299,6 @@
     <code value="SNRS" displayName="scrub nurse" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="SASST" displayName="second assistant surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="TASST" displayName="third assistant surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
-  </system>
-  <system valueSetOid="2.16.840.1.113883.11.20.12.1" valueSetName="Personal And Legal Relationship Role Type">
-    <code value="SELF" displayName="self" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="MTH" displayName="mother" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="FTH" displayName="father" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="DAU" displayName="natural daughter" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="SON" displayName="natural son" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="DAUINLAW" displayName="daughter in-law" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="SONINLAW" displayName="son in-law" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="GUARD" displayName="guardian" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
-    <code value="HPOWATT" displayName="healthcare power of attorney" codeSystemName="RoleCode" codeSystem="2.16.840.1.113883.5.111" />
   </system>
   <system valueSetOid="2.16.840.1.114222.4.11.7187" valueSetName="PHVS_Industry_CDC_Census2010">
     <code value="7280" displayName="Accounting, tax preparation, bookkeeping, and payroll services" codeSystemName="Industry CDC Census 2010" codeSystem="2.16.840.1.114222.4.5.315" />
@@ -1181,11 +1147,6 @@
     <code value="TMP" displayName="temporary" codeSystemName="AddressUse" codeSystem="2.16.840.1.113883.5.1119" />
     <code value="WP" displayName="work place" codeSystemName="AddressUse" codeSystem="2.16.840.1.113883.5.1119" />
   </system>
-  <system valueSetOid="2.16.840.1.113883.3.88.12.80.2" valueSetName="PostalCode">
-    <code value="19009" displayName="Bryn Athyn" codeSystemName="USPostalCodes" codeSystem="2.16.840.1.113883.6.231" />
-    <code value="92869-1736" displayName="Orange, CA" codeSystemName="USPostalCodes" codeSystem="2.16.840.1.113883.6.231" />
-    <code value="32830-8413" displayName="Lake Buena Vista, FL" codeSystemName="USPostalCodes" codeSystem="2.16.840.1.113883.6.231" />
-  </system>
   <system valueSetOid="2.16.840.1.113883.3.88.12.3221.7.2" valueSetName="Problem Type">
     <code value="75326-9" displayName="Problem" codeSystemName="LOINC" codeSystem="2.16.840.1.113883.6.1" />
     <code value="75325-1" displayName="Symptom" codeSystemName="LOINC" codeSystem="2.16.840.1.113883.6.1" />
@@ -1215,16 +1176,6 @@
     <code value="aborted" displayName="Aborted" codeSystemName="ActStatus" codeSystem="2.16.840.1.113883.5.14" />
     <code value="cancelled" displayName="Cancelled" codeSystemName="ActStatus" codeSystem="2.16.840.1.113883.5.14" />
   </system>
-  <system valueSetOid="2.16.840.1.113883.3.520.4.23" valueSetName="Radiation Regional Treatment and Boost Radiation Grouping">
-    <code value="55860" displayName="SURGICAL EXPOSURE, PROSTATE" codeSystemName="HCPCS" codeSystem="2.16.840.1.113883.6.14" />
-    <code value="55862" displayName="EXTENSIVE PROSTATE SURGERY......" codeSystemName="HCPCS" codeSystem="2.16.840.1.113883.6.14" />
-    <code value="D0000ZZ" displayName="Beam Radiation of Brain using Photons &lt;1 MeV" codeSystemName="ICD10PCS" codeSystem="2.16.840.1.113883.6.4" />
-    <code value="D0001ZZ" displayName="Beam Radiation of Brain using Photons 1 - 10 MeV" codeSystemName="ICD10PCS" codeSystem="2.16.840.1.113883.6.4" />
-    <code value="33356009" displayName="Betatron teleradiotherapy" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="445232009" displayName="Boost radiation therapy" codeSystemName="SNOMED CT" codeSystem="2.16.840.1.113883.6.96" />
-    <code value="C1715" displayName="Brachytherapy needle" codeSystemName="HCPCS" codeSystem="2.16.840.1.113883.6.14" />
-    <code value="G0173" displayName="Linear acc stereo radsur com" codeSystemName="HCPCS" codeSystem="2.16.840.1.113883.6.14" />
-  </system>
   <system valueSetOid="2.16.840.1.113883.11.20.9.39" valueSetName="Result Status">
     <code value="aborted" displayName="aborted" codeSystemName="ActStatus" codeSystem="2.16.840.1.113883.5.14" />
     <code value="active" displayName="active" codeSystemName="ActStatus" codeSystem="2.16.840.1.113883.5.14" />
@@ -1234,127 +1185,129 @@
     <code value="suspended" displayName="suspended" codeSystemName="ActStatus" codeSystem="2.16.840.1.113883.5.14" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.8" valueSetName="TNM Clinical Metastasis">
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="MX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1C" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1B" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Not applicable (no AJCC staging scheme)" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M0+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M0I+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="M0(i+)" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="M1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="M1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="M1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="M1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1e" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.7" valueSetName="TNM Clinical Node">
-    <code value="N1A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N2B" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N3C" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N3B" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N3A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N2C" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N2A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N2c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N1B" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N3" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Not applicable (no AJCC staging scheme)" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="NX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0I-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0I+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0i-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0i+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0m-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0m+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N1mi" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.10" valueSetName="TNM Clinical Stage Descriptor">
     <code value="0" displayName="None" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="1" displayName="E (Extranodal, lymphomas only)" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="2" displayName="S (Spleen, lymphomas only)" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="1" displayName="E-Extranodal, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="2" displayName="S-Spleen, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="3" displayName="M-Multiple primary tumors in a single site" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="5" displayName="E &amp; S-Extranodal and spleen, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="9" displayName="Unknown; not stated in patient record" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.9" valueSetName="TNM Clinical Stage Group">
-    <code value="IVB" displayName="No display name applicable." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IVB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IVA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IV" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="III" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="II" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="I" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1A2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IVC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="0is" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="0A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1B" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1A1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1B2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Occult" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IE" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="0A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="0is" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="I" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IS" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="II" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IIA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IIA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIE" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIS" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="III" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IIIC1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IIIC2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIIE" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="IIIS" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IV" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVA" displayName="No display name applicable." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IVA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="IVA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Occult" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Unknown" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.6" valueSetName="TNM Clinical Tumor">
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="TX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Tis" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Ta" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1mic" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1a2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1a1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Tid pd" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Tis pu" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Ta" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Tis" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Tispu" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Tidpd" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T1mi" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1 mic" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2a1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2a2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T3d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T4e" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-  </system>
-  <system valueSetOid="0.0.0.0.13" valueSetName="TNM Edition Number">
-    <code value="5" displayName="AJCC Staging Manual, 5th Edition" codeSystemName="TNM Edition Number" codeSystem="0.0.0.0.12" />
-    <code value="6" displayName="AJCC Staging Manual, 6th Edition" codeSystemName="TNM Edition Number" codeSystem="0.0.0.0.12" />
-    <code value="7" displayName="AJCC Staging Manual, 7th Edition" codeSystemName="TNM Edition Number" codeSystem="0.0.0.0.12" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.19" valueSetName="TNM Pathologic Metastasis">
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="MX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
@@ -1362,24 +1315,23 @@
     <code value="M1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="M1e" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1m" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="M1m1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="MX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.18" valueSetName="TNM Pathologic Node">
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="NX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0I-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0I+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0M-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N0M+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0i-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0i+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0m-" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N0m+" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N1mi" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N0b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N1m" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="N1mi" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
@@ -1388,45 +1340,92 @@
     <code value="N3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="N3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="N4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.21" valueSetName="TNM Pathologic Stage Descriptor">
     <code value="0" displayName="None" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="3" displayName="M (Multiple primary tumors in a single site)" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="9" displayName="Unknown, not stated in patient record" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="1" displayName="E-Extranodal, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="2" displayName="S-Spleen, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="3" displayName="M-Multiple primary tumors in a single site" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="4" displayName="Y-Classification during or after initial multimodality therapy" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="5" displayName="E &amp; S-Extranodal and spleen, lymphomas only" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="6" displayName="M &amp; Y-Multiple primary tumors and initial multimodality therapy" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="9" displayName="Unknown; not stated in patient record" codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+  </system>
+  <system valueSetOid="2.16.840.1.113883.3.520.4.20" valueSetName="TNM Pathologic Stage Group">
+    <code value="0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="0A" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="0is" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="I" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IB2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IS" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="II" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="III" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIC1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IIIC2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IV" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVA" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVA1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVA2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVB" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="IVC" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Occult" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Unknown" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.3.520.4.17" valueSetName="TNM Pathologic Tumor">
+    <code value="Not recorded" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="TX" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Ta" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Tis" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="Tispu" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="Tispd" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Tis" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="Ta" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T3" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1mic" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1mi" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1 mic" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
-    <code value="T0" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1a2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1b2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T1c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T1d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2a1" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2a2" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T2c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T2d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T3c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T3d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4a" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4b" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4c" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="T4d" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
     <code value="T4e" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
+    <code value="Not applicable" displayName="Site specific descriptions prevent listing of text equivalents." codeSystemName="TNM 7. Edition" codeSystem="2.16.840.1.113883.15.6" />
   </system>
   <system valueSetOid="2.16.840.1.113883.1.11.19601" valueSetName="x_ServiceEventPerformer">
     <code value="PRF" displayName="performer" codeSystemName="HL7ParticipationType" codeSystem="2.16.840.1.113883.5.90" />

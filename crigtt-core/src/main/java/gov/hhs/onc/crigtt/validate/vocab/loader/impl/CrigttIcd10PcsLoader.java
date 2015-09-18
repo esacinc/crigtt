@@ -13,8 +13,10 @@ public class CrigttIcd10PcsLoader extends Icd10PcsLoader {
     protected void loadDocument(ODocument doc, Map<String, String> fields) {
         super.loadDocument(doc, fields);
 
-        fields.put(VocabFields.CODE_NAME, CrigttVocabUtils.buildDelimitedIcdCode(fields.get(VocabFields.CODE_NAME)));
+        if (fields.get(VocabFields.CODE_NAME).length() > 3) {
+            fields.put(VocabFields.CODE_NAME, CrigttVocabUtils.buildDelimitedIcdCode(fields.get(VocabFields.CODE_NAME)));
 
-        super.loadDocument(doc, fields);
+            super.loadDocument(doc, fields);
+        }
     }
 }

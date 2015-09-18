@@ -218,7 +218,7 @@
 										<low value="20150321"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="277473004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+									<value xsi:type="CD" code="51092000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>

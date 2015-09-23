@@ -1057,16 +1057,48 @@
     
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-31884</crigtt:id>
-        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
+                <crigtt-validate-vocab:groupingValueSet>
                     <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
                     <crigtt:name>Clinical Substance</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.88.12.80.17</crigtt:id>
+                    <crigtt:name>Medication Clinical General Drug</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
+                    <crigtt:name>Clinical Substance</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113762.1.4.1010.5</crigtt:id>
+                    <crigtt:name>Medication Clinical Brand-specific Drug</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
+                    <crigtt:name>Clinical Substance</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.88.12.80.20</crigtt:id>
+                    <crigtt:name>Unique Ingredient Identifier - Complete Set</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:groupingValueSet>
+                    <crigtt:id>2.16.840.1.113762.1.4.1010.2</crigtt:id>
+                    <crigtt:name>Clinical Substance</crigtt:name>
+                </crigtt-validate-vocab:groupingValueSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113762.1.4.1010.9</crigtt:id>
+                    <crigtt:name>Substance Other Than Clinical Drug</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:translation</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
 
     <crigtt-validate-vocab:vocabAssertion>
@@ -1173,11 +1205,8 @@
 
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1126-202-c</crigtt:id>
-        <!--
-        TODO: Implement searching by code names.
-        -->
-        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
         <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
+        <crigtt-validate-vocab:searchTarget>CODE_NAME</crigtt-validate-vocab:searchTarget>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
@@ -1187,6 +1216,7 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:city</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:codeIdFallback>true</crigtt-validate-vocab:codeIdFallback>
         <crigtt-validate-vocab:codeNameExpression>text()</crigtt-validate-vocab:codeNameExpression>
     </crigtt-validate-vocab:vocabAssertion>
 

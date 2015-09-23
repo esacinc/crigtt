@@ -31,6 +31,8 @@ public interface ValidatorSchematron extends NamedBean, InitializingBean {
 
     public void setExtensionFunctions(ExtensionFunctionDefinition ... extFuncs);
 
+    public Map<String, String> getNamespaces();
+
     public Map<String, ?> getParameters();
 
     public void setParameters(Map<String, ?> params);

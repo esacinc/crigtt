@@ -10,14 +10,12 @@ import gov.hhs.onc.crigtt.validate.vocab.VocabAttributes;
 import gov.hhs.onc.crigtt.validate.vocab.VocabService;
 import gov.hhs.onc.crigtt.validate.vocab.VocabSet;
 import gov.hhs.onc.crigtt.validate.vocab.VocabTarget;
-import gov.hhs.onc.crigtt.xml.CrigttXmlNs;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import javax.xml.XMLConstants;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.s9api.QName;
@@ -28,25 +26,14 @@ import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.value.SequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.keyvalue.MultiKey;
-import org.springframework.beans.factory.InitializingBean;
 
-public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunction implements InitializingBean {
+public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunction {
     @Resource(name = "xpathCompilerCrigtt")
     protected CrigttXpathCompiler xpathCompiler;
-
-    protected IndependentContext xpathContext;
 
     protected AbstractVocabFunction(StructuredQName name) {
         super(name, SequenceType.SINGLE_BOOLEAN, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_INTEGER,
             SequenceType.SINGLE_INTEGER, SequenceType.NODE_SEQUENCE);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        (this.xpathContext = new IndependentContext(this.xpathCompiler.getUnderlyingStaticContext())).declareNamespace(CrigttXmlNs.HL7_CDA_PREFIX,
-            CrigttXmlNs.HL7_CDA_URI);
-        this.xpathContext.declareNamespace(CrigttXmlNs.HL7_SDTC_PREFIX, CrigttXmlNs.HL7_SDTC_URI);
-        this.xpathContext.declareNamespace(CrigttXmlNs.W3C_XML_SCHEMA_INSTANCE_PREFIX, XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     }
 
     @Override
@@ -55,8 +42,8 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
         String patternId = CrigttXpathUtils.getStringValue(args[0]), assertionId = CrigttXpathUtils.getStringValue(args[1]), lineNum =
             Long.toString(CrigttXpathUtils.getAtomicValue(args[2]).getLongValue()), columnNum =
             Long.toString(CrigttXpathUtils.getAtomicValue(args[3]).getLongValue()), valueSetId, codeSystemId, codeId, codeName;
-        VocabService service =
-            ((ValidatorSchematron) contextData.get(CrigttContextDataNames.VALIDATE_SCHEMATRON_NAME)).getActiveVocabServices().get(assertionId);
+        ValidatorSchematron schematron = ((ValidatorSchematron) contextData.get(CrigttContextDataNames.VALIDATE_SCHEMATRON_NAME));
+        VocabService service = schematron.getActiveVocabServices().get(assertionId);
         VocabAssertion assertion = service.getAssertions().get(assertionId);
 
         List<VocabSet> expectedVocabSets = assertion.getExpectedVocabSets();
@@ -81,20 +68,24 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
             return new XdmAtomicValue(true);
         }
 
+        IndependentContext xpathContext = new IndependentContext(this.xpathCompiler.getUnderlyingStaticContext());
+
+        schematron.getNamespaces().forEach(xpathContext::declareNamespace);
+
         VocabSet vocabSet =
             new VocabSetImpl(null, new ValueSetImpl((valueSetId =
-                this.xpathCompiler.evaluateString(assertion.getValueSetIdExpression(), this.xpathContext, vocabContextNode)),
-                this.xpathCompiler.evaluateString(assertion.getValueSetNameExpression(), this.xpathContext, vocabContextNode),
-                this.xpathCompiler.evaluateString(assertion.getValueSetVersionExpression(), this.xpathContext, vocabContextNode)), new CodeSystemImpl(
-                (codeSystemId = this.xpathCompiler.evaluateString(assertion.getCodeSystemIdExpression(), this.xpathContext, vocabContextNode)),
-                this.xpathCompiler.evaluateString(assertion.getCodeSystemNameExpression(), this.xpathContext, vocabContextNode),
-                this.xpathCompiler.evaluateString(assertion.getCodeSystemVersionExpression(), this.xpathContext, vocabContextNode)));
+                this.xpathCompiler.evaluateString(assertion.getValueSetIdExpression(), xpathContext, vocabContextNode)), this.xpathCompiler.evaluateString(
+                assertion.getValueSetNameExpression(), xpathContext, vocabContextNode), this.xpathCompiler.evaluateString(
+                assertion.getValueSetVersionExpression(), xpathContext, vocabContextNode)), new CodeSystemImpl((codeSystemId =
+                this.xpathCompiler.evaluateString(assertion.getCodeSystemIdExpression(), xpathContext, vocabContextNode)), this.xpathCompiler.evaluateString(
+                assertion.getCodeSystemNameExpression(), xpathContext, vocabContextNode), this.xpathCompiler.evaluateString(
+                assertion.getCodeSystemVersionExpression(), xpathContext, vocabContextNode)));
 
         contextData.put(new MultiKey<>(patternId, assertionId, lineNum, columnNum, CrigttContextDataNames.VALIDATE_VOCAB_VOCAB_SET_NAME), vocabSet);
 
         Code code =
-            new CodeImpl((codeId = this.xpathCompiler.evaluateString(assertion.getCodeIdExpression(), this.xpathContext, vocabContextNode)), (codeName =
-                this.xpathCompiler.evaluateString(assertion.getCodeNameExpression(), this.xpathContext, vocabContextNode)));
+            new CodeImpl((codeId = this.xpathCompiler.evaluateString(assertion.getCodeIdExpression(), xpathContext, vocabContextNode)), (codeName =
+                this.xpathCompiler.evaluateString(assertion.getCodeNameExpression(), xpathContext, vocabContextNode)));
 
         contextData.put(new MultiKey<>(patternId, assertionId, lineNum, columnNum, CrigttContextDataNames.VALIDATE_VOCAB_CODE_NAME), code);
 
@@ -105,16 +96,15 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
         }
 
         boolean status = true, valueSetIdAvailable = (valueSetId != null), valueSetFallback = assertion.getValueSetFallback(), codeSystemIdAvailable =
-            (codeSystemId != null), codeSystemFallback = assertion.getCodeSystemFallback(), codeIdAvailable = (codeId != null), codeNameAvailable =
-            (codeName != null);
+            (codeSystemId != null), codeSystemFallback = assertion.getCodeSystemFallback(), codeIdAvailable = (codeId != null), codeIdFallback =
+            assertion.getCodeIdFallback(), codeNameAvailable = (codeName != null);
+        VocabTarget target = assertion.getTarget(), searchTarget = assertion.getSearchTarget();
 
-        if (codeId == null) {
+        if (!codeIdAvailable && !codeIdFallback) {
             messages.add("Code was not specified.");
 
             status = false;
         }
-
-        VocabTarget target = assertion.getTarget();
 
         if ((target == VocabTarget.CODE_NAME) && !codeNameAvailable) {
             messages.add("Code display name was not specified.");
@@ -126,7 +116,8 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
 
         // noinspection ConstantConditions
         if ((valueSetIdAvailable || valueSetFallback || codeSystemIdAvailable || codeSystemFallback)
-            && codeIdAvailable
+            && (codeIdAvailable || codeIdFallback)
+            && ((searchTarget != VocabTarget.CODE_NAME) || codeNameAvailable)
             && !(filteredExpectedVocabSets =
                 expectedVocabSets
                     .stream()
@@ -152,12 +143,22 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
 
                 if (valueSetIdExpected) {
                     if ((valueSetIdSearch = (valueSetIdAvailable ? valueSetId : (valueSetFallback ? filteredExpectedVocabSet.getValueSet().getId() : null))) != null) {
-                        foundCodes =
-                            ((codeSystemIdSearch != null) ? service.findCodesByValueSet(valueSetIdSearch, codeSystemIdSearch, codeId) : service
-                                .findCodesByValueSet(valueSetIdSearch, codeId));
+                        if (searchTarget == VocabTarget.CODE_ID) {
+                            foundCodes =
+                                ((codeSystemIdSearch != null) ? service.findCodesByValueSet(valueSetIdSearch, codeSystemIdSearch, codeId) : service
+                                    .findCodesByValueSet(valueSetIdSearch, codeId));
+                        } else {
+                            foundCodes =
+                                ((codeSystemIdSearch != null) ? service.findNamedCodesByValueSet(valueSetIdSearch, codeSystemIdSearch, codeName) : service
+                                    .findNamedCodesByValueSet(valueSetIdSearch, codeName));
+                        }
                     }
                 } else if ((valueSetId == null) && (codeSystemIdSearch != null)) {
-                    foundCodes = service.findCodesByCodeSystem(codeSystemIdSearch, codeId);
+                    if (searchTarget == VocabTarget.CODE_ID) {
+                        foundCodes = service.findCodesByCodeSystem(codeSystemIdSearch, codeId);
+                    } else {
+                        foundCodes = service.findNamedCodesByCodeSystem(codeSystemIdSearch, codeName);
+                    }
                 }
 
                 if (!CollectionUtils.isEmpty(foundCodes)) {
@@ -171,11 +172,19 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
 
                     status = false;
                 }
-            } else if (codeNameAvailable && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
-                messages.add(String.format("Code display name did not match any of %d possible values.", allFoundCodes.size()));
+            } else if (((searchTarget == VocabTarget.CODE_NAME) && allFoundCodes.isEmpty())
+                || !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
+                messages.add("Invalid code display name.");
 
                 status = false;
             }
+
+            if ((target != VocabTarget.CODE_NAME) && codeNameAvailable && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
+                messages.add("Invalid code display name.");
+            }
+
+            contextData.put(new MultiKey<>(patternId, assertionId, lineNum, columnNum, CrigttContextDataNames.VALIDATE_VOCAB_CODES_EXPECTED_NAME),
+                allFoundCodes);
 
             if (valueSetIdRequired && !valueSetIdAvailable && !valueSetFallback) {
                 messages.add("Value set OID was not specified.");

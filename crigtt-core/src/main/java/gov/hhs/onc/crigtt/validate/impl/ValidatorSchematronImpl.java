@@ -7,6 +7,7 @@ import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.schematron.Active;
 import gov.hhs.onc.crigtt.schematron.Assertion;
 import gov.hhs.onc.crigtt.schematron.Name;
+import gov.hhs.onc.crigtt.schematron.Namespace;
 import gov.hhs.onc.crigtt.schematron.Pattern;
 import gov.hhs.onc.crigtt.schematron.Phase;
 import gov.hhs.onc.crigtt.schematron.Rule;
@@ -86,6 +87,7 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     private Map<String, ValidatorRule> activeRules;
     private Map<String, ValidatorAssertion> activeAssertions;
     private Map<String, VocabService> activeVocabServices;
+    private Map<String, String> namespaces;
     private CrigttXsltExecutable schemaXsltExec;
 
     @Override
@@ -167,6 +169,9 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
 
             this.activeSchema.setName(this.name);
         }
+
+        this.namespaces =
+            CrigttStreamUtils.toMap(Namespace::getPrefix, Namespace::getUri, CrigttStreamUtils.instances(schemaContent.stream(), Namespace.class));
 
         Map<String, Phase> phases = mapComponents(schemaContent, Phase.class);
         int numPhases = phases.size();
@@ -314,6 +319,11 @@ public class ValidatorSchematronImpl extends AbstractNamedBean implements Valida
     @Override
     public void setExtensionFunctions(ExtensionFunctionDefinition ... extFuncs) {
         this.extFuncs = extFuncs;
+    }
+
+    @Override
+    public Map<String, String> getNamespaces() {
+        return this.namespaces;
     }
 
     @Override

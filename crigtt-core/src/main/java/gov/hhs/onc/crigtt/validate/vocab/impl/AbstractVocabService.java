@@ -35,6 +35,11 @@ public abstract class AbstractVocabService implements VocabService {
     }
 
     @Override
+    public List<Code> findNamedCodesByCodeSystem(String codeSystemId, String codeName) {
+        return this.findNamedCodesByCodeSystem(false, codeSystemId, codeName);
+    }
+
+    @Override
     @SuppressWarnings({ CompilerWarnings.UNCHECKED })
     public void afterPropertiesSet() throws Exception {
         this.assertions =

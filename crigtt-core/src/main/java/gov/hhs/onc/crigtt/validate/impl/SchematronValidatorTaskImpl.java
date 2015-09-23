@@ -136,6 +136,8 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
                         (columnNumStr = Integer.toString(columnNum)), CrigttContextDataNames.VALIDATE_VOCAB_VOCAB_SETS_EXPECTED_NAME))));
                     event.setVocabSet(((VocabSet) contextData.get(new MultiKey<>(patternId, assertionId, lineNumStr, columnNumStr,
                         CrigttContextDataNames.VALIDATE_VOCAB_VOCAB_SET_NAME))));
+                    event.setExpectedCodes(((List<Code>) contextData.get(new MultiKey<>(patternId, assertionId, lineNumStr,
+                        CrigttContextDataNames.VALIDATE_VOCAB_CODES_EXPECTED_NAME))));
                     event.setCode(((Code) contextData.get(new MultiKey<>(patternId, assertionId, lineNumStr, columnNumStr,
                         CrigttContextDataNames.VALIDATE_VOCAB_CODE_NAME))));
                     event.setMessages(((List<String>) contextData.get(new MultiKey<>(patternId, assertionId, lineNumStr, columnNumStr,

@@ -15,7 +15,7 @@ public final class CrigttXpathUtils {
     public final static String EXPR_DELIM = "/";
 
     public final static String QUOTE = "'";
-    
+
     public final static String ATTR_PREFIX = "@";
     public final static String CALL_PREFIX = "(";
     public final static String PREDICATE_PREFIX = "[";

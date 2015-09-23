@@ -2,50 +2,41 @@ package gov.hhs.onc.crigtt.validate.vocab.loader.impl;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import gov.hhs.onc.crigtt.utils.CrigttStringUtils;
 import gov.hhs.onc.crigtt.validate.vocab.VocabFields;
 import gov.hhs.onc.crigtt.validate.vocab.model.impl.IcdO3Model;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.sitenv.vocabularies.loader.VocabularyLoader;
-import org.sitenv.vocabularies.repository.VocabularyRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.sitenv.vocabularies.loader.DelimitedTextVocabularyLoader;
 import org.springframework.stereotype.Component;
 
 @Component("codeLoaderIcdO3")
-public class IcdO3Loader extends VocabularyLoader<IcdO3Model> {
+public class IcdO3Loader extends DelimitedTextVocabularyLoader<IcdO3Model> {
+    private final static String TOPOGRAPHY_AXIS_CODE_ID_PREFIX = "C";
+
+    private final static String USED_TOPOGRAPHY_CODE_LEVEL_STR = Integer.toString(4);
+
     public IcdO3Loader() {
-        super(IcdO3Model.class);
+        super(IcdO3Model.class, 2, 4, 1);
     }
 
     @Override
-    protected int loadFile(VocabularyRepository vocabRepo, OObjectDatabaseTx dbConnection, ODocument doc, Map<String, String> baseFields, File file)
-        throws Exception {
-        int fileCount = 0;
+    protected boolean processLine(OObjectDatabaseTx dbConnection, ODocument doc, Map<String, String> baseFields, Map<String, String> fields, int lineIndex,
+        String line) {
+        String[] lineParts = StringUtils.splitPreserveAllTokens(line, CrigttStringUtils.TAB, 3);
 
-        try (HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file))) {
-            HSSFSheet sheet = workbook.getSheetAt(0);
-            HSSFRow row;
-            Map<String, String> fields;
-
-            for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-                row = sheet.getRow(rowIndex);
-
-                fields = new LinkedHashMap<>();
-                fields.put("code", row.getCell(4).getStringCellValue());
-                fields.put("displayName", row.getCell(5).getStringCellValue());
-                fields.putAll(baseFields);
-
-                this.loadDocument(doc, fields);
-
-                fileCount++;
-            }
+        if ((lineParts.length != 3) || (StringUtils.startsWith(line, TOPOGRAPHY_AXIS_CODE_ID_PREFIX) && !USED_TOPOGRAPHY_CODE_LEVEL_STR.equals(lineParts[1]))) {
+            return false;
         }
 
-        return fileCount;
+        fields.clear();
+        fields.put(VocabFields.CODE_NAME, CrigttStringUtils.unquote(lineParts[0]));
+        fields.put(VocabFields.DISPLAY_NAME_NAME, CrigttStringUtils.unquote(lineParts[2]));
+        fields.putAll(this.buildBaseFields());
+
+        this.loadDocument(dbConnection, doc, fields);
+
+        return true;
     }
 
     @Override

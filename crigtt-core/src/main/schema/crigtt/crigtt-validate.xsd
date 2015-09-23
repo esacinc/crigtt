@@ -125,6 +125,7 @@
             <xsd:element name="assertion" type="crigtt-validate:Assertion" minOccurs="0"/>
             <xsd:element name="expectedVocabSets" type="crigtt-validate-vocab:VocabSets" minOccurs="0"/>
             <xsd:element name="vocabSet" type="crigtt-validate-vocab:VocabSet" minOccurs="0"/>
+            <xsd:element name="expectedCodes" type="crigtt-validate-vocab:Codes" minOccurs="0"/>
             <xsd:element name="code" type="crigtt-validate-vocab:Code" minOccurs="0"/>
             <xsd:element name="description" type="xsd:string"/>
             <xsd:element name="messages" type="crigtt-validate:Messages" minOccurs="0"/>

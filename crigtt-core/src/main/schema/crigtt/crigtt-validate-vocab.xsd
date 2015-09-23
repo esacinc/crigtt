@@ -58,12 +58,19 @@
         </xsd:sequence>
     </xsd:complexType>
     
+    <xsd:complexType name="Codes">
+        <xsd:sequence>
+            <xsd:element name="code" type="crigtt-validate-vocab:Code" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
     <xsd:complexType name="VocabAssertion">
         <xsd:sequence>
             <xsd:group ref="crigtt:IdElements"/>
             <xsd:element name="active" type="xsd:boolean" minOccurs="0" default="true"/>
             <xsd:element name="optional" type="xsd:boolean" minOccurs="0" default="false"/>
             <xsd:element name="target" type="crigtt-validate-vocab:VocabTarget" minOccurs="0" default="CODE_ID"/>
+            <xsd:element name="searchTarget" type="crigtt-validate-vocab:VocabTarget" minOccurs="0" default="CODE_ID"/>
             <xsd:element name="expectedVocabSets" type="crigtt-validate-vocab:VocabSets" minOccurs="0"/>
             <xsd:element name="vocabContextExpression" type="xsd:string" minOccurs="0" default="."/>
             <xsd:element name="groupingValueSetFallback" type="xsd:boolean" minOccurs="0" default="true"/>
@@ -78,7 +85,7 @@
             <xsd:element name="codeSystemIdExpression" type="xsd:string" minOccurs="0" default="@codeSystem"/>
             <xsd:element name="codeSystemNameExpression" type="xsd:string" minOccurs="0" default="@codeSystemName"/>
             <xsd:element name="codeSystemVersionExpression" type="xsd:string" minOccurs="0" default="@codeSystemVersion"/>
-            <xsd:element name="searchByCodeName" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="codeIdFallback" type="xsd:boolean" minOccurs="0" default="false"/>
             <xsd:element name="codeIdExpression" type="xsd:string" minOccurs="0" default="@code"/>
             <xsd:element name="codeNameExpression" type="xsd:string" minOccurs="0" default="@displayName"/>
             <xsd:element name="testExpressionOverride" type="xsd:string" minOccurs="0"/>

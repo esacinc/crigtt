@@ -82,22 +82,12 @@
         p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-dynamic.xml">
         <beans:property name="codeLoaders">
             <beans:map>
-                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD9CM_DIAGNOSIS_CODE_SYSTEM_TYPE }"
-                    value-ref="codeLoaderIcd9CmDx"/>
-                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD10CM_CODE_SYSTEM_TYPE }" value-ref="codeLoaderIcd10Cm"/>
-                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).ICD10PCS_CODE_SYSTEM_TYPE }" value-ref="codeLoaderIcd10Pcs"/>
                 <beans:entry key="#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.IcdO3Model).TYPE }" value-ref="codeLoaderIcdO3"/>
-                <beans:entry key="#{ T(org.sitenv.vocabularies.constants.VocabularyConstants).RXNORM_CODE_SYSTEM_TYPE }" value-ref="codeLoaderRxNorm"/>
             </beans:map>
         </beans:property>
         <beans:property name="codeModelDefinitions">
             <beans:set>
                 <beans:value>#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.IcdO3Model).DEF }</beans:value>
-            </beans:set>
-        </beans:property>
-        <beans:property name="valueSetModelDefinitions">
-            <beans:set>
-                <beans:value>#{ T(gov.hhs.onc.crigtt.validate.vocab.model.impl.CrigttValueSetCodeModel).DEF }</beans:value>
             </beans:set>
         </beans:property>
     </beans:bean>

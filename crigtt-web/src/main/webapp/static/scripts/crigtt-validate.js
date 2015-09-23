@@ -1,5 +1,20 @@
 (function ($) {
     //====================================================================================================
+    // CLASS: VALIDATOR LEVELS
+    //====================================================================================================
+    $.extend($.crigtt.validate.ValidatorLevel.INFO.value, {
+        "displayName": "Information"
+    });
+    
+    $.extend($.crigtt.validate.ValidatorLevel.WARN.value, {
+        "displayName": "Warning"
+    });
+    
+    $.extend($.crigtt.validate.ValidatorLevel.ERROR.value, {
+        "displayName": "Error"
+    });
+    
+    //====================================================================================================
     // CLASS: VALIDATOR
     //====================================================================================================
     $.extend($.crigtt.validate, {
@@ -85,6 +100,26 @@
                     
                     return ((sortKeyValue == String(true)) ? sortKeyElem.text() : String.EMPTY);
                 },
+                "textSorter": function (sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem) {
+                    if (sortColumnIndex != 0) {
+                        return $.tablesorter.sortNatural(sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem);
+                    }
+                    
+                    var passValue1 = (sortKeyValue1 == "Pass"), passValue2 = (sortKeyValue2 == "Pass");
+                    
+                    if (passValue1 && passValue2) {
+                        return 0;
+                    } else if (passValue1) {
+                        return 1;
+                    } else if (passValue2) {
+                        return -1;
+                    } else {
+                        var levels = $.keys($.crigtt.validate.ValidatorLevel);
+                        levels.reverse();
+                        
+                        return $.tablesorter.sortNumeric(levels.indexOf(sortKeyValue1), levels.indexOf(sortKeyValue2));
+                    }
+                },
                 "widgetOptions": {
                     "filter_formatter": panelEventsTableFilterFormatters,
                     "stickyHeaders_attachTo": panelEventsTabPaneElem
@@ -105,7 +140,7 @@
                 
                 panelEventsTableElems.find("tbody tr").each(function (panelEventsTableRowIndex, panelEventsTableRowElem) {
                     var eventStatus = ((panelEventsTableRowElem = $(panelEventsTableRowElem)).attr("data-status") == String(true));
-                    var eventLevel = panelEventsTableRowElem.find("td span").eq(2).text();
+                    var eventLevel = panelEventsTableRowElem.attr("data-level");
                     
                     numEvents++;
                     
@@ -122,11 +157,15 @@
                     }
                 });
                 
-                var eventTotals = [ [ numFilteredEvents, numEvents ] ];
+                var eventTotals = [];
                 
                 $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
                     eventTotals.push([ numFilteredLevelEvents[levelName], numLevelEvents[levelName] ]);
                 });
+                
+                eventTotals.push([ numFilteredEvents, numEvents ]);
+                
+                eventTotals.reverse();
                 
                 $.each(eventTotals, function (panelEventTotalSpanIndex, eventTotals) {
                     panelEventTotalsListElems.each(function (panelEventTotalsListIndex, panelEventTotalsListElem) {

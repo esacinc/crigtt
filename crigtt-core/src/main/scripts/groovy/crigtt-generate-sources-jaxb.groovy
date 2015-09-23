@@ -249,13 +249,15 @@ def pkgNames = this.tokenizeMap(bindingVars["pkgNames"])
 def implPkgNames = pkgNames.collectEntries{ [ it.key, (it.value + IMPL_PKG_NAME_SUFFIX) ] }
 
 implPkgNames.each{
-    def xmlSchemaAnno = codeModel._package(it.value).annotations().find{ it.annotationClass.fullName() == XmlSchema.class.name }
+    def implPkg = codeModel._package(it.value)
+    def xmlSchemaAnno = implPkg.annotations().find{ it.annotationClass.fullName() == XmlSchema.class.name }
     
     if (xmlSchemaAnno == null) {
-        return
+        xmlSchemaAnno = implPkg.annotate(XmlSchema.class)
+        xmlSchemaAnno.param("elementFormDefault", codeModel.directClass("javax.xml.bind.annotation.XmlNsForm").staticRef("QUALIFIED"))
     }
     
-    def xmlSchemaAnnoNsParam = xmlSchemaAnno.param("namespace", xmlNsUriStaticRefs[it.key]).paramArray("xmlns").annotate(XmlNs.class)
+    xmlSchemaAnno.param("namespace", xmlNsUriStaticRefs[it.key]).paramArray("xmlns").annotate(XmlNs.class)
         .param("prefix", xmlNsPrefixStaticRefs[it.key]).param("namespaceURI", xmlNsUriStaticRefs[it.key])
 }
 

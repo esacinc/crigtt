@@ -34,6 +34,7 @@
     </xsl:template>
     
     <xsl:template name="propValue">
+        <xsl:param name="classNames" select="$EMPTY"/>
         <xsl:param name="containerTagName" select="'span'"/>
         <xsl:param name="normalizeWhitespace" select="true()"/>
         <xsl:param name="sortKey" select="true()"/>
@@ -41,6 +42,9 @@
         <xsl:choose>
             <xsl:when test="exists($value) and not(crigtt-validate:is-blank($value))">
                 <xsl:element name="{$containerTagName}">
+                    <xsl:if test="not(crigtt-validate:is-blank($classNames))">
+                        <xsl:attribute name="class" select="$classNames"/>
+                    </xsl:if>
                     <xsl:attribute name="data-normalize-whitespace">
                         <xsl:value-of select="$normalizeWhitespace"/>
                     </xsl:attribute>
@@ -133,101 +137,45 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template name="vocabSetComponents">
-        <xsl:param name="expectedElems"/>
-        <xsl:param name="actualElem"/>
+    <xsl:template name="vocabSet">
+        <xsl:param name="elem"/>
+        <xsl:param name="idSortKey" select="true()"/>
         <xsl:choose>
-            <xsl:when test="exists($actualElem)">
+            <xsl:when test="exists($elem)">
+                <xsl:variable name="groupingValueSetAvailable" select="exists($elem/crigtt-validate-vocab:groupingValueSet)"/>
+                <xsl:variable name="valueSetAvailable" select="exists($elem/crigtt-validate-vocab:valueSet)"/>
+                <xsl:variable name="codeSystemAvailable" select="exists($elem/crigtt-validate-vocab:codeSystem)"/>
                 <ul>
-                    <li>
-                        <strong>Actual</strong>
-                        <ul>
-                            <li>
-                                <strong>Grouping Value Set</strong>
-                                <xsl:choose>
-                                    <xsl:when test="exists($actualElem/crigtt-validate-vocab:groupingValueSet)">
-                                        <xsl:call-template name="component">
-                                            <xsl:with-param name="elem" select="$actualElem/crigtt-validate-vocab:groupingValueSet"/>
-                                            <xsl:with-param name="versioned" select="true()"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                </xsl:choose>
-                            </li>
-                            <li>
-                                <strong>Value Set</strong>
-                                <xsl:choose>
-                                    <xsl:when test="exists($actualElem/crigtt-validate-vocab:valueSet)">
-                                        <xsl:call-template name="component">
-                                            <xsl:with-param name="elem" select="$actualElem/crigtt-validate-vocab:valueSet"/>
-                                            <xsl:with-param name="idSortKey" select="false()"/>
-                                            <xsl:with-param name="versioned" select="true()"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                </xsl:choose>
-                            </li>
-                            <li>
-                                <strong>Code System</strong>
-                                <xsl:choose>
-                                    <xsl:when test="exists($actualElem/crigtt-validate-vocab:codeSystem)">
-                                        <xsl:call-template name="component">
-                                            <xsl:with-param name="elem" select="$actualElem/crigtt-validate-vocab:codeSystem"/>
-                                            <xsl:with-param name="idSortKey" select="false()"/>
-                                            <xsl:with-param name="versioned" select="true()"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                </xsl:choose>
-                            </li>
-                        </ul>
-                    </li>
-                    <xsl:for-each select="$expectedElems">
+                    <xsl:if test="$groupingValueSetAvailable">
                         <li>
-                            <strong>Expected #<xsl:value-of select="position()"/></strong>
-                            <ul>
-                                <li>
-                                    <strong>Grouping Value Set</strong>
-                                    <xsl:choose>
-                                        <xsl:when test="exists(current()/crigtt-validate-vocab:groupingValueSet)">
-                                            <xsl:call-template name="component">
-                                                <xsl:with-param name="elem" select="current()/crigtt-validate-vocab:groupingValueSet"/>
-                                                <xsl:with-param name="idSortKey" select="false()"/>
-                                                <xsl:with-param name="versioned" select="true()"/>
-                                            </xsl:call-template>
-                                        </xsl:when>
-                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                    </xsl:choose>
-                                </li>
-                                <li>
-                                    <strong>Value Set</strong>
-                                    <xsl:choose>
-                                        <xsl:when test="exists(current()/crigtt-validate-vocab:valueSet)">
-                                            <xsl:call-template name="component">
-                                                <xsl:with-param name="elem" select="current()/crigtt-validate-vocab:valueSet"/>
-                                                <xsl:with-param name="idSortKey" select="false()"/>
-                                                <xsl:with-param name="versioned" select="true()"/>
-                                            </xsl:call-template>
-                                        </xsl:when>
-                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                    </xsl:choose>
-                                </li>
-                                <li>
-                                    <strong>Code System</strong>
-                                    <xsl:choose>
-                                        <xsl:when test="exists(current()/crigtt-validate-vocab:codeSystem)">
-                                            <xsl:call-template name="component">
-                                                <xsl:with-param name="elem" select="current()/crigtt-validate-vocab:codeSystem"/>
-                                                <xsl:with-param name="idSortKey" select="false()"/>
-                                                <xsl:with-param name="versioned" select="true()"/>
-                                            </xsl:call-template>
-                                        </xsl:when>
-                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                    </xsl:choose>
-                                </li>
-                            </ul>
+                            <strong>Grouping Value Set</strong>
+                            <xsl:call-template name="component">
+                                <xsl:with-param name="elem" select="$elem/crigtt-validate-vocab:groupingValueSet"/>
+                                <xsl:with-param name="idSortKey" select="$idSortKey"/>
+                                <xsl:with-param name="versioned" select="true()"/>
+                            </xsl:call-template>
                         </li>
-                    </xsl:for-each>
+                    </xsl:if>
+                    <xsl:if test="$valueSetAvailable">
+                        <li>
+                            <strong>Value Set</strong>
+                            <xsl:call-template name="component">
+                                <xsl:with-param name="elem" select="$elem/crigtt-validate-vocab:valueSet"/>
+                                <xsl:with-param name="idSortKey" select="$idSortKey and not($groupingValueSetAvailable)"/>
+                                <xsl:with-param name="versioned" select="true()"/>
+                            </xsl:call-template>
+                        </li>
+                    </xsl:if>
+                    <xsl:if test="$codeSystemAvailable">
+                        <li>
+                            <strong>Code System</strong>
+                            <xsl:call-template name="component">
+                                <xsl:with-param name="elem" select="$elem/crigtt-validate-vocab:codeSystem"/>
+                                <xsl:with-param name="idSortKey" select="$idSortKey and not($groupingValueSetAvailable) and not($valueSetAvailable)"/>
+                                <xsl:with-param name="versioned" select="true()"/>
+                            </xsl:call-template>
+                        </li>
+                    </xsl:if>
                 </ul>
             </xsl:when>
             <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
@@ -457,51 +405,58 @@
                                             </li>
                                             <li>
                                                 <xsl:call-template name="prop">
-                                                    <xsl:with-param name="labelClassNames" select="'text-info'"/>
-                                                    <xsl:with-param name="labelIconName" select="'info-circle'"/>
-                                                    <xsl:with-param name="name" select="'Information'"/>
-                                                    <xsl:with-param name="value" select="concat($numInfoEvents, ' of ', $numInfoEvents, ' (0 Filtered)')"/>
+                                                    <xsl:with-param name="labelClassNames" select="'text-danger'"/>
+                                                    <xsl:with-param name="labelIconName" select="'times-circle'"/>
+                                                    <xsl:with-param name="name" select="'Error Failures'"/>
+                                                    <xsl:with-param name="value" select="concat($numErrorEvents, ' of ', $numErrorEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                             <li>
                                                 <xsl:call-template name="prop">
                                                     <xsl:with-param name="labelClassNames" select="'text-warning'"/>
                                                     <xsl:with-param name="labelIconName" select="'exclamation-circle'"/>
-                                                    <xsl:with-param name="name" select="'Warnings'"/>
+                                                    <xsl:with-param name="name" select="'Warning Failures'"/>
                                                     <xsl:with-param name="value" select="concat($numWarnEvents, ' of ', $numWarnEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                             <li>
                                                 <xsl:call-template name="prop">
-                                                    <xsl:with-param name="labelClassNames" select="'text-danger'"/>
-                                                    <xsl:with-param name="labelIconName" select="'times-circle'"/>
-                                                    <xsl:with-param name="name" select="'Errors'"/>
-                                                    <xsl:with-param name="value" select="concat($numErrorEvents, ' of ', $numErrorEvents, ' (0 Filtered)')"/>
+                                                    <xsl:with-param name="labelClassNames" select="'text-info'"/>
+                                                    <xsl:with-param name="labelIconName" select="'info-circle'"/>
+                                                    <xsl:with-param name="name" select="'Information Failures'"/>
+                                                    <xsl:with-param name="value" select="concat($numInfoEvents, ' of ', $numInfoEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
                                         </ul>
                                     </caption>
                                     <thead>
                                         <tr>
-                                            <th class="filter-false">ID</th>
                                             <th>Status</th>
-                                            <th>Level</th>
                                             <th data-filter-label="Line #">Location</th>
                                             <th class="filter-false">Expression</th>
-                                            <th data-filter-label="ID">Schema</th>
+                                            <th class="filter-false">Description</th>
+                                            <th class="filter-false">Messages</th>
+                                            <th data-filter-label="ID">Vocabulary Sets</th>
+                                            <th data-filter-label="ID">Code</th>
                                             <th data-filter-label="ID">Pattern</th>
                                             <th data-filter-label="ID">Rule</th>
                                             <th data-filter-label="ID">Assertion</th>
-                                            <th data-filter-label="ID">Vocabulary Sets</th>
-                                            <th data-filter-label="ID">Code</th>
-                                            <th class="filter-false">Description</th>
-                                            <th class="filter-false">Messages</th>
+                                            <th class="filter-false">ID</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <xsl:for-each select="crigtt-validate:results/crigtt-validate:events/crigtt-validate:event">
+                                            <xsl:variable name="eventStatus" select="xsd:boolean(crigtt-validate:status/text())"/>
                                             <xsl:variable name="eventLevel" select="crigtt-validate:level/text()"/>
                                             <xsl:variable name="infoEventLevel" select="$eventLevel = 'INFO'"/>
+                                            <xsl:variable name="eventLevelDisplayName">
+                                                <xsl:choose>
+                                                    <xsl:when test="$infoEventLevel">Information</xsl:when>
+                                                    <xsl:when test="$eventLevel = 'WARN'">Warning</xsl:when>
+                                                    <xsl:when test="$eventLevel = 'ERROR'">Error</xsl:when>
+                                                    <xsl:otherwise>default</xsl:otherwise>
+                                                </xsl:choose>
+                                            </xsl:variable>
                                             <xsl:variable name="eventLevelClassName">
                                                 <xsl:choose>
                                                     <xsl:when test="$infoEventLevel">info</xsl:when>
@@ -510,35 +465,29 @@
                                                     <xsl:otherwise>default</xsl:otherwise>
                                                 </xsl:choose>
                                             </xsl:variable>
-                                            <xsl:variable name="eventStatus" select="xsd:boolean(crigtt-validate:status/text())"/>
-                                            <xsl:variable name="eventClassName">
+                                            <xsl:variable name="eventStatusClassName">
                                                 <xsl:choose>
-                                                    <xsl:when test="$eventStatus and not($infoEventLevel)">success</xsl:when>
+                                                    <xsl:when test="$eventStatus">success</xsl:when>
                                                     <xsl:otherwise>
                                                         <xsl:value-of select="$eventLevelClassName"/>
                                                     </xsl:otherwise>
                                                 </xsl:choose>
                                             </xsl:variable>
-                                            <tr class="{$eventClassName}" data-status="{$eventStatus}">
+                                            <tr class="{$eventStatusClassName}" data-level="{$eventLevel}" data-status="{$eventStatus}">
                                                 <td>
                                                     <xsl:call-template name="propValue">
-                                                        <xsl:with-param name="value" select="crigtt:id/text()"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="propValue">
+                                                        <xsl:with-param name="classNames" select="concat('text-', $eventStatusClassName)"/>
+                                                        <xsl:with-param name="sortKey" select="$eventStatus"/>
                                                         <xsl:with-param name="value">
                                                             <xsl:choose>
                                                                 <xsl:when test="$eventStatus">Pass</xsl:when>
-                                                                <xsl:otherwise>Fail</xsl:otherwise>
+                                                                <xsl:otherwise><xsl:value-of select="$eventLevelDisplayName"/> Failure</xsl:otherwise>
                                                             </xsl:choose>
                                                         </xsl:with-param>
                                                     </xsl:call-template>
-                                                </td>
-                                                <td class="text-{$eventLevelClassName}">
-                                                    <xsl:call-template name="propValue">
-                                                        <xsl:with-param name="value" select="crigtt-validate:level/text()"/>
-                                                    </xsl:call-template>
+                                                    <xsl:if test="not($eventStatus)">
+                                                        <span class="hidden" data-sort-key="true"><xsl:value-of select="$eventLevel"/></span>
+                                                    </xsl:if>
                                                 </td>
                                                 <td>
                                                     <xsl:choose>
@@ -603,18 +552,6 @@
                                                         </li>
                                                         <li>
                                                             <xsl:call-template name="prop">
-                                                                <xsl:with-param name="name" select="'Test Expression'"/>
-                                                                <xsl:with-param name="value">
-                                                                    <xsl:if test="exists(crigtt-validate:testExpression)">
-                                                                        <xsl:value-of select="crigtt-validate:testExpression/text()"/>
-                                                                    </xsl:if>
-                                                                </xsl:with-param>
-                                                                <xsl:with-param name="valueContainerTagName" select="'pre'"/>
-                                                                <xsl:with-param name="valueNormalizeWhitespace" select="false()"/>
-                                                            </xsl:call-template>
-                                                        </li>
-                                                        <li>
-                                                            <xsl:call-template name="prop">
                                                                 <xsl:with-param name="name" select="'Runtime Test Expression'"/>
                                                                 <xsl:with-param name="value">
                                                                     <xsl:if test="exists(crigtt-validate:runtimeTestExpression)">
@@ -626,38 +563,6 @@
                                                             </xsl:call-template>
                                                         </li>
                                                     </ul>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="crigtt-validate:schema"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="crigtt-validate:pattern"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="crigtt-validate:rule"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="crigtt-validate:assertion"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="vocabSetComponents">
-                                                        <xsl:with-param name="actualElem" select="crigtt-validate:vocabSet"/>
-                                                        <xsl:with-param name="expectedElems"
-                                                            select="crigtt-validate:expectedVocabSets/crigtt-validate:expectedVocabSet"/>
-                                                    </xsl:call-template>
-                                                </td>
-                                                <td>
-                                                    <xsl:call-template name="component">
-                                                        <xsl:with-param name="elem" select="crigtt-validate:code"/>
-                                                    </xsl:call-template>
                                                 </td>
                                                 <td>
                                                     <xsl:call-template name="propValue">
@@ -687,6 +592,74 @@
                                                         </xsl:when>
                                                         <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
                                                     </xsl:choose>
+                                                </td>
+                                                <td>
+                                                    <xsl:choose>
+                                                        <xsl:when test="exists(crigtt-validate:vocabSet)">
+                                                            <ul>
+                                                                <li>
+                                                                    <strong>Actual</strong>
+                                                                    <xsl:call-template name="vocabSet">
+                                                                        <xsl:with-param name="elem" select="crigtt-validate:vocabSet"/>
+                                                                    </xsl:call-template>
+                                                                </li>
+                                                                <xsl:for-each select="crigtt-validate:expectedVocabSets/crigtt-validate-vocab:vocabSet">
+                                                                    <li>
+                                                                        <strong>Expected #<xsl:value-of select="position()"/></strong>
+                                                                        <xsl:call-template name="vocabSet">
+                                                                            <xsl:with-param name="elem" select="current()"/>
+                                                                            <xsl:with-param name="idSortKey" select="false()"/>
+                                                                        </xsl:call-template>
+                                                                    </li>
+                                                                </xsl:for-each>
+                                                            </ul>
+                                                        </xsl:when>
+                                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
+                                                    </xsl:choose>
+                                                </td>
+                                                <td>
+                                                    <xsl:choose>
+                                                        <xsl:when test="exists(crigtt-validate:code)">
+                                                            <ul>
+                                                                <li>
+                                                                    <strong>Actual</strong>
+                                                                    <xsl:call-template name="component">
+                                                                        <xsl:with-param name="elem" select="crigtt-validate:code"/>
+                                                                    </xsl:call-template>
+                                                                </li>
+                                                                <xsl:for-each select="crigtt-validate:expectedCodes/crigtt-validate-vocab:code">
+                                                                    <li>
+                                                                        <strong>Expected #<xsl:value-of select="position()"/></strong>
+                                                                        <xsl:call-template name="vocabSet">
+                                                                            <xsl:with-param name="elem" select="current()"/>
+                                                                            <xsl:with-param name="idSortKey" select="false()"/>
+                                                                        </xsl:call-template>
+                                                                    </li>
+                                                                </xsl:for-each>
+                                                            </ul>
+                                                        </xsl:when>
+                                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
+                                                    </xsl:choose>
+                                                </td>
+                                                <td>
+                                                    <xsl:call-template name="component">
+                                                        <xsl:with-param name="elem" select="crigtt-validate:pattern"/>
+                                                    </xsl:call-template>
+                                                </td>
+                                                <td>
+                                                    <xsl:call-template name="component">
+                                                        <xsl:with-param name="elem" select="crigtt-validate:rule"/>
+                                                    </xsl:call-template>
+                                                </td>
+                                                <td>
+                                                    <xsl:call-template name="component">
+                                                        <xsl:with-param name="elem" select="crigtt-validate:assertion"/>
+                                                    </xsl:call-template>
+                                                </td>
+                                                <td>
+                                                    <xsl:call-template name="propValue">
+                                                        <xsl:with-param name="value" select="crigtt:id/text()"/>
+                                                    </xsl:call-template>
                                                 </td>
                                             </tr>
                                         </xsl:for-each>

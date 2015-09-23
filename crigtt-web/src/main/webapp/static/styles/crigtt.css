@@ -234,16 +234,17 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td ul {
     text-align: left;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(1),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(1) {
-    min-width: 90px;
-}
-
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(4),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4) {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(2),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(2) {
     min-width: 160px;
 }
 
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(3),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(3),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(4),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(5),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(5),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(6),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(7),
@@ -253,14 +254,13 @@ div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(9),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(9),
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(10),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(10),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(11),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(11),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(12),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(12),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(13),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(13){
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(10){
     min-width: 200px;
+}
+
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(11),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(11) {
+    min-width: 90px;
 }
 
 div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th div,

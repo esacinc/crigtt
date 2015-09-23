@@ -4,6 +4,7 @@
     //====================================================================================================
     $.extend($.tablesorter.defaults, {
         "headerTemplate": "{content}{icon}",
+        "ignoreCase": false,
         "theme": "bootstrap",
         "widgetOptions": {
             "filter_searchDelay": 1000,

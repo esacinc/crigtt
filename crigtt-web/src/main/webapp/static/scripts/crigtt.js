@@ -29,6 +29,12 @@
     // EXTENSIONS: JQUERY FUNCTIONS
     //====================================================================================================
     $.extend($, {
+        "keys": function (obj) {
+            return $.map(obj, function (prop) {
+                return prop.key;
+            });
+        },
+        
         "properties": function (obj, callback, args) {
             return $.each(obj, function (propName, propValue) {
                 if (obj.hasOwnProperty(propName)) {

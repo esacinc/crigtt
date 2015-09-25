@@ -298,6 +298,16 @@
                                 <xsl:with-param name="name" select="'Document File Name'"/>
                                 <xsl:with-param name="value" select="$docFileName"/>
                             </xsl:call-template>
+                            <xsl:call-template name="prop">
+                                <xsl:with-param name="containerTagName" select="'div'"/>
+                                <xsl:with-param name="name" select="'Result'"/>
+                                <xsl:with-param name="value">
+                                    <xsl:choose>
+                                        <xsl:when test="$errorStatus">Fail</xsl:when>
+                                        <xsl:otherwise>Pass</xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:with-param>
+                            </xsl:call-template>
                         </span>
                     </a>
                     <span class="well well-sm">
@@ -407,7 +417,7 @@
                                                 <xsl:call-template name="prop">
                                                     <xsl:with-param name="labelClassNames" select="'text-danger'"/>
                                                     <xsl:with-param name="labelIconName" select="'times-circle'"/>
-                                                    <xsl:with-param name="name" select="'Error Failures'"/>
+                                                    <xsl:with-param name="name" select="'Errors'"/>
                                                     <xsl:with-param name="value" select="concat($numErrorEvents, ' of ', $numErrorEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
@@ -415,7 +425,7 @@
                                                 <xsl:call-template name="prop">
                                                     <xsl:with-param name="labelClassNames" select="'text-warning'"/>
                                                     <xsl:with-param name="labelIconName" select="'exclamation-circle'"/>
-                                                    <xsl:with-param name="name" select="'Warning Failures'"/>
+                                                    <xsl:with-param name="name" select="'Warnings'"/>
                                                     <xsl:with-param name="value" select="concat($numWarnEvents, ' of ', $numWarnEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
@@ -423,7 +433,7 @@
                                                 <xsl:call-template name="prop">
                                                     <xsl:with-param name="labelClassNames" select="'text-info'"/>
                                                     <xsl:with-param name="labelIconName" select="'info-circle'"/>
-                                                    <xsl:with-param name="name" select="'Information Failures'"/>
+                                                    <xsl:with-param name="name" select="'Infos'"/>
                                                     <xsl:with-param name="value" select="concat($numInfoEvents, ' of ', $numInfoEvents, ' (0 Filtered)')"/>
                                                 </xsl:call-template>
                                             </li>
@@ -481,7 +491,7 @@
                                                         <xsl:with-param name="value">
                                                             <xsl:choose>
                                                                 <xsl:when test="$eventStatus">Pass</xsl:when>
-                                                                <xsl:otherwise><xsl:value-of select="$eventLevelDisplayName"/> Failure</xsl:otherwise>
+                                                                <xsl:otherwise><xsl:value-of select="$eventLevelDisplayName"/></xsl:otherwise>
                                                             </xsl:choose>
                                                         </xsl:with-param>
                                                     </xsl:call-template>

@@ -104,8 +104,13 @@
                     </h1>
                     <h2><strong>Purpose</strong></h2>
                     <p>
-                        The Cancer Registry Implementation Guide Test Tool (CRIGTT) project is an interactive tool for validating the content of electronic
+                        The Cancer Report Validator (CRV) is an interactive tool for validating the content of electronic
                         submissions of cancer-related medical information prior to a system&apos;s communication with a cancer registry.
+                    </p>
+                    <p>
+                        The CRV conforms to the <a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=383">HL7 Implementation Guide for
+                        CDA&reg; Release 2: Reporting to Public Health Cancer Registries from Ambulatory Healthcare Providers, Release 1; DSTU Release 1.1 - US
+                        Realm.</a>
                     </p>
                     <h2><strong>Background</strong></h2>
                     <p>
@@ -117,7 +122,7 @@
                     </p>
                     <p>
                         In order to facilitate this goal, central cancer registries have been established to collect data from sources such as hospitals,
-                        doctors&apos; offices, and laboratories on cancer occurrence and type of initial treatment. CRIGTT serves as a means of verifying that
+                        doctors&apos; offices, and laboratories on cancer occurrence and type of initial treatment. CRV serves as a means of verifying that
                         the software used by doctors&apos; offices is capable of correctly preparing Clinical Document Architecture (CDA) documents for
                         submission. This tool only applies to the format required by Meaningful Use for physicians and it is not intended to be used for
                         hospital or laboratory reporting.

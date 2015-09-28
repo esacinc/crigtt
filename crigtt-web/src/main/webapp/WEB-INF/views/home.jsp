@@ -87,7 +87,7 @@
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" target="_blank" href="https://github.com/esacinc/crigtt">
                                     <i class="fa fa-fw fa-github"></i>
-                                    GitHub Repository
+                                    GitHub Repository and Links to Documentation
                                 </a>
                             </li>
                         </ul>

@@ -131,6 +131,11 @@
                         This initiative has been sponsored by the CDC and is being managed by the
                         <a href="http://www.healthit.gov/">Office of the National Coordinator for Healthcare IT</a>.
                     </p>
+                    <h2><strong>Test Data</strong></h2>
+                    <spring:message code="crigtt.msg.test.data.url" var="testDataUrl"/>
+                    <p>
+                        Test cases have been developed in conjunction with the validator. The test data can be obtained <a href="${testDataUrl}">here</a>.
+                    </p>
                 </div>
                 <div id="content-tab-validator" class="tab-pane" role="tabpanel">
                     <h1>

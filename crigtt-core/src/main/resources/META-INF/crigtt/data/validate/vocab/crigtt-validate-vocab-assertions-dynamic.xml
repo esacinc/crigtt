@@ -100,20 +100,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-16788</crigtt:id>
-        <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.114222.4.11.1066</crigtt:id>
-                    <crigtt:name>Healthcare Provider Taxonomy (HIPAA)</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-16082</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
@@ -152,7 +138,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-9075</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -163,6 +149,7 @@
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:value[@xsi:type='CD']</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -259,20 +246,6 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-8903</crigtt:id>
-        <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.114222.4.11.3591</crigtt:id>
-                    <crigtt:name>Payer</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
@@ -441,38 +414,12 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-34055</crigtt:id>
-        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.3.520.4.9</crigtt:id>
-                    <crigtt:name>TNM Clinical Stage Group</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-34137</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
                     <crigtt:id>2.16.840.1.113883.3.520.4.4</crigtt:id>
                     <crigtt:name>NAACCR TNM Clinical Staged By</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-34154</crigtt:id>
-        <crigtt-validate-vocab:active>false</crigtt-validate-vocab:active>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.3.520.4.20</crigtt:id>
-                    <crigtt:name>TNM Pathologic Stage Group</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
@@ -598,18 +545,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-5303</crigtt:id>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.1.11.12212</crigtt:id>
-                    <crigtt:name>Marital Status</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-9965</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
@@ -675,7 +610,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:codeIdExpression>@use</crigtt-validate-vocab:codeIdExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-16788-v</crigtt:id>
         <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
@@ -689,7 +624,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-7995</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -741,7 +676,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:assignedEntity/cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-32133</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -834,7 +769,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-32476</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -846,7 +781,7 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-32615</crigtt:id>
         <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
@@ -1054,7 +989,7 @@
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:routeCode</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-31884</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -1194,12 +1129,6 @@
                     <crigtt:name>ICD-9-CM Appendix A-Morphology of Neoplasms</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:codeSystem>
-                    <crigtt:id>2.16.840.1.113883.6.90</crigtt:id>
-                    <crigtt:name>ICD-10-CM</crigtt:name>
-                </crigtt-validate-vocab:codeSystem>
-            </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
     </crigtt-validate-vocab:vocabAssertion>
 
@@ -1257,7 +1186,7 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-33012-c</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
@@ -1269,7 +1198,7 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
     </crigtt-validate-vocab:vocabAssertion>
-    
+
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-33185-c</crigtt:id>
         <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
@@ -1401,12 +1330,6 @@
                     <crigtt:name>ICD-9-CM Appendix A-Morphology of Neoplasms</crigtt:name>
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:codeSystem>
-                    <crigtt:id>2.16.840.1.113883.6.90</crigtt:id>
-                    <crigtt:name>ICD-10-CM</crigtt:name>
-                </crigtt-validate-vocab:codeSystem>
-            </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
     </crigtt-validate-vocab:vocabAssertion>
 
@@ -1523,5 +1446,101 @@
                 </crigtt-validate-vocab:valueSet>
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+    
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-19207-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.1</crigtt:id>
+                    <crigtt:name>LOINC</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.96</crigtt:id>
+                    <crigtt:name>SNOMED CT</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-19218-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.1</crigtt:id>
+                    <crigtt:name>LOINC</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.96</crigtt:id>
+                    <crigtt:name>SNOMED CT</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-31977-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.1</crigtt:id>
+                    <crigtt:name>LOINC</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.96</crigtt:id>
+                    <crigtt:name>SNOMED CT</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
+    </crigtt-validate-vocab:vocabAssertion>
+
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1126-33268-c</crigtt:id>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.88.12.3221.7.4</crigtt:id>
+                    <crigtt:name>Problem</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.90</crigtt:id>
+                    <crigtt:name>ICD-10-CM</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:codeSystem>
+                    <crigtt:id>2.16.840.1.113883.6.103</crigtt:id>
+                    <crigtt:name>ICD-9-CM</crigtt:name>
+                </crigtt-validate-vocab:codeSystem>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+    </crigtt-validate-vocab:vocabAssertion>
+
+    <crigtt-validate-vocab:vocabAssertion>
+        <crigtt:id>a-1098-7489-v</crigtt:id>
+        <crigtt-validate-vocab:optional>true</crigtt-validate-vocab:optional>
+        <crigtt-validate-vocab:expectedVocabSets>
+            <crigtt-validate-vocab:vocabSet>
+                <crigtt-validate-vocab:valueSet>
+                    <crigtt:id>2.16.840.1.113883.3.88.12.3221.7.4</crigtt:id>
+                    <crigtt:name>Problem</crigtt:name>
+                </crigtt-validate-vocab:valueSet>
+            </crigtt-validate-vocab:vocabSet>
+        </crigtt-validate-vocab:expectedVocabSets>
+        <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
+        <crigtt-validate-vocab:testExpressionOverride>empty(cda:value[@xsi:type='CD'])</crigtt-validate-vocab:testExpressionOverride>
     </crigtt-validate-vocab:vocabAssertion>
 </crigtt-validate-vocab:vocabAssertions>

@@ -187,35 +187,4 @@
     <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1169-34066</crigtt:id>
     </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-32476</crigtt:id>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-32615</crigtt:id>
-        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-32483</crigtt:id>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-32620</crigtt:id>
-        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-33610</crigtt:id>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1169-33611</crigtt:id>
-        <crigtt-validate-vocab:target>CODE_NAME</crigtt-validate-vocab:target>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-16826</crigtt:id>
-    </crigtt-validate-vocab:vocabAssertion>
 </crigtt-validate-vocab:vocabAssertions>

@@ -317,8 +317,8 @@
 									<td ID="PrimarySite_1">Breast</td>
 									<td ID="Laterality_1">Right</td>
 									<td ID="Histology_1">Adenocarcinoma, NOS</td>
-									<td ID="Behavior_1">Malignant, Primary</td>
-									<td ID="Confirmation_1">Positive Histology</td>
+									<td ID="Behavior_1">Malignant, primary site</td>
+									<td ID="Confirmation_1">Positive histology</td>
 									<td ID="Grade_1">2</td>
 									<td ID="StageGroup_1">IIB</td>
 								</tr>
@@ -402,7 +402,7 @@
 										</originalText>
 										<qualifier>
 											<name code="31206-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Behavior ICD-O-3 Cancer"/>
-											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
+											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary site" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 													<reference value="#Behavior_1"/>
 												</originalText>
@@ -418,7 +418,7 @@
 										</qualifier>
 										<qualifier>
 											<name code="21861-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Dx confirmed by Cancer"/>
-											<value xsi:type="CD" code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive Histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
+											<value xsi:type="CD" code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
 												<originalText>
 													<reference value="#Confirmation_1"/>
 												</originalText>
@@ -847,7 +847,7 @@
 								<period value="6" unit="h"/>
 							</effectiveTime>
 							<routeCode code="C38276" codeSystem="2.16.840.1.113883.3.26.1.1" codeSystemName="Medication Route FDA Value Set" displayName="Intravenous"/>
-							<approachSiteCode code="LA" codeSystem="2.16.840.1.113883.12.163" codeSystemName="Administrative Site" displayName="Left Arm"/>
+							<approachSiteCode code="66480008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT" displayName="Structure of left forearm"/>
 							<doseQuantity value="2" unit="mg/mL">
                                 <translation>
                                     <originalText>

@@ -286,19 +286,45 @@
   </system>
   <system valueSetOid="2.16.840.1.113883.1.11.10267" valueSetName="ParticipationFunction">
     <code value="ADMPHYS" displayName="admitting physician" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
-    <code value="ANRS" displayName="anesthesia nurse" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="ANEST" displayName="anesthesist" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="ANRS" displayName="anesthesia nurse" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="ASSEMBLER" displayName="assembly software" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="ATTPHYS" displayName="attending physician" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AUCG" displayName="caregiver information receiver" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AUCOV" displayName="consent overrider" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AUEMROV" displayName="emergency overrider" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AULR" displayName="legitimate relationship information receiver" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AUTM" displayName="care team information receiver" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="AUWA" displayName="work area information receiver" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="CLMADJ" displayName="claims adjudication" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="DISPHYS" displayName="discharging physician" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="ENROLL" displayName="enrollment broker" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="FASST" displayName="first assistant surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="FFSMGT" displayName="ffs management" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="FULINRD" displayName="fully insured" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="GRDCON" displayName="legal guardian consent author" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="MCMGT" displayName="managed care management" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="MDWF" displayName="midwife" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="NASST" displayName="nurse assistant" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="PAYORCNTR" displayName="payor contracting" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="PCP" displayName="primary care physician" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="POACON" displayName="healthcare power of attorney consent author" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="PRCON" displayName="personal representative consent author" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="PRISURG" displayName="primary surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="PROMSK" displayName="authorized provider masking author" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="PROVMGT" displayName="provider management" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="REINS" displayName="reinsures" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="RETROCES" displayName="retrocessionaires" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="REVIEWER" displayName="reviewer" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="RNDPHYS" displayName="rounding physician" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
-    <code value="SNRS" displayName="scrub nurse" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
     <code value="SASST" displayName="second assistant surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
-    <code value="TASST" displayName="third assistant surgeon" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="SELFINRD" displayName="self insured" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="SNRS" displayName="scrub nurse" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="SUBCON" displayName="subject of consent author" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="SUBCTRT" displayName="subcontracting risk" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="TASST" displayName="third assistant" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="UMGT" displayName="utilization management" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
+    <code value="UNDERWRTNG" displayName="underwriting" codeSystemName="participationFunction" codeSystem="2.16.840.1.113883.5.88" />
   </system>
   <system valueSetOid="2.16.840.1.114222.4.11.7187" valueSetName="PHVS_Industry_CDC_Census2010">
     <code value="7280" displayName="Accounting, tax preparation, bookkeeping, and payroll services" codeSystemName="Industry CDC Census 2010" codeSystem="2.16.840.1.114222.4.5.315" />

@@ -231,8 +231,8 @@
 										including shoulder</td>
 									<td ID="Laterality_1">Right</td>
 									<td ID="Histology_1">Hutchinson's melanotic freckle</td>
-									<td ID="Behavior_1">In situ; non-invasive</td>
-									<td ID="Confirmation_1">Positive Histology</td>
+									<td ID="Behavior_1">Carcinoma in situ</td>
+									<td ID="Confirmation_1">Positive histology</td>
 									<td ID="Grade_1">Not applicable</td>
 									<td ID="ClinicalStageGroup_1">0</td>
 									<td ID="PathologicStageGroup_1">0</td>
@@ -242,8 +242,8 @@
 									<td ID="PrimarySite_2">Malignant melanoma of scalp and neck</td>
 									<td ID="Laterality_2">Not applicable</td>
 									<td ID="Histology_2">Nodular melanoma</td>
-									<td ID="Behavior_2">Malignant, Primary</td>
-									<td ID="Confirmation_2">Positive Histology</td>
+									<td ID="Behavior_2">Malignant, primary site</td>
+									<td ID="Confirmation_2">Positive histology</td>
 									<td ID="Grade_2">Not applicable</td>
 									<td ID="ClinicalStageGroup_2">Not yet staged</td>
 									<td ID="PathologicStageGroup_2">IIB</td>
@@ -325,10 +325,11 @@
 										<low value="20150804"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="M8742/2"
-										codeSystem="2.16.840.1.113883.6.103"
-										codeSystemName="ICD-9-CM"
-										displayName="Hutchinson's melanotic freckle">
+									<value xsi:type="CD" code="M8742/2" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Hutchinson's melanotic freckle" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
+                                    <!-- Other options for value (Histologic Type)
+                                    <value xsi:type="CD" code="8742/2" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Lentigo maligna">
+                                    <value xsi:type="CD" code="61217001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Hutchinson's melanotic freckle (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+                                    -->
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
@@ -339,7 +340,7 @@
 											<value xsi:type="CD" code="2"
 												codeSystem="2.16.840.1.113883.3.520.3.14"
 												codeSystemName="NAACCR Behavior Code"
-												displayName="In situ; non-invasive"
+												displayName="Carcinoma in situ"
 												sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 												<reference value="#Behavior_1"/>
@@ -362,7 +363,7 @@
 											<value xsi:type="CD" code="1"
 												codeSystem="2.16.840.1.113883.3.520.3.3"
 												codeSystemName="NAACCR Diagnostic Confirmation"
-												displayName="Positive Histology"
+												displayName="Positive histology"
 												sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
 												<originalText>
 												<reference value="#Confirmation_1"/>
@@ -374,6 +375,11 @@
 										codeSystem="2.16.840.1.113883.6.90"
 										codeSystemName="ICD-10-CM"
 										displayName="Melanoma in situ of right upper limb, including shoulder">
+                                    <!-- Other options for targetSiteCode (Primary Site)
+                                    <targetSiteCode code="172.6" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant melanoma of skin of upper limb, including shoulder">
+                                    <targetSiteCode code="C44.6" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Skin of upper limb and shoulder">
+                                    <targetSiteCode code="416433004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Skin and subcutaneous tissue structure of forearm" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+                                    -->
 										<originalText>
 											<reference value="#PrimarySite_1"/>
 										</originalText>
@@ -672,9 +678,11 @@
 										<low value="20150804"/>
 										<high nullFlavor="NA"/>
 									</effectiveTime>
-									<value xsi:type="CD" code="M8721/3"
-										codeSystem="2.16.840.1.113883.6.103"
-										codeSystemName="ICD-9-CM" displayName="Nodular melanoma">
+									<value xsi:type="CD" code="M8721/3" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Nodular melanoma" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
+                                    <!--Other options for value (Histologic Type)
+                                    <value xsi:type="CD" code="2142002" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Nodular melanoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+                                    <value xsi:type="CD" code="8721/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Nodular melanoma">
+                                    -->
 										<originalText>
 											<reference value="#Histology_2"/>
 										</originalText>
@@ -708,7 +716,7 @@
 											<value xsi:type="CD" code="1"
 												codeSystem="2.16.840.1.113883.3.520.3.3"
 												codeSystemName="NAACCR Diagnostic Confirmation"
-												displayName="Positive Histology"
+												displayName="Positive histology"
 												sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
 												<originalText>
 												<reference value="#Confirmation_2"/>
@@ -719,6 +727,11 @@
 									<targetSiteCode code="C43.4" codeSystem="2.16.840.1.113883.6.90"
 										codeSystemName="ICD-10-CM"
 										displayName="Malignant melanoma of scalp and neck">
+                                    <!-- Other options for targetSiteCode (Primary Site)
+                                    <targetSiteCode code="172.4" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant melanoma of skin of scalp and neck">
+                                    <targetSiteCode code="C44.4" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Skin of scalp and neck">
+                                    <targetSiteCode code="281719008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Skin of part of neck (body structure)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+                                    -->
 										<originalText>
 											<reference value="#PrimarySite_2"/>
 										</originalText>
@@ -1206,6 +1219,10 @@
 										codeSystemName="ICD-10-CM"
 										displayName="Melanoma in situ of right upper limb, including shoulder"
 									/>
+									<!-- Other options for value (Problem)
+									<value xsi:type="CD" code="302836005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Lentigo maligna (disorder)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+									<value xsi:type="CD" code="172.6" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant melanoma of skin of upper limb, including shoulder"/>
+									-->
 								</observation>
 							</entryRelationship>
 						</act>
@@ -1242,6 +1259,10 @@
 										codeSystem="2.16.840.1.113883.6.90"
 										codeSystemName="ICD-10-CM"
 										displayName="Malignant melanoma of scalp and neck"/>
+									<!-- Other options for value (Problem)
+									<value xsi:type="CD" code="93642000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Malignant melanoma of skin of neck (disorder)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+									<value xsi:type="CD" code="172.4" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant melanoma of skin of scalp and neck"/>
+									-->
 								</observation>
 							</entryRelationship>
 						</act>
@@ -1291,6 +1312,10 @@
 							<code code="0HBBXZZ" codeSystem="2.16.840.1.113883.6.4"
 								codeSystemName="ICD10 PCS"
 								displayName="Excision of Right Upper Arm Skin, External Approach">
+                            <!-- Other options for code (Procedure Code):
+                            <code code="5621009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Excision of malignant neoplastic lesion of skin of extremities">
+                            <code code="11600" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4" displayName="Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 0.5 cm or less">
+                            -->
 								<originalText>
 									<reference value="#Proc1"/>
 								</originalText>
@@ -1337,6 +1362,10 @@
 							<code code="11621" codeSystem="2.16.840.1.113883.6.12"
 								codeSystemName="CPT-4"
 								displayName="Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised diameter">
+                            <!-- Other options for code (Procedure Code):
+                            <code code="39559009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Excision of malignant lesion of scalp and neck">
+                            <code code="0HB4XZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Excision of Neck Skin, External Approach">
+                            -->
 								<originalText>
 									<reference value="#Proc2"/>
 								</originalText>

@@ -219,12 +219,16 @@
 										<high nullFlavor="NA"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="51092000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+                                    <!--Other options for value (Histologic Type)
+                                    <value xsi:type="CD" code="9823/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma">
+                                    <value xsi:type="CD" code="M9823/3" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
+                                    -->
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
 										<qualifier>
 											<name code="31206-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Behavior ICD-O-3 Cancer"/>
-											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
+											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary site" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 													<reference value="#Behavior_1"/>
 												</originalText>
@@ -248,6 +252,11 @@
 										</qualifier>
 									</value>
 									<targetSiteCode code="313229003" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="All bone marrow of ilium (body structure)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+                                    <!-- Other options for targetSiteCode (Primary Site)
+									<targetSiteCode code="204.10" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia, without mention of having achieved remission">
+                                    <targetSiteCode code="C42.1" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Bone marrow">
+                                    <targetSiteCode code="C9110" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission">
+                                    -->
 										<originalText>
 											<reference value="#PrimarySite_1"/>
 										</originalText>
@@ -503,6 +512,10 @@
 										<low value="20150321"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="277473004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia (disorder)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+									<!-- Other options for value (Problem)
+									<value xsi:type="CD" code="C9110" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission"/>                                    <value xsi:type="CD" code="204.1" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Lymphoid Leukemia; chronic"/>
+                                    <value xsi:type="CD" code="204.10" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia, without mention of having achieved remission"/>
+                                    -->
 								</observation>
 							</entryRelationship>
 						</act>

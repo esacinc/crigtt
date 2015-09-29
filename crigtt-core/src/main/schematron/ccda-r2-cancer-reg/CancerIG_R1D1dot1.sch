@@ -1842,28 +1842,25 @@ Note: The effectiveTime/low (a.k.a. "onset date") indicates Cancer Diagnosis Dat
             <sch:assert id="a-1169-33708" test="@sdtc:valueSet='2.16.840.1.113883.3.520.4.22'">This value SHALL contain exactly one [1..1] @sdtc:valueSet="2.16.840.1.113883.3.520.4.22" (CodeSystem: SNOMED CT urn:oid:2.16.840.1.113883.6.96 STATIC) (CONF:1169-33708).</sch:assert>
         </sch:rule>
 		<sch:rule id="r-urn-hl7ii-2.16.840.1.113883.10.13.4-2015-02-05-branch-1169-32447-errors" context="cda:observation[cda:templateId[@root='2.16.840.1.113883.10.13.4' and @extension = '2015-02-05']]/cda:value[@xsi:type='CD'][empty(@nullFlavor)]">
-			<sch:assert id="a-1169-32464" test="(@code!='8000' and @code!='86049000') or (@code='8000' and @displayName='Neoplasm' and (@codeSystem='2.16.840.1.113883.6.43.1' or @codeSystem='2.16.840.1.114222.4.11.6038' or @codeSystem='2.16.840.1.113883.6.90')) or (@code='86049000' and @displayName='Neoplasm, malignant (primary)' and @codeSystem='2.16.840.1.113883.6.96')">If value/@nullFlavor is not present then
+			<sch:assert id="a-1169-32464" test="(@code!='8000' and @code!='86049000') or (@code='8000' and @displayName='Neoplasm' and (@codeSystem='2.16.840.1.113883.6.43.1' or @codeSystem='2.16.840.1.114222.4.11.6038')) or (@code='86049000' and @displayName='Neoplasm, malignant (primary)' and @codeSystem='2.16.840.1.113883.6.96')">If value/@nullFlavor is not present then
 This value SHALL contain exactly one [1..1] @code (CONF:1169-32464).
 Note: This @code attribute is used to document histologic type of tumor. If the histologic type isn’t known, the value of “8000” (with @displayName="Neoplasm") should be used when using code systems ICD-O-3, ICD-9-CM, ICD-10-CM and "86049000" (with @displayName="Neoplasm, malignant (primary)") when using SNOMED CT code system.</sch:assert>
 			<sch:assert id="a-1169-32473-c" test="exists(@code)">
 The @code for histologic type of tumor, if present, SHALL be selected from:
 (a) ICD-O-3 (CodeSystem: 2.16.840.1.113883.6.43.1) or
 (b) Morphologic Abnormality of Neoplasms Value Set (ValueSet: 2.16.840.1.114222.4.11.7256) or
-(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038) or
-(d) ICD-10-CM (CodeSystem: 2.16.840.1.113883.6.90) (CONF:1169-32473).</sch:assert>
-			<sch:assert id="a-1169-32634" test="@codeSystem='2.16.840.1.113883.6.43.1' or @codeSystem='2.16.840.1.113883.6.103' or @codeSystem='2.16.840.1.113883.6.90' or @codeSystem='2.16.840.1.113883.6.96'">If value/@nullFlavor not present then
+(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038).</sch:assert>
+			<sch:assert id="a-1169-32634" test="@codeSystem='2.16.840.1.113883.6.43.1' or @codeSystem='2.16.840.1.113883.6.103' or @codeSystem='2.16.840.1.113883.6.96'">If value/@nullFlavor not present then
 This value SHALL contain exactly one [1..1] @codeSystem (CONF:1169-32634). The @codeSystem associated with the code for histologic type of tumor SHALL be selected from:
 (a) ICD-O-3 (CodeSystem: 2.16.840.1.113883.6.43.1) or
 (b) SNOMED CT (CodeSystem: 2.16.840.1.113883.6.96) or
-(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038) or
-(d) ICD-10-CM (CodeSystem: 2.16.840.1.113883.6.90) (CONF:1169-32635).</sch:assert>
+(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038)(CONF:1169-32635).</sch:assert>
 			<sch:assert id="a-1169-32618" test="exists(@displayName)">If value/@nullFlavor not present then
 This value SHALL contain exactly one [1..1] @displayName (CONF:1169-32618).</sch:assert>
 			<sch:assert id="a-1169-32619-c" test="exists(@displayName)">The @displayName associated with the code for histologic type of tumor SHALL be selected from:
 (a) ICD-O-3 (CodeSystem: 2.16.840.1.113883.6.43.1) or
 (b) Morphologic Abnormality of Neoplasms Value Set (ValueSet: 2.16.840.1.114222.4.11.7256) or
-(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038) or
-(d) ICD-10-CM (CodeSystem: 2.16.840.1.113883.6.90) (CONF:1169-32619).</sch:assert>
+(c) ICD-9-CM Appendix A-Morphology of Neoplasms (ValueSet: 2.16.840.1.114222.4.11.6038) (CONF:1169-32619).</sch:assert>
 		</sch:rule>
 		<sch:rule id="r-urn-hl7ii-2.16.840.1.113883.10.13.4-2015-02-05-branch-1169-32537-errors" context="cda:observation[cda:templateId[@root='2.16.840.1.113883.10.13.4' and @extension = '2015-02-05']]/cda:value[@xsi:type='CD']/cda:originalText">
 			<sch:let name="origTextValue" value="cda:reference/@value"/>

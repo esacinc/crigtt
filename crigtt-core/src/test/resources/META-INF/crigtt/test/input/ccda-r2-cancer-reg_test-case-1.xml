@@ -139,7 +139,7 @@
 			<representedCustodianOrganization>
 				<id extension="5673900987" root="2.16.840.1.113883.4.6"/>
 				<id extension="321CX" root="1.1.1.1.1.1.1.1.3"/>
-				<name>Seattle Grace Oncology</name>
+				<name>Seattle Grace Oncology Clinic</name>
 				<telecom use="WP" value="tel:+1(206)555-3900"/>
 				<addr use="WP">
 					<streetAddressLine>999 Ellis Way</streetAddressLine>
@@ -359,12 +359,16 @@
 										<high nullFlavor="NA"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="8500/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Infiltrating duct carcinoma, NOS">
+                                    <!-- Other options for value (Histologic Type)
+                                    <value xsi:type="CD" code="82711006" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Infiltrating duct carcinoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+                                    <value xsi:type="CD" code="M8500/3" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Infiltrating duct carcinoma" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
+                                    -->
 										<originalText>
 											<reference value="#Histology_1"/>
 										</originalText>
 										<qualifier>
 											<name code="31206-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Behavior ICD-O-3 Cancer"/>
-											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
+											<value xsi:type="CD" code="3" codeSystem="2.16.840.1.113883.3.520.3.14" codeSystemName="NAACCR Behavior Code" displayName="Malignant, primary site" sdtc:valueSet="2.16.840.1.113883.3.520.4.14">
 												<originalText>
 													<reference value="#Behavior_1"/>
 												</originalText>
@@ -380,7 +384,7 @@
 										</qualifier>
 										<qualifier>
 											<name code="21861-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Dx confirmed by Cancer"/>
-											<value xsi:type="CD" code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive Histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
+											<value xsi:type="CD" code="1" codeSystem="2.16.840.1.113883.3.520.3.3" codeSystemName="NAACCR Diagnostic Confirmation" displayName="Positive histology" sdtc:valueSet="2.16.840.1.113883.3.520.4.3">
 												<originalText>
 													<reference value="#Confirmation_1"/>
 												</originalText>
@@ -388,6 +392,11 @@
 										</qualifier>
 									</value>
 									<targetSiteCode code="C50.411" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Malignant neoplasm of upper-outer quadrant of right female breast">
+                                    <!-- Other options for targetSiteCode (Primary Site)
+                                    <targetSiteCode code="174.4" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant neoplasm of upper-outer quadrant of female breast">
+                                    <targetSiteCode code="C50.4" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Upper-outer quadrant of breast">
+                                    <targetSiteCode code="110496004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Upper outer quadrant of right breast" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.8.9">
+                                    -->
 										<originalText>
 											<reference value="#PrimarySite_1"/>
 										</originalText>
@@ -1228,6 +1237,10 @@
 							<!-- Planned Procedure (V2) -->
 							<id root="9a6d1bac-17d3-4195-89c4-1121bc809b5a"/>
 							<code code="72146" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4" displayName="MRI SPINAL CANAL THORACIC W/O CONTRAST MATRL"/>
+							<!-- Other options for code:
+							<code code="241647000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Magnetic resonance imaging of thoracic spine"/>
+                            <code code="BR37ZZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Magnetic Resonance Imaging (MRI) of Thoracic Spine"/>
+                            -->
 							<statusCode code="active"/>
 							<effectiveTime value="20141104"/>
 							<author typeCode="AUT">
@@ -1282,6 +1295,10 @@
 										<low value="19900512"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="E11.9" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Type 2 diabetes mellitus without complications"/>
+									<!-- Other options for value (Problem)
+                                    <value xsi:type="CD" code="44054006" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Diabetes mellitus type 2" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+                                    <value xsi:type="CD" code="250.00" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Diabetes mellitus without mention of complication or manifestation; type II or unspecified type, not stated as uncontrolled"/>
+                                    -->
 								</observation>
 							</entryRelationship>
 						</act>
@@ -1316,6 +1333,10 @@
 										<low value="20140126"/>
 									</effectiveTime>
 									<value xsi:type="CD" code="C50.411" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Malignant neoplasm of upper-outer quadrant of right female breast"/>
+									<!-- Other options for value (Problem)
+                                    <value xsi:type="CD" code="373083005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Malignant neoplasm of breast upper outer quadrant" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
+                                    <value xsi:type="CD" code="174.4" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant neoplasm of upper-outer quadrant of female breast"/>
+                                    -->
 								</observation>
 							</entryRelationship>
 						</act>
@@ -1341,6 +1362,10 @@
 							<templateId root="2.16.840.1.113883.10.13.15" extension="2014-08-08"/>
 							<id root="d5b614bd-01ce-410d-8726-e1fd01dcc72a"/>
 							<code code="19083" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4" displayName="Biopsy, breast, with placement of breast localization device(s) (eg, clip, metallic pellet), when performed, and imaging of the biopsy specimen, when performed, percutaneous; first lesion, including ultrasound guidance">
+							<!-- Other options for code (Procedure Code):
+							<code code="442963006" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Percutaneous needle biopsy of breast using ultrasound guidance">
+                            <code code="0HBT3ZX" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Excision of Right Breast, Percutaneous Approach, Diagnostic">
+		                    -->
 								<originalText>
 									<reference value="#Proc1"/>
 								</originalText>
@@ -1375,6 +1400,10 @@
 							<templateId root="2.16.840.1.113883.10.13.15" extension="2014-08-08"/>
 							<id root="d5b614bd-01ce-410d-8726-e1fd01dcc72a"/>
 							<code code="19307" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4" displayName="Mastectomy, modified radical, including axillary lymph nodes, with or without pectoralis minor muscle, but excluding pectoralis major muscle">
+							<!-- Other options for code (Procedure Code):
+							<code code="406505007" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Modified radical mastectomy">
+                            <code code="0HTT0ZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Resection of Right Breast, Open Approach">
+		                    -->
 								<originalText>
 									<reference value="#Proc1"/>
 								</originalText>
@@ -1419,6 +1448,10 @@
 											<templateId root="2.16.840.1.113883.10.13.25" extension="2014-08-08"/>
 											<id root="4a7eed3b-d1d4-4f67-80fa-4972c563606c"/>
 											<code code="77412" codeSystem="2.16.840.1.113883.6.14" codeSystemName="HCPCS" displayName="Radiation treatment delivery, ≥ 1 MeV; complex" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											<!-- Other options for code (Radiation Regional Treatment Modality Procedure):
+											<code code="448385000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Megavoltage radiation therapy using photons" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											<code code="DM011ZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Beam Radiation of Right Breast using Photons 1 - 10 MeV" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											-->
 												<originalText>
 													<reference value="#Rad1"/>
 												</originalText>
@@ -1452,6 +1485,10 @@
 											<templateId root="2.16.840.1.113883.10.13.26" extension="2014-08-08"/>
 											<id root="87cb6d8e-b33f-4b8b-a19e-443db01bde15"/>
 											<code code="77412" codeSystem="2.16.840.1.113883.6.14" codeSystemName="HCPCS" displayName="Radiation treatment delivery, ≥ 1 MeV; complex" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											<!-- Other options for code (Radiation Boost Modality Procedure):
+											<code code="448385000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Megavoltage radiation therapy using photons" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											<code code="DM011ZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Beam Radiation of Right Breast using Photons 1 - 10 MeV" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
+											-->
 												<originalText>
 													<reference value="#Rad1"/>
 												</originalText>

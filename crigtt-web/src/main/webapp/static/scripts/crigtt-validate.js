@@ -13,7 +13,11 @@
     $.extend($.crigtt.validate.ValidatorLevel.ERROR.value, {
         "displayName": "Error"
     });
-    
+
+    $.extend($.crigtt.validate.ValidatorLevel.MISMATCH.value, {
+        "displayName": "Mismatch"
+    });
+
     //====================================================================================================
     // CLASS: VALIDATOR
     //====================================================================================================
@@ -35,9 +39,11 @@
             var panelGroupElem = $("div#panel-group-validator-results");
             var panelHeadingElem = respElem.find("div.panel-heading");
             var panelCollapseElem = respElem.find("div.panel-collapse");
-            var panelEventsTabPaneElem = respElem.find("div.panel-body div.tab-content div.tab-pane").eq(1);
-            var panelEventsTableElem = panelEventsTabPaneElem.find("table.table");
-            
+            var panelEventsIgTabPaneElem = respElem.find("div.panel-body div.tab-content div.tab-pane").eq(1);
+            var panelEventsIgTableElem = panelEventsIgTabPaneElem.find("table.table");
+            var panelEventsTestDataTabPaneElem = respElem.find("div.panel-body div.tab-content div.tab-pane").eq(2);
+            var panelEventsTestDataTableElem = panelEventsTestDataTabPaneElem.find("table.table");
+
             panelHeadingElem.click($.proxy(function (event) {
                 var target = $(event.target);
                 
@@ -73,58 +79,42 @@
                 ]);
             }, this));
             
-            var panelEventsTableFilterFormatters = {};
+            var panelEventsIgTableFilterFormatters = {};
+            var panelEventsTestDataTableFilterFormatters = {};
             
-            panelEventsTableElem.find("th").each(function (panelEventsTableHeaderIndex, panelEventsTableHeaderElem) {
-                if (!(panelEventsTableHeaderElem = $(panelEventsTableHeaderElem)).hasClass("filter-false")) {
-                    var panelEventsTableFilterLabel = panelEventsTableHeaderElem.attr("data-filter-label");
+            panelEventsIgTableElem.find("th").each(function (panelEventsIgTableHeaderIndex, panelEventsIgTableHeaderElem) {
+                if (!(panelEventsIgTableHeaderElem = $(panelEventsIgTableHeaderElem)).hasClass("filter-false")) {
+                    var panelEventsIgTableFilterLabel = panelEventsIgTableHeaderElem.attr("data-filter-label");
                     
-                    panelEventsTableFilterFormatters[panelEventsTableHeaderIndex] = function (cell, index) {
+                    panelEventsIgTableFilterFormatters[panelEventsIgTableHeaderIndex] = function (cell, index) {
                         return $.tablesorter.filterFormatter.select2(cell, index, {
-                            "cellText": panelEventsTableFilterLabel,
+                            "cellText": panelEventsIgTableFilterLabel,
                             "match": false,
                             "placeholder": "Select Filters",
-                            "width": ((panelEventsTableFilterLabel ? 80 : 100) + "%")
+                            "width": ((panelEventsIgTableFilterLabel ? 80 : 100) + "%")
                         });
                     };
                 }
             });
-            
-            panelEventsTableElem.tablesorter({
-                "sortList": [
-                    [0, 0]
-                ],
-                "textExtraction": function (tableDataElem) {
-                    var sortKeyElem = $(tableDataElem).find("*[data-sort-key]").eq(0);
-                    var sortKeyValue = sortKeyElem.attr("data-sort-key");
-                    
-                    return ((sortKeyValue == String(true)) ? sortKeyElem.text() : String.EMPTY);
-                },
-                "textSorter": function (sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem) {
-                    if (sortColumnIndex != 0) {
-                        return $.tablesorter.sortNatural(sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem);
-                    }
-                    
-                    var passValue1 = (sortKeyValue1 == "Pass"), passValue2 = (sortKeyValue2 == "Pass");
-                    
-                    if (passValue1 && passValue2) {
-                        return 0;
-                    } else if (passValue1) {
-                        return 1;
-                    } else if (passValue2) {
-                        return -1;
-                    } else {
-                        var levels = $.keys($.crigtt.validate.ValidatorLevel);
-                        levels.reverse();
-                        
-                        return $.tablesorter.sortNumeric(levels.indexOf(sortKeyValue1), levels.indexOf(sortKeyValue2));
-                    }
-                },
-                "widgetOptions": {
-                    "filter_formatter": panelEventsTableFilterFormatters,
-                    "stickyHeaders_attachTo": panelEventsTabPaneElem
+
+            panelEventsTestDataTableElem.find("th").each(function (panelEventsTestDataTableHeaderIndex, panelEventsTestDataTableHeaderElem) {
+                if (!(panelEventsTestDataTableHeaderElem = $(panelEventsTestDataTableHeaderElem)).hasClass("filter-false")) {
+                    var panelEventsTestDataTableFilterLabel = panelEventsTestDataTableHeaderElem.attr("data-filter-label");
+
+                    panelEventsTestDataTableFilterFormatters[panelEventsTestDataTableHeaderIndex] = function (cell, index) {
+                        return $.tablesorter.filterFormatter.select2(cell, index, {
+                            "cellText": panelEventsTestDataTableFilterLabel,
+                            "match": false,
+                            "placeholder": "Select Filters",
+                            "width": ((panelEventsTestDataTableFilterLabel ? 80 : 100) + "%")
+                        });
+                    };
                 }
-            }).on("filterEnd", $.proxy(function () {
+            });
+
+            panelEventsIgTableElem.tablesorter(
+                this.getTableSorterArgs("Pass", panelEventsIgTableFilterFormatters, panelEventsIgTabPaneElem)
+            ).on("filterEnd", $.proxy(function () {
                 var numEvents = 0;
                 var numLevelEvents = {};
                 var numFilteredEvents = 0;
@@ -135,12 +125,12 @@
                     numFilteredLevelEvents[levelName] = 0;
                 });
                 
-                var panelEventsTableElems = panelEventsTabPaneElem.find("table.table");
-                var panelEventTotalsListElems = panelEventsTableElems.find("caption ul");
+                var panelEventsIgTableElems = panelEventsIgTabPaneElem.find("table.table");
+                var panelEventTotalsListElems = panelEventsIgTableElems.find("caption ul");
                 
-                panelEventsTableElems.find("tbody tr").each(function (panelEventsTableRowIndex, panelEventsTableRowElem) {
-                    var eventStatus = ((panelEventsTableRowElem = $(panelEventsTableRowElem)).attr("data-status") == String(true));
-                    var eventLevel = panelEventsTableRowElem.attr("data-level");
+                panelEventsIgTableElems.find("tbody tr").each(function (panelEventsIgTableRowIndex, panelEventsIgTableRowElem) {
+                    var eventStatus = ((panelEventsIgTableRowElem = $(panelEventsIgTableRowElem)).attr("data-status") == String(true));
+                    var eventLevel = panelEventsIgTableRowElem.attr("data-level");
                     
                     numEvents++;
                     
@@ -148,7 +138,7 @@
                         numLevelEvents[eventLevel]++;
                     }
                     
-                    if (panelEventsTableRowElem.hasClass("filtered")) {
+                    if (panelEventsIgTableRowElem.hasClass("filtered")) {
                         numFilteredEvents++;
                         
                         if (!eventStatus) {
@@ -156,35 +146,134 @@
                         }
                     }
                 });
-                
+
                 var eventTotals = [];
-                
+
                 $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
-                    eventTotals.push([ numFilteredLevelEvents[levelName], numLevelEvents[levelName] ]);
+                    if(levelName != $.crigtt.validate.ValidatorLevel.MISMATCH.key) {
+                        eventTotals.push([ numFilteredLevelEvents[levelName], numLevelEvents[levelName] ]);
+                    }
                 });
-                
+
                 eventTotals.push([ numFilteredEvents, numEvents ]);
-                
+
                 eventTotals.reverse();
                 
-                $.each(eventTotals, function (panelEventTotalSpanIndex, eventTotals) {
-                    panelEventTotalsListElems.each(function (panelEventTotalsListIndex, panelEventTotalsListElem) {
-                        $(panelEventTotalsListElem).find("li span span").eq(panelEventTotalSpanIndex)
+                $.each(eventTotals, function (panelEventIgTotalSpanIndex, eventTotals) {
+                    panelEventTotalsListElems.each(function (panelEventIgTotalsListIndex, panelEventIgTotalsListElem) {
+                        $(panelEventIgTotalsListElem).find("li span span").eq(panelEventIgTotalSpanIndex)
                             .text(((eventTotals[1] - eventTotals[0]) + " of " + eventTotals[1] + " (" + eventTotals[0] + " Filtered)"));
                     });
                 });
             }, this));
-            
-            panelEventsTableElem.find("tr.tablesorter-filter-row td label").each(function (panelEventsTableFilterLabelIndex, panelEventsTableFilterLabelElem) {
-                var panelEventsTableFilterLabelContent = (panelEventsTableFilterLabelElem = $(panelEventsTableFilterLabelElem)).text();
-                
-                panelEventsTableFilterLabelElem.empty();
-                panelEventsTableFilterLabelElem.append($("<strong/>").text(panelEventsTableFilterLabelContent), ": ");
-            });
-            
+
+            panelEventsTestDataTableElem.tablesorter(
+                this.getTableSorterArgs("Match", panelEventsTestDataTableFilterFormatters, panelEventsTestDataTabPaneElem)
+            ).on("filterEnd", $.proxy(function () {
+                var numEvents = 0;
+                var numLevelEvents = {};
+                var numFilteredEvents = 0;
+                var numFilteredLevelEvents = {};
+
+                $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
+                    numLevelEvents[levelName] = 0;
+                    numFilteredLevelEvents[levelName] = 0;
+                });
+
+                var panelEventsTestDataTableElems = panelEventsTestDataTabPaneElem.find("table.table");
+                var panelEventTestDataTotalsListElems = panelEventsTestDataTableElems.find("caption ul");
+
+                panelEventsTestDataTableElems.find("tbody tr").each(function (panelEventsTestDataTableRowIndex, panelEventsTestDataTableRowElem) {
+                    var eventStatus = ((panelEventsTestDataTableRowElem = $(panelEventsTestDataTableRowElem)).attr("data-status") == String(true));
+                    var eventLevel = panelEventsTestDataTableRowElem.attr("data-level");
+
+                    numEvents++;
+
+                    if (!eventStatus) {
+                        numLevelEvents[eventLevel]++;
+                    }
+
+                    if (panelEventsTestDataTableRowElem.hasClass("filtered")) {
+                        numFilteredEvents++;
+
+                        if (!eventStatus) {
+                            numFilteredLevelEvents[eventLevel]++;
+                        }
+                    }
+                });
+
+                var eventTotals = [];
+
+                $.properties($.crigtt.validate.ValidatorLevel, function (levelName) {
+                    if(levelName == $.crigtt.validate.ValidatorLevel.MISMATCH.key) {
+                        eventTotals.push([numFilteredLevelEvents[levelName], numLevelEvents[levelName]]);
+                    }
+                });
+
+                eventTotals.push([ numFilteredEvents, numEvents ]);
+
+                eventTotals.reverse();
+
+                $.each(eventTotals, function (panelEventTestDataTotalSpanIndex, eventTotals) {
+                    panelEventTestDataTotalsListElems.each(function (panelEventTestDataTotalsListIndex, panelEventTestDataTotalsListElem) {
+                        $(panelEventTestDataTotalsListElem).find("li span span").eq(panelEventTestDataTotalSpanIndex)
+                            .text(((eventTotals[1] - eventTotals[0]) + " of " + eventTotals[1] + " (" + eventTotals[0] + " Filtered)"));
+                    });
+                });
+            }, this));
+
+            panelEventsIgTableElem.find("tr.tablesorter-filter-row td label").each(this.labelFilters);
+
+            panelEventsTestDataTableElem.find("tr.tablesorter-filter-row td label").each(this.labelFilters);
+
             return respElem;
         },
-        
+
+        "labelFilters": function (panelEventsTableFilterLabelIndex, panelEventsTableFilterLabelElem) {
+            var panelEventsTestDataTableFilterLabelContent = (panelEventsTableFilterLabelElem = $(panelEventsTableFilterLabelElem)).text();
+
+            panelEventsTableFilterLabelElem.empty();
+            panelEventsTableFilterLabelElem.append($("<strong/>").text(panelEventsTestDataTableFilterLabelContent), ": ");
+        },
+
+        "getTableSorterArgs": function(sortKeyValue, filterFormatter, tabPaneElem) {
+            return {
+                "sortList": [
+                    [0, 0]
+                ],
+                "textExtraction": function (tableDataElem) {
+                    var sortKeyElem = $(tableDataElem).find("*[data-sort-key]").eq(0);
+                    var sortKeyValue = sortKeyElem.attr("data-sort-key");
+
+                    return ((sortKeyValue == String(true)) ? sortKeyElem.text() : String.EMPTY);
+                },
+                "textSorter": function (sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem) {
+                    if (sortColumnIndex != 0) {
+                        return $.tablesorter.sortNatural(sortKeyValue1, sortKeyValue2, sortDirection, sortColumnIndex, tableElem);
+                    }
+
+                    var passValue1 = (sortKeyValue1 == sortKeyValue), passValue2 = (sortKeyValue2 == sortKeyValue);
+
+                    if (passValue1 && passValue2) {
+                        return 0;
+                    } else if (passValue1) {
+                        return 1;
+                    } else if (passValue2) {
+                        return -1;
+                    } else {
+                        var levels = $.keys($.crigtt.validate.ValidatorLevel);
+                        levels.reverse();
+
+                        return $.tablesorter.sortNumeric(levels.indexOf(sortKeyValue1), levels.indexOf(sortKeyValue2));
+                    }
+                },
+                "widgetOptions": {
+                    "filter_formatter": filterFormatter,
+                    "stickyHeaders_attachTo": tabPaneElem
+                }
+            }
+        },
+
         "downloadResults": function (panelElem, renderType, asWindow) {
             this.validate(renderType, {
                 "data": panelElem.data($.crigtt.validate.Validator.VALIDATE_DATA_DATA_ENTRY_NAME),

@@ -50,7 +50,7 @@
 			<patient>
 				<name use="L">
 					<given>Izzie</given>
-					<given qualifier="IN">Jean</given>
+					<given>Jean</given>
 					<family>Stevens</family>
 				</name>
 				<administrativeGenderCode code="F" displayName="Female"

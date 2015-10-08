@@ -4,6 +4,7 @@
     targetNamespace="urn:gov.hhs.onc.crigtt:validate"
     xmlns:crigtt="urn:gov.hhs.onc.crigtt"
     xmlns:crigtt-validate="urn:gov.hhs.onc.crigtt:validate"
+    xmlns:crigtt-validate-testcases="urn:gov.hhs.onc.crigtt:validate-testcases"
     xmlns:crigtt-validate-vocab="urn:gov.hhs.onc.crigtt:validate-vocab"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
@@ -11,7 +12,8 @@
     = IMPORTS
     =====================================================================================================-->
     <xsd:import namespace="urn:gov.hhs.onc.crigtt" schemaLocation="crigtt-core.xsd"/>
-    
+
+    <xsd:import namespace="urn:gov.hhs.onc.crigtt:validate-testcases" schemaLocation="crigtt-validate-testcases.xsd"/>
     <xsd:import namespace="urn:gov.hhs.onc.crigtt:validate-vocab" schemaLocation="crigtt-validate-vocab.xsd"/>
     
     <!--====================================================================================================
@@ -33,6 +35,12 @@
     <xsd:group name="StatusElements">
         <xsd:sequence>
             <xsd:element name="status" type="xsd:boolean"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:group name="TestcaseElements">
+        <xsd:sequence>
+            <xsd:element name="testcaseId" type="xsd:string"/>
         </xsd:sequence>
     </xsd:group>
     
@@ -59,6 +67,7 @@
             <xsd:enumeration value="INFO"/>
             <xsd:enumeration value="WARN"/>
             <xsd:enumeration value="ERROR"/>
+            <xsd:enumeration value="MISMATCH"/>
         </xsd:restriction>
     </xsd:simpleType>
     
@@ -129,6 +138,9 @@
             <xsd:element name="code" type="crigtt-validate-vocab:Code" minOccurs="0"/>
             <xsd:element name="description" type="xsd:string"/>
             <xsd:element name="messages" type="crigtt-validate:Messages" minOccurs="0"/>
+            <xsd:element name="actualResult" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="expectedResults" type="crigtt-validate-testcases:ExpectedResults" minOccurs="0"/>
+            <xsd:element name="contextSpecific" type="xsd:boolean" default="false"/>
         </xsd:sequence>
     </xsd:complexType>
     
@@ -144,6 +156,7 @@
             <xsd:element name="info" type="xsd:int"/>
             <xsd:element name="warn" type="xsd:int"/>
             <xsd:element name="error" type="xsd:int"/>
+            <xsd:element name="mismatch" type="xsd:int"/>
         </xsd:sequence>
     </xsd:complexType>
     
@@ -167,6 +180,7 @@
          <xsd:sequence>
             <xsd:group ref="crigtt-validate:DtoElements"/>
             <xsd:group ref="crigtt-validate:DocumentElements"/>
+            <xsd:group ref="crigtt-validate:TestcaseElements"/>
         </xsd:sequence>
     </xsd:complexType>
     
@@ -180,6 +194,7 @@
                     <xsd:element name="processedTimestamp" type="crigtt-validate:Timestamp"/>
                     <xsd:element name="results" type="crigtt-validate:Results"/>
                     <xsd:group ref="crigtt-validate:DocumentElements"/>
+                    <xsd:group ref="crigtt-validate:TestcaseElements"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>

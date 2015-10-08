@@ -27,7 +27,7 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
     @Resource(name = "validatorServiceImpl")
     private ValidatorService validatorService;
 
-    public ValidatorReport validate(Attachment docAttachment) throws Exception {
+    public ValidatorReport validate(Attachment docAttachment, String testcaseId) throws Exception {
         Exchange exchange = JAXRSUtils.getCurrentMessage().getExchange();
 
         ValidatorSubmission submission = new ValidatorSubmissionImpl();
@@ -35,6 +35,7 @@ public class ValidatorWebServiceImpl implements ValidatorWebService {
 
         ValidatorDocument doc = new ValidatorDocumentImpl();
         submission.setDocument(doc);
+        submission.setTestcaseId(testcaseId);
 
         doc.setFileName(CrigttFileUtils.buildSafeFileName(docAttachment.getContentDisposition().getParameter(ContentDispositionParameters.FILENAME)));
 

@@ -15,5 +15,6 @@ public interface ValidatorWebService {
     @Path("/validate")
     @POST
     @Produces({ MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_HTML_VALUE, MediaType.TEXT_XML_VALUE })
-    public ValidatorReport validate(@Multipart(ValidatorParameters.FILE_NAME) Attachment docAttachment) throws Exception;
+    public ValidatorReport validate(@Multipart(ValidatorParameters.FILE_NAME) Attachment docAttachment,
+        @Multipart(ValidatorParameters.TESTCASE_NAME) String testcaseId) throws Exception;
 }

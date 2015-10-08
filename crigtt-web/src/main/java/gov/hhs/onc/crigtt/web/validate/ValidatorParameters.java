@@ -8,6 +8,8 @@ public final class ValidatorParameters {
     @JsonConstant
     public final static String FORMAT_NAME = "format";
     @JsonConstant
+    public final static String TESTCASE_NAME = "testcase";
+    @JsonConstant
     public final static String TIME_ZONE_NAME = "timeZone";
 
     private ValidatorParameters() {

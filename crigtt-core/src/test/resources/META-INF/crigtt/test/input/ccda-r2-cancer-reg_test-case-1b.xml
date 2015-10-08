@@ -51,7 +51,7 @@
 				<!-- The first name element represents what the patient is known as -->
 				<name use="L">
 					<given>Meredith</given>
-					<given qualifier="IN">Lynn</given>
+					<given>Lynn</given>
 					<family>Shepherd</family>
 				</name>
 				<name>
@@ -1447,11 +1447,7 @@
 										<procedure classCode="PROC" moodCode="EVN">
 											<templateId root="2.16.840.1.113883.10.13.25" extension="2014-08-08"/>
 											<id root="4a7eed3b-d1d4-4f67-80fa-4972c563606c"/>
-											<code code="77412" codeSystem="2.16.840.1.113883.6.14" codeSystemName="HCPCS" displayName="Radiation treatment delivery, ≥ 1 MeV; complex" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											<!-- Other options for code (Radiation Regional Treatment Modality Procedure):
-											<code code="448385000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Megavoltage radiation therapy using photons" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											<code code="DM011ZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Beam Radiation of Right Breast using Photons 1 - 10 MeV" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											-->
+											<code nullFlavor="NA">
 												<originalText>
 													<reference value="#Rad1"/>
 												</originalText>
@@ -1464,10 +1460,9 @@
 												<observation classCode="OBS" moodCode="EVN">
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
-													<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-													<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
+													<id nullFlavor="NA"/>
+													<code nullFlavor="NA"/>
 													<statusCode code="completed"/>
-													<value xsi:type="CD" code="C50.411" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Malignant neoplasm of upper-outer quadrant of right female breast"/>
 												</observation>
 											</entryRelationship>
 										</procedure>
@@ -1484,11 +1479,7 @@
 										<procedure classCode="PROC" moodCode="EVN">
 											<templateId root="2.16.840.1.113883.10.13.26" extension="2014-08-08"/>
 											<id root="87cb6d8e-b33f-4b8b-a19e-443db01bde15"/>
-											<code code="77412" codeSystem="2.16.840.1.113883.6.14" codeSystemName="HCPCS" displayName="Radiation treatment delivery, ≥ 1 MeV; complex" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											<!-- Other options for code (Radiation Boost Modality Procedure):
-											<code code="448385000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Megavoltage radiation therapy using photons" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											<code code="DM011ZZ" codeSystem="2.16.840.1.113883.6.4" codeSystemName="ICD10 PCS" displayName="Beam Radiation of Right Breast using Photons 1 - 10 MeV" sdtc:valueSet="2.16.840.1.113883.3.520.4.23">
-											-->
+											<code nullFlavor="NA">
 												<originalText>
 													<reference value="#Rad1"/>
 												</originalText>
@@ -1501,10 +1492,9 @@
 												<observation classCode="OBS" moodCode="EVN">
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
-													<id root="ab1791b0-5c71-11db-b0de-0800200c9a66"/>
-													<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
+													<id nullFlavor="NA"/>
+													<code nullFlavor="NA"/>
 													<statusCode code="completed"/>
-													<value xsi:type="CD" code="C50.411" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Malignant neoplasm of upper-outer quadrant of right female breast"/>
 												</observation>
 											</entryRelationship>
 										</procedure>

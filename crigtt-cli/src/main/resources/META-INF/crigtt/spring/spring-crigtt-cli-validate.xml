@@ -27,7 +27,8 @@
     <!--suppress SpringPlaceholdersInspection -->
     <beans:bean id="cliValidatorOptsCrigtt" parent="cliValidatorOptsImpl" lazy-init="true" scope="prototype"
         p:format="true"
-        p:outputDirectory="${crigtt.cli.out.dir}"/>
+        p:outputDirectory="${crigtt.cli.out.dir}"
+        p:testcaseId="${crigtt.cli.testcase.name.default}"/>
     
     <!--====================================================================================================
     = COMMAND LINE INTERFACE VALIDATOR SERVICE

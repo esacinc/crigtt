@@ -23,7 +23,19 @@
     <beans:bean id="docSchematronSkeleton" parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
         c:src="classpath*:META-INF/crigtt/schematron/iso-schematron-xslt2/iso_schematron_skeleton_for_saxon.xsl"
         p:uri="iso_schematron_skeleton_for_saxon.xsl"/>
-    
+
+    <!--====================================================================================================
+    = TESTCASE SOURCES
+    =====================================================================================================-->
+    <util:list id="testcaseSources">
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase0.xml</beans:value>
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase1a.xml</beans:value>
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase1b.xml</beans:value>
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase2.xml</beans:value>
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase3.xml</beans:value>
+        <beans:value>classpath*:META-INF/crigtt/data/validate/testcases/crigtt-validate-testcases-testcase4.xml</beans:value>
+    </util:list>
+
     <!--====================================================================================================
     = XSLT EXECUTABLES
     =====================================================================================================-->
@@ -173,7 +185,19 @@
     <!--suppress SpringBeanConstructorArgInspection -->
     <beans:bean id="validatorTaskSchematronCcdaR2CancerReg" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
         p:schematron-ref="validatorSchematronCcdaR2CancerReg"/>
-    
+
+    <!--====================================================================================================
+    = CONTEXT SPECIFIC VALIDATOR TASKS
+    =====================================================================================================-->
+    <beans:bean id="validatorTaskContextSpecific" class="gov.hhs.onc.crigtt.validate.ContextSpecificValidatorTask" parent="validatorTask" abstract="true"/>
+
+    <beans:bean id="validatorTaskContextSpecificImpl" class="gov.hhs.onc.crigtt.validate.impl.ContextSpecificValidatorTaskImpl"
+        parent="validatorTaskContextSpecific" abstract="true"/>
+
+    <!--suppress SpringBeanConstructorArgInspection -->
+    <beans:bean id="validatorTaskContextSpecificCrigtt" parent="validatorTaskContextSpecificImpl" lazy-init="true" scope="prototype"
+        p:testcaseSources-ref="testcaseSources"/>
+
     <!--====================================================================================================
     = VALIDATOR SERVICES
     =====================================================================================================-->
@@ -185,6 +209,7 @@
         <beans:property name="taskBeanNames">
             <beans:array>
                 <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>
+                <beans:idref bean="validatorTaskContextSpecificCrigtt"/>
             </beans:array>
         </beans:property>
     </beans:bean>

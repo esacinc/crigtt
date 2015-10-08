@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crigtt-validate-testcases:testcase
+        xmlns:crigtt="urn:gov.hhs.onc.crigtt"
+        xmlns:crigtt-validate-testcases="urn:gov.hhs.onc.crigtt:validate-testcases">
+    <crigtt:id>testcase3</crigtt:id>
+    <crigtt:name>Test Case 3: Two Cancer Diagnoses</crigtt:name>
+
+    <crigtt-validate-testcases:xPathSets>
+        <!--====================================================================================================
+        = ID COMPARISONS
+        =====================================================================================================-->
+        <!--====================================================================================================
+        = PROBLEM OBSERVATION #1: REFERENCE ENTRY RELATIONSHIP
+        =====================================================================================================-->
+        <crigtt-validate-testcases:xPathSet>
+            <crigtt-validate-testcases:xPathExpression>
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
+                '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
+                value[@code='M8742/2' or @code='61217001' or @code='8742/2']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+            </crigtt-validate-testcases:xPathExpression>
+            <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
+            <crigtt-validate-testcases:expectedResults>
+                <crigtt-validate-testcases:expectedResult>
+                    /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='D03.62' or @code='302836005' or @code='172.6']]/id/@root
+                </crigtt-validate-testcases:expectedResult>
+            </crigtt-validate-testcases:expectedResults>
+        </crigtt-validate-testcases:xPathSet>
+
+        <!--====================================================================================================
+        = PROBLEM OBSERVATION #1: PROCEDURE ACTIVITY PROCEDURE
+        =====================================================================================================-->
+        <crigtt-validate-testcases:xPathSet>
+            <crigtt-validate-testcases:xPathExpression>
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
+                '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
+                value[@code='M8742/2' or @code='61217001' or @code='8742/2']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+            </crigtt-validate-testcases:xPathExpression>
+            <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
+            <crigtt-validate-testcases:expectedResults>
+                <crigtt-validate-testcases:expectedResult>
+                    /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension =
+                    '2014-08-08']]/entry/procedure[code[@code='5621009' or @code='11600' or
+                    @code='0HBCXZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id/@root
+                </crigtt-validate-testcases:expectedResult>
+            </crigtt-validate-testcases:expectedResults>
+        </crigtt-validate-testcases:xPathSet>
+
+        <!--====================================================================================================
+        = PROBLEM OBSERVATION #2: REFERENCE ENTRY RELATIONSHIP
+        =====================================================================================================-->
+        <crigtt-validate-testcases:xPathSet>
+            <crigtt-validate-testcases:xPathExpression>
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
+                '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
+                value[@code='M8721/3' or @code='2142002' or @code='8721/3']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+            </crigtt-validate-testcases:xPathExpression>
+            <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
+            <crigtt-validate-testcases:expectedResults>
+                <crigtt-validate-testcases:expectedResult>
+                    /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='C43.4' or @code='93642000' or @code='172.4']]/id/@root
+                </crigtt-validate-testcases:expectedResult>
+            </crigtt-validate-testcases:expectedResults>
+        </crigtt-validate-testcases:xPathSet>
+
+        <!--====================================================================================================
+        = PROBLEM OBSERVATION #2: PROCEDURE ACTIVITY PROCEDURE
+        =====================================================================================================-->
+        <crigtt-validate-testcases:xPathSet>
+            <crigtt-validate-testcases:xPathExpression>
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
+                '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
+                value[@code='M8721/3' or @code='2142002' or @code='8721/3']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+            </crigtt-validate-testcases:xPathExpression>
+            <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
+            <crigtt-validate-testcases:expectedResults>
+                <crigtt-validate-testcases:expectedResult>
+                    /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension =
+                    '2014-08-08']]/entry/procedure[code[@code='39559009' or @code='11621' or
+                    @code='0HB4XZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id/@root
+                </crigtt-validate-testcases:expectedResult>
+            </crigtt-validate-testcases:expectedResults>
+        </crigtt-validate-testcases:xPathSet>
+    </crigtt-validate-testcases:xPathSets>
+</crigtt-validate-testcases:testcase>

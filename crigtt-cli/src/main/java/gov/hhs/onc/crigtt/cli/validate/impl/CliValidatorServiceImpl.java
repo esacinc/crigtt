@@ -165,6 +165,7 @@ public class CliValidatorServiceImpl implements CliValidatorService {
         ValidatorDocument doc = new ValidatorDocumentImpl();
         doc.setFileName(ObjectUtils.defaultIfNull(opts.getInputFileName(), inFileName));
         submission.setDocument(doc);
+        submission.setTestcaseId(opts.getTestcaseId());
 
         ValidatorReport report;
 

@@ -74,6 +74,10 @@
     <beans:bean id="objFactoryValidate" class="gov.hhs.onc.crigtt.validate.ObjectFactory"/>
     
     <beans:bean id="objFactoryValidateImpl" class="gov.hhs.onc.crigtt.validate.impl.ObjectFactory"/>
+
+    <beans:bean id="objFactoryValidateTestcases" class="gov.hhs.onc.crigtt.validate.testcases.ObjectFactory"/>
+
+    <beans:bean id="objFactoryValidateTestcasesImpl" class="gov.hhs.onc.crigtt.validate.testcases.impl.ObjectFactory"/>
     
     <beans:bean id="objFactoryValidateVocab" class="gov.hhs.onc.crigtt.validate.vocab.ObjectFactory"/>
     
@@ -124,6 +128,7 @@
             <beans:array>
                 <beans:value>#{ objFactoryValidateImpl.class.package.name }</beans:value>
                 <beans:value>#{ objFactoryValidateVocabImpl.class.package.name }</beans:value>
+                <beans:value>#{ objFactoryValidateTestcasesImpl.class.package.name }</beans:value>
             </beans:array>
         </beans:property>
     </beans:bean>

@@ -51,7 +51,7 @@
 				<!-- The first name element represents what the patient is known as -->
 				<name use="L">
 					<given>Evelyn</given>
-					<given qualifier="IN">E</given>
+					<given>E</given>
 					<family qualifier="SP">Everyman</family>
 					<suffix qualifier="AC">J.D.</suffix>
 				</name>

@@ -184,96 +184,82 @@ div.panel-body div.tab-content div.tab-pane {
     overflow-x: auto;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) caption ul {
     display: inline-block;
     list-style: none;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) caption ul li {
     display: inline-block;
     margin-left: 20px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li:nth-of-type(1) {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) caption ul li:nth-of-type(1) {
     margin-left: 0;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li span strong {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) caption ul li span strong {
     display: inline-block;
     text-align: right;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) caption ul li span strong i.fa {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) caption ul li span strong i.fa {
     margin-right: 5px;
     font-size: 13px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table tr.tablesorter-filter-row td label {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table tr.tablesorter-filter-row td label {
     margin-right: 5px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table tr.tablesorter-filter-row td div.select2 {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table tr.tablesorter-filter-row td div.select2 {
     min-width: 120px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table tr.tablesorter-filter-row td div.select2 input {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table tr.tablesorter-filter-row td div.select2 input {
     font-family: "Tahoma", sans-serif;
     font-size: 9px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th,
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table th,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td {
     min-width: 110px;
     text-align: center;
     vertical-align: middle;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td ul {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td ul {
     margin-left: 20px;
     padding-left: 0;
     text-align: left;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(2),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(2) {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table th:nth-of-type(n + 2),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td:nth-of-type(n + 2) {
     min-width: 160px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(3),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(3),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(4),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(4),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(5),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(5),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(6),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(6),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(7),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(7),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(8),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(8),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(9),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(9),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(10),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(10){
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(n + 3),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(n + 3) {
     min-width: 200px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th:nth-of-type(11),
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td:nth-of-type(11) {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table th:nth-of-type(11),
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td:nth-of-type(11) {
     min-width: 90px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th div,
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table th div,
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td {
     padding: 2px;
     font-size: 9px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table th button.btn-filter {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table th button.btn-filter {
     padding: 2px;
 }
 
-div.panel-body div.tab-content div.tab-pane:nth-of-type(2) table.table td pre {
+div.panel-body div.tab-content div.tab-pane:nth-of-type(n + 2) table.table td pre {
     max-width: 500px;
     max-height: 75px;
     margin: auto;

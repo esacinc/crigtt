@@ -42,8 +42,8 @@ public class SchematronValidatorTaskImpl extends AbstractValidatorTask implement
     private Map<String, ValidatorLevel> phaseLevels;
     private ValidatorSchematron schematron;
 
-    public SchematronValidatorTaskImpl(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces) {
-        super(doc, docSrc, docFileName, docNamespaces);
+    public SchematronValidatorTaskImpl(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces, String testcaseId) {
+        super(doc, docSrc, docFileName, docNamespaces, testcaseId);
     }
 
     @Override

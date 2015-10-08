@@ -38,7 +38,7 @@
 			<patient>
 				<name use="L">
 					<given>Izzie</given>
-					<given qualifier="IN">Jean</given>
+					<given>Jean</given>
 					<family>Stevens</family>
 				</name>
 				<administrativeGenderCode code="F" displayName="Female" codeSystem="2.16.840.1.113883.5.1" codeSystemName="AdministrativeGender"/>
@@ -311,6 +311,10 @@
 											</value>
 										</qualifier>
 									</value>
+									<!--Other options for value (Histologic Type)
+									<value xsi:type="CD" code="61217001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Nodular melanoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
+									<value xsi:type="CD" code="8742/2" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Nodular melanoma">
+									-->
 									<targetSiteCode code="D03.62" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Melanoma in situ of left upper limb, including shoulder">
 									<!-- Other options for targetSiteCode (Primary Site)
 									<targetSiteCode code="172.6" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Malignant melanoma of skin of upper limb, including shoulder">

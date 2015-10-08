@@ -11,6 +11,7 @@ import gov.hhs.onc.crigtt.validate.render.JsonValidatorRenderer;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderOptions;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.validate.render.XmlValidatorRenderer;
+import gov.hhs.onc.crigtt.validate.testcases.Testcase;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -47,15 +48,19 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
             testDoc.setFileName(testInputDocSrc.getResource().getFilename());
             testSubmission.setDocument(testDoc);
 
-            ValidatorReport testReport = this.service.validate(testSubmission);
+            for(Testcase testcase : this.testcases) {
+                testSubmission.setTestcaseId(testcase.getId());
 
-            this.writeResponse(true, testSubmission, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
-            this.writeResponse(true, testSubmission, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
-            this.writeResponse(true, testSubmission, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+                ValidatorReport testReport = this.service.validate(testSubmission);
+
+                this.writeResponse(true, testSubmission, ValidatorRenderType.JSON, this.jsonRenderer.render(testReport, RENDER_OPTS));
+                this.writeResponse(true, testSubmission, ValidatorRenderType.XML, this.xmlRenderer.render(testReport, RENDER_OPTS));
+                this.writeResponse(true, testSubmission, ValidatorRenderType.HTML, this.htmlRenderer.render(testReport, RENDER_OPTS));
+            }
         }
     }
 
-    @BeforeClass(groups = { "crigtt.test.it.validate.all" }, dependsOnMethods = "initializeDocuments")
+    @BeforeClass(groups = { "crigtt.test.it.validate.all" }, dependsOnMethods = { "initializeDocuments", "initializeTestcases" })
     @Override
     public void initializeFileSystem() throws Exception {
         super.initializeFileSystem();
@@ -65,5 +70,11 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
     @Override
     public void initializeDocuments() throws Exception {
         super.initializeDocuments();
+    }
+
+    @BeforeClass(groups = { "crigtt.test.it.validate.all" })
+    @Override
+    protected void initializeTestcases() {
+        super.initializeTestcases();
     }
 }

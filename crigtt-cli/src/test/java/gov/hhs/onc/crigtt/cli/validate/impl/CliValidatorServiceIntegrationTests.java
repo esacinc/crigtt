@@ -44,7 +44,7 @@ public class CliValidatorServiceIntegrationTests extends AbstractCrigttCliIntegr
         Assert.assertEquals(this.service.getExitCode(), 0, "Invalid CLI validator service exit code.");
     }
 
-    @BeforeClass(groups = { "crigtt.test.it.cli.validate.all" }, dependsOnMethods = "initializeDocuments")
+    @BeforeClass(groups = { "crigtt.test.it.cli.validate.all" }, dependsOnMethods = { "initializeDocuments", "initializeTestcases" })
     @Override
     public void initializeFileSystem() throws Exception {
         super.initializeFileSystem();
@@ -54,5 +54,11 @@ public class CliValidatorServiceIntegrationTests extends AbstractCrigttCliIntegr
     @Override
     public void initializeDocuments() throws Exception {
         super.initializeDocuments();
+    }
+
+    @BeforeClass(groups = { "crigtt.test.it.cli.validate.all" })
+    @Override
+    protected void initializeTestcases() {
+        super.initializeTestcases();
     }
 }

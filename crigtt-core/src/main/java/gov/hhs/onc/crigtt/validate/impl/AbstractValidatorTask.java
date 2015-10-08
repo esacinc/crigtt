@@ -17,12 +17,14 @@ public abstract class AbstractValidatorTask implements ValidatorTask {
     protected String docFileName;
     protected Map<String, String> docNamespaces;
     protected IndependentContext xpathContext;
+    protected String testcaseId;
 
-    protected AbstractValidatorTask(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces) {
+    protected AbstractValidatorTask(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces, String testcaseId) {
         this.doc = doc;
         this.docSrc = docSrc;
         this.docFileName = docFileName;
         this.docNamespaces = docNamespaces;
+        this.testcaseId = testcaseId;
     }
 
     @Override

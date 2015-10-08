@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    elementFormDefault="qualified"
+    targetNamespace="urn:gov.hhs.onc.crigtt:validate-testcases"
+    xmlns:crigtt="urn:gov.hhs.onc.crigtt"
+    xmlns:crigtt-validate-testcases="urn:gov.hhs.onc.crigtt:validate-testcases"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!--====================================================================================================
+    = IMPORTS
+    =====================================================================================================-->
+    <xsd:import namespace="urn:gov.hhs.onc.crigtt" schemaLocation="crigtt-core.xsd"/>
+
+    <!--====================================================================================================
+    = COMPLEX TYPES
+    =====================================================================================================-->
+    <xsd:complexType name="ElementSet">
+        <xsd:sequence>
+            <xsd:element name="optional" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="subExpressionSet" type="crigtt-validate-testcases:SubExpressionSet" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ElementSets">
+        <xsd:sequence>
+            <xsd:element name="elementSet" type="crigtt-validate-testcases:ElementSet" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExpectedResults">
+        <xsd:sequence>
+            <xsd:element name="expectedResult" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SubExpressionSet">
+        <xsd:sequence>
+            <xsd:element name="subExpression" type="xsd:string" default=""/>
+            <xsd:element name="expectedResults" type="crigtt-validate-testcases:ExpectedResults"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="XPathSet">
+        <xsd:sequence>
+            <xsd:element name="xPathExpression" type="xsd:string"/>
+            <xsd:element name="xPathResultComparison" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:choice>
+                <xsd:element name="expectedResults" type="crigtt-validate-testcases:ExpectedResults"/>
+                <xsd:element name="elementSets" type="crigtt-validate-testcases:ElementSets"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="XPathSets">
+        <xsd:sequence>
+            <xsd:element name="xPathSet" type="crigtt-validate-testcases:XPathSet" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Testcase">
+        <xsd:sequence>
+            <xsd:group ref="crigtt:NameElements"/>
+            <xsd:element name="xPathSets" type="crigtt-validate-testcases:XPathSets" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!--====================================================================================================
+    = ELEMENTS
+    =====================================================================================================-->
+    <xsd:element name="testcase" type="crigtt-validate-testcases:Testcase"/>
+</xsd:schema>

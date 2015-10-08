@@ -111,11 +111,13 @@ public class ValidatorServiceImpl implements ValidatorService {
         ValidatorDocument docObj = submission.getDocument();
         report.setDocument(docObj);
 
+        String testcaseId = submission.getTestcaseId();
         String docFileName = docObj.getFileName();
         byte[] docContent = docObj.getContent(), docHash =
             CrigttFunctionUtils.consume(docObj::getHash, () -> ObjectUtils.clone(this.digest).digest(docContent), docObj::setHash);
-        String docHashStr = Base64.encodeBase64String(docHash);
-        ValidatorResults results = this.cache.get(docHashStr, ValidatorResults.class);
+
+        String docHashTestcaseStr = Base64.encodeBase64String(docHash) + Base64.encodeBase64String(testcaseId.getBytes());
+        ValidatorResults results = this.cache.get(docHashTestcaseStr, ValidatorResults.class);
         ValidatorEventTotals eventTotals;
         long processedTimestamp;
 
@@ -126,8 +128,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             LOGGER
                 .debug(String
                     .format(
-                        "Retrieved submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) results (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d) from cache.",
-                        id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
+                        "Retrieved submission (id=%s, submitted=%s) document (fileName=%s, testCaseId=%s, document + testCaseId hash=%s) results (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d) from cache.",
+                        id, formattedSubmittedTimestamp, docFileName, testcaseId, docHashTestcaseStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
                         (eventTotals = results.getEventTotals()).getAll(), eventTotals.getInfo(), eventTotals.getWarn(), eventTotals.getError()));
 
             return report;
@@ -159,7 +161,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                     taskBeanName -> {
                         ValidatorFutureTask futureTask =
                             new ValidatorFutureTask(taskLatch,
-                                ((ValidatorTask) this.beanFactory.getBean(taskBeanName, doc, docSrc, docFileName, docNamespaces)));
+                                ((ValidatorTask) this.beanFactory.getBean(taskBeanName, doc, docSrc, docFileName, docNamespaces, testcaseId)));
 
                         this.taskExecutor.submit(futureTask);
 
@@ -172,14 +174,14 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         for (ValidatorFutureTask futureTask : futureTasks) {
             if ((taskException = futureTask.getException()) != null) {
-                LOGGER.error(String.format("Unable to validate submission (id=%s, submitted=%s) document (fileName=%s, hash=%s).", id,
-                    formattedSubmittedTimestamp, docFileName, docHashStr), taskException);
+                LOGGER.error(String.format("Unable to validate submission (id=%s, submitted=%s) document (fileName=%s, testCaseId=%s, document + testCaseId hash=%s).",
+                    id, formattedSubmittedTimestamp, docFileName, testcaseId, docHashTestcaseStr), taskException);
 
                 throw taskException;
             }
         }
 
-        int numInfoEvents = 0, numWarnEvents = 0, numErrorEvents = 0;
+        int numInfoEvents = 0, numWarnEvents = 0, numErrorEvents = 0, numMismatchEvents = 0;
         boolean status = true;
         int eventId = 0;
         List<ValidatorEvent> taskEvents;
@@ -210,6 +212,10 @@ public class ValidatorServiceImpl implements ValidatorService {
 
                         status = false;
                         break;
+
+                    case MISMATCH:
+                        numMismatchEvents++;
+                        break;
                 }
             }
         }
@@ -218,19 +224,21 @@ public class ValidatorServiceImpl implements ValidatorService {
         eventTotals.setInfo(numInfoEvents);
         eventTotals.setWarn(numWarnEvents);
         eventTotals.setError(numErrorEvents);
+        eventTotals.setMismatch(numMismatchEvents);
 
         results.setStatus(status);
 
-        this.cache.putIfAbsent(docHashStr, results);
+        this.cache.putIfAbsent(docHashTestcaseStr, results);
 
         report.setProcessedTimestamp((processedTimestamp = Instant.now().getMillis()));
+        report.setTestcaseId(testcaseId);
 
         LOGGER
             .info(String
                 .format(
-                    "Submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) validated (processed=%s, status=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
-                    id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)), status,
-                    (eventId - 1), numInfoEvents, numWarnEvents, numErrorEvents));
+                    "Submission (id=%s, submitted=%s) document (fileName=%s, testCaseId=%s, document + testCaseId hash=%s) validated (processed=%s, status=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d, numMismatchEvents=%d).",
+                    id, formattedSubmittedTimestamp, docFileName, testcaseId, docHashTestcaseStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)), status,
+                    (eventId - 1), numInfoEvents, numWarnEvents, numErrorEvents, numMismatchEvents));
 
         return report;
     }

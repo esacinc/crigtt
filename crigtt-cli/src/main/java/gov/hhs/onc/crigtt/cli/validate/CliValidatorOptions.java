@@ -36,4 +36,8 @@ public interface CliValidatorOptions {
     public ValidatorRenderType getType();
 
     public void setType(ValidatorRenderType type);
+
+    public String getTestcaseId();
+
+    public void setTestcaseId(String testcaseId);
 }

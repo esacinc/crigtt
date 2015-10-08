@@ -154,6 +154,17 @@
                                 </span>
                                 <input id="input-file-doc-display" class="form-control" type="text" readonly="readonly"/>
                             </div>
+                            <h3>
+                                <i class="fa fa-check-square"></i>
+                                <strong>Test Cases</strong>
+                            </h3>
+                            <div class="input-group">
+                                <select id="testcase-select" class="input-sm form-control" name="testcase">
+                                    <c:forEach var="testcase" items="${testcases}">
+                                        <option value=${testcase.id}>${testcase.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="btn-group btn-group-sm">

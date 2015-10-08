@@ -38,7 +38,7 @@
 			<patient>
 				<name use="L">
 					<given>Richard</given>
-					<given qualifier="IN" nullFlavor="NI"/>
+					<given nullFlavor="NI"/>
 					<family>Webber</family>
 				</name>
 				<administrativeGenderCode code="M" displayName="Male" codeSystem="2.16.840.1.113883.5.1" codeSystemName="AdministrativeGender"/>

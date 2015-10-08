@@ -16,6 +16,7 @@ public class CliValidatorOptionsImpl implements CliValidatorOptions {
     private File outDir;
     private WritableResource outFile;
     private ValidatorRenderType type;
+    private String testcaseId;
 
     @Override
     public boolean getFormat() {
@@ -94,5 +95,18 @@ public class CliValidatorOptionsImpl implements CliValidatorOptions {
     @Parameter(names = { "-t", "--type" }, required = true, arity = 1, description = "Output render type.")
     public void setType(ValidatorRenderType type) {
         this.type = type;
+    }
+
+    @Override
+    public String getTestcaseId() {
+        return this.testcaseId;
+    }
+
+    @Override
+    @Parameter(names = { "-c", "--testcase" }, arity = 1,
+        description =
+            "Test case for running conformance against test data. Possible values: [testcase0, testcase1a, testcase1b, testcase2, testcase3, testcase4]")
+    public void setTestcaseId(String testcaseId) {
+        this.testcaseId = testcaseId;
     }
 }

@@ -2,10 +2,13 @@ package gov.hhs.onc.crigtt.web.validate.impl;
 
 import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
+import gov.hhs.onc.crigtt.validate.testcases.Testcase;
 import gov.hhs.onc.crigtt.web.test.impl.AbstractCrigttWebIntegrationTests;
 import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
 import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -36,33 +39,46 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
     @Test
     public void testValidate() throws Exception {
         for (ResourceSource testInputDocSrc : this.testInputDocSrcs) {
-            HttpHeaders testReqHeaders = new HttpHeaders();
-            testReqHeaders.setContentDispositionFormData(ValidatorParameters.FILE_NAME, testInputDocSrc.getResource().getFilename());
+            for (Testcase testcase : this.testcases) {
+                String testcaseId = testcase.getId();
 
-            MultipartBody testReqBody =
-                new MultipartBody(new Attachment(ValidatorParameters.FILE_NAME, new ByteDataSource(testInputDocSrc.getBytes(), MediaType.TEXT_XML_VALUE),
-                    new MultivaluedHashMap<>(testReqHeaders.toSingleValueMap())));
+                HttpHeaders testFileReqHeaders = new HttpHeaders();
+                testFileReqHeaders.setContentDispositionFormData(ValidatorParameters.FILE_NAME, testInputDocSrc.getResource().getFilename());
 
-            WebClient testWebClient = WebClient.fromClient(this.testClient).type(MediaType.MULTIPART_FORM_DATA_VALUE);
-            ValidatorRenderType[] testRenderTypes = ValidatorRenderType.values();
-            Map<String, HttpStatus> testRespStatusMap = new LinkedHashMap<>(testRenderTypes.length);
-            String testReqUri;
-            Response testResp;
+                HttpHeaders testTestcaseReqHeaders = new HttpHeaders();
+                testTestcaseReqHeaders.add(ValidatorParameters.TESTCASE_NAME, testcaseId);
 
-            for (ValidatorRenderType testRenderType : testRenderTypes) {
-                testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
-                    HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
+                List<Attachment> attachments = new ArrayList<>();
+                attachments.add(new Attachment(ValidatorParameters.FILE_NAME, new ByteDataSource(testInputDocSrc.getBytes(), MediaType.TEXT_XML_VALUE),
+                    new MultivaluedHashMap<>(testFileReqHeaders.toSingleValueMap())));
 
-                this.writeResponse(testResp.getHeaderString(ValidatorHeaders.RESP_FILE_NAME_NAME), testResp.readEntity(byte[].class));
+                // noinspection ConstantConditions
+                attachments.add(new Attachment(ValidatorParameters.TESTCASE_NAME, new ByteDataSource(testcaseId.getBytes()),
+                    new MultivaluedHashMap<>(testTestcaseReqHeaders.toSingleValueMap())));
+
+                MultipartBody testReqBody = new MultipartBody(attachments);
+
+                WebClient testWebClient = WebClient.fromClient(this.testClient).type(MediaType.MULTIPART_FORM_DATA_VALUE);
+                ValidatorRenderType[] testRenderTypes = ValidatorRenderType.values();
+                Map<String, HttpStatus> testRespStatusMap = new LinkedHashMap<>(testRenderTypes.length);
+                String testReqUri;
+                Response testResp;
+
+                for (ValidatorRenderType testRenderType : testRenderTypes) {
+                    testRespStatusMap.put((testReqUri = (this.testUrl + FilenameUtils.EXTENSION_SEPARATOR + testRenderType.getExtension())),
+                        HttpStatus.valueOf((testResp = testWebClient.to(testReqUri, false).post(testReqBody)).getStatus()));
+
+                    this.writeResponse(testResp.getHeaderString(ValidatorHeaders.RESP_FILE_NAME_NAME), testResp.readEntity(byte[].class));
+                }
+
+                testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(
+                    "Invalid test query (uri=%s) response status (code=%d text=%s).", testAssertReqUri, testAssertRespStatus.value(),
+                    testAssertRespStatus.getReasonPhrase())));
             }
-
-            testRespStatusMap.forEach((testAssertReqUri, testAssertRespStatus) -> Assert.assertSame(testAssertRespStatus, HttpStatus.OK, String.format(
-                "Invalid test query (uri=%s) response status (code=%d text=%s).", testAssertReqUri, testAssertRespStatus.value(),
-                testAssertRespStatus.getReasonPhrase())));
         }
     }
 
-    @BeforeClass(groups = { "crigtt.test.it.web.ws.all" }, dependsOnMethods = "initializeDocuments")
+    @BeforeClass(groups = { "crigtt.test.it.web.ws.all" }, dependsOnMethods = { "initializeDocuments", "initializeTestcases" })
     @Override
     public void initializeFileSystem() throws Exception {
         super.initializeFileSystem();
@@ -72,5 +88,11 @@ public class ValidatorServiceWebIntegrationTests extends AbstractCrigttWebIntegr
     @Override
     public void initializeDocuments() throws Exception {
         super.initializeDocuments();
+    }
+
+    @BeforeClass(groups = { "crigtt.test.it.web.ws.all" })
+    @Override
+    protected void initializeTestcases() {
+        super.initializeTestcases();
     }
 }

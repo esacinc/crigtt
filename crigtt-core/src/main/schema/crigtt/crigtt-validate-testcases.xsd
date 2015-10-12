@@ -12,6 +12,16 @@
     <xsd:import namespace="urn:gov.hhs.onc.crigtt" schemaLocation="crigtt-core.xsd"/>
 
     <!--====================================================================================================
+    = SIMPLE TYPES: ENUMERATIONS
+    =====================================================================================================-->
+    <xsd:simpleType name="MatchingLevel">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="EQUALS"/>
+            <xsd:enumeration value="SUBSTRING"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!--====================================================================================================
     = COMPLEX TYPES
     =====================================================================================================-->
     <xsd:complexType name="ElementSet">
@@ -33,9 +43,17 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="MatchingCondition">
+        <xsd:sequence>
+            <xsd:element name="matchingLevel" type="crigtt-validate-testcases:MatchingLevel" minOccurs="0" default="EQUALS"/>
+            <xsd:element name="matchLength" type="xsd:int" minOccurs="0" default="8"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:complexType name="SubExpressionSet">
         <xsd:sequence>
             <xsd:element name="subExpression" type="xsd:string" default=""/>
+            <xsd:element name="matchingCondition" type="crigtt-validate-testcases:MatchingCondition" minOccurs="0"/>
             <xsd:element name="expectedResults" type="crigtt-validate-testcases:ExpectedResults"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -44,6 +62,7 @@
         <xsd:sequence>
             <xsd:element name="xPathExpression" type="xsd:string"/>
             <xsd:element name="xPathResultComparison" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="matchingCondition" type="crigtt-validate-testcases:MatchingCondition" minOccurs="0"/>
             <xsd:choice>
                 <xsd:element name="expectedResults" type="crigtt-validate-testcases:ExpectedResults"/>
                 <xsd:element name="elementSets" type="crigtt-validate-testcases:ElementSets"/>

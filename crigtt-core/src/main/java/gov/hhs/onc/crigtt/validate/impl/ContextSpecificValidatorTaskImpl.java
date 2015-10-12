@@ -11,6 +11,7 @@ import gov.hhs.onc.crigtt.validate.ValidatorLocation;
 import gov.hhs.onc.crigtt.validate.testcases.ElementSet;
 import gov.hhs.onc.crigtt.validate.testcases.ElementSets;
 import gov.hhs.onc.crigtt.validate.testcases.ExpectedResults;
+import gov.hhs.onc.crigtt.validate.testcases.MatchingCondition;
 import gov.hhs.onc.crigtt.validate.testcases.SubExpressionSet;
 import gov.hhs.onc.crigtt.validate.testcases.Testcase;
 import gov.hhs.onc.crigtt.validate.testcases.XPathSet;
@@ -24,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
 import net.sf.saxon.om.NodeInfo;
@@ -79,8 +82,8 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         loc.setNodeExpression(baseXPathExpression);
 
         List<String> expectedResults = xPathSetContent.getExpectedResults();
-
         List<XdmNode> locNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathSet.getXPathExpression(), this.xpathContext, this.doc));
+        MatchingCondition matchingCondition = xPathSet.getMatchingCondition();
 
         for (XdmNode locNode : locNodes) {
             if (locNode != null) {
@@ -100,10 +103,10 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         }
                     }
 
-                    assertionStatus = getAssertionStatus(expectedXPathResults, actualResult);
+                    assertionStatus = getAssertionStatus(expectedXPathResults, actualResult, matchingCondition);
                     expectedResults.addAll(expectedXPathResults);
                 } else {
-                    assertionStatus = getAssertionStatus(expectedResults, actualResult);
+                    assertionStatus = getAssertionStatus(expectedResults, actualResult, matchingCondition);
                 }
 
                 event.setActualResult(actualResult);
@@ -136,6 +139,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
             int nodeIndex = 0;
 
             for (SubExpressionSet subExpressionSet : elementSet.getSubExpressionSets()) {
+                MatchingCondition matchingCondition = subExpressionSet.getMatchingCondition();
                 String subExpression = subExpressionSet.getSubExpression();
                 List<String> expectedResults = subExpressionSet.getExpectedResults();
                 String xPathExpression = getIndexedXPathExpression(nodeIndex, baseXPathExpression, subExpression);
@@ -159,7 +163,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         setLocationInfo(loc, nodeInfo, getIndexedXPathExpression(nodeIndex, baseXPathExpression, subExpression));
                         event.setActualResult(actualResult);
 
-                        if ((assertionStatus = getAssertionStatus(expectedResults, actualResult))) {
+                        if ((assertionStatus = getAssertionStatus(expectedResults, actualResult, matchingCondition))) {
                             setLocationInfo(loc, nodeInfo,
                                 getIndexedXPathExpression(nodeIndex == 0 ? (nodeIndex = a + 1) : nodeIndex, baseXPathExpression, subExpression));
 
@@ -205,7 +209,27 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
     }
 
     private boolean getAssertionStatus(List<String> expectedResults, String actualResult) {
-        return expectedResults.stream().anyMatch(expectedResult -> expectedResult.equals(actualResult));
+        return getAssertionStatus(expectedResults, actualResult, null);
+    }
+
+    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, @Nullable MatchingCondition matchingCondition) {
+        Predicate<String> matchingPredicate = actualResult::equals;
+
+        if (matchingCondition != null) {
+            int substrMatchLen = matchingCondition.getMatchLength();
+
+            switch (matchingCondition.getMatchingLevel()) {
+                case EQUALS:
+                    matchingPredicate = actualResult::equals;
+                    break;
+                case SUBSTRING:
+                    matchingPredicate = expectedResult -> (expectedResult.length() < substrMatchLen ? expectedResult.equals(actualResult) :
+                        expectedResult.substring(0, substrMatchLen).equals(actualResult));
+                    break;
+            }
+        }
+
+        return expectedResults.stream().anyMatch(matchingPredicate);
     }
 
     @Override

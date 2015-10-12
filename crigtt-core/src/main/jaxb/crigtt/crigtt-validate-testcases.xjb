@@ -67,6 +67,23 @@
         </jaxb:bindings>
     </jaxb:bindings>
 
+    <jaxb:bindings node="xsd:complexType[@name='MatchingCondition']">
+        <annox:annotate target="class">
+            @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.testcases.impl.MatchingConditionImpl.class) })
+        </annox:annotate>
+        <annox:annotate target="class">
+            @com.fasterxml.jackson.annotation.JsonTypeName("matchingCondition")
+        </annox:annotate>
+        <jaxb:bindings node="xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='matchingLevel']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='matchLength']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
     <jaxb:bindings node="xsd:complexType[@name='SubExpressionSet']">
         <annox:annotate target="class">
             @com.fasterxml.jackson.annotation.JsonSubTypes({ @com.fasterxml.jackson.annotation.JsonSubTypes.Type(gov.hhs.onc.crigtt.validate.testcases.impl.SubExpressionSetImpl.class) })
@@ -76,6 +93,9 @@
         </annox:annotate>
         <jaxb:bindings node="xsd:sequence">
             <jaxb:bindings node="xsd:element[@name='subExpression']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='matchingCondition']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='expectedResults']">
@@ -96,6 +116,9 @@
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='xPathResultComparison']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='matchingCondition']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
             <jaxb:bindings node="xsd:choice">

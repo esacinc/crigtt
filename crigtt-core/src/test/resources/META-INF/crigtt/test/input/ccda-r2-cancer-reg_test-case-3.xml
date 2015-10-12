@@ -87,8 +87,8 @@
 			<telecom value="Kepnera@Derm.com"/>
 			<assignedPerson>
 				<name>
-					<given>Kepner</given>
-					<family>April</family>
+					<given>April</given>
+					<family>Kepner</family>
 					<suffix qualifier="AC">MD</suffix>
 				</name>
 			</assignedPerson>
@@ -1121,7 +1121,7 @@
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
 													<id nullFlavor="NA"/>
-													<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
+													<code nullFlavor="NA"/>
 													<statusCode code="completed"/>
 												</observation>
 											</entryRelationship>
@@ -1150,7 +1150,7 @@
 													<templateId root="2.16.840.1.113883.10.20.22.4.19" extension="2014-06-09"/>
 													<templateId root="2.16.840.1.113883.10.13.19" extension="2014-08-08"/>
 													<id nullFlavor="NA"/>
-													<code code="29308-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Diagnosis"/>
+													<code nullFlavor="NA"/>
 													<statusCode code="completed"/>
 												</observation>
 											</entryRelationship>

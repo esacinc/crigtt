@@ -371,16 +371,20 @@
                                     </xsl:choose>
                                 </xsl:with-param>
                             </xsl:call-template>
-                            <xsl:call-template name="prop">
-                                <xsl:with-param name="containerTagName" select="'div'"/>
-                                <xsl:with-param name="name" select="'Result (Test Data Conformance Events)'"/>
-                                <xsl:with-param name="value">
-                                    <xsl:choose>
-                                        <xsl:when test="$mismatchStatus">Test data mismatches exist</xsl:when>
-                                        <xsl:otherwise>No test data mismatches</xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:with-param>
-                            </xsl:call-template>
+                            <xsl:choose>
+                                <xsl:when test="$testcaseNum != $noTestcaseSelected">
+                                    <xsl:call-template name="prop">
+                                        <xsl:with-param name="containerTagName" select="'div'"/>
+                                        <xsl:with-param name="name" select="'Result (Test Data Conformance Events)'"/>
+                                        <xsl:with-param name="value">
+                                            <xsl:choose>
+                                                <xsl:when test="$mismatchStatus">Test data mismatches exist</xsl:when>
+                                                <xsl:otherwise>No test data mismatches</xsl:otherwise>
+                                            </xsl:choose>
+                                        </xsl:with-param>
+                                    </xsl:call-template>
+                                </xsl:when>
+                            </xsl:choose>
                         </span>
                     </a>
                     <span class="well well-sm">

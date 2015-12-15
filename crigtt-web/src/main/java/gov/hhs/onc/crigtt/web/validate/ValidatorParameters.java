@@ -8,6 +8,8 @@ public final class ValidatorParameters {
     @JsonConstant
     public final static String FORMAT_NAME = "format";
     @JsonConstant
+    public final static String SCHEMATRON_NAME = "selectedSchematron";
+    @JsonConstant
     public final static String TIME_ZONE_NAME = "timeZone";
 
     private ValidatorParameters() {

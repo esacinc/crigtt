@@ -65,7 +65,7 @@
             <beans:array>
                 <beans:ref bean="extFuncLoc"/>
                 <beans:ref bean="extFuncValidateVocabStatic"/>
-                <beans:ref bean="extFuncValidateVocabDynamic"/>
+                <!--beans:ref bean="extFuncValidateVocabDynamic"/-->
             </beans:array>
         </beans:property>
         <beans:property name="parameters">
@@ -91,15 +91,39 @@
             </beans:array>
         </beans:property>
     </beans:bean>
-    
-    <beans:bean id="validatorSchematronCcdaR2CancerReg" parent="validatorSchematronImpl"
-        p:id="ccda-r2-cancer-reg"
-        p:name="Consolidated Clinical Document Architecture (C-CDA) Release 2.0 Cancer Registry DSTU 1.1"
-        p:source="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/CancerIG_R1D1dot1.sch">
+
+    <beans:bean id="validatorSchematronCec" parent="validatorSchematronImpl"
+                p:id="cec"
+                p:name="Quality Reporting Document Architecture Category I (QRDA 1) CEC Release 3"
+                p:source="classpath*:META-INF/crigtt/schematron/ecqm/CMS_2016_QRDA_Category_1-CEC_v3.sch">
         <beans:property name="vocabServices">
             <beans:array>
-                <beans:ref bean="vocabServiceStaticCrigtt"/>
-                <beans:ref bean="vocabServiceDynamicCrigtt"/>
+                <beans:ref bean="vocabServiceStaticQrda"/>
+                <!--beans:ref bean="vocabServiceDynamicCrigtt"/-->
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="validatorSchematronHqr" parent="validatorSchematronImpl"
+                p:id="hqr"
+                p:name="Quality Reporting Document Architecture Category I (QRDA 1) HQR Release 3"
+                p:source="classpath*:META-INF/crigtt/schematron/ecqm/CMS_2016_QRDA_Category_1-HQR_v3.sch">
+        <beans:property name="vocabServices">
+            <beans:array>
+                <beans:ref bean="vocabServiceStaticQrda"/>
+                <!--beans:ref bean="vocabServiceDynamicCrigtt"/-->
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="validatorSchematronPqrs" parent="validatorSchematronImpl"
+                p:id="pqrs"
+                p:name="Quality Reporting Document Architecture Category I (QRDA 1) PQRS Release 3"
+                p:source="classpath*:META-INF/crigtt/schematron/ecqm/CMS_2016_QRDA_Category_1-PQRS_v3.sch">
+        <beans:property name="vocabServices">
+            <beans:array>
+                <beans:ref bean="vocabServiceStaticQrda"/>
+                <!--beans:ref bean="vocabServiceDynamicCrigtt"/-->
             </beans:array>
         </beans:property>
     </beans:bean>
@@ -169,10 +193,16 @@
             </beans:map>
         </beans:property>
     </beans:bean>
-    
+
     <!--suppress SpringBeanConstructorArgInspection -->
-    <beans:bean id="validatorTaskSchematronCcdaR2CancerReg" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
-        p:schematron-ref="validatorSchematronCcdaR2CancerReg"/>
+    <beans:bean id="validatorTaskSchematronCec" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
+                p:schematron-ref="validatorSchematronCec"/>
+    <!--suppress SpringBeanConstructorArgInspection -->
+    <beans:bean id="validatorTaskSchematronHqr" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
+                p:schematron-ref="validatorSchematronHqr"/>
+    <!--suppress SpringBeanConstructorArgInspection -->
+    <beans:bean id="validatorTaskSchematronPqrs" parent="validatorTaskSchematronCrigtt" lazy-init="true" scope="prototype"
+                p:schematron-ref="validatorSchematronPqrs"/>
     
     <!--====================================================================================================
     = VALIDATOR SERVICES
@@ -182,9 +212,19 @@
     <beans:bean id="validatorServiceImpl" class="gov.hhs.onc.crigtt.validate.impl.ValidatorServiceImpl" parent="validatorService"
         p:digestAlgorithm="SHA512"
         p:digestProvider="#{ new org.bouncycastle.jce.provider.BouncyCastleProvider() }">
-        <beans:property name="taskBeanNames">
+        <beans:property name="cecTaskBeanNames">
             <beans:array>
-                <beans:idref bean="validatorTaskSchematronCcdaR2CancerReg"/>
+                <beans:idref bean="validatorTaskSchematronCec"/>
+            </beans:array>
+        </beans:property>
+        <beans:property name="hqrTaskBeanNames">
+            <beans:array>
+                <beans:idref bean="validatorTaskSchematronHqr"/>
+            </beans:array>
+        </beans:property>
+        <beans:property name="pqrsTaskBeanNames">
+            <beans:array>
+                <beans:idref bean="validatorTaskSchematronPqrs"/>
             </beans:array>
         </beans:property>
     </beans:bean>

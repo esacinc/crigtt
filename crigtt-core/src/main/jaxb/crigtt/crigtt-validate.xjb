@@ -45,7 +45,16 @@
             </jaxb:bindings>
         </jaxb:bindings>
     </jaxb:bindings>
-    
+
+    <jaxb:bindings node="xsd:group[@name='SchematronElements']">
+        <jaxb:bindings node="xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='schematronId']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+
     <!--====================================================================================================
     = COMPLEX TYPES
     =====================================================================================================-->

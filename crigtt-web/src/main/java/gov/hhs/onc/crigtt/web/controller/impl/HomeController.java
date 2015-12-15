@@ -9,8 +9,10 @@ import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.web.controller.CrigttModelAttributes;
 import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
 import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
-import java.util.Collections;
+
 import java.util.TimeZone;
+import java.util.Map;
+import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
@@ -45,13 +47,24 @@ public class HomeController implements InitializingBean {
     private String validatorLevelJson;
     private String validatorParamsJson;
     private String validatorRenderTypeJson;
+    Map<String, String> schematrons;
 
     @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
     public ModelAndView displayHome(HttpServletRequest servletReq) throws Exception {
-        return new ModelAndView(HOME_VIEW_NAME, Collections.singletonMap(
-            CrigttModelAttributes.FORMATTED_BUILD_TIMESTAMP_NAME,
+
+        ModelAndView mav = new ModelAndView(HOME_VIEW_NAME);
+        mav.addObject(CrigttModelAttributes.FORMATTED_BUILD_TIMESTAMP_NAME,
             CrigttDateUtils.format(CrigttDateUtils.DISPLAY_FORMAT, this.buildTimestamp,
-                ObjectUtils.defaultIfNull(RequestContextUtils.getTimeZone(servletReq), this.defaultTimeZone))));
+                ObjectUtils.defaultIfNull(RequestContextUtils.getTimeZone(servletReq), this.defaultTimeZone)));
+        return mav;
+    }
+
+    @RequestMapping(value="/home")
+    public ModelAndView selectTag()  {
+        ModelAndView mav = new ModelAndView(HOME_VIEW_NAME);
+        mav.addObject("schematronsMap", schematrons);
+        mav.addObject("selectedSchematron", new selectedSchematron());
+        return mav;
     }
 
     @Override
@@ -61,6 +74,15 @@ public class HomeController implements InitializingBean {
         this.validatorLevelJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorLevel.class);
         this.validatorParamsJson = CrigttJsonUtils.serializeConstants(this.objMapper, ValidatorParameters.class);
         this.validatorRenderTypeJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorRenderType.class);
+        this.schematrons = buildSchematronOptions();
+    }
+
+    private Map<String, String> buildSchematronOptions() {
+        Map<String, String> schematrons = new HashMap<String, String>();
+        schematrons.put("cec", "QRDA Category 1 CEC v3");
+        schematrons.put("hqr", "QRDA Category 1 HQR v3");
+        schematrons.put("pqrs", "QRDA Category 1 PQRS v3");
+        return schematrons;
     }
 
     @ModelAttribute(value = CrigttModelAttributes.BUILD_VERSION_NAME)

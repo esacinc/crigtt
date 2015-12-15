@@ -15,7 +15,15 @@ public interface ValidatorService extends BeanFactoryAware, InitializingBean {
 
     public void setDigestProvider(Provider digestProv);
 
-    public String[] getTaskBeanNames();
+    public String[] getCecTaskBeanNames();
 
-    public void setTaskBeanNames(String ... taskBeanNames);
+    public void setCecTaskBeanNames(String... cecTaskBeanNames);
+
+    public String[] getHqrTaskBeanNames();
+
+    public void setHqrTaskBeanNames(String... hqrTaskBeanNames);
+
+    public String[] getPqrsTaskBeanNames();
+
+    public void setPqrsTaskBeanNames(String... pqrsTaskBeanNames);
 }

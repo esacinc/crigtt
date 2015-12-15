@@ -35,6 +35,12 @@
             <xsd:element name="status" type="xsd:boolean"/>
         </xsd:sequence>
     </xsd:group>
+
+    <xsd:group name="SchematronElements">
+        <xsd:sequence>
+            <xsd:element name="schematronId" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:group>
     
     <!--====================================================================================================
     = SIMPLE TYPES
@@ -166,7 +172,8 @@
     <xsd:complexType name="Submission">
          <xsd:sequence>
             <xsd:group ref="crigtt-validate:DtoElements"/>
-            <xsd:group ref="crigtt-validate:DocumentElements"/>
+             <xsd:group ref="crigtt-validate:DocumentElements"/>
+             <xsd:group ref="crigtt-validate:SchematronElements"/>
         </xsd:sequence>
     </xsd:complexType>
     

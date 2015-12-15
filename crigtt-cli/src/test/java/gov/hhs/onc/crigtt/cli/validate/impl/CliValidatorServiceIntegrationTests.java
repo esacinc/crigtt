@@ -20,7 +20,8 @@ public class CliValidatorServiceIntegrationTests extends AbstractCrigttCliIntegr
     @Test(dependsOnMethods = { "testRunBadOption" })
     public void testRunRender() throws Exception {
         for (ResourceSource testInputDocSrc : this.testInputDocSrcs) {
-            String[] baseArgs = ArrayUtils.toArray("-i", CrigttResourceUtils.extractPath(testInputDocSrc.getResource()), "-d", this.testOutDir.getPath(), "-t");
+            String[] baseArgs = ArrayUtils.toArray("-i", CrigttResourceUtils.extractPath(testInputDocSrc.getResource()),
+                    "-d", this.testOutDir.getPath(), "-s", "cec", "-t");
 
             for (ValidatorRenderType renderType : ValidatorRenderType.values()) {
                 this.service.run(ArrayUtils.add(baseArgs, renderType.name()));

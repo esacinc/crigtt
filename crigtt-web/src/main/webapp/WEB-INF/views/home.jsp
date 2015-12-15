@@ -143,6 +143,18 @@
                         <strong>Submit</strong>
                     </h1>
                     <form id="form-validator" name="form-validator" action="${urlServiceValidatorValidate}" enctype="multipart/form-data" method="post">
+
+                        <h3>
+                            <strong>Select Schematron for validation </strong>
+                        </h3>
+                        <div class="input-group">
+                            <select id="selectedSchematron" class="input-sm form-control" name="selectedSchematron">
+                                <option value="cec">QRDA Category 1 CEC v3</option>
+                                <option value="hqr">QRDA Category 1 HQR v3</option>
+                                <option value="pqrs">QRDA Category 1 PQRS v3</option>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-btn">
@@ -155,6 +167,7 @@
                                 <input id="input-file-doc-display" class="form-control" type="text" readonly="readonly"/>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="btn-group btn-group-sm">
                                 <button id="btn-validator-upload" class="btn btn-default form-control" disabled="disabled" type="submit" data-toggle="tooltip"

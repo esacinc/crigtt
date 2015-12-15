@@ -96,7 +96,9 @@ public class ValidatorServiceImpl implements ValidatorService {
     private BeanFactory beanFactory;
     private Provider digestProv;
     private String digestAlg;
-    private String[] taskBeanNames;
+    private String[] cecTaskBeanNames;
+    private String[] hqrTaskBeanNames;
+    private String[] pqrsTaskBeanNames;
     private MessageDigest digest;
 
     @Override
@@ -115,7 +117,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         byte[] docContent = docObj.getContent(), docHash =
             CrigttFunctionUtils.consume(docObj::getHash, () -> ObjectUtils.clone(this.digest).digest(docContent), docObj::setHash);
         String docHashStr = Base64.encodeBase64String(docHash);
-        ValidatorResults results = this.cache.get(docHashStr, ValidatorResults.class);
+        String cacheKey = docHashStr + "-" + submission.getSchematronId(); // Add the schematronId to the cache key
+        ValidatorResults results = this.cache.get(cacheKey, ValidatorResults.class);
         ValidatorEventTotals eventTotals;
         long processedTimestamp;
 
@@ -126,8 +129,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             LOGGER
                 .debug(String
                     .format(
-                        "Retrieved submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) results (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d) from cache.",
-                        id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
+                        "Retrieved submission (id=%s, submitted=%s, schematronId=%s) document (fileName=%s, hash=%s) results (processed=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d) from cache.",
+                        id, formattedSubmittedTimestamp, submission.getSchematronId(), docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)),
                         (eventTotals = results.getEventTotals()).getAll(), eventTotals.getInfo(), eventTotals.getWarn(), eventTotals.getError()));
 
             return report;
@@ -150,25 +153,24 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         Stream.of(docElemNsBindings).forEach(docElemNsBinding -> docNamespaces.put(docElemNsBinding.getPrefix(), docElemNsBinding.getURI()));
 
-        CountDownLatch taskLatch = new CountDownLatch(this.taskBeanNames.length);
-
-        List<ValidatorFutureTask> futureTasks =
-            Stream
-                .of(this.taskBeanNames)
-                .map(
-                    taskBeanName -> {
-                        ValidatorFutureTask futureTask =
-                            new ValidatorFutureTask(taskLatch,
-                                ((ValidatorTask) this.beanFactory.getBean(taskBeanName, doc, docSrc, docFileName, docNamespaces)));
-
-                        this.taskExecutor.submit(futureTask);
-
-                        return futureTask;
-                    }).collect(Collectors.toList());
-
-        taskLatch.await();
-
         Exception taskException;
+
+        List<ValidatorFutureTask> futureTasks;
+        switch(submission.getSchematronId()) {
+            case "cec":
+                futureTasks = getValidatorFutureTasks(cecTaskBeanNames, docFileName, docSrc, doc, docNamespaces);
+                break;
+            case "hqr":
+                futureTasks = getValidatorFutureTasks(hqrTaskBeanNames, docFileName, docSrc, doc, docNamespaces);
+                break;
+            case "pqrs":
+                futureTasks = getValidatorFutureTasks(pqrsTaskBeanNames, docFileName, docSrc, doc, docNamespaces);
+                break;
+            default:
+                taskException = new Exception("Unknown Schematron");
+                LOGGER.error("Unknown Schematron.");
+                throw taskException;
+        }
 
         for (ValidatorFutureTask futureTask : futureTasks) {
             if ((taskException = futureTask.getException()) != null) {
@@ -221,19 +223,41 @@ public class ValidatorServiceImpl implements ValidatorService {
 
         results.setStatus(status);
 
-        this.cache.putIfAbsent(docHashStr, results);
+        this.cache.putIfAbsent(cacheKey, results);
 
         report.setProcessedTimestamp((processedTimestamp = Instant.now().getMillis()));
 
         LOGGER
             .info(String
                 .format(
-                    "Submission (id=%s, submitted=%s) document (fileName=%s, hash=%s) validated (processed=%s, status=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
-                    id, formattedSubmittedTimestamp, docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)), status,
+                    "Submission (id=%s, submitted=%s, schematronId=%s) document (fileName=%s, hash=%s) validated (processed=%s, status=%s, numEvents=%d, numInfoEvents=%d, numWarnEvents=%d, numErrorEvents=%d).",
+                    id, formattedSubmittedTimestamp, submission.getSchematronId(), docFileName, docHashStr, CrigttDateUtils.DISPLAY_FORMAT.format(new Date(processedTimestamp)), status,
                     (eventId - 1), numInfoEvents, numWarnEvents, numErrorEvents));
 
         return report;
     }
+
+    private List<ValidatorFutureTask> getValidatorFutureTasks(String[] taskBeanNames, String docFileName, ByteArraySource docSrc, XdmDocument doc, Map<String, String> docNamespaces) throws InterruptedException {
+        CountDownLatch taskLatch = new CountDownLatch(taskBeanNames.length);
+
+        List<ValidatorFutureTask> futureTasks =
+                Stream
+                        .of(taskBeanNames)
+                        .map(
+                                taskBeanName -> {
+                                    ValidatorFutureTask futureTask =
+                                            new ValidatorFutureTask(taskLatch,
+                                                    ((ValidatorTask) this.beanFactory.getBean(taskBeanName, doc, docSrc, docFileName, docNamespaces)));
+
+                                    this.taskExecutor.submit(futureTask);
+
+                                    return futureTask;
+                                }).collect(Collectors.toList());
+
+        taskLatch.await();
+        return futureTasks;
+    }
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -266,12 +290,32 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
-    public String[] getTaskBeanNames() {
-        return this.taskBeanNames;
+    public String[] getCecTaskBeanNames() {
+        return this.cecTaskBeanNames;
     }
 
     @Override
-    public void setTaskBeanNames(String ... taskBeanNames) {
-        this.taskBeanNames = taskBeanNames;
+    public void setCecTaskBeanNames(String ... cecTaskBeanNames) {
+        this.cecTaskBeanNames = cecTaskBeanNames;
+    }
+
+    @Override
+    public String[] getHqrTaskBeanNames() {
+        return this.hqrTaskBeanNames;
+    }
+
+    @Override
+    public void setHqrTaskBeanNames(String ... hqrTaskBeanNames) {
+        this.hqrTaskBeanNames = hqrTaskBeanNames;
+    }
+
+    @Override
+    public String[] getPqrsTaskBeanNames() {
+        return this.pqrsTaskBeanNames;
+    }
+
+    @Override
+    public void setPqrsTaskBeanNames(String ... pqrsTaskBeanNames) {
+        this.pqrsTaskBeanNames = pqrsTaskBeanNames;
     }
 }

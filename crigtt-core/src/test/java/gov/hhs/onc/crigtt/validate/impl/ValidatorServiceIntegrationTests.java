@@ -46,6 +46,7 @@ public class ValidatorServiceIntegrationTests extends AbstractCrigttIntegrationT
             testDoc.setContent(testInputDocSrc.getBytes());
             testDoc.setFileName(testInputDocSrc.getResource().getFilename());
             testSubmission.setDocument(testDoc);
+            testSubmission.setSchematronId("hqr");
 
             ValidatorReport testReport = this.service.validate(testSubmission);
 

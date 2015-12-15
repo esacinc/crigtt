@@ -16,6 +16,8 @@ public class CliValidatorOptionsImpl implements CliValidatorOptions {
     private File outDir;
     private WritableResource outFile;
     private ValidatorRenderType type;
+    private String schematronId;
+
 
     @Override
     public boolean getFormat() {
@@ -95,4 +97,19 @@ public class CliValidatorOptionsImpl implements CliValidatorOptions {
     public void setType(ValidatorRenderType type) {
         this.type = type;
     }
+
+    @Override
+    public String getSchematronId() {
+        return this.schematronId;
+    }
+
+    @Override
+    @Parameter(names = { "-s", "--schematron" }, arity = 1,
+            description =
+                    "Schematron for running the validation. Possible values: [cec,hqr, pqrs]")
+    public void setSchematronId(String schematronId) {
+        this.schematronId = schematronId;
+    }
+
+
 }

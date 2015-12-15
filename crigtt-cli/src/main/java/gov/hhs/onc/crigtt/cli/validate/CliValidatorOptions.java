@@ -36,4 +36,9 @@ public interface CliValidatorOptions {
     public ValidatorRenderType getType();
 
     public void setType(ValidatorRenderType type);
+
+    public String getSchematronId();
+
+    public void setSchematronId(String schematronId);
+
 }

@@ -24,13 +24,13 @@
     
     <beans:bean id="vocabServiceStaticImpl" class="gov.hhs.onc.crigtt.validate.vocab.impl.StaticVocabServiceImpl" parent="vocabServiceStatic"
         abstract="true"/>
-    
-    <beans:bean id="vocabServiceStaticCrigtt" parent="vocabServiceStaticImpl"
-        p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-static.xml">
+
+    <beans:bean id="vocabServiceStaticQrda" parent="vocabServiceStaticImpl"
+                p:assertionSource="classpath*:META-INF/crigtt/data/validate/vocab/crigtt-validate-vocab-assertions-static.xml">
         <beans:property name="document">
             <beans:bean parent="doc" factory-bean="docBuilderCrigtt" factory-method="build"
-                c:src="classpath*:META-INF/crigtt/schematron/ccda-r2-cancer-reg/voc.xml"
-                p:uri="voc.xml"/>
+                        c:src="classpath*:META-INF/crigtt/schematron/ecqm/voc.xml"
+                        p:uri="voc.xml"/>
         </beans:property>
     </beans:bean>
 </beans:beans>

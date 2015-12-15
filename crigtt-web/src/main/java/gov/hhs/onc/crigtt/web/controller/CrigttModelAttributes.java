@@ -8,6 +8,8 @@ public final class CrigttModelAttributes {
     public final static String FORMATTED_BUILD_TIMESTAMP_NAME = "formattedBuildTimestamp";
     public final static String BUILD_VERSION_NAME = "buildVersion";
 
+    public final static String SCHEMATRONS_NAME = "schematrons";
+
     public final static String VALIDATOR_HEADERS_JSON_NAME = VALIDATOR_PREFIX + "Headers" + JSON_SUFFIX;
     public final static String VALIDATOR_LEVEL_JSON_NAME = VALIDATOR_PREFIX + "Level" + JSON_SUFFIX;
     public final static String VALIDATOR_PARAMS_JSON_NAME = VALIDATOR_PREFIX + "Parameters" + JSON_SUFFIX;

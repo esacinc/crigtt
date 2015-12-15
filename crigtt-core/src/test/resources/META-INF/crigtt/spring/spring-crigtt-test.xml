@@ -22,14 +22,6 @@
     =====================================================================================================-->
     <util:list id="listTestInputDocSrcs">
         <!--suppress SpringPlaceholdersInspection -->
-        <beans:value>classpath*:${crigtt.test.input.dir.path}/Cancer_Event_Report_Document_R1D1dot1.xml</beans:value>
-        <!--suppress SpringPlaceholdersInspection -->
-        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-1.xml</beans:value>
-        <!--suppress SpringPlaceholdersInspection -->
-        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-2.xml</beans:value>
-        <!--suppress SpringPlaceholdersInspection -->
-        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-3.xml</beans:value>
-        <!--suppress SpringPlaceholdersInspection -->
-        <beans:value>classpath*:${crigtt.test.input.dir.path}/ccda-r2-cancer-reg_test-case-4.xml</beans:value>
+        <beans:value>classpath*:${crigtt.test.input.dir.path}/CEC_Sample_QRDA_I_Informative.xml</beans:value>
     </util:list>
 </beans:beans>

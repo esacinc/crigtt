@@ -17,6 +17,7 @@
     <xsd:simpleType name="MatchingLevel">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="EQUALS"/>
+            <xsd:enumeration value="EQUALS_IGNORE_CASE"/>
             <xsd:enumeration value="SUBSTRING"/>
             <xsd:enumeration value="REGEXP"/>
         </xsd:restriction>

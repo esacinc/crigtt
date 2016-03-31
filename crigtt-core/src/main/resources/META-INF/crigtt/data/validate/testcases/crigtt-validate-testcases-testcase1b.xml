@@ -407,6 +407,9 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/name</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>EQUALS_IGNORE_CASE</crigtt-validate-testcases:matchingLevel>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Seattle Grace Oncology Clinic</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -487,6 +490,9 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/assignedEntity/representedOrganization/name</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>EQUALS_IGNORE_CASE</crigtt-validate-testcases:matchingLevel>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Seattle Grace Hospital</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>

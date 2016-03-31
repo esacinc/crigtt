@@ -12,13 +12,17 @@ import gov.hhs.onc.crigtt.validate.testcases.ElementSet;
 import gov.hhs.onc.crigtt.validate.testcases.ElementSets;
 import gov.hhs.onc.crigtt.validate.testcases.ExpectedResults;
 import gov.hhs.onc.crigtt.validate.testcases.MatchingCondition;
+import gov.hhs.onc.crigtt.validate.testcases.MatchingLevel;
 import gov.hhs.onc.crigtt.validate.testcases.SubExpressionSet;
 import gov.hhs.onc.crigtt.validate.testcases.Testcase;
 import gov.hhs.onc.crigtt.validate.testcases.XPathSet;
+import gov.hhs.onc.crigtt.validate.testcases.impl.MatchingConditionImpl;
 import gov.hhs.onc.crigtt.validate.testcases.utils.TestcaseUtils;
+import gov.hhs.onc.crigtt.validate.vocab.VocabXmlNames;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
+import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -119,9 +123,9 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         }
                     }
 
-                    assertionStatus = getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, matchingCondition);
+                    assertionStatus = getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, baseXPathExpression, matchingCondition);
                 } else {
-                    assertionStatus = getAssertionStatus(expectedResults, actualResult, matchingCondition);
+                    assertionStatus = getAssertionStatus(expectedResults, actualResult, baseXPathExpression, matchingCondition);
                 }
 
                 event.setActualResult(actualResult);
@@ -130,12 +134,12 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                     break;
                 }
             } else {
-                assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT);
+                assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, baseXPathExpression);
             }
         }
 
         if (locNodes.size() == 0) {
-            assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT);
+            assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, baseXPathExpression);
         }
 
         if (expectedXPathResults.size() > 0) {
@@ -182,7 +186,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         setLocationInfo(loc, nodeInfo, getIndexedXPathExpression(nodeIndex, baseXPathExpression, subExpression));
                         event.setActualResult(actualResult);
 
-                        if ((assertionStatus = getAssertionStatus(expectedResults, actualResult, matchingCondition))) {
+                        if ((assertionStatus = getAssertionStatus(expectedResults, actualResult, xPathExpression, matchingCondition))) {
                             setLocationInfo(loc, nodeInfo,
                                 getIndexedXPathExpression(nodeIndex == 0 ? (nodeIndex = a + 1) : nodeIndex, baseXPathExpression, subExpression));
 
@@ -196,7 +200,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                 }
 
                 if (nodeListSize == 0) {
-                    assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT);
+                    assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, xPathExpression);
                 }
 
                 event.setExpectedResults(expectedResults);
@@ -216,7 +220,8 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
     }
 
     private String getIndexedXPathExpression(int nodeIndex, String baseXPathExpression, String subExpression) {
-        return nodeIndex == 0 ? baseXPathExpression + subExpression : baseXPathExpression + "[" + nodeIndex + "]" + subExpression;
+        return nodeIndex == 0 ? baseXPathExpression + subExpression :
+            baseXPathExpression + CrigttXpathUtils.PREDICATE_PREFIX + nodeIndex + CrigttXpathUtils.PREDICATE_SUFFIX + subExpression;
     }
 
     private void setLocationInfo(ValidatorLocation loc, NodeInfo nodeInfo, String xPathExpression) {
@@ -227,12 +232,21 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         loc.setNodeExpression(xPathExpression);
     }
 
-    private boolean getAssertionStatus(List<String> expectedResults, String actualResult) {
-        return getAssertionStatus(expectedResults, actualResult, null);
+    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, String xPathExpression) {
+        return getAssertionStatus(expectedResults, actualResult, xPathExpression, null);
     }
 
-    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, @Nullable MatchingCondition matchingCondition) {
+    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, String xPathExpression,
+        @Nullable MatchingCondition matchingCondition) {
         Predicate<String> matchingPredicate = actualResult::equals;
+
+        if (xPathExpression.contains(VocabXmlNames.DISPLAY_NAME_ATTR_NAME) || xPathExpression.contains(CrigttXpathUtils.TEXT_NODE_SELECTION)) {
+            if (matchingCondition != null) {
+                matchingCondition.setMatchingLevel(MatchingLevel.EQUALS_IGNORE_CASE);
+            } else {
+                matchingCondition = new MatchingConditionImpl(MatchingLevel.EQUALS_IGNORE_CASE, null, 8);
+            }
+        }
 
         if (matchingCondition != null) {
             int substrMatchLen = matchingCondition.getMatchLength();
@@ -240,6 +254,9 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
             switch (matchingCondition.getMatchingLevel()) {
                 case EQUALS:
                     matchingPredicate = actualResult::equals;
+                    break;
+                case EQUALS_IGNORE_CASE:
+                    matchingPredicate = actualResult::equalsIgnoreCase;
                     break;
                 case SUBSTRING:
                     matchingPredicate = expectedResult -> {

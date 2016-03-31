@@ -27,6 +27,9 @@ public final class CrigttXpathUtils {
     public final static String AND_OP = "and";
     public final static String OR_OP = "or";
 
+    public final static String TEXT_NODE_SELECTION_NAME = "text";
+    public final static String TEXT_NODE_SELECTION = TEXT_NODE_SELECTION_NAME + CALL_PREFIX + CALL_SUFFIX;
+
     public final static String CURRENT_NODE = ".";
 
     private CrigttXpathUtils() {

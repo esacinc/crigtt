@@ -317,6 +317,9 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/name</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>EQUALS_IGNORE_CASE</crigtt-validate-testcases:matchingLevel>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>General Practice Associates</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>

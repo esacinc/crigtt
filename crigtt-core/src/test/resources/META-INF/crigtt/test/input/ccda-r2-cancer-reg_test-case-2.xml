@@ -84,7 +84,7 @@
 				</useablePeriod>
 			</addr>
 			<telecom use="WP" value="tel:+1(206)555-4697"/>
-			<telecom value="Mbailey@doc.com"/>
+			<telecom value="mailto:Mbailey@doc.com"/>
 			<assignedPerson>
 				<name>
 					<given>Miranda</given>

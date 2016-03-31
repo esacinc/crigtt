@@ -21,19 +21,36 @@ import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
+import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.tree.tiny.TinyDocumentImpl;
+import net.sf.saxon.tree.tiny.TinyTree;
+import org.apache.commons.lang3.StringUtils;
 
 public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask implements ContextSpecificValidatorTask {
+    private final static String EMAIL_ADDR_DELIM = "@";
+    private final static String EMAIL_ADDR_URI_PATTERN_FORMAT = "^mailto:(/{2})?[\\w.]+@[\\w.]+$";
+    private final static String PHONE_NUM_URI_PATTERN_FORMAT = "^tel:[+]1[-.]?((\\d){3}|(\\((\\d){3}\\)))[-.]?(\\d){3}[-.]?(\\d){4}$";
+
+    private final static String EMAIL_ADDR_URI_CHAR_REPLACEMENT = "/";
+    private final static String PHONE_NUM_URI_SEPARATOR_REPLACEMENT = "[-.()]";
+
+    private Pattern emailAddrExprPattern;
+    private Pattern phoneNumExprPattern;
+
     @Resource(name = "jaxbMarshallerValidate")
     private CrigttJaxbMarshaller validateJaxbMarshaller;
 
@@ -84,6 +101,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         List<String> expectedResults = xPathSetContent.getExpectedResults();
         List<XdmNode> locNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathSet.getXPathExpression(), this.xpathContext, this.doc));
         MatchingCondition matchingCondition = xPathSet.getMatchingCondition();
+        Set<String> expectedXPathResults = new HashSet<>(expectedResults.size());
 
         for (XdmNode locNode : locNodes) {
             if (locNode != null) {
@@ -93,8 +111,6 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                 String actualResult = locNode.getStringValue();
 
                 if (xPathSet.getXPathResultComparison()) {
-                    List<String> expectedXPathResults = new ArrayList<>(expectedResults.size());
-
                     for (String expectedResult : expectedResults) {
                         XdmNode resultNode = this.xpathCompiler.evaluateNode(expectedResult, this.xpathContext, this.doc);
 
@@ -103,8 +119,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         }
                     }
 
-                    assertionStatus = getAssertionStatus(expectedXPathResults, actualResult, matchingCondition);
-                    expectedResults.addAll(expectedXPathResults);
+                    assertionStatus = getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, matchingCondition);
                 } else {
                     assertionStatus = getAssertionStatus(expectedResults, actualResult, matchingCondition);
                 }
@@ -121,6 +136,10 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
 
         if (locNodes.size() == 0) {
             assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT);
+        }
+
+        if (expectedXPathResults.size() > 0) {
+            expectedResults.addAll(expectedXPathResults);
         }
 
         event.setExpectedResults(expectedResults);
@@ -223,9 +242,47 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                     matchingPredicate = actualResult::equals;
                     break;
                 case SUBSTRING:
-                    matchingPredicate = expectedResult -> (expectedResult.length() < substrMatchLen ? expectedResult.equals(actualResult) :
-                        expectedResult.substring(0, substrMatchLen).equals(actualResult));
+                    matchingPredicate = expectedResult -> {
+                        int minResultLen;
+                        int actualResultLen = actualResult.length();
+                        int expectedResultLen = expectedResult.length();
+
+                        minResultLen =
+                            expectedResultLen < substrMatchLen ? Math.min(expectedResultLen, actualResultLen) : Math.min(actualResultLen, substrMatchLen);
+
+                        return expectedResult.substring(0, minResultLen).equals(actualResult.substring(0, minResultLen));
+                    };
                     break;
+                case REGEXP:
+                    if (matchingCondition.getMatchingRegexpElementType() != null) {
+                        switch (matchingCondition.getMatchingRegexpElementType()) {
+                            case EMAIL_ADDR:
+                                String normalizedResult = actualResult.replaceAll(EMAIL_ADDR_URI_CHAR_REPLACEMENT, StringUtils.EMPTY);
+
+                                matchingPredicate = expectedResult -> {
+                                    int normalizedResultEmailDelimIdx = normalizedResult.indexOf(EMAIL_ADDR_DELIM);
+                                    int expectedResultEmailDelimIdx = expectedResult.indexOf(EMAIL_ADDR_DELIM);
+
+                                    return (this.emailAddrExprPattern.matcher(actualResult).matches() && normalizedResult
+                                        .substring(0, normalizedResultEmailDelimIdx).equals(expectedResult.substring(0, expectedResultEmailDelimIdx)))
+                                        && normalizedResult.substring(normalizedResultEmailDelimIdx)
+                                        .equalsIgnoreCase(expectedResult.substring(expectedResultEmailDelimIdx));
+                                };
+                                break;
+                            case PHONE_NUM:
+                                matchingPredicate = expectedResult -> this.phoneNumExprPattern.matcher(actualResult).matches() && actualResult
+                                    .replaceAll(PHONE_NUM_URI_SEPARATOR_REPLACEMENT, StringUtils.EMPTY).equals(expectedResult);
+                                break;
+                            default:
+                                matchingPredicate = expectedResult -> Pattern.matches(expectedResult, actualResult);
+                                break;
+
+                        }
+
+                        break;
+                    } else {
+                        matchingPredicate = expectedResult -> Pattern.matches(expectedResult, actualResult);
+                    }
             }
         }
 
@@ -247,7 +304,20 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
 
-        this.testcases = CrigttStreamUtils.toMap(IdentifiedBean::getId,
-            Function.<Testcase>identity(), LinkedHashMap::new, TestcaseUtils.buildTestcases(this.getTestcaseSources(), this.validateJaxbMarshaller).stream());
+        this.testcases = CrigttStreamUtils.toMap(IdentifiedBean::getId, Function.identity(), LinkedHashMap::new,
+            TestcaseUtils.buildTestcases(this.getTestcaseSources(), this.validateJaxbMarshaller).stream());
+
+        TinyTree docTree = ((TinyDocumentImpl) this.doc.getUnderlyingNode()).getTree();
+
+        for (NamespaceBinding namespaceBinding : docTree.getNamespaceBindings()) {
+            String prefix;
+
+            if (namespaceBinding != null && !this.docNamespaces.containsKey(prefix = namespaceBinding.getPrefix())) {
+                this.xpathContext.declareNamespace(prefix, namespaceBinding.getURI());
+            }
+        }
+
+        this.emailAddrExprPattern = Pattern.compile(EMAIL_ADDR_URI_PATTERN_FORMAT);
+        this.phoneNumExprPattern = Pattern.compile(PHONE_NUM_URI_PATTERN_FORMAT);
     }
 }

@@ -85,6 +85,10 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/useablePeriod/low/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
+                            <crigtt-validate-testcases:matchLength>6</crigtt-validate-testcases:matchLength>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>200202</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -108,8 +112,12 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/telecom/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>REGEXP</crigtt-validate-testcases:matchingLevel>
+                            <crigtt-validate-testcases:matchingRegexpElementType>PHONE_NUM</crigtt-validate-testcases:matchingRegexpElementType>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>tel:+1(206)555-2414</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>tel:+12065552414</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -126,6 +134,9 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/patient/birthTime/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>19700505</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -294,15 +305,22 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/telecom/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>REGEXP</crigtt-validate-testcases:matchingLevel>
+                            <crigtt-validate-testcases:matchingRegexpElementType>PHONE_NUM</crigtt-validate-testcases:matchingRegexpElementType>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>tel:+1(206)555-3892</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>tel:+12065553892</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/telecom/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>REGEXP</crigtt-validate-testcases:matchingLevel>
+                            <crigtt-validate-testcases:matchingRegexpElementType>EMAIL_ADDR</crigtt-validate-testcases:matchingRegexpElementType>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>mailto:Kepnera@Derm.com</crigtt-validate-testcases:expectedResult>
-                            <crigtt-validate-testcases:expectedResult>Kepnera@Derm.com</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -332,8 +350,12 @@
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/telecom/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:matchingCondition>
+                            <crigtt-validate-testcases:matchingLevel>REGEXP</crigtt-validate-testcases:matchingLevel>
+                            <crigtt-validate-testcases:matchingRegexpElementType>PHONE_NUM</crigtt-validate-testcases:matchingRegexpElementType>
+                        </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>tel:+1(206)555-3800</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>tel:+12065553800</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -420,15 +442,6 @@
                         <crigtt-validate-testcases:subExpression>/statusCode/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>active</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:matchingCondition>
-                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
-                        </crigtt-validate-testcases:matchingCondition>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>20150804</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -771,15 +784,6 @@
                             <crigtt-validate-testcases:expectedResult>active</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:matchingCondition>
-                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
-                        </crigtt-validate-testcases:matchingCondition>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>20150804</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
             </crigtt-validate-testcases:elementSets>
         </crigtt-validate-testcases:xPathSet>
@@ -1079,27 +1083,6 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:matchingCondition>
-                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
-                        </crigtt-validate-testcases:matchingCondition>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>20150804</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/code/@code</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/code/@displayName</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/effectiveTime/low/@value
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:matchingCondition>
@@ -1154,27 +1137,6 @@
                         <crigtt-validate-testcases:subExpression>/act/statusCode/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>active</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:matchingCondition>
-                            <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
-                        </crigtt-validate-testcases:matchingCondition>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>20150804</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/code/@code</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/code/@displayName</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>

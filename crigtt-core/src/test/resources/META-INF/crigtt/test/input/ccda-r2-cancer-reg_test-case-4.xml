@@ -105,7 +105,7 @@
 				</useablePeriod>
 			</addr>
 			<telecom use="WP" value="tel:+1(206)555-3892"/>
-			<telecom value="Kepnera@Derm.com"/>
+			<telecom value="mailto:Kepnera@Derm.com"/>
 			<assignedPerson>
 				<name>
 					<given>April</given>

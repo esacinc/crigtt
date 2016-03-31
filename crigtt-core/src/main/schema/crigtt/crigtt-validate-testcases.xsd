@@ -18,6 +18,14 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="EQUALS"/>
             <xsd:enumeration value="SUBSTRING"/>
+            <xsd:enumeration value="REGEXP"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="MatchingRegexpElementType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="EMAIL_ADDR"/>
+            <xsd:enumeration value="PHONE_NUM"/>
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -46,6 +54,7 @@
     <xsd:complexType name="MatchingCondition">
         <xsd:sequence>
             <xsd:element name="matchingLevel" type="crigtt-validate-testcases:MatchingLevel" minOccurs="0" default="EQUALS"/>
+            <xsd:element name="matchingRegexpElementType" type="crigtt-validate-testcases:MatchingRegexpElementType" minOccurs="0"/>
             <xsd:element name="matchLength" type="xsd:int" minOccurs="0" default="8"/>
         </xsd:sequence>
     </xsd:complexType>

@@ -44,15 +44,24 @@ import net.sf.saxon.tree.tiny.TinyDocumentImpl;
 import net.sf.saxon.tree.tiny.TinyTree;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Derived from:
+ * <ul>
+ * <li><a href="https://tools.ietf.org/html/rfc6068">RFC 6068 - The 'mailto' URI Scheme</a></li>
+ * <li><a href="https://tools.ietf.org/html/rfc3966">RFC 3966 - The tel URI for Telephone Numbers</a></li>
+ * </ul>
+ */
 public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask implements ContextSpecificValidatorTask {
     private final static String EMAIL_ADDR_DELIM = "@";
-    private final static String EMAIL_ADDR_URI_PATTERN_FORMAT = "^mailto:(/{2})?[\\w.]+@[\\w.]+$";
-    private final static String PHONE_NUM_URI_PATTERN_FORMAT = "^tel:[+]1[-.]?((\\d){3}|(\\((\\d){3}\\)))[-.]?(\\d){3}[-.]?(\\d){4}$";
 
-    private final static String EMAIL_ADDR_URI_CHAR_REPLACEMENT = "/";
+    private final static String EMAIL_ADDR_URI_PREFIX = "mailto:";
+    private final static String PHONE_NUM_URI_PREFIX = "tel:";
+    private final static String PHONE_NUM_URI_GLOBAL_PREFIX = PHONE_NUM_URI_PREFIX + "+";
+
+    private final static int PHONE_NUM_NUM_DIGITS = 10;
+    private final static String PHONE_NUM_URI_PATTERN_FORMAT = "^" + PHONE_NUM_URI_PREFIX + "\\+1?\\d{" + PHONE_NUM_NUM_DIGITS + "}$";
     private final static String PHONE_NUM_URI_SEPARATOR_REPLACEMENT = "[-.()]";
 
-    private Pattern emailAddrExprPattern;
     private Pattern phoneNumExprPattern;
 
     @Resource(name = "jaxbMarshallerValidate")
@@ -272,28 +281,49 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                     break;
                 case REGEXP:
                     if (matchingCondition.getMatchingRegexpElementType() != null) {
+                        String normalizedResult;
+
                         switch (matchingCondition.getMatchingRegexpElementType()) {
                             case EMAIL_ADDR:
-                                String normalizedResult = actualResult.replaceAll(EMAIL_ADDR_URI_CHAR_REPLACEMENT, StringUtils.EMPTY);
+                                if (actualResult.substring(0, EMAIL_ADDR_URI_PREFIX.length()).equalsIgnoreCase(EMAIL_ADDR_URI_PREFIX)) {
+                                    normalizedResult = EMAIL_ADDR_URI_PREFIX + actualResult.substring(EMAIL_ADDR_URI_PREFIX.length());
+                                } else {
+                                    return false;
+                                }
 
                                 matchingPredicate = expectedResult -> {
                                     int normalizedResultEmailDelimIdx = normalizedResult.indexOf(EMAIL_ADDR_DELIM);
                                     int expectedResultEmailDelimIdx = expectedResult.indexOf(EMAIL_ADDR_DELIM);
 
-                                    return (this.emailAddrExprPattern.matcher(actualResult).matches() && normalizedResult
-                                        .substring(0, normalizedResultEmailDelimIdx).equals(expectedResult.substring(0, expectedResultEmailDelimIdx)))
+                                    return (normalizedResult.substring(0, normalizedResultEmailDelimIdx)
+                                        .equals(expectedResult.substring(0, expectedResultEmailDelimIdx)))
                                         && normalizedResult.substring(normalizedResultEmailDelimIdx)
                                         .equalsIgnoreCase(expectedResult.substring(expectedResultEmailDelimIdx));
                                 };
                                 break;
                             case PHONE_NUM:
-                                matchingPredicate = expectedResult -> this.phoneNumExprPattern.matcher(actualResult).matches() && actualResult
-                                    .replaceAll(PHONE_NUM_URI_SEPARATOR_REPLACEMENT, StringUtils.EMPTY).equals(expectedResult);
+                                if (actualResult.substring(0, PHONE_NUM_URI_GLOBAL_PREFIX.length()).equalsIgnoreCase(PHONE_NUM_URI_GLOBAL_PREFIX)) {
+                                    normalizedResult =
+                                        PHONE_NUM_URI_GLOBAL_PREFIX + actualResult.replaceAll(PHONE_NUM_URI_SEPARATOR_REPLACEMENT, StringUtils.EMPTY)
+                                            .substring(PHONE_NUM_URI_GLOBAL_PREFIX.length());
+
+                                    matchingPredicate = expectedResult -> {
+                                        int normalizedResultPhoneNumMatchEndIdx = normalizedResult.length() - 1;
+                                        int expectedResultPhoneNumMatchEndIdx = expectedResult.length() - 1;
+
+                                        return this.phoneNumExprPattern.matcher(normalizedResult).matches() && normalizedResult
+                                            .substring(normalizedResultPhoneNumMatchEndIdx - PHONE_NUM_NUM_DIGITS + 1, normalizedResultPhoneNumMatchEndIdx)
+                                            .equals(expectedResult
+                                                .substring(expectedResultPhoneNumMatchEndIdx - PHONE_NUM_NUM_DIGITS + 1, expectedResultPhoneNumMatchEndIdx));
+                                    };
+                                } else {
+                                    return false;
+                                }
+
                                 break;
                             default:
                                 matchingPredicate = expectedResult -> Pattern.matches(expectedResult, actualResult);
                                 break;
-
                         }
 
                         break;
@@ -334,7 +364,6 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
             }
         }
 
-        this.emailAddrExprPattern = Pattern.compile(EMAIL_ADDR_URI_PATTERN_FORMAT);
         this.phoneNumExprPattern = Pattern.compile(PHONE_NUM_URI_PATTERN_FORMAT);
     }
 }

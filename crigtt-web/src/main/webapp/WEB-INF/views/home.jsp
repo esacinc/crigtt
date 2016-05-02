@@ -54,6 +54,7 @@
         <title><spring:message code="crigtt.msg.title.home"/></title>
     </head>
     <body>
+        <spring:message code="crigtt.msg.github.repository.url" var="gitHubRepositoryUrl"/>
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -85,7 +86,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" target="_blank" href="https://github.com/esacinc/crigtt">
+                                <a role="menuitem" tabindex="-1" target="_blank" href="${gitHubRepositoryUrl}">
                                     <i class="fa fa-fw fa-github"></i>
                                     GitHub Repository and Links to Documentation
                                 </a>
@@ -135,6 +136,12 @@
                     <spring:message code="crigtt.msg.test.data.url" var="testDataUrl"/>
                     <p>
                         Test cases have been developed in conjunction with the validator. The test data can be obtained <a href="${testDataUrl}">here</a>.
+                    </p>
+                    <h2><strong>Documentation</strong></h2>
+                    <spring:message code="crigtt.msg.juror.document.url" var="jurorDocumentUrl"/>
+                    <p>
+                        Links for the project documentation can be found <a href="${gitHubRepositoryUrl}">here</a>.
+                        The Juror Document can be found <a href="${jurorDocumentUrl}">here</a>.
                     </p>
                 </div>
                 <div id="content-tab-validator" class="tab-pane" role="tabpanel">

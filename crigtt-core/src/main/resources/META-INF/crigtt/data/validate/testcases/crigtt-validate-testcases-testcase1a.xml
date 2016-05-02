@@ -897,24 +897,6 @@
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
 
                 <!--====================================================================================================
@@ -951,24 +933,6 @@
                         <crigtt-validate-testcases:subExpression>/substanceAdministration/doseQuantity/@unit</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -1031,24 +995,6 @@
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
             </crigtt-validate-testcases:elementSets>
         </crigtt-validate-testcases:xPathSet>
@@ -1104,24 +1050,6 @@
                         <crigtt-validate-testcases:subExpression>/substanceAdministration/doseQuantity/@unit</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -1181,24 +1109,6 @@
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
             </crigtt-validate-testcases:elementSets>
         </crigtt-validate-testcases:xPathSet>
@@ -1254,24 +1164,6 @@
                         <crigtt-validate-testcases:subExpression>/substanceAdministration/doseQuantity/@unit</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>mg</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>
-                            /substanceAdministration/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -1607,22 +1499,6 @@
                             <crigtt-validate-testcases:expectedResult>Ambulatory surgical setting</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
 
                 <crigtt-validate-testcases:elementSet>
@@ -1691,22 +1567,6 @@
                             <crigtt-validate-testcases:expectedResult>Inpatient medical/surgical ward</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
 
                 <crigtt-validate-testcases:elementSet>
@@ -1766,22 +1626,6 @@
                             <crigtt-validate-testcases:expectedResult>20140914</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
 
                 <crigtt-validate-testcases:elementSet>
@@ -1835,22 +1679,6 @@
                         </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>20141222</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@code
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>29308-4</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and
-                            @extension='2014-08-08']]/code/@displayName
-                        </crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Diagnosis</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>

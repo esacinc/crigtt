@@ -109,7 +109,7 @@
                         submissions of cancer-related medical information prior to a system&apos;s communication with a cancer registry.
                     </p>
                     <p>
-                        The CRV conforms to the <a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=383">HL7 Implementation Guide for
+                        The CRV conforms to the <a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=398">HL7 Implementation Guide for
                         CDA&reg; Release 2: Reporting to Public Health Cancer Registries from Ambulatory Healthcare Providers, Release 1; DSTU Release 1.1 - US
                         Realm.</a>
                     </p>
@@ -140,7 +140,7 @@
                     <h2><strong>Documentation</strong></h2>
                     <spring:message code="crigtt.msg.juror.document.url" var="jurorDocumentUrl"/>
                     <p>
-                        Links for the project documentation can be found <a href="${gitHubRepositoryUrl}">here</a>.
+                        Links for the project documentation can be found <a target="_blank" href="${gitHubRepositoryUrl}">here</a>.
                         The Juror Document can be found <a href="${jurorDocumentUrl}">here</a>.
                     </p>
                 </div>

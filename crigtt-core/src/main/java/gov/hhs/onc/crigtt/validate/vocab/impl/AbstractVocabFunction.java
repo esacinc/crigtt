@@ -173,13 +173,13 @@ public abstract class AbstractVocabFunction extends AbstractCrigttExtensionFunct
                     status = false;
                 }
             } else if (((searchTarget == VocabTarget.CODE_NAME) && allFoundCodes.isEmpty())
-                || (codeNameAvailable && codeName!=null && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName())))) {
+                || (codeNameAvailable && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName())))) {
                 messages.add("Invalid code display name.");
 
                 status = false;
             }
 
-            if ((target != VocabTarget.CODE_NAME) && codeNameAvailable && codeName!=null && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
+            if ((target != VocabTarget.CODE_NAME) && codeNameAvailable && !allFoundCodes.stream().anyMatch(foundCode -> codeName.equals(foundCode.getName()))) {
                 messages.add("Invalid code display name.");
             }
 

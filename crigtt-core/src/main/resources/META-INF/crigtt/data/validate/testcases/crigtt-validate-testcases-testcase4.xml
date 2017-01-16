@@ -93,12 +93,6 @@
                             <crigtt-validate-testcases:expectedResult>200202</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/useablePeriod/high/@nullFlavor</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
             </crigtt-validate-testcases:elementSets>
         </crigtt-validate-testcases:xPathSet>
@@ -181,7 +175,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/patient/sdtc:raceCode/@nullFlavor</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -244,66 +238,6 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/streetAddressLine/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>555 Walnut Drive</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/city/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Seattle</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/state/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>WA</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/postalCode/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>98101</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/country/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>US</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/useablePeriod/low/@nullFlavor</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/addr/useablePeriod/high/@nullFlavor</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/assignedPerson/name/given[1]/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>April</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/assignedPerson/name/family/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Kepner</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/assignedPerson/name/suffix/text()</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>MD</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/telecom/@value</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:matchingCondition>
                             <crigtt-validate-testcases:matchingLevel>REGEXP</crigtt-validate-testcases:matchingLevel>
@@ -321,6 +255,74 @@
                         </crigtt-validate-testcases:matchingCondition>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>mailto:Kepnera@Derm.com</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                </crigtt-validate-testcases:elementSet>
+
+                <crigtt-validate-testcases:elementSet>
+                    <crigtt-validate-testcases:subExpressionPrefix>/addr</crigtt-validate-testcases:subExpressionPrefix>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/streetAddressLine/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>555 Walnut Drive</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/city/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>Seattle</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/state/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>WA</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/postalCode/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>98101</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/country/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>US</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/useablePeriod/low/@nullFlavor</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/useablePeriod/high/@nullFlavor</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                </crigtt-validate-testcases:elementSet>
+
+                <crigtt-validate-testcases:elementSet>
+                    <crigtt-validate-testcases:subExpressionPrefix>/assignedPerson/name</crigtt-validate-testcases:subExpressionPrefix>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/given[1]/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>April</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/family/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>Kepner</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/suffix/text()</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>MD</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -422,7 +424,7 @@
                         <crigtt-validate-testcases:subExpression>/assignedEntity/id/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -495,7 +497,7 @@
                         <crigtt-validate-testcases:subExpression>/value/qualifier[name[@code='21858-6']]/value/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -835,7 +837,7 @@
                         <crigtt-validate-testcases:subExpression>/value/qualifier[name[@code='21858-6']]/value/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -915,7 +917,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/targetSiteCode[@code='C43.4']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Malignant melanoma of skin of scalp and neck</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>Malignant melanoma of scalp and neck</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1034,32 +1036,6 @@
         </crigtt-validate-testcases:xPathSet>
 
         <!--====================================================================================================
-        = PAYERS SECTION
-        =====================================================================================================-->
-        <crigtt-validate-testcases:xPathSet>
-            <crigtt-validate-testcases:xPathExpression>
-                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.20.22.2.18' and @extension =
-                '2014-06-09']]/entry/act/entryRelationship/act
-            </crigtt-validate-testcases:xPathExpression>
-            <crigtt-validate-testcases:elementSets>
-                <crigtt-validate-testcases:elementSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/code/@code</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>3811</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/code/@displayName</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Federal, State, Local not specified - HMO</crigtt-validate-testcases:expectedResult>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
-                </crigtt-validate-testcases:elementSet>
-            </crigtt-validate-testcases:elementSets>
-        </crigtt-validate-testcases:xPathSet>
-
-        <!--====================================================================================================
         = PROBLEM SECTION
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
@@ -1167,7 +1143,7 @@
                         <crigtt-validate-testcases:subExpression>/act/entryRelationship/observation/value[@code='C43.4']/@displayName
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>Malignant melanoma of skin of scalp and neck</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>Malignant melanoma of scalp and neck</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1186,7 +1162,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>
-                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension='2014-08-08']]/entry
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension='2014-08-08']]/entry/procedure
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:elementSets>
                 <!--====================================================================================================
@@ -1194,7 +1170,7 @@
                 =====================================================================================================-->
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>5621009</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>11600</crigtt-validate-testcases:expectedResult>
@@ -1202,13 +1178,13 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/statusCode/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/statusCode/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>completed</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:matchingCondition>
                             <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
                         </crigtt-validate-testcases:matchingCondition>
@@ -1217,13 +1193,13 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/participant/participantRole/code/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/participant/participantRole/code/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>1115-5</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/participant/participantRole/code/@displayName
+                        <crigtt-validate-testcases:subExpression>/participant/participantRole/code/@displayName
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Dermatology clinic</crigtt-validate-testcases:expectedResult>
@@ -1234,14 +1210,14 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:optional>true</crigtt-validate-testcases:optional>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='5621009']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='5621009']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision of malignant neoplastic lesion of skin of extremities
                             </crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='11600']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='11600']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision, malignant lesion including margins, trunk, arms, or legs; excised diameter 0.5
                                 cm or less
@@ -1249,7 +1225,7 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='0HBBXZZ']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='0HBBXZZ']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision of Right Upper Arm Skin, External Approach
                             </crigtt-validate-testcases:expectedResult>
@@ -1262,7 +1238,7 @@
                 =====================================================================================================-->
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>39559009</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>11621</crigtt-validate-testcases:expectedResult>
@@ -1270,13 +1246,13 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/statusCode/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/statusCode/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>completed</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/effectiveTime/low/@value</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:matchingCondition>
                             <crigtt-validate-testcases:matchingLevel>SUBSTRING</crigtt-validate-testcases:matchingLevel>
                         </crigtt-validate-testcases:matchingCondition>
@@ -1285,13 +1261,13 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/participant/participantRole/code/@code</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/participant/participantRole/code/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>1115-5</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/participant/participantRole/code/@displayName
+                        <crigtt-validate-testcases:subExpression>/participant/participantRole/code/@displayName
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Dermatology clinic</crigtt-validate-testcases:expectedResult>
@@ -1302,14 +1278,14 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:optional>true</crigtt-validate-testcases:optional>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='39559009']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='39559009']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision of malignant lesion of scalp and neck
                             </crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='11621']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='11621']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision, malignant lesion including margins, scalp, neck, hands, feet, genitalia; excised
                                 diameter
@@ -1317,7 +1293,7 @@
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/procedure/code[@code='0HB4XZZ']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/code[@code='0HB4XZZ']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Excision of Neck Skin, External Approach
                             </crigtt-validate-testcases:expectedResult>
@@ -1344,7 +1320,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/code/@nullFlavor</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1352,7 +1328,7 @@
                             @extension='2014-08-08']]/id/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1360,7 +1336,7 @@
                             @extension='2014-08-08']]/code/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -1381,7 +1357,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/code/@nullFlavor</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1389,7 +1365,7 @@
                             @extension='2014-08-08']]/id/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1397,7 +1373,7 @@
                             @extension='2014-08-08']]/code/@nullFlavor
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>NA</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>

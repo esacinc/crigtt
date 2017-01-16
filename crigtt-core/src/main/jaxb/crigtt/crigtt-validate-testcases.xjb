@@ -30,6 +30,9 @@
             <jaxb:bindings node="xsd:element[@name='optional']">
                  <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='subExpressionPrefix']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='subExpressionSet']">
                 <jaxb:property name="subExpressionSets"/>
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
@@ -60,6 +63,9 @@
             @com.fasterxml.jackson.annotation.JsonTypeName("expectedResults")
         </annox:annotate>
         <jaxb:bindings node="xsd:sequence">
+            <jaxb:bindings node="xsd:element[@name='includeNullFlavors']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='expectedResult']">
                 <jaxb:property name="expectedResults"/>
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>

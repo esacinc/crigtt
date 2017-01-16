@@ -12,6 +12,10 @@
     =====================================================================================================-->
     <jaxb:globalBindings choiceContentProperty="true" fixedAttributeAsConstantProperty="true" generateIsSetMethod="true" generateMixedExtensions="true"
         generateValueClass="false">
+        <xjc:javaType
+            name="java.lang.String"
+            xmlType="xsd:string"
+            adapter="javax.xml.bind.annotation.adapters.CollapsedStringAdapter"/>
         <xjc:smartWildcardDefaultBinding/>
     </jaxb:globalBindings>
  </jaxb:bindings>

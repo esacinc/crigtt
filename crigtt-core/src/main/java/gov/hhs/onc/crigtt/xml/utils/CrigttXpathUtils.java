@@ -2,10 +2,12 @@ package gov.hhs.onc.crigtt.xml.utils;
 
 import javax.annotation.Nullable;
 import net.sf.saxon.om.Item;
+import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmValue;
+import net.sf.saxon.tree.util.Navigator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -81,6 +83,50 @@ public final class CrigttXpathUtils {
         }
 
         return nodeExpr;
+    }
+
+    public static String getIndexedXPathExpression(NodeInfo nodeInfo) {
+        return Navigator.getPath(nodeInfo);
+    }
+
+    public static int getNumDelimiters(String baseXPathExpression, String delimiter) {
+        int numDelims = 0;
+        int startPos = 0;
+        boolean endSearch = false;
+
+        while (!endSearch) {
+            int delimIndex = baseXPathExpression.indexOf(delimiter, startPos);
+
+            if (delimIndex > -1) {
+                numDelims++;
+                startPos = delimIndex + 1;
+            } else {
+                endSearch = true;
+            }
+        }
+
+        return numDelims;
+    }
+
+    public static String getXPathExpressionPrefix(String xPathExpression, int numPrefixDelims) {
+        int numDelims = 0;
+        int startPos = 0;
+        boolean endSearch = false;
+        String xPathExpressionPrefix = "";
+
+        while (!endSearch) {
+            int delimIndex = xPathExpression.indexOf(CrigttXpathUtils.EXPR_DELIM, startPos);
+
+            if (delimIndex > -1 && numPrefixDelims + 1 > numDelims) {
+                numDelims++;
+                startPos = delimIndex + 1;
+                xPathExpressionPrefix = xPathExpression.substring(0, delimIndex);
+            } else {
+                endSearch = true;
+            }
+        }
+
+        return xPathExpressionPrefix;
     }
 
     @Nullable

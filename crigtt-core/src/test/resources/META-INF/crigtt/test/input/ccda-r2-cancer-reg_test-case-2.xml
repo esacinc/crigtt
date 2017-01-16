@@ -31,7 +31,6 @@
 				<country nullFlavor="UNK"/>
 				<useablePeriod xsi:type="IVL_TS">
 					<low nullFlavor="UNK"/>
-					<high nullFlavor="UNK"/>
 				</useablePeriod>
 			</addr>
 			<telecom nullFlavor="UNK"/>
@@ -255,7 +254,7 @@
                                     <!-- Other options for targetSiteCode (Primary Site)
 									<targetSiteCode code="204.10" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia, without mention of having achieved remission">
                                     <targetSiteCode code="C42.1" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Bone marrow">
-                                    <targetSiteCode code="C9110" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission">
+                                    <targetSiteCode code="C91.10" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission">
                                     -->
 										<originalText>
 											<reference value="#PrimarySite_1"/>
@@ -513,7 +512,7 @@
 									</effectiveTime>
 									<value xsi:type="CD" code="277473004" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia (disorder)" sdtc:valueSet="2.16.840.1.113883.3.88.12.3221.7.4"/>
 									<!-- Other options for value (Problem)
-									<value xsi:type="CD" code="C9110" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission"/>                                    <value xsi:type="CD" code="204.1" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Lymphoid Leukemia; chronic"/>
+									<value xsi:type="CD" code="C91.10" codeSystem="2.16.840.1.113883.6.90" codeSystemName="ICD-10-CM" displayName="Chronic lymphocytic leukemia of B-cell type not having achieved remission"/>                                    <value xsi:type="CD" code="204.1" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Lymphoid Leukemia; chronic"/>
                                     <value xsi:type="CD" code="204.10" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia, without mention of having achieved remission"/>
                                     -->
 								</observation>
@@ -682,33 +681,13 @@
 			</component>
 			<!--*****Vital Signs Section (entries required) (V2) *****-->
 			<component>
-				<section>
+				<section nullFlavor="NI">
 					<!-- ** Vital Signs Section (entries required) (V2) ** -->
 					<templateId root="2.16.840.1.113883.10.20.22.2.4" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.4.1" extension="2014-06-09"/>
 					<code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="VITAL SIGNS"/>
 					<title>VITAL SIGNS</title>
 					<text>Vital signs not taken</text>
-					<entry>
-						<organizer classCode="CLUSTER" moodCode="EVN">
-							<!-- ** Vital signs organizer ** -->
-							<templateId root="2.16.840.1.113883.10.20.22.4.26" extension="2014-06-09"/>
-							<id root="31b73bd0-cffc-4599-902e-dbe54bc56cb4"/>
-							<code code="74728-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Vital signs"/>
-							<statusCode code="completed"/>
-							<component>
-								<observation classCode="OBS" moodCode="EVN">
-									<!-- ** Vital sign observation ** -->
-									<templateId root="2.16.840.1.113883.10.20.22.4.27" extension="2014-06-09"/>
-									<id root="ed9589fd-fda0-41f7-a3d0-dc537554f5c2"/>
-									<code nullFlavor="NA"/>
-									<statusCode code="completed"/>
-									<effectiveTime nullFlavor="NA"/>
-									<value xsi:type="PQ" nullFlavor="NA"/>
-								</observation>
-							</component>
-						</organizer>
-					</entry>
 				</section>
 			</component>
 		</structuredBody>

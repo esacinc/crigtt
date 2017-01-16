@@ -31,7 +31,6 @@
 				<country>US</country>
 				<useablePeriod xsi:type="IVL_TS">
 					<low value="20050623"/>
-					<high nullFlavor="NA"/>
 				</useablePeriod>
 			</addr>
 			<addr use="HP">
@@ -42,7 +41,6 @@
 				<country>US</country>
 				<useablePeriod xsi:type="IVL_TS">
 					<low value="19900105"/>
-					<high value="20050623"/>
 				</useablePeriod>
 			</addr>
 			<telecom value="tel:+1(206)555-1313" use="HP"/>

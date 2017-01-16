@@ -5,7 +5,7 @@ import gov.hhs.onc.crigtt.io.impl.ResourceSource;
 import gov.hhs.onc.crigtt.validate.ValidatorSubmission;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.validate.testcases.Testcase;
-import gov.hhs.onc.crigtt.validate.testcases.utils.TestcaseUtils;
+import gov.hhs.onc.crigtt.validate.testcases.utils.CrigttTestcaseUtils;
 import gov.hhs.onc.crigtt.validate.utils.ValidatorUtils;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import java.io.File;
@@ -53,6 +53,6 @@ public abstract class AbstractCrigttIntegrationTests extends AbstractCrigttTests
     }
 
     protected void initializeTestcases() {
-        this.testcases = TestcaseUtils.buildTestcases(this.applicationContext, this.validateJaxbMarshaller);
+        this.testcases = CrigttTestcaseUtils.buildTestcases(this.applicationContext, this.validateJaxbMarshaller);
     }
 }

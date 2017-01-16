@@ -18,6 +18,7 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="EQUALS"/>
             <xsd:enumeration value="EQUALS_IGNORE_CASE"/>
+            <xsd:enumeration value="NOT_EQUALS"/>
             <xsd:enumeration value="SUBSTRING"/>
             <xsd:enumeration value="REGEXP"/>
         </xsd:restriction>
@@ -30,12 +31,26 @@
         </xsd:restriction>
     </xsd:simpleType>
 
+    <xsd:simpleType name="NullFlavor">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NI"/>
+            <xsd:enumeration value="NA"/>
+            <xsd:enumeration value="UNK"/>
+            <xsd:enumeration value="ASKU"/>
+            <xsd:enumeration value="NAV"/>
+            <xsd:enumeration value="NASK"/>
+            <xsd:enumeration value="MSK"/>
+            <xsd:enumeration value="OTH"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <!--====================================================================================================
     = COMPLEX TYPES
     =====================================================================================================-->
     <xsd:complexType name="ElementSet">
         <xsd:sequence>
             <xsd:element name="optional" type="xsd:boolean" minOccurs="0" default="false"/>
+            <xsd:element name="subExpressionPrefix" type="xsd:string" minOccurs="0" default=""/>
             <xsd:element name="subExpressionSet" type="crigtt-validate-testcases:SubExpressionSet" minOccurs="1" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -48,6 +63,7 @@
 
     <xsd:complexType name="ExpectedResults">
         <xsd:sequence>
+            <xsd:element name="includeNullFlavors" type="xsd:boolean" minOccurs="0" default="false"/>
             <xsd:element name="expectedResult" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>

@@ -31,7 +31,6 @@
 				<country>US</country>
 				<useablePeriod xsi:type="IVL_TS">
 					<low value="200202"/>
-					<high nullFlavor="NA"/>
 				</useablePeriod>
 			</addr>
 			<telecom value="tel:+1(206)555-2414" use="HP"/>
@@ -1212,33 +1211,13 @@
 			</component>
 			<!--*****Vital Signs Section (entries required) (V2) *****-->
 			<component>
-				<section>
+				<section nullFlavor="NI">
 					<!-- ** Vital Signs Section (entries required) (V2) ** -->
 					<templateId root="2.16.840.1.113883.10.20.22.2.4" extension="2014-06-09"/>
 					<templateId root="2.16.840.1.113883.10.20.22.2.4.1" extension="2014-06-09"/>
 					<code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="VITAL SIGNS"/>
 					<title>VITAL SIGNS</title>
 					<text>Vital signs not taken</text>
-					<entry>
-						<organizer classCode="CLUSTER" moodCode="EVN">
-							<!-- ** Vital signs organizer ** -->
-							<templateId root="2.16.840.1.113883.10.20.22.4.26" extension="2014-06-09"/>
-							<id root="31b73bd0-cffc-4599-902e-dbe54bc56cb4"/>
-							<code code="74728-7" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Vital signs"/>
-							<statusCode code="completed"/>
-							<component>
-								<observation classCode="OBS" moodCode="EVN">
-									<!-- ** Vital sign observation ** -->
-									<templateId root="2.16.840.1.113883.10.20.22.4.27" extension="2014-06-09"/>
-									<id root="ed9589fd-fda0-41f7-a3d0-dc537554f5c2"/>
-									<code nullFlavor="NA"/>
-									<statusCode code="completed"/>
-									<effectiveTime nullFlavor="NA"/>
-									<value xsi:type="PQ" nullFlavor="NA"/>
-								</observation>
-							</component>
-						</organizer>
-					</entry>
 				</section>
 			</component>
 		</structuredBody>

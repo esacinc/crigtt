@@ -183,6 +183,25 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="messages">
+        <xsl:choose>
+            <xsl:when test="exists(crigtt-validate:messages)">
+                <ul>
+                    <xsl:for-each select="crigtt-validate:messages/crigtt-validate:message">
+                        <li>
+                            <xsl:call-template name="propValue">
+                                <xsl:with-param name="containerTagName" select="'pre'"/>
+                                <xsl:with-param name="normalizeWhitespace" select="false()"/>
+                                <xsl:with-param name="value" select="text()"/>
+                            </xsl:call-template>
+                        </li>
+                    </xsl:for-each>
+                </ul>
+            </xsl:when>
+            <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="location">
         <xsl:choose>
             <xsl:when test="exists(crigtt-validate:location)">
@@ -644,22 +663,7 @@
                                                     </xsl:call-template>
                                                 </td>
                                                 <td>
-                                                    <xsl:choose>
-                                                        <xsl:when test="exists(crigtt-validate:messages)">
-                                                            <ul>
-                                                                <xsl:for-each select="crigtt-validate:messages/crigtt-validate:message">
-                                                                    <li>
-                                                                        <xsl:call-template name="propValue">
-                                                                            <xsl:with-param name="containerTagName" select="'pre'"/>
-                                                                            <xsl:with-param name="normalizeWhitespace" select="false()"/>
-                                                                            <xsl:with-param name="value" select="text()"/>
-                                                                        </xsl:call-template>
-                                                                    </li>
-                                                                </xsl:for-each>
-                                                            </ul>
-                                                        </xsl:when>
-                                                        <xsl:otherwise><em data-sort-key="">None</em></xsl:otherwise>
-                                                    </xsl:choose>
+                                                    <xsl:call-template name="messages"/>
                                                 </td>
                                                 <td>
                                                     <xsl:choose>
@@ -763,6 +767,7 @@
                                                     <th data-filter-label="ID">Actual Result</th>
                                                     <th data-filter-label="ID">Expected Result(s)</th>
                                                     <th data-filter-label="Line #">Location</th>
+                                                    <th class="filter-false">Messages</th>
                                                     <th class="filter-false">ID</th>
                                                 </tr>
                                             </thead>
@@ -821,7 +826,7 @@
                                                             <xsl:choose>
                                                                 <xsl:when test="exists(crigtt-validate:expectedResults)">
                                                                     <ul>
-                                                                        <xsl:for-each select="crigtt-validate:expectedResults/crigtt-validate-testcases:expectedResult">
+                                                                        <xsl:for-each select="crigtt-validate:expectedResults">
                                                                             <li>
                                                                                 <xsl:call-template name="propValue">
                                                                                     <xsl:with-param name="value" select="current()/text()"/>
@@ -835,6 +840,9 @@
                                                         </td>
                                                         <td>
                                                             <xsl:call-template name="location"/>
+                                                        </td>
+                                                        <td>
+                                                            <xsl:call-template name="messages"/>
                                                         </td>
                                                         <td>
                                                             <xsl:call-template name="propValue">

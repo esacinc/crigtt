@@ -6,34 +6,32 @@ import gov.hhs.onc.crigtt.io.impl.ByteArraySource;
 import gov.hhs.onc.crigtt.utils.CrigttStreamUtils;
 import gov.hhs.onc.crigtt.validate.ContextSpecificValidatorTask;
 import gov.hhs.onc.crigtt.validate.ValidatorEvent;
-import gov.hhs.onc.crigtt.validate.ValidatorLevel;
 import gov.hhs.onc.crigtt.validate.ValidatorLocation;
 import gov.hhs.onc.crigtt.validate.testcases.ElementSet;
 import gov.hhs.onc.crigtt.validate.testcases.ElementSets;
 import gov.hhs.onc.crigtt.validate.testcases.ExpectedResults;
 import gov.hhs.onc.crigtt.validate.testcases.MatchingCondition;
-import gov.hhs.onc.crigtt.validate.testcases.MatchingLevel;
+import gov.hhs.onc.crigtt.validate.testcases.NullFlavor;
 import gov.hhs.onc.crigtt.validate.testcases.SubExpressionSet;
 import gov.hhs.onc.crigtt.validate.testcases.Testcase;
 import gov.hhs.onc.crigtt.validate.testcases.XPathSet;
-import gov.hhs.onc.crigtt.validate.testcases.impl.MatchingConditionImpl;
-import gov.hhs.onc.crigtt.validate.testcases.utils.TestcaseUtils;
-import gov.hhs.onc.crigtt.validate.vocab.VocabXmlNames;
+import gov.hhs.onc.crigtt.validate.testcases.utils.CrigttTestcaseUtils;
 import gov.hhs.onc.crigtt.xml.impl.CrigttJaxbMarshaller;
 import gov.hhs.onc.crigtt.xml.impl.CrigttLocation;
 import gov.hhs.onc.crigtt.xml.impl.XdmDocument;
 import gov.hhs.onc.crigtt.xml.utils.CrigttXpathUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.xml.transform.Source;
 import net.sf.saxon.om.NamespaceBinding;
@@ -44,33 +42,13 @@ import net.sf.saxon.tree.tiny.TinyDocumentImpl;
 import net.sf.saxon.tree.tiny.TinyTree;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Derived from:
- * <ul>
- * <li><a href="https://tools.ietf.org/html/rfc6068">RFC 6068 - The 'mailto' URI Scheme</a></li>
- * <li><a href="https://tools.ietf.org/html/rfc3966">RFC 3966 - The tel URI for Telephone Numbers</a></li>
- * </ul>
- */
 public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask implements ContextSpecificValidatorTask {
-    private final static String EMAIL_ADDR_DELIM = "@";
-
-    private final static String EMAIL_ADDR_URI_PREFIX = "mailto:";
-    private final static String PHONE_NUM_URI_PREFIX = "tel:";
-    private final static String PHONE_NUM_URI_GLOBAL_PREFIX = PHONE_NUM_URI_PREFIX + "+";
-
-    private final static int PHONE_NUM_NUM_DIGITS = 10;
-    private final static String PHONE_NUM_URI_PATTERN_FORMAT = "^" + PHONE_NUM_URI_PREFIX + "\\+1?\\d{" + PHONE_NUM_NUM_DIGITS + "}$";
-    private final static String PHONE_NUM_URI_SEPARATOR_REPLACEMENT = "[-.()]";
-
-    private Pattern phoneNumExprPattern;
-
     @Resource(name = "jaxbMarshallerValidate")
     private CrigttJaxbMarshaller validateJaxbMarshaller;
 
     private List<Source> testcaseSources;
     private Map<String, Testcase> testcases;
-
-    private final static String EMPTY_RESULT = "()";
+    private List<String> nullFlavors;
 
     public ContextSpecificValidatorTaskImpl(XdmDocument doc, ByteArraySource docSrc, String docFileName, Map<String, String> docNamespaces,
         String testcaseId) {
@@ -79,8 +57,6 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
 
     @Override
     public List<ValidatorEvent> call() throws Exception {
-        ValidatorEvent event;
-
         List<XPathSet> xPathSets = this.testcases.get(this.testcaseId).getXPathSets();
         List<ValidatorEvent> events = new ArrayList<>(xPathSets.size());
 
@@ -89,8 +65,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
             Object xPathSetContent = xPathSet.getContent();
 
             if (xPathSetContent instanceof ExpectedResults) {
-                events.add((event = new ValidatorEventImpl()));
-                evaluateResults(event, xPathSet, baseXPathExpression, (ExpectedResults) xPathSetContent);
+                evaluateResults(events, xPathSet, baseXPathExpression, (ExpectedResults) xPathSetContent);
             } else if (xPathSetContent instanceof ElementSets) {
                 evaluateSubexpressionSets(events, baseXPathExpression, (ElementSets) xPathSetContent);
             }
@@ -99,19 +74,19 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         return events;
     }
 
-    private void evaluateResults(ValidatorEvent event, XPathSet xPathSet, String baseXPathExpression, ExpectedResults xPathSetContent)
+    private void evaluateResults(List<ValidatorEvent> events, XPathSet xPathSet, String baseXPathExpression, ExpectedResults xPathSetContent)
         throws SaxonApiException {
         ValidatorLocation loc;
         CrigttLocation locObj;
         boolean assertionStatus = false;
 
-        event.setLocation((loc = new ValidatorLocationImpl()));
-        event.setContextSpecific(true);
-        event.setLevel(ValidatorLevel.MISMATCH);
+        ValidatorEvent event = CrigttTestcaseUtils.setEventDetails(loc = new ValidatorLocationImpl());
+        events.add(event);
 
         loc.setNodeExpression(baseXPathExpression);
 
-        List<String> expectedResults = xPathSetContent.getExpectedResults();
+        List<String> expectedResults =
+            CrigttTestcaseUtils.addNullFlavors(xPathSetContent.getIncludeNullFlavors(), this.nullFlavors, xPathSetContent.getExpectedResults());
         List<XdmNode> locNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathSet.getXPathExpression(), this.xpathContext, this.doc));
         MatchingCondition matchingCondition = xPathSet.getMatchingCondition();
         Set<String> expectedXPathResults = new HashSet<>(expectedResults.size());
@@ -132,9 +107,10 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                         }
                     }
 
-                    assertionStatus = getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, baseXPathExpression, matchingCondition);
+                    assertionStatus =
+                        CrigttTestcaseUtils.getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, baseXPathExpression, matchingCondition);
                 } else {
-                    assertionStatus = getAssertionStatus(expectedResults, actualResult, baseXPathExpression, matchingCondition);
+                    assertionStatus = CrigttTestcaseUtils.getAssertionStatus(expectedResults, actualResult, baseXPathExpression, matchingCondition);
                 }
 
                 event.setActualResult(actualResult);
@@ -143,12 +119,14 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                     break;
                 }
             } else {
-                assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, baseXPathExpression);
+                assertionStatus =
+                    expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(expectedResults, CrigttTestcaseUtils.EMPTY_RESULT, baseXPathExpression);
             }
         }
 
         if (locNodes.size() == 0) {
-            assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, baseXPathExpression);
+            assertionStatus =
+                expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(expectedResults, CrigttTestcaseUtils.EMPTY_RESULT, baseXPathExpression);
         }
 
         if (expectedXPathResults.size() > 0) {
@@ -161,179 +139,185 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
 
     private void evaluateSubexpressionSets(List<ValidatorEvent> events, String baseXPathExpression, ElementSets xPathSetContent)
         throws SaxonApiException {
-        boolean assertionStatus = false;
-        ValidatorEvent event;
-        ValidatorLocation loc;
-        XdmNode locNode;
+        List<XdmNode> baseExprLocNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(baseXPathExpression, this.xpathContext, this.doc));
 
-        for (ElementSet elementSet : xPathSetContent.getElementSets()) {
-            boolean optional = elementSet.getOptional();
-            int nodeIndex = 0;
+        if (baseExprLocNodes.isEmpty()) {
+            for (ElementSet elementSet : xPathSetContent.getElementSets()) {
+                CrigttTestcaseUtils.addEventInfo(events, elementSet, baseXPathExpression + elementSet.getSubExpressionPrefix());
+            }
+        } else {
+            for (ElementSet elementSet : xPathSetContent.getElementSets()) {
+                Map<SubExpressionSet, Map<String, List<NodeInfo>>> subExpressionSetResults = new LinkedHashMap<>(elementSet.getSubExpressionSets().size());
+                String baseSubExpression = baseXPathExpression + elementSet.getSubExpressionPrefix();
 
-            for (SubExpressionSet subExpressionSet : elementSet.getSubExpressionSets()) {
-                MatchingCondition matchingCondition = subExpressionSet.getMatchingCondition();
-                String subExpression = subExpressionSet.getSubExpression();
-                List<String> expectedResults = subExpressionSet.getExpectedResults();
-                String xPathExpression = getIndexedXPathExpression(nodeIndex, baseXPathExpression, subExpression);
+                List<XdmNode> exprLocNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(baseSubExpression, this.xpathContext, this.doc));
 
-                List<XdmNode> subExprLocNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathExpression, this.xpathContext, this.doc));
+                if (exprLocNodes.isEmpty()) {
+                    CrigttTestcaseUtils.addEventInfo(events, elementSet, baseSubExpression);
+                } else {
+                    Map<String, Integer> indexCount = new HashMap<>();
+                    String indexedBaseExpression = CrigttXpathUtils.getIndexedXPathExpression(exprLocNodes.get(0).getUnderlyingNode());
+                    int numBaseXPathExpressionDelims = CrigttXpathUtils.getNumDelimiters(indexedBaseExpression, CrigttXpathUtils.EXPR_DELIM);
 
-                event = new ValidatorEventImpl();
-                event.setLocation((loc = new ValidatorLocationImpl()));
-                event.setContextSpecific(true);
-                event.setLevel(ValidatorLevel.MISMATCH);
+                    for (SubExpressionSet subExpressionSet : elementSet.getSubExpressionSets()) {
+                        Map<String, List<NodeInfo>> nodeInfoResults = new HashMap<>();
+                        String xPathExpression = baseSubExpression + subExpressionSet.getSubExpression();
+                        MatchingCondition matchingCondition = subExpressionSet.getMatchingCondition();
+                        List<XdmNode> subExprLocNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathExpression, this.xpathContext, this.doc));
 
-                loc.setNodeExpression(xPathExpression);
+                        for (XdmNode locNode : subExprLocNodes) {
+                            if (locNode != null) {
+                                NodeInfo nodeInfo = locNode.getUnderlyingNode();
+                                String actualResult = nodeInfo.getStringValue();
 
-                int nodeListSize = subExprLocNodes.size();
+                                nodeInfoResults.putIfAbsent(actualResult, new ArrayList<>());
+                                nodeInfoResults.get(actualResult).add(nodeInfo);
+                            }
+                        }
 
-                for (int a = 0; a < nodeListSize; a++) {
-                    if ((locNode = subExprLocNodes.get(a)) != null) {
-                        NodeInfo nodeInfo = locNode.getUnderlyingNode();
-                        String actualResult = nodeInfo.getStringValue();
+                        subExpressionSetResults.put(subExpressionSet, nodeInfoResults);
 
-                        setLocationInfo(loc, nodeInfo, getIndexedXPathExpression(nodeIndex, baseXPathExpression, subExpression));
-                        event.setActualResult(actualResult);
+                        List<String> expectedResults = CrigttTestcaseUtils.addNullFlavors(subExpressionSet.getExpectedResults().getIncludeNullFlavors(),
+                            this.nullFlavors, subExpressionSet.getExpectedResults().getExpectedResults());
 
-                        if ((assertionStatus = getAssertionStatus(expectedResults, actualResult, xPathExpression, matchingCondition))) {
-                            setLocationInfo(loc, nodeInfo,
-                                getIndexedXPathExpression(nodeIndex == 0 ? (nodeIndex = a + 1) : nodeIndex, baseXPathExpression, subExpression));
+                        for (Entry<String, List<NodeInfo>> entry : nodeInfoResults.entrySet()) {
+                            String actualResult = entry.getKey();
+                            boolean assertionStatus = CrigttTestcaseUtils.getAssertionStatus(expectedResults, actualResult, xPathExpression, matchingCondition);
 
-                            break;
+                            if (assertionStatus) {
+                                for (NodeInfo nodeInfo : nodeInfoResults.get(actualResult)) {
+                                    String xPathExpressionPrefix = CrigttXpathUtils
+                                        .getXPathExpressionPrefix(CrigttXpathUtils.getIndexedXPathExpression(nodeInfo), numBaseXPathExpressionDelims);
+                                    indexCount.putIfAbsent(xPathExpressionPrefix, 0);
+                                    indexCount.put(xPathExpressionPrefix, (indexCount.get(xPathExpressionPrefix)) + 1);
+                                }
+
+                                break;
+                            }
                         }
                     }
+
+                    events.addAll(processResults(subExpressionSetResults, baseSubExpression, elementSet.getOptional(), indexCount));
+                }
+            }
+        }
+    }
+
+    private List<ValidatorEvent> processResults(Map<SubExpressionSet, Map<String, List<NodeInfo>>> subExpressionSetResults, String baseSubExpression,
+        boolean optional, Map<String, Integer> indexCount) {
+        Entry<String, Integer> resultEntry = indexCount.entrySet().stream().max(Entry.comparingByValue()).orElse(null);
+        List<ValidatorEvent> events = new LinkedList<>();
+        List<ValidatorEvent> optionalEvents = new ArrayList<>();
+        boolean foundOptionalMatch = false;
+
+        for (SubExpressionSet subExpressionSet : subExpressionSetResults.keySet()) {
+            boolean foundMatch = false;
+
+            ValidatorLocation loc = new ValidatorLocationImpl();
+            ValidatorEvent event = CrigttTestcaseUtils.setEventDetails(loc);
+            Map<String, List<NodeInfo>> nodeInfoResults = subExpressionSetResults.get(subExpressionSet);
+            MatchingCondition matchingCondition = subExpressionSet.getMatchingCondition();
+            List<String> expectedResults = CrigttTestcaseUtils.addNullFlavors(subExpressionSet.getExpectedResults().getIncludeNullFlavors(), this.nullFlavors,
+                subExpressionSet.getExpectedResults().getExpectedResults());
+
+            String xPathExpression = baseSubExpression + subExpressionSet.getSubExpression();
+            String xPathExpressionPrefix = resultEntry != null ? resultEntry.getKey() : baseSubExpression;
+
+            Map<String, ValidatorEvent> tempEvents = new HashMap<>();
+
+            for (Entry<String, List<NodeInfo>> entry : nodeInfoResults.entrySet()) {
+                String actualResult = entry.getKey();
+                boolean assertionStatus = CrigttTestcaseUtils.getAssertionStatus(expectedResults, actualResult,
+                    CrigttXpathUtils.getIndexedXPathExpression(entry.getValue().get(0)), matchingCondition);
+
+                for (NodeInfo nodeInfo : nodeInfoResults.get(actualResult)) {
+                    String indexedXPathExpression = CrigttXpathUtils.getIndexedXPathExpression(nodeInfo);
+
+                    if (assertionStatus) {
+                        if (indexedXPathExpression.contains(xPathExpressionPrefix)) {
+                            CrigttTestcaseUtils.setLocationInfo(loc, nodeInfo, indexedXPathExpression + StringUtils.LF + xPathExpression);
+                            event = CrigttTestcaseUtils.setEventDetails(loc, expectedResults, true);
+                            event.setActualResult(actualResult);
+
+                            events.add(event);
+                            foundMatch = true;
+
+                            if (optional) {
+                                foundOptionalMatch = true;
+                            }
+
+                            break;
+                        } else {
+                            CrigttTestcaseUtils.setLocationInfo(loc, nodeInfo, indexedXPathExpression + StringUtils.LF + xPathExpression);
+                            event = CrigttTestcaseUtils.setEventDetails(loc, expectedResults);
+                            event.setActualResult(actualResult);
+                            event.getMessages().add("Actual result matches expected result, but is not found in the expected location.");
+
+                            tempEvents.put(indexedXPathExpression, event);
+                        }
+                    } else {
+                        loc = new ValidatorLocationImpl();
+                        event = CrigttTestcaseUtils.setEventDetails(loc, expectedResults);
+                        CrigttTestcaseUtils.setLocationInfo(loc, nodeInfo, indexedXPathExpression + StringUtils.LF + xPathExpression);
+                        event.setActualResult(actualResult);
+
+                        if (optional) {
+                            event.getMessages().add(
+                                "Mismatch is part of a group of XPath expressions, in which one must be satisfied for the event to be considered a match.");
+
+                        }
+
+                        tempEvents.putIfAbsent(CrigttXpathUtils.getIndexedXPathExpression(nodeInfo), event);
+                    }
                 }
 
-                if (loc.getNodeExpression() == null) {
-                    loc.setNodeExpression(xPathExpression);
+                if (foundMatch) {
+                    break;
                 }
+            }
 
-                if (nodeListSize == 0) {
-                    assertionStatus = expectedResults.isEmpty() || getAssertionStatus(expectedResults, EMPTY_RESULT, xPathExpression);
+            if (foundOptionalMatch) {
+                break;
+            }
+
+            if (foundMatch) {
+                continue;
+            }
+
+            if (tempEvents.isEmpty()) {
+                loc.setNodeExpression(xPathExpression);
+
+                if (expectedResults.contains(CrigttTestcaseUtils.EMPTY_RESULT)) {
+                    event = CrigttTestcaseUtils.setEventDetails(loc, expectedResults, true);
+                } else {
+                    event.setExpectedResults(expectedResults);
                 }
-
-                event.setExpectedResults(expectedResults);
-                event.setStatus(assertionStatus);
 
                 if (optional) {
-                    if (assertionStatus) {
-                        events.add(event);
-
-                        break;
-                    }
+                    event.getMessages()
+                        .add("Mismatch is part of a group of XPath expressions, in which one must be satisfied for the event to be considered a match.");
+                    optionalEvents.add(event);
                 } else {
                     events.add(event);
                 }
-            }
-        }
-    }
-
-    private String getIndexedXPathExpression(int nodeIndex, String baseXPathExpression, String subExpression) {
-        return nodeIndex == 0 ? baseXPathExpression + subExpression :
-            baseXPathExpression + CrigttXpathUtils.PREDICATE_PREFIX + nodeIndex + CrigttXpathUtils.PREDICATE_SUFFIX + subExpression;
-    }
-
-    private void setLocationInfo(ValidatorLocation loc, NodeInfo nodeInfo, String xPathExpression) {
-        CrigttLocation locObj;
-
-        loc.setColumnNumber((locObj = new CrigttLocation(nodeInfo)).getColumnNumber());
-        loc.setLineNumber(locObj.getLineNumber());
-        loc.setNodeExpression(xPathExpression);
-    }
-
-    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, String xPathExpression) {
-        return getAssertionStatus(expectedResults, actualResult, xPathExpression, null);
-    }
-
-    private boolean getAssertionStatus(List<String> expectedResults, String actualResult, String xPathExpression,
-        @Nullable MatchingCondition matchingCondition) {
-        Predicate<String> matchingPredicate = actualResult::equals;
-
-        if (xPathExpression.contains(VocabXmlNames.DISPLAY_NAME_ATTR_NAME) || xPathExpression.contains(CrigttXpathUtils.TEXT_NODE_SELECTION)) {
-            if (matchingCondition != null) {
-                matchingCondition.setMatchingLevel(MatchingLevel.EQUALS_IGNORE_CASE);
             } else {
-                matchingCondition = new MatchingConditionImpl(MatchingLevel.EQUALS_IGNORE_CASE, null, 8);
-            }
-        }
-
-        if (matchingCondition != null) {
-            int substrMatchLen = matchingCondition.getMatchLength();
-
-            switch (matchingCondition.getMatchingLevel()) {
-                case EQUALS:
-                    matchingPredicate = actualResult::equals;
-                    break;
-                case EQUALS_IGNORE_CASE:
-                    matchingPredicate = actualResult::equalsIgnoreCase;
-                    break;
-                case SUBSTRING:
-                    matchingPredicate = expectedResult -> {
-                        int minResultLen;
-                        int actualResultLen = actualResult.length();
-                        int expectedResultLen = expectedResult.length();
-
-                        minResultLen =
-                            expectedResultLen < substrMatchLen ? Math.min(expectedResultLen, actualResultLen) : Math.min(actualResultLen, substrMatchLen);
-
-                        return expectedResult.substring(0, minResultLen).equals(actualResult.substring(0, minResultLen));
-                    };
-                    break;
-                case REGEXP:
-                    if (matchingCondition.getMatchingRegexpElementType() != null) {
-                        String normalizedResult;
-
-                        switch (matchingCondition.getMatchingRegexpElementType()) {
-                            case EMAIL_ADDR:
-                                if (actualResult.substring(0, EMAIL_ADDR_URI_PREFIX.length()).equalsIgnoreCase(EMAIL_ADDR_URI_PREFIX)) {
-                                    normalizedResult = EMAIL_ADDR_URI_PREFIX + actualResult.substring(EMAIL_ADDR_URI_PREFIX.length());
-                                } else {
-                                    return false;
-                                }
-
-                                matchingPredicate = expectedResult -> {
-                                    int normalizedResultEmailDelimIdx = normalizedResult.indexOf(EMAIL_ADDR_DELIM);
-                                    int expectedResultEmailDelimIdx = expectedResult.indexOf(EMAIL_ADDR_DELIM);
-
-                                    return (normalizedResult.substring(0, normalizedResultEmailDelimIdx)
-                                        .equals(expectedResult.substring(0, expectedResultEmailDelimIdx)))
-                                        && normalizedResult.substring(normalizedResultEmailDelimIdx)
-                                        .equalsIgnoreCase(expectedResult.substring(expectedResultEmailDelimIdx));
-                                };
-                                break;
-                            case PHONE_NUM:
-                                if (actualResult.substring(0, PHONE_NUM_URI_GLOBAL_PREFIX.length()).equalsIgnoreCase(PHONE_NUM_URI_GLOBAL_PREFIX)) {
-                                    normalizedResult =
-                                        PHONE_NUM_URI_GLOBAL_PREFIX + actualResult.replaceAll(PHONE_NUM_URI_SEPARATOR_REPLACEMENT, StringUtils.EMPTY)
-                                            .substring(PHONE_NUM_URI_GLOBAL_PREFIX.length());
-
-                                    matchingPredicate = expectedResult -> {
-                                        int normalizedResultPhoneNumMatchEndIdx = normalizedResult.length() - 1;
-                                        int expectedResultPhoneNumMatchEndIdx = expectedResult.length() - 1;
-
-                                        return this.phoneNumExprPattern.matcher(normalizedResult).matches() && normalizedResult
-                                            .substring(normalizedResultPhoneNumMatchEndIdx - PHONE_NUM_NUM_DIGITS + 1, normalizedResultPhoneNumMatchEndIdx)
-                                            .equals(expectedResult
-                                                .substring(expectedResultPhoneNumMatchEndIdx - PHONE_NUM_NUM_DIGITS + 1, expectedResultPhoneNumMatchEndIdx));
-                                    };
-                                } else {
-                                    return false;
-                                }
-
-                                break;
-                            default:
-                                matchingPredicate = expectedResult -> Pattern.matches(expectedResult, actualResult);
-                                break;
-                        }
-
-                        break;
+                if (optional) {
+                    tempEvents.forEach((prefix, tempEvent) -> optionalEvents.add(tempEvent));
+                } else {
+                    if (tempEvents.containsKey(xPathExpressionPrefix)) {
+                        events.add(tempEvents.get(xPathExpressionPrefix));
                     } else {
-                        matchingPredicate = expectedResult -> Pattern.matches(expectedResult, actualResult);
+                        events.add(tempEvents.entrySet().stream().findFirst().get().getValue());
                     }
+                }
             }
         }
 
-        return expectedResults.stream().anyMatch(matchingPredicate);
+        if (optional && !foundOptionalMatch) {
+            events.addAll(optionalEvents);
+        }
+
+        return events;
     }
 
     @Override
@@ -352,7 +336,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         super.afterPropertiesSet();
 
         this.testcases = CrigttStreamUtils.toMap(IdentifiedBean::getId, Function.identity(), LinkedHashMap::new,
-            TestcaseUtils.buildTestcases(this.getTestcaseSources(), this.validateJaxbMarshaller).stream());
+            CrigttTestcaseUtils.buildTestcases(this.getTestcaseSources(), this.validateJaxbMarshaller).stream());
 
         TinyTree docTree = ((TinyDocumentImpl) this.doc.getUnderlyingNode()).getTree();
 
@@ -364,6 +348,6 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
             }
         }
 
-        this.phoneNumExprPattern = Pattern.compile(PHONE_NUM_URI_PATTERN_FORMAT);
+        this.nullFlavors = Arrays.stream(NullFlavor.values()).map(NullFlavor::value).collect(Collectors.toList());
     }
 }

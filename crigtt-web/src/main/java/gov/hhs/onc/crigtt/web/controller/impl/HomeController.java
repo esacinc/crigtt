@@ -7,7 +7,7 @@ import gov.hhs.onc.crigtt.utils.CrigttDateUtils;
 import gov.hhs.onc.crigtt.validate.ValidatorLevel;
 import gov.hhs.onc.crigtt.validate.render.ValidatorRenderType;
 import gov.hhs.onc.crigtt.validate.testcases.Testcase;
-import gov.hhs.onc.crigtt.validate.testcases.utils.TestcaseUtils;
+import gov.hhs.onc.crigtt.validate.testcases.utils.CrigttTestcaseUtils;
 import gov.hhs.onc.crigtt.web.controller.CrigttModelAttributes;
 import gov.hhs.onc.crigtt.web.validate.ValidatorHeaders;
 import gov.hhs.onc.crigtt.web.validate.ValidatorParameters;
@@ -75,7 +75,7 @@ public class HomeController implements ApplicationContextAware, InitializingBean
         this.validatorLevelJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorLevel.class);
         this.validatorParamsJson = CrigttJsonUtils.serializeConstants(this.objMapper, ValidatorParameters.class);
         this.validatorRenderTypeJson = CrigttJsonUtils.serializeEnum(this.objMapper, ValidatorRenderType.class);
-        this.validatorTestcases = TestcaseUtils.buildTestcases(this.appContext, this.validateJaxbMarshaller);
+        this.validatorTestcases = CrigttTestcaseUtils.buildTestcases(this.appContext, this.validateJaxbMarshaller);
     }
 
     @ModelAttribute(value = CrigttModelAttributes.BUILD_VERSION_NAME)

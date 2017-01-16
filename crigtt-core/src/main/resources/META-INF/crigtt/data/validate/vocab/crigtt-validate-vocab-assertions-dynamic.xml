@@ -153,19 +153,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-7301</crigtt:id>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.3.88.12.80.62</crigtt:id>
-                    <crigtt:name>Vital Sign Result</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-31579</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
@@ -249,7 +236,7 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-15992-c</crigtt:id>
+        <crigtt:id>a-1098-15992-v</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>
                 <crigtt-validate-vocab:valueSet>
@@ -271,19 +258,6 @@
             </crigtt-validate-vocab:vocabSet>
         </crigtt-validate-vocab:expectedVocabSets>
         <crigtt-validate-vocab:vocabContextExpression>cda:value</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-15247</crigtt:id>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.1.11.19579</crigtt:id>
-                    <crigtt:name>Family Member Value Set</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:code</crigtt-validate-vocab:vocabContextExpression>
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>

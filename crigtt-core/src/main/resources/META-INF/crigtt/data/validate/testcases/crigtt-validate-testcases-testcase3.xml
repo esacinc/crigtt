@@ -439,7 +439,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act[entryRelationship[observation[value[@code='8742/2' or @code='61217001' or @code='M8742/2']]]]
+                and @extension = '2015-02-05']]/entry/act[entryRelationship[observation[value[@code='8742/2' or @code='8742' or @code='61217001' or @code='M8742/2']]]]
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:elementSets>
                 <crigtt-validate-testcases:elementSet>
@@ -458,7 +458,7 @@
          =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='61217001' or @code='M8742/2']]
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='8742' or @code='61217001' or @code='M8742/2']]
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:elementSets>
                 <crigtt-validate-testcases:elementSet>
@@ -466,6 +466,7 @@
                         <crigtt-validate-testcases:subExpression>/value/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>8742/2</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>8742</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>61217001</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>M8742/2</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -540,7 +541,7 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:optional>true</crigtt-validate-testcases:optional>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/value[@code='8742/2']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/value[@code='8742/2' or @code='8742']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Lentigo maligna</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -597,7 +598,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='61217001' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='8742' or @code='61217001' or
                 @code='M8742/2']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.5' and
                 @extension='2015-02-05']]/effectiveTime/low/@value
             </crigtt-validate-testcases:xPathExpression>
@@ -614,7 +615,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='61217001' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='8742' or @code='61217001' or
                 @code='M8742/2']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.5' and
                 @extension='2015-02-05']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.35' and
                 @extension='2015-02-05']]
@@ -688,7 +689,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='61217001' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='8742' or @code='61217001' or
                 @code='M8742/2']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.7' and
                 @extension='2015-02-06']]/effectiveTime/low/@value
             </crigtt-validate-testcases:xPathExpression>
@@ -705,7 +706,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='61217001' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8742/2' or @code='8742' or @code='61217001' or
                 @code='M8742/2']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.7' and
                 @extension='2015-02-06']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.40' and
                 @extension='2015-02-05']]
@@ -779,7 +780,7 @@
          =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act[entryRelationship[observation[value[@code='8721/3' or @code='2142002' or @code='M8721/3']]]]
+                and @extension = '2015-02-05']]/entry/act[entryRelationship[observation[value[@code='8721/3' or @code='8721' or @code='2142002' or @code='M8721/3']]]]
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:elementSets>
                 <crigtt-validate-testcases:elementSet>
@@ -798,7 +799,7 @@
          =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='2142002' or @code='M8721/3']]
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='8721' or @code='2142002' or @code='M8721/3']]
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:elementSets>
                 <crigtt-validate-testcases:elementSet>
@@ -815,6 +816,7 @@
                         <crigtt-validate-testcases:subExpression>/value/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>8721/3</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>8721</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>M8721/3</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>2142002</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -881,7 +883,7 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:optional>true</crigtt-validate-testcases:optional>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/value[@code='8721/3']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/value[@code='8721/3' or @code='8721']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Nodular melanoma</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -935,7 +937,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='2142002' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='8721' or @code='2142002' or
                 @code='M8721/3']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.31' and
                 @extension='2015-04-02']]/code/@code
             </crigtt-validate-testcases:xPathExpression>
@@ -949,7 +951,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='2142002' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='8721' or @code='2142002' or
                 @code='M8721/3']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.7' and
                 @extension='2015-02-06']]/effectiveTime/low/@value
             </crigtt-validate-testcases:xPathExpression>
@@ -966,7 +968,7 @@
         =====================================================================================================-->
         <crigtt-validate-testcases:xPathSet>
             <crigtt-validate-testcases:xPathExpression>/ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2'
-                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='2142002' or
+                and @extension = '2015-02-05']]/entry/act/entryRelationship/observation[value[@code='8721/3' or @code='8721' or @code='2142002' or
                 @code='M8721/3']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.7' and
                 @extension='2015-02-06']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.40' and
                 @extension='2015-02-05']]
@@ -1390,7 +1392,7 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
                 '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
-                value[@code='M8742/2' or @code='61217001' or @code='8742/2']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+                value[@code='M8742/2' or @code='61217001' or @code='8742/2' or @code='8742']]/entryRelationship[@typeCode='REFR']/observation/id/@root
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>
@@ -1426,7 +1428,7 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
                 '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
-                value[@code='M8721/3' or @code='2142002' or @code='8721/3']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+                value[@code='M8721/3' or @code='2142002' or @code='8721/3' or @code='8721']]/entryRelationship[@typeCode='REFR']/observation/id/@root
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>

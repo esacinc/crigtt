@@ -220,6 +220,7 @@
 									<value xsi:type="CD" code="51092000" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
                                     <!--Other options for value (Histologic Type)
                                     <value xsi:type="CD" code="9823/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma">
+                                    <value xsi:type="CD" code="9823" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma">
                                     <value xsi:type="CD" code="M9823/3" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Chronic lymphoid leukemia" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
                                     -->
 										<originalText>

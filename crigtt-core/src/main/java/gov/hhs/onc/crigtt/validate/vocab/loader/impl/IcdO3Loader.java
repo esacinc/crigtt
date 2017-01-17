@@ -16,6 +16,8 @@ public class IcdO3Loader extends DelimitedTextVocabularyLoader<IcdO3Model> {
 
     private final static String USED_TOPOGRAPHY_CODE_LEVEL_STR = Integer.toString(4);
 
+    private final static String MORPHOLOGY_CODE_DELIM = "/";
+
     public IcdO3Loader() {
         super(IcdO3Model.class, 2, 4, 1);
     }
@@ -29,12 +31,14 @@ public class IcdO3Loader extends DelimitedTextVocabularyLoader<IcdO3Model> {
             return false;
         }
 
-        fields.clear();
-        fields.put(VocabFields.CODE_NAME, CrigttStringUtils.unquote(lineParts[0]));
-        fields.put(VocabFields.DISPLAY_NAME_NAME, CrigttStringUtils.unquote(lineParts[2]));
-        fields.putAll(this.buildBaseFields());
+        String code = lineParts[0];
+        String displayName = lineParts[2];
 
-        this.loadDocument(dbConnection, doc, fields);
+        addField(dbConnection, doc, fields, code, displayName);
+
+        if (StringUtils.contains(code, MORPHOLOGY_CODE_DELIM)) {
+            addField(dbConnection, doc, fields, code.substring(0, code.indexOf(MORPHOLOGY_CODE_DELIM)), displayName);
+        }
 
         return true;
     }
@@ -46,5 +50,14 @@ public class IcdO3Loader extends DelimitedTextVocabularyLoader<IcdO3Model> {
         baseFields.put(VocabFields.CODE_SYSTEM_NAME_NAME, IcdO3Model.CODE_SYSTEM_NAME);
 
         return baseFields;
+    }
+
+    private void addField(OObjectDatabaseTx dbConnection, ODocument doc, Map<String, String> fields, String code, String displayName) {
+        fields.clear();
+        fields.put(VocabFields.CODE_NAME, CrigttStringUtils.unquote(code));
+        fields.put(VocabFields.DISPLAY_NAME_NAME, CrigttStringUtils.unquote(displayName));
+        fields.putAll(this.buildBaseFields());
+
+        this.loadDocument(dbConnection, doc, fields);
     }
 }

@@ -431,6 +431,7 @@
                         <crigtt-validate-testcases:subExpression>/value/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>9823/3</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>9823</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>M9823/3</crigtt-validate-testcases:expectedResult>
                             <crigtt-validate-testcases:expectedResult>51092000</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
@@ -513,7 +514,7 @@
                 <crigtt-validate-testcases:elementSet>
                     <crigtt-validate-testcases:optional>true</crigtt-validate-testcases:optional>
                     <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/value[@code='9823/3']/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:subExpression>/value[@code='9823/3' or @code='9823']/@displayName</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>B-cell chronic lymphocytic leukemia/small lymphocytic lymphoma
                             </crigtt-validate-testcases:expectedResult>

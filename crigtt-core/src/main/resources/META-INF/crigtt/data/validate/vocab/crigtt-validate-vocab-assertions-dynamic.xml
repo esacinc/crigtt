@@ -35,19 +35,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-5372</crigtt:id>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.1.11.11526</crigtt:id>
-                    <crigtt:name>Language</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:languageCode</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-6394</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>

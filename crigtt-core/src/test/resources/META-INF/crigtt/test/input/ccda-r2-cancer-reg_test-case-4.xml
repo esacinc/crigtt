@@ -327,6 +327,7 @@
 									<value xsi:type="CD" code="M8742/2" codeSystem="2.16.840.1.113883.6.103" codeSystemName="ICD-9-CM" displayName="Hutchinson's melanotic freckle" sdtc:valueSet="2.16.840.1.114222.4.11.6038">
                                     <!-- Other options for value (Histologic Type)
                                     <value xsi:type="CD" code="8742/2" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Lentigo maligna">
+                                    <value xsi:type="CD" code="8742" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Lentigo maligna">
                                     <value xsi:type="CD" code="61217001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Hutchinson's melanotic freckle (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
                                     -->
 										<originalText>
@@ -681,6 +682,7 @@
                                     <!--Other options for value (Histologic Type)
                                     <value xsi:type="CD" code="2142002" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" displayName="Nodular melanoma (morphologic abnormality)" sdtc:valueSet="2.16.840.1.114222.4.11.7256">
                                     <value xsi:type="CD" code="8721/3" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Nodular melanoma">
+                                    <value xsi:type="CD" code="8721" codeSystem="2.16.840.1.113883.6.43.1" codeSystemName="ICD-O-3" displayName="Nodular melanoma">
                                     -->
 										<originalText>
 											<reference value="#Histology_2"/>

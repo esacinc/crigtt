@@ -222,7 +222,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/id[@root='2.16.840.1.113883.4.6']/@extension</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>4829010403</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>1234567877</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -297,12 +297,6 @@
                             <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
-                    <crigtt-validate-testcases:subExpressionSet>
-                        <crigtt-validate-testcases:subExpression>/useablePeriod/high/@nullFlavor</crigtt-validate-testcases:subExpression>
-                        <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:includeNullFlavors>true</crigtt-validate-testcases:includeNullFlavors>
-                        </crigtt-validate-testcases:expectedResults>
-                    </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
 
                 <crigtt-validate-testcases:elementSet>
@@ -341,7 +335,7 @@
                     <crigtt-validate-testcases:subExpressionSet>
                         <crigtt-validate-testcases:subExpression>/id[@root='2.16.840.1.113883.4.6']/@extension</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
-                            <crigtt-validate-testcases:expectedResult>3892018958</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>2893559510</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -646,6 +640,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Tis</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>IS</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -654,6 +649,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>N0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -662,6 +658,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>M0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -737,6 +734,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Tis</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>IS</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -745,6 +743,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>N0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -753,6 +752,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>M0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -979,6 +979,7 @@
                         <crigtt-validate-testcases:subExpression>/value/@code</crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>IIB</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>2B</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -999,6 +1000,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>T4a</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>4A</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1007,6 +1009,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>N0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1015,6 +1018,7 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>M0</crigtt-validate-testcases:expectedResult>
+                            <crigtt-validate-testcases:expectedResult>0</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                     <crigtt-validate-testcases:subExpressionSet>
@@ -1031,6 +1035,26 @@
                         </crigtt-validate-testcases:subExpression>
                         <crigtt-validate-testcases:expectedResults>
                             <crigtt-validate-testcases:expectedResult>Pathologist</crigtt-validate-testcases:expectedResult>
+                        </crigtt-validate-testcases:expectedResults>
+                    </crigtt-validate-testcases:subExpressionSet>
+                </crigtt-validate-testcases:elementSet>
+            </crigtt-validate-testcases:elementSets>
+        </crigtt-validate-testcases:xPathSet>
+
+        <!--====================================================================================================
+        = PAYERS SECTION
+        =====================================================================================================-->
+        <crigtt-validate-testcases:xPathSet>
+            <crigtt-validate-testcases:xPathExpression>
+                /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.20.22.2.18' and @extension =
+                '2014-06-09']]/entry/act/entryRelationship/act
+            </crigtt-validate-testcases:xPathExpression>
+            <crigtt-validate-testcases:elementSets>
+                <crigtt-validate-testcases:elementSet>
+                    <crigtt-validate-testcases:subExpressionSet>
+                        <crigtt-validate-testcases:subExpression>/code/@displayName</crigtt-validate-testcases:subExpression>
+                        <crigtt-validate-testcases:expectedResults>
+                            <crigtt-validate-testcases:expectedResult>Federal, State, Local not specified - HMO</crigtt-validate-testcases:expectedResult>
                         </crigtt-validate-testcases:expectedResults>
                     </crigtt-validate-testcases:subExpressionSet>
                 </crigtt-validate-testcases:elementSet>
@@ -1392,13 +1416,13 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
                 '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
-                value[@code='M8742/2' or @code='61217001' or @code='8742/2' or @code='8742']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+                value[@code='M8742/2' or @code='61217001' or @code='8742/2' or @code='8742']]/entryRelationship[@typeCode='REFR']/observation/id
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>
                 <crigtt-validate-testcases:expectedResult>
                     /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
-                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='D03.61' or @code='302836005' or @code='172.6']]/id/@root
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='D03.61' or @code='302836005' or @code='172.6']]/id
                 </crigtt-validate-testcases:expectedResult>
             </crigtt-validate-testcases:expectedResults>
         </crigtt-validate-testcases:xPathSet>
@@ -1410,13 +1434,13 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension =
                 '2014-08-08']]/entry/procedure[code[@code='5621009' or @code='11600' or
-                @code='0HBBXZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id/@root
+                @code='0HBBXZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>
                 <crigtt-validate-testcases:expectedResult>
                     /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
-                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='D03.61' or @code='302836005' or @code='172.6']]/id/@root
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='D03.61' or @code='302836005' or @code='172.6']]/id
                 </crigtt-validate-testcases:expectedResult>
             </crigtt-validate-testcases:expectedResults>
         </crigtt-validate-testcases:xPathSet>
@@ -1428,13 +1452,13 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.2' and @extension =
                 '2015-02-05']]/entry/act/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.4' and @extension='2015-02-05'] and
-                value[@code='M8721/3' or @code='2142002' or @code='8721/3' or @code='8721']]/entryRelationship[@typeCode='REFR']/observation/id/@root
+                value[@code='M8721/3' or @code='2142002' or @code='8721/3' or @code='8721']]/entryRelationship[@typeCode='REFR']/observation/id
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>
                 <crigtt-validate-testcases:expectedResult>
                     /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
-                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='C43.4' or @code='93642000' or @code='172.4']]/id/@root
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='C43.4' or @code='93642000' or @code='172.4']]/id
                 </crigtt-validate-testcases:expectedResult>
             </crigtt-validate-testcases:expectedResults>
         </crigtt-validate-testcases:xPathSet>
@@ -1446,13 +1470,13 @@
             <crigtt-validate-testcases:xPathExpression>
                 /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.10' and @extension =
                 '2014-08-08']]/entry/procedure[code[@code='39559009' or @code='11621' or
-                @code='0HB4XZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id/@root
+                @code='0HB4XZZ']]/entryRelationship/observation[templateId[@root='2.16.840.1.113883.10.13.19' and @extension='2014-08-08']]/id
             </crigtt-validate-testcases:xPathExpression>
             <crigtt-validate-testcases:xPathResultComparison>true</crigtt-validate-testcases:xPathResultComparison>
             <crigtt-validate-testcases:expectedResults>
                 <crigtt-validate-testcases:expectedResult>
                     /ClinicalDocument/component/structuredBody/component/section[templateId[@root='2.16.840.1.113883.10.13.21' and @extension =
-                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='C43.4' or @code='93642000' or @code='172.4']]/id/@root
+                    '2014-08-08']]/entry/act/entryRelationship/observation[value[@code='C43.4' or @code='93642000' or @code='172.4']]/id
                 </crigtt-validate-testcases:expectedResult>
             </crigtt-validate-testcases:expectedResults>
         </crigtt-validate-testcases:xPathSet>

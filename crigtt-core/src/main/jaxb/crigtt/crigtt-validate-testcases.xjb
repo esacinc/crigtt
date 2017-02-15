@@ -121,6 +121,9 @@
             <jaxb:bindings node="xsd:element[@name='xPathExpression']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>
+            <jaxb:bindings node="xsd:element[@name='elementNodeKindExpected']">
+                <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
+            </jaxb:bindings>
             <jaxb:bindings node="xsd:element[@name='xPathResultComparison']">
                 <annox:annotate target="getter">@com.fasterxml.jackson.annotation.JsonProperty</annox:annotate>
             </jaxb:bindings>

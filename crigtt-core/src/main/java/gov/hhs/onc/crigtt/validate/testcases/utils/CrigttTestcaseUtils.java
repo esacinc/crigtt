@@ -27,7 +27,13 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.xml.bind.JAXBElement;
 import javax.xml.transform.Source;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.expr.sort.GenericAtomicComparer;
+import net.sf.saxon.functions.DeepEqual;
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.trans.XPathException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
@@ -53,6 +59,8 @@ public final class CrigttTestcaseUtils {
     public final static Pattern PHONE_NUM_EXPR_PATTERN = Pattern.compile(CrigttTestcaseUtils.PHONE_NUM_URI_PATTERN_FORMAT);
 
     public final static String EMPTY_RESULT = "()";
+
+    public final static int MATCHING_CONDITION_MATCH_LEN_DEFAULT = 8;
 
     private CrigttTestcaseUtils() {
     }
@@ -86,12 +94,13 @@ public final class CrigttTestcaseUtils {
         return event;
     }
 
-    public static void addEventInfo(List<ValidatorEvent> events, ElementSet elementSet, String baseSubExpression) {
+    public static void addEventInfo(List<ValidatorEvent> events, ElementSet elementSet, String baseSubExpression, List<String> nullFlavors) {
         ValidatorEvent event;
         ValidatorLocation loc;
 
         for (SubExpressionSet subExpressionSet : elementSet.getSubExpressionSets()) {
-            List<String> expectedResults = subExpressionSet.getExpectedResults().getExpectedResults();
+            List<String> expectedResults = addNullFlavors(subExpressionSet.getExpectedResults().getIncludeNullFlavors(), nullFlavors,
+                subExpressionSet.getExpectedResults().getExpectedResults());
             event = CrigttTestcaseUtils.setEventDetails(loc = new ValidatorLocationImpl(), expectedResults,
                 expectedResults.contains(CrigttTestcaseUtils.EMPTY_RESULT));
             loc.setNodeExpression(baseSubExpression + subExpressionSet.getSubExpression());
@@ -130,7 +139,7 @@ public final class CrigttTestcaseUtils {
             if (matchingCondition != null) {
                 matchingCondition.setMatchingLevel(MatchingLevel.EQUALS_IGNORE_CASE);
             } else {
-                matchingCondition = new MatchingConditionImpl(MatchingLevel.EQUALS_IGNORE_CASE, null, 8);
+                matchingCondition = new MatchingConditionImpl(MatchingLevel.EQUALS_IGNORE_CASE, null, MATCHING_CONDITION_MATCH_LEN_DEFAULT);
             }
         }
 
@@ -214,5 +223,32 @@ public final class CrigttTestcaseUtils {
         }
 
         return expectedResults.stream().anyMatch(matchingPredicate);
+    }
+
+    public static boolean getAssertionStatus(List<XdmNode> expectedResults, XdmNode actualResult, Configuration config) throws XPathException {
+        return getAssertionStatus(expectedResults, actualResult, config, null);
+    }
+
+    public static boolean getAssertionStatus(List<XdmNode> expectedResults, XdmNode actualResult, Configuration config,
+        @Nullable MatchingCondition matchingCondition) throws XPathException {
+        XPathContext xPathContext = config.getConversionContext().newContext();
+        GenericAtomicComparer comparer = new GenericAtomicComparer(null, xPathContext);
+
+        if (matchingCondition == null) {
+            matchingCondition = new MatchingConditionImpl(MatchingLevel.EQUALS, null, MATCHING_CONDITION_MATCH_LEN_DEFAULT);
+        }
+
+        MatchingLevel matchingLevel = matchingCondition.getMatchingLevel();
+
+        for (XdmNode expectedResult : expectedResults) {
+            boolean deepEquals =
+                DeepEqual.deepEquals(expectedResult.getUnderlyingNode().iterate(), actualResult.getUnderlyingNode().iterate(), comparer, xPathContext, 0);
+
+            if ((matchingLevel.equals(MatchingLevel.EQUALS) && deepEquals) || (matchingLevel.equals(MatchingLevel.NOT_EQUALS) && !deepEquals)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

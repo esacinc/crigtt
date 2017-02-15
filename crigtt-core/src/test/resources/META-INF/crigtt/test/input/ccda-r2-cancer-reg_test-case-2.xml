@@ -69,7 +69,7 @@
 	<author>
 		<time value="201209151030-0800"/>
 		<assignedAuthor>
-			<id extension="9988776655" root="2.16.840.1.113883.4.6"/>
+			<id extension="1234567885" root="2.16.840.1.113883.4.6"/>
 			<code code="208D00000X" displayName="General Practice" codeSystem="2.16.840.1.113883.6.101" codeSystemName="Healthcare Provider Taxonomy (HIPAA)"/>
 			<addr use="WP">
 				<streetAddressLine>123 Green Street</streetAddressLine>
@@ -79,7 +79,6 @@
 				<country>US</country>
 				<useablePeriod xsi:type="IVL_TS">
 					<low nullFlavor="NA"/>
-					<high nullFlavor="NA"/>
 				</useablePeriod>
 			</addr>
 			<telecom use="WP" value="tel:+1(206)555-4697"/>

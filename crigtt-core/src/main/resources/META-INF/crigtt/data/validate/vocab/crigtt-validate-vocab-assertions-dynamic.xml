@@ -74,19 +74,6 @@
     </crigtt-validate-vocab:vocabAssertion>
     
     <crigtt-validate-vocab:vocabAssertion>
-        <crigtt:id>a-1098-5407</crigtt:id>
-        <crigtt-validate-vocab:expectedVocabSets>
-            <crigtt-validate-vocab:vocabSet>
-                <crigtt-validate-vocab:valueSet>
-                    <crigtt:id>2.16.840.1.113883.11.20.9.64</crigtt:id>
-                    <crigtt:name>PatientLanguage</crigtt:name>
-                </crigtt-validate-vocab:valueSet>
-            </crigtt-validate-vocab:vocabSet>
-        </crigtt-validate-vocab:expectedVocabSets>
-        <crigtt-validate-vocab:vocabContextExpression>cda:languageCode</crigtt-validate-vocab:vocabContextExpression>
-    </crigtt-validate-vocab:vocabAssertion>
-    
-    <crigtt-validate-vocab:vocabAssertion>
         <crigtt:id>a-1098-16082</crigtt:id>
         <crigtt-validate-vocab:expectedVocabSets>
             <crigtt-validate-vocab:vocabSet>

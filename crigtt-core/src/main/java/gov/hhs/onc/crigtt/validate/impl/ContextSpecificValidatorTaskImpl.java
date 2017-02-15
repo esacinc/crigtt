@@ -38,6 +38,8 @@ import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmNodeKind;
+import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.tiny.TinyDocumentImpl;
 import net.sf.saxon.tree.tiny.TinyTree;
 import org.apache.commons.lang3.StringUtils;
@@ -75,10 +77,11 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
     }
 
     private void evaluateResults(List<ValidatorEvent> events, XPathSet xPathSet, String baseXPathExpression, ExpectedResults xPathSetContent)
-        throws SaxonApiException {
+        throws SaxonApiException, XPathException {
         ValidatorLocation loc;
         CrigttLocation locObj;
         boolean assertionStatus = false;
+        boolean xPathComparisonElementResult = xPathSet.getXPathResultComparison() && xPathSet.getElementNodeKindExpected();
 
         ValidatorEvent event = CrigttTestcaseUtils.setEventDetails(loc = new ValidatorLocationImpl());
         events.add(event);
@@ -90,25 +93,34 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
         List<XdmNode> locNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(xPathSet.getXPathExpression(), this.xpathContext, this.doc));
         MatchingCondition matchingCondition = xPathSet.getMatchingCondition();
         Set<String> expectedXPathResults = new HashSet<>(expectedResults.size());
+        List<XdmNode> xPathNodeResults = new ArrayList<>(expectedResults.size());
 
         for (XdmNode locNode : locNodes) {
             if (locNode != null) {
                 loc.setColumnNumber((locObj = new CrigttLocation(locNode.getUnderlyingNode())).getColumnNumber());
                 loc.setLineNumber(locObj.getLineNumber());
 
-                String actualResult = locNode.getStringValue();
+                XdmNodeKind locNodeKind = locNode.getNodeKind();
+                String actualResult = (locNodeKind == XdmNodeKind.ATTRIBUTE || locNodeKind == XdmNodeKind.TEXT) ? locNode.getStringValue() : locNode.toString();
 
                 if (xPathSet.getXPathResultComparison()) {
                     for (String expectedResult : expectedResults) {
                         XdmNode resultNode = this.xpathCompiler.evaluateNode(expectedResult, this.xpathContext, this.doc);
 
                         if (resultNode != null) {
-                            expectedXPathResults.add(resultNode.getStringValue());
+                            XdmNodeKind nodeKind = resultNode.getNodeKind();
+
+                            if (nodeKind == XdmNodeKind.ATTRIBUTE || nodeKind == XdmNodeKind.TEXT) {
+                                expectedXPathResults.add(resultNode.getStringValue());
+                            } else if (nodeKind == XdmNodeKind.ELEMENT) {
+                                xPathNodeResults.add(resultNode);
+                            }
                         }
                     }
 
-                    assertionStatus =
-                        CrigttTestcaseUtils.getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, baseXPathExpression, matchingCondition);
+                    assertionStatus = xPathSet.getElementNodeKindExpected()
+                        ? CrigttTestcaseUtils.getAssertionStatus(xPathNodeResults, locNode, this.xpathContext.getConfiguration(), matchingCondition)
+                        : CrigttTestcaseUtils.getAssertionStatus(new ArrayList<>(expectedXPathResults), actualResult, baseXPathExpression, matchingCondition);
                 } else {
                     assertionStatus = CrigttTestcaseUtils.getAssertionStatus(expectedResults, actualResult, baseXPathExpression, matchingCondition);
                 }
@@ -120,21 +132,39 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                 }
             } else {
                 assertionStatus =
-                    expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(expectedResults, CrigttTestcaseUtils.EMPTY_RESULT, baseXPathExpression);
+                    expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(
+                        xPathComparisonElementResult ? (expectedResults = findEmptyResult(expectedResults)) : expectedResults, CrigttTestcaseUtils.EMPTY_RESULT,
+                        baseXPathExpression);
             }
         }
 
         if (locNodes.size() == 0) {
             assertionStatus =
-                expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(expectedResults, CrigttTestcaseUtils.EMPTY_RESULT, baseXPathExpression);
+                expectedResults.isEmpty() || CrigttTestcaseUtils.getAssertionStatus(
+                    xPathComparisonElementResult ? (expectedResults = findEmptyResult(expectedResults)) : expectedResults, CrigttTestcaseUtils.EMPTY_RESULT,
+                    baseXPathExpression);
         }
 
         if (expectedXPathResults.size() > 0) {
             expectedResults.addAll(expectedXPathResults);
+        } else if (xPathComparisonElementResult && xPathNodeResults.size() > 0) {
+            expectedResults.addAll(new HashSet<>(xPathNodeResults).stream().map(XdmNode::toString).collect(Collectors.toList()));
         }
 
         event.setExpectedResults(expectedResults);
         event.setStatus(assertionStatus);
+    }
+
+    private List<String> findEmptyResult(List<String> expectedResults) throws SaxonApiException {
+        List<String> results = new ArrayList<>(expectedResults);
+
+        for (String expectedResult : expectedResults) {
+            if (this.xpathCompiler.evaluateNode(expectedResult, this.xpathContext, this.doc) == null && !results.contains(CrigttTestcaseUtils.EMPTY_RESULT)) {
+                results.add(CrigttTestcaseUtils.EMPTY_RESULT);
+            }
+        }
+
+        return results;
     }
 
     private void evaluateSubexpressionSets(List<ValidatorEvent> events, String baseXPathExpression, ElementSets xPathSetContent)
@@ -143,7 +173,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
 
         if (baseExprLocNodes.isEmpty()) {
             for (ElementSet elementSet : xPathSetContent.getElementSets()) {
-                CrigttTestcaseUtils.addEventInfo(events, elementSet, baseXPathExpression + elementSet.getSubExpressionPrefix());
+                CrigttTestcaseUtils.addEventInfo(events, elementSet, baseXPathExpression + elementSet.getSubExpressionPrefix(), this.nullFlavors);
             }
         } else {
             for (ElementSet elementSet : xPathSetContent.getElementSets()) {
@@ -153,7 +183,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                 List<XdmNode> exprLocNodes = Arrays.asList(this.xpathCompiler.evaluateNodes(baseSubExpression, this.xpathContext, this.doc));
 
                 if (exprLocNodes.isEmpty()) {
-                    CrigttTestcaseUtils.addEventInfo(events, elementSet, baseSubExpression);
+                    CrigttTestcaseUtils.addEventInfo(events, elementSet, baseSubExpression, this.nullFlavors);
                 } else {
                     Map<String, Integer> indexCount = new HashMap<>();
                     String indexedBaseExpression = CrigttXpathUtils.getIndexedXPathExpression(exprLocNodes.get(0).getUnderlyingNode());
@@ -307,7 +337,7 @@ public class ContextSpecificValidatorTaskImpl extends AbstractValidatorTask impl
                     if (tempEvents.containsKey(xPathExpressionPrefix)) {
                         events.add(tempEvents.get(xPathExpressionPrefix));
                     } else {
-                        events.add(tempEvents.entrySet().stream().findFirst().get().getValue());
+                        events.addAll(tempEvents.values().stream().collect(Collectors.toList()));
                     }
                 }
             }
